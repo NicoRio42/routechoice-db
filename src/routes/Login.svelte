@@ -22,7 +22,7 @@
 
 <article class="login-box">
   <h1>Login</h1>
-  <form>
+  <form on:submit={handleSubmit}>
     <label for="email">Email</label>
     <input bind:value={email} id="email" type="email" name="email" required />
 

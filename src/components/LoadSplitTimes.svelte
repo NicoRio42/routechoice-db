@@ -1,15 +1,22 @@
 <script lang="ts">
+  import { Runner } from "../models/runner";
+
   import { IOFXMLParser } from "../utils/iof-xml-parser/IOFXMLParser";
+  import { detectRunnersByName } from "../utils/detect-runners-by-name/detectRunnersByName";
 
   import { timeZones } from "./time-zones";
 
-  let fileinput;
-  let xmlDoc;
-  let classNames = ["------------"];
-  let className;
-  let splitTimes;
+  export let savedSplitTimes: IOFXMLParser;
+  export let mapviewer;
 
-  export let savedSplitTimes;
+  let fileinput: HTMLElement;
+  let xmlDoc: XMLDocument;
+  let classNames: string[] = [];
+  let className: string;
+  let timeZone = timeZones[1];
+  let timeOffset = 0;
+  let splitTimes: IOFXMLParser;
+  let runners: Runner[] = [];
 
   const onFileSelected = (event) => {
     let xmlFile = event.target.files[0];
@@ -27,62 +34,112 @@
     reader.readAsText(xmlFile);
   };
 
-  const parseIOFXML = () => {
-    const date = new Date("2021-04-03");
-    splitTimes = new IOFXMLParser(xmlDoc, className, 1.2, date, "+01:00");
+  const parseIOFXML = (event) => {
+    event.preventDefault();
+    splitTimes = new IOFXMLParser(xmlDoc, className, 1.2, timeZone, timeOffset);
 
-    console.log(splitTimes);
+    runners = detectRunnersByName(
+      [...splitTimes.runners],
+      [...mapviewer.routes]
+    );
+
+    console.log(splitTimes, runners);
+  };
+
+  const saveSplitTimes = () => {
+    savedSplitTimes = { ...splitTimes, runners: runners };
   };
 </script>
 
-<div class="time-offset">
-  <label for="time-offset">Time offset (seconds)</label>
-  <input type="number" name="time-offset" id="time-offset" />
-</div>
+<form on:submit={parseIOFXML}>
+  <p>
+    <label for="iof-xml-file">IOF XML File</label>
+    <input
+      name="iof-xml-file"
+      id="iof-xml-file"
+      on:change={(e) => onFileSelected(e)}
+      type="file"
+      bind:this={fileinput}
+    />
+    <button type="button" on:click={() => fileinput.click()}
+      >Load IOF XML File</button
+    >
+  </p>
 
-<div>
-  <label for="iof-xml-file">IOF XML File</label>
-  <input
-    name="iof-xml-file"
-    id="iof-xml-file"
-    on:change={(e) => onFileSelected(e)}
-    type="file"
-    bind:this={fileinput}
-  />
-  <button on:click={() => fileinput.click()}>Load IOF XML File</button>
-</div>
+  <p>
+    <label for="class">Class</label>
+    <select name="class" id="class" bind:value={className}>
+      {#each classNames as className}
+        <option value={className}>{className}</option>
+      {/each}
+    </select>
+  </p>
 
-<div>
-  <label for="class">Class</label>
-  <select
-    name="class"
-    id="class"
-    bind:value={className}
-    on:change={parseIOFXML}
-  >
-    {#each classNames as className}
-      <option value={className}>{className}</option>
+  <p>
+    <label for="time-zone">Time zone</label>
+    <select bind:value={timeZone} name="time-zone" id="time-zone"
+      >timeZone
+      {#each timeZones as timeZone}
+        <option value={timeZone}>{timeZone}</option>
+      {/each}
+    </select>
+  </p>
+
+  <p>
+    <label for="time-offset">Time offset (seconds)</label>
+    <input
+      bind:value={timeOffset}
+      type="number"
+      name="time-offset"
+      id="time-offset"
+    />
+  </p>
+
+  <button type="submit">Load splits</button>
+</form>
+
+<table>
+  <thead>
+    <tr>
+      <th>Split times</th>
+      <th>GPS track</th>
+      <th>Routechoice DB user</th>
+    </tr>
+  </thead>
+
+  <tbody>
+    {#each runners as runner}
+      <tr>
+        <td>{`${runner.firstName} ${runner.lastName}`}</td>
+
+        <td>
+          <select bind:value={runner.rerun2dRouteIndex}>
+            {#each mapviewer.routes as route, index}
+              <option value={index}>{route.runnername}</option>
+            {/each}
+          </select>
+        </td>
+
+        <td>Soon</td>
+      </tr>
     {/each}
-  </select>
-</div>
+  </tbody>
+</table>
 
-<div>
-  <label for="time-zone">Time zone</label>
-  <select name="time-zone" id="time-zone">
-    {#each timeZones as timeZone}
-      <option value={timeZone}>{timeZone}</option>
-    {/each}
-  </select>
-</div>
-
-<h2>Correspondance with routes</h2>
-
-<button on:click={() => (savedSplitTimes = { ...splitTimes })}
-  >Save split times</button
->
+<button type="submit" on:click={saveSplitTimes}>Save split times</button>
 
 <style>
   input[type="file"] {
     display: none;
+  }
+
+  form {
+    display: grid;
+    grid-template-columns: 50% 50%;
+  }
+
+  p {
+    display: flex;
+    flex-direction: column;
   }
 </style>

@@ -77,7 +77,11 @@
         {/if}
       </td>
 
-      <td>A</td>
+      <td>
+        {#if runner.leg.routeChoice}
+          {runner.leg.routeChoice}
+        {/if}
+      </td>
     </tr>
   {/each}
   <tbody />

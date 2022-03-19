@@ -14,19 +14,22 @@ export class IOFXMLParser {
   superman: number[] = [];
   supermanSplits: number[] = [];
   mistakesSum: number[] = [];
+  timeOffset = 0;
 
   constructor(
     splitsXmlDoc: XMLDocument,
     className: string,
     mistakeDetectionRatio = MISTAKE_DETECTION_RATIO,
-    date: Date,
-    timeZone: string
+    timeZone: string,
+    timeOffset?: number,
+    date?: Date
   ) {
     this.splitsXmlDoc = splitsXmlDoc;
     this.className = className;
     this.mistakeDetectionRatio = mistakeDetectionRatio;
     this.date = date;
     this.timeZone = timeZone;
+    this.timeOffset = timeOffset;
 
     this.loadSplits();
   }

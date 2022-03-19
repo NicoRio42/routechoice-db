@@ -3,16 +3,18 @@
   import LoadSplitTimes from "../components/LoadSplitTimes.svelte";
   import LegSplitTimesTable from "../components/SplitTimesTable/LegSplitTimesTable.svelte";
   import SplitTimesTable from "../components/SplitTimesTable/SplitTimesTable.svelte";
+  import { IOFXMLParser } from "../utils/iof-xml-parser/IOFXMLParser";
+  import { detectRunnersRoutechoices } from "../utils/routechoices-detector/detect-route";
 
   let isLoadSplitsDialogOpen = false;
   let isSplitsTableDialogOpen = false;
-  let splitTimes = {
-    runners: [],
-    course: [],
-  };
+  let splitTimes: IOFXMLParser = { runners: [] };
   let legNumber = 1;
   let iframe: HTMLElement;
   let numberOfContols: number;
+  let mapviewer;
+
+  $: console.log(splitTimes);
 
   const iframeLoaded = (e) => {
     iframe = document.getElementById("2d-rerun");
@@ -29,6 +31,9 @@
         iframe.contentWindow.mapviewer.otechinfo = data.otechinfo;
         iframe.contentWindow.mapviewer.request_redraw();
         iframe.contentWindow.mapviewer.update_routediv();
+
+        mapviewer = iframe.contentWindow.mapviewer;
+        console.log(mapviewer);
 
         numberOfContols = data.tags.length;
       });
@@ -64,13 +69,28 @@
   const handleNextLeg = (totalNumberOfLegs) => {
     legNumber = legNumber === totalNumberOfLegs ? legNumber : legNumber + 1;
   };
+
+  const detectRoutechoices = () => {
+    splitTimes = {
+      ...splitTimes,
+      runners: detectRunnersRoutechoices(
+        splitTimes.runners,
+        mapviewer,
+        mapviewer.routes
+      ),
+    };
+  };
 </script>
 
 {#if isLoadSplitsDialogOpen}
   <Dialog on:closeDialog={() => (isLoadSplitsDialogOpen = false)}>
     <h1 slot="title">Load split times</h1>
 
-    <LoadSplitTimes slot="content" bind:savedSplitTimes={splitTimes} />
+    <LoadSplitTimes
+      slot="content"
+      bind:savedSplitTimes={splitTimes}
+      {mapviewer}
+    />
   </Dialog>
 {/if}
 
@@ -89,7 +109,7 @@
     <button on:click={() => (isLoadSplitsDialogOpen = true)}>Split times</button
     >
 
-    <button>Detect routechoices</button>
+    <button on:click={detectRoutechoices}>Detect routechoices</button>
 
     <button on:click={() => (isSplitsTableDialogOpen = true)}
       >Split times table</button

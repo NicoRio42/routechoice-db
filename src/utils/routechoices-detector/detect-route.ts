@@ -131,41 +131,48 @@ const buildRoutechoicesTable = (data, table) => {
 }
 */
 
-const detectRunnersRoutechoices = (splitsObject, routechoices) => {
+export const detectRunnersRoutechoices = (runners, courseObject, routes) => {
   // splitsObject is Routechoice-DB like splits object
   // routechoices is an array resulting to a GET request on RDB API
-  splits = { ...splitsObject };
+  courseObject = attributeRoutechoicesToLegs(courseObject);
 
-  splits.runners.forEach((runner) => {
-    runner.legs.forEach((leg, index) => {
-      let startTime;
+  runners.forEach((runner) => {
+    const route = routes[runner.rerun2dRouteIndex];
 
-      if (index === 0) {
-        startTime = runner.startTime;
-      } else {
-        startTime = addSecondsToTime(
-          runner.startTime,
-          runner.legs[index - 1].timeOverall
+    if (route) {
+      const routeArray = route.latarray.map((lat, index) => [
+        lat,
+        route.lngarray[index],
+        route.timearray[index],
+      ]);
+
+      runner.legs.forEach((leg, index) => {
+        const raceStartTime = new Date(runner.startTime);
+        const raceStartTimeInSeconds = raceStartTime.getTime() / 1000;
+        console.log(raceStartTimeInSeconds);
+        const startTime =
+          index === 0
+            ? raceStartTimeInSeconds
+            : raceStartTimeInSeconds + runner.legs[index - 1].timeOverall;
+
+        const finishTime = raceStartTimeInSeconds + leg.timeOverall;
+        let cutGpxArray = cutRouteArrayRemoveTimes(
+          routeArray,
+          startTime,
+          finishTime
         );
-      }
+        let legNumber = index + 1;
+        let routechoices = prepareRoutechoices(courseObject, legNumber);
 
-      let finishTime = addSecondsToTime(runner.startTime, leg.timeOverall);
-      let cutGpxArray = cutGpxRemoveTimes(gpxArray, startTime, finishTime);
-      let legNumber = index + 1;
-      let routechoices = prepareRoutechoices(courseObject, legNumber);
-      let detectedRoutechoice = null;
-      //console.log(startTime, finishTime, cutGpxArray)
-
-      if (routechoices.length !== 0) {
-        detectedRoutechoice = detectRoutechoice(cutGpxArray, routechoices);
-      }
-
-      detectedRoutechoices.push({
-        legNumber: legNumber,
-        detectedRoutechoice: detectedRoutechoice,
+        leg.routeChoice =
+          routechoices.length !== 0
+            ? detectRoutechoice(cutGpxArray, routechoices)
+            : null;
       });
-    });
+    }
   });
+
+  return runners;
 };
 
 const distancePointToSegment = (point, extremity1, extremity2) => {
@@ -213,7 +220,7 @@ const distancePointToPolyline = (point, polyline) => {
   ]);
 
   for (let i = 1; i < polyline.length; i++) {
-    d = distancePointToSegment(point, polyline[i - 1], polyline[i]);
+    const d = distancePointToSegment(point, polyline[i - 1], polyline[i]);
     if (d < distance) {
       distance = d;
     }
@@ -265,6 +272,14 @@ const cutGpxRemoveTimes = (gpxArray, startTime, finishTime) => {
     });
 };
 
+const cutRouteArrayRemoveTimes = (routeArray, startTime, finishTime) => {
+  // Cut GPX and remove times
+  return routeArray
+    .filter((point) => point[2] > startTime)
+    .filter((point) => point[2] < finishTime)
+    .map((point) => [point[0], point[1]]);
+};
+
 const timeIsHigher = (time1, time2) => {
   // Compare times in '2021-07-03T13:39:22Z' format
   let t1 = timeToArray(time1);
@@ -294,9 +309,9 @@ const arraysEqualsToIndex = (array1, array2, index) => {
 
 const timeToArray = (time) => {
   // Convert time in '2021-07-03T13:39:22Z' format to an array of numbers
-  t1 = time.slice(0, -1); // remove Z
-  t2 = t1.split("T");
-  t3 = t2[0]
+  const t1 = time.slice(0, -1); // remove Z
+  const t2 = t1.split("T");
+  const t3 = t2[0]
     .split("-")
     .concat(t2[1].split(":"))
     .map((t) => Number(t));
@@ -305,7 +320,7 @@ const timeToArray = (time) => {
 
 const arrayToTime = (timeArray) => {
   // Invert function of timeToArray()
-  array = timeArray.map((element) => String(element));
+  const array = timeArray.map((element) => String(element));
 
   // Add '0' for number smaller than 10
   for (let i = 1; i < array.length; i++) {
@@ -364,13 +379,11 @@ const prepareRoutechoices = (courseObject, legNumber) => {
   let routechoices = courseObject.tags.filter(
     (tag) => tag.legNumber == legNumber
   );
-  let preparedRoutechoices = routechoices.map((routechoice) => {
-    let r = {};
-    r.name = routechoice.name;
-    r.legNumber = routechoices.legNumber;
-    r.points = routechoice.points.map((point) => stringToArray(point));
-    return r;
-  });
+  let preparedRoutechoices = routechoices.map((routechoice) => ({
+    name: routechoice.name,
+    legNumber: routechoices.legNumber,
+    points: routechoice.points.map((point) => stringToArray(point)),
+  }));
 
   return preparedRoutechoices;
 };
