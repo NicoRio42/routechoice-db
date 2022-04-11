@@ -24,29 +24,38 @@
 </script>
 
 <Router {url}>
-  <nav>
-    <Link to="/">Home</Link>
+  <div class="window">
+    <nav>
+      <Link to="/">Home</Link>
 
-    <div class="links">
-      <Link to="about">About</Link>
-      <Link to="blog">Blog</Link>
-      <Link to="login">Login</Link>
-      <Link to="courses">Courses</Link>
-    </div>
-  </nav>
+      <div class="links">
+        <Link to="about">About</Link>
+        <Link to="blog">Blog</Link>
+        <Link to="login">Login</Link>
+        <Link to="courses">Courses</Link>
+      </div>
+    </nav>
 
-  <main>
-    <Route path="blog" component={Blog} />
-    <Route path="about" component={About} />
-    <Route path="/"><Home /></Route>
-    <Route path="login"><Login /></Route>
-    <Route path="courses"><Course /></Route>
-  </main>
+    <main>
+      <Route path="blog" component={Blog} />
+      <Route path="about" component={About} />
+      <Route path="/"><Home /></Route>
+      <Route path="login"><Login /></Route>
+      <Route path="courses"><Course /></Route>
+    </main>
+  </div>
 </Router>
 
 <style>
+  .window {
+    height: 100%;
+    display: flex;
+    flex-direction: column;
+  }
+
   nav {
     display: flex;
+    flex: 0 1 auto;
     justify-content: space-between;
     font-size: 1.5rem;
     background-color: teal;
@@ -62,6 +71,7 @@
   }
 
   main {
-    flex-grow: 1;
+    min-height: 0;
+    flex: 1 1 auto;
   }
 </style>

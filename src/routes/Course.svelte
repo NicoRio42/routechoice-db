@@ -3,18 +3,18 @@
   import LoadSplitTimes from "../components/LoadSplitTimes.svelte";
   import LegSplitTimesTable from "../components/SplitTimesTable/LegSplitTimesTable.svelte";
   import SplitTimesTable from "../components/SplitTimesTable/SplitTimesTable.svelte";
+  import { selectHack } from "../utils/2d-rerun-hacks/display";
   import { IOFXMLParser } from "../utils/iof-xml-parser/IOFXMLParser";
   import { detectRunnersRoutechoices } from "../utils/routechoices-detector/detect-route";
 
   let isLoadSplitsDialogOpen = false;
   let isSplitsTableDialogOpen = false;
+  let isInSplitMode = true;
   let splitTimes: IOFXMLParser = { runners: [] };
   let legNumber = 1;
   let iframe: HTMLElement;
   let numberOfContols: number;
   let mapviewer;
-
-  $: console.log(splitTimes);
 
   const iframeLoaded = (e) => {
     iframe = document.getElementById("2d-rerun");
@@ -35,39 +35,35 @@
         mapviewer = iframe.contentWindow.mapviewer;
         console.log(mapviewer);
 
-        numberOfContols = data.tags.length;
+        numberOfContols = data.coursecoords.length - 1;
+
+        iframe.contentDocument.getElementById("shown").click();
+        selectHack(iframe, "selectmode", "analyzecourse");
+        selectHack(iframe, "showtagsselect", "1");
       });
   };
 
-  const show2dRerunPanel = () => {
+  const togle2dRerunPanel = () => {
     if (iframe) {
       let rightmenu = iframe.contentDocument.getElementById("rightmenu");
-      rightmenu.style.display = "block";
+      rightmenu.style.display =
+        rightmenu.style.display === "block" ? "none" : "block";
     }
   };
 
   const handlePreviousControl = () => {
     legNumber = legNumber !== 0 ? legNumber - 1 : legNumber;
-    let select = iframe.contentDocument.getElementById("selectmode");
-    select.value = "analyzecourse";
-    select.dispatchEvent(new Event("change"));
-    iframe.contentDocument.getElementById("ac-back").click();
+    propagateLegChangeTo2DRerun();
   };
 
   const handleNextControl = () => {
     legNumber = legNumber !== numberOfContols ? legNumber + 1 : legNumber;
-    let select = iframe.contentDocument.getElementById("selectmode");
-    select.value = "analyzecourse";
-    select.dispatchEvent(new Event("change"));
-    iframe.contentDocument.getElementById("ac-forward").click();
+    propagateLegChangeTo2DRerun();
   };
 
-  const handlePreviousLeg = () => {
-    legNumber = legNumber === 1 ? 1 : legNumber - 1;
-  };
-
-  const handleNextLeg = (totalNumberOfLegs) => {
-    legNumber = legNumber === totalNumberOfLegs ? legNumber : legNumber + 1;
+  const propagateLegChangeTo2DRerun = () => {
+    selectHack(iframe, "selectmode", "analyzecourse");
+    iframe.contentDocument.getElementById(`ac-${legNumber}`).click();
   };
 
   const detectRoutechoices = () => {
@@ -102,9 +98,9 @@
   </Dialog>
 {/if}
 
-<div class="container">
+<div class="course-container">
   <aside>
-    <button on:click={show2dRerunPanel}>Show 2d-rerun panel</button>
+    <button on:click={togle2dRerunPanel}>Show 2d-rerun panel</button>
 
     <button on:click={() => (isLoadSplitsDialogOpen = true)}>Split times</button
     >
@@ -115,54 +111,63 @@
       >Split times table</button
     >
 
-    <section class="routechoices-graph">
-      <p class="graph-item">
-        A <span class="bar-group">
-          <span
-            style:opacity="50%"
-            style:background-color="blue"
-            style:width="86%"
-            class="bar"
-          />
-          <span style:background-color="blue" style:width="80%" class="bar" />
-        </span>
-      </p>
+    <button on:click={() => (isInSplitMode = !isInSplitMode)}
+      ><span>Splits</span> / <span>Graph</span></button
+    >
 
-      <p class="graph-item">
-        B <span class="bar-group">
-          <span
-            style:opacity="50%"
-            style:background-color="yellow"
-            style:width="81%"
-            class="bar"
-          />
-          <span style:background-color="yellow" style:width="70%" class="bar" />
-        </span>
-      </p>
+    {#if !isInSplitMode}
+      <section class="routechoices-graph">
+        <p class="graph-item">
+          A <span class="bar-group">
+            <span
+              style:opacity="50%"
+              style:background-color="blue"
+              style:width="86%"
+              class="bar"
+            />
+            <span style:background-color="blue" style:width="80%" class="bar" />
+          </span>
+        </p>
 
-      <p class="graph-item">
-        C <span class="bar-group">
-          <span
-            style:opacity="50%"
-            style:background-color="green"
-            style:width="100%"
-            class="bar"
-          />
-          <span style:background-color="green" style:width="96%" class="bar" />
-        </span>
-      </p>
-    </section>
+        <p class="graph-item">
+          B <span class="bar-group">
+            <span
+              style:opacity="50%"
+              style:background-color="yellow"
+              style:width="81%"
+              class="bar"
+            />
+            <span
+              style:background-color="yellow"
+              style:width="70%"
+              class="bar"
+            />
+          </span>
+        </p>
 
-    <section>
-      <div class="leg-split-times-table-container">
+        <p class="graph-item">
+          C <span class="bar-group">
+            <span
+              style:opacity="50%"
+              style:background-color="green"
+              style:width="100%"
+              class="bar"
+            />
+            <span
+              style:background-color="green"
+              style:width="96%"
+              class="bar"
+            />
+          </span>
+        </p>
+      </section>
+    {/if}
+
+    {#if isInSplitMode}
+      <section class="leg-split-times-table-container">
         <LegSplitTimesTable {legNumber} {splitTimes} />
-      </div>
-      <button on:click={() => handlePreviousLeg()}>Previous</button>
-      {legNumber}
-      <button on:click={() => handleNextLeg(splitTimes.course.length)}
-        >Next</button
-      >
-    </section>
+      </section>
+    {/if}
   </aside>
 
   <iframe
@@ -171,36 +176,33 @@
     title="2d-rerun"
     src="2d-rerun/2d-rerun.html"
   />
+</div>
 
-  <div class="pilot">
-    <button on:click={handlePreviousControl}>Previous</button>
-    <select name="" id="">
-      <option value="">1</option>
-      <option value="">2</option>
-      <option value="">3</option>
-    </select>
-    <button on:click={handleNextControl}>Next</button>
-  </div>
+<div class="pilot">
+  <button on:click={handlePreviousControl}>&#8592;</button>
+  <select bind:value={legNumber} on:change={propagateLegChangeTo2DRerun}>
+    {#each [...Array(numberOfContols).keys()] as leg}
+      <option value={leg + 1}>{leg + 1}</option>
+    {/each}
+  </select>
+  <button on:click={handleNextControl}>&#8594;</button>
 </div>
 
 <style>
-  .container {
-    width: 100%;
+  .course-container {
+    display: flex;
+    min-height: 0;
     height: 100%;
-    display: grid;
-    grid-template-columns: auto 1fr;
-    grid-template-rows: 1fr auto;
-    /* grid-auto-columns: auto; */
   }
 
   aside {
-    grid-column: 1;
-    grid-row: 1 / 3;
+    flex: 0 1 auto;
+    display: flex;
+    flex-direction: column;
     width: 20rem;
     background-color: white;
     box-shadow: 3px 3px 5px lightgray;
     padding: 0.5rem;
-    overflow-y: scroll;
   }
 
   .graph-item {
@@ -221,19 +223,22 @@
     height: 100%;
   }
 
+  .leg-split-times-table-container {
+    flex: 1 1 auto;
+    overflow-y: auto;
+  }
+
   iframe {
-    grid-column: 2;
-    grid-row: 1;
-    width: 100%;
-    height: 100%;
-    /* flex-grow: 1; */
+    flex: 1 1 auto;
     display: block;
     border: none;
   }
 
   .pilot {
-    grid-column: 2;
-    grid-row: 2;
+    position: absolute;
+    bottom: 0;
+    left: 50%;
+    transform: translate(-50%);
     display: flex;
     justify-content: center;
   }
