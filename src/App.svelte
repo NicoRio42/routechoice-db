@@ -24,54 +24,32 @@
 </script>
 
 <Router {url}>
-  <div class="window">
-    <nav>
-      <Link to="/">Home</Link>
+  <nav class="container-fluid">
+    <ul>
+      <li><Link to="/">Home</Link></li>
+    </ul>
 
-      <div class="links">
-        <Link to="about">About</Link>
-        <Link to="blog">Blog</Link>
-        <Link to="login">Login</Link>
-        <Link to="courses">Courses</Link>
-      </div>
-    </nav>
+    <ul class="links">
+      <li><Link to="about">About</Link></li>
+      <li><Link to="blog">Blog</Link></li>
+      <li><Link to="login">Login</Link></li>
+      <li><Link to="courses">Courses</Link></li>
+    </ul>
+  </nav>
 
-    <main>
-      <Route path="blog" component={Blog} />
-      <Route path="about" component={About} />
-      <Route path="/"><Home /></Route>
-      <Route path="login"><Login /></Route>
-      <Route path="courses"><Course /></Route>
-    </main>
-  </div>
+  <Route path="blog" component={Blog} />
+  <Route path="about" component={About} />
+  <Route path="/"><Home /></Route>
+  <Route path="login"><Login /></Route>
+  <Route path="courses"><Course /></Route>
 </Router>
 
 <style>
-  .window {
-    height: 100%;
-    display: flex;
-    flex-direction: column;
-  }
-
   nav {
-    display: flex;
-    flex: 0 1 auto;
-    justify-content: space-between;
-    font-size: 1.5rem;
-    background-color: teal;
+    border-bottom: 1px solid lightgray;
   }
-
-  nav :global(a) {
-    color: white;
-  }
-
-  .links {
-    display: flex;
-    gap: 1rem;
-  }
-
-  main {
-    min-height: 0;
-    flex: 1 1 auto;
-  }
+  /* 
+  nav ul:last-child {
+    margin-right: 0;
+  } */
 </style>

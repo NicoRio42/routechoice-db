@@ -94,51 +94,10 @@
     overflow: scroll;
   }
 
-  table {
-    border-collapse: collapse;
-    border-spacing: 0;
-    width: 100%;
-    display: table;
-  }
-
   table th.sticky-header {
-    background-color: #38383d;
-    color: white;
-    font-weight: normal;
     position: sticky;
     top: 0;
     z-index: 1;
-  }
-
-  table tr:nth-child(odd) td {
-    background-color: #fff;
-  }
-
-  table tr:nth-child(even) td {
-    background-color: #f1f1f1;
-  }
-
-  table td,
-  table th {
-    padding: 8px 8px;
-    display: table-cell;
-    text-align: right;
-    vertical-align: top;
-    white-space: nowrap;
-  }
-
-  table th:first-child,
-  table td:first-child {
-    padding-left: 16px;
-    text-align: left;
-  }
-
-  tbody tr:hover td {
-    background-color: #ccc;
-  }
-
-  tbody {
-    z-index: 0;
   }
 
   .tooltip-container {

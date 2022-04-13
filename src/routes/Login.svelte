@@ -20,43 +20,54 @@
   };
 </script>
 
-<article class="login-box">
-  <h1>Login</h1>
-  <form on:submit={handleSubmit}>
-    <label for="email">Email</label>
-    <input bind:value={email} id="email" type="email" name="email" required />
+<main>
+  <article class="login-box">
+    <h1>Login</h1>
+    <form on:submit={handleSubmit}>
+      <label for="email">Email</label>
+      <input bind:value={email} id="email" type="email" name="email" required />
 
-    <label for="password">Password</label>
-    <input
-      bind:value={password}
-      type="password"
-      id="password"
-      name="password"
-      required
-    />
+      <label for="password">Password</label>
+      <input
+        bind:value={password}
+        type="password"
+        id="password"
+        name="password"
+        required
+      />
 
-    <button type="submit" on:click={handleSubmit}>Login</button>
-  </form>
-</article>
+      <button type="submit" on:click={handleSubmit}>Login</button>
+    </form>
+  </article>
+</main>
 
 <style>
-  .login-box {
-    box-shadow: 0px 0px 10px 0px rgba(89, 89, 89, 1);
-    border-radius: 3px;
+  main {
+    flex: 1;
+    margin: 0;
+    padding: 0;
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    align-items: center;
+  }
+
+  article {
+    margin: 0;
     padding: 1rem;
-    margin: 30vh auto 0;
-    width: 20rem;
+  }
+
+  h1 {
+    margin-bottom: 1rem;
   }
 
   @media screen and (max-width: 500px) {
-    .login-box {
-      margin: 0 0 50vh 0;
-      width: auto;
+    main {
+      justify-content: start;
     }
-  }
 
-  form {
-    display: flex;
-    flex-direction: column;
+    article {
+      width: 100%;
+    }
   }
 </style>
