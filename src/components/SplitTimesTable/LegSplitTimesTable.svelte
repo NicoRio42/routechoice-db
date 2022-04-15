@@ -32,7 +32,7 @@
 
       <th class="sticky-header">Time</th>
 
-      <th class="sticky-header">Routechoice</th>
+      <th class="sticky-header right">Routechoice</th>
     </tr>
   </thead>
   {#each legSplitTimes as runner}

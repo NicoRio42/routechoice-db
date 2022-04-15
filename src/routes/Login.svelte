@@ -1,22 +1,9 @@
 <script>
-  import { getAuth, signInWithEmailAndPassword } from "firebase/auth";
-
   let email;
   let password;
 
   const handleSubmit = (event) => {
-    event.preventDefault();
-
-    const auth = getAuth();
-    signInWithEmailAndPassword(auth, email, password)
-      .then((userCredential) => {
-        // Signed in
-        console.log(userCredential.user);
-        // ...
-      })
-      .catch((error) => {
-        console.log(error.code, error.message);
-      });
+    console.log("toto");
   };
 </script>
 

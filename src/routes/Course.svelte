@@ -44,6 +44,8 @@
         iframe.contentDocument.getElementById("shown").click();
         selectHack(iframe, "selectmode", "analyzecourse");
         selectHack(iframe, "showtagsselect", "1");
+
+        setTimeout(propagateLegChangeTo2DRerun, 3000);
       });
   };
 
@@ -95,57 +97,42 @@
 <main class="course-container">
   {#if showSidePanel}
     <aside>
-      <nav>
+      <details class="options">
+        <summary class="icon-button"
+          ><span
+            ><svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 512 512"
+              ><!--! Font Awesome Pro 6.1.1 by @fontawesome - https://fontawesome.com License - https://fontawesome.com/license (Commercial License) Copyright 2022 Fonticons, Inc. --><path
+                d="M495.9 166.6C499.2 175.2 496.4 184.9 489.6 191.2L446.3 230.6C447.4 238.9 448 247.4 448 256C448 264.6 447.4 273.1 446.3 281.4L489.6 320.8C496.4 327.1 499.2 336.8 495.9 345.4C491.5 357.3 486.2 368.8 480.2 379.7L475.5 387.8C468.9 398.8 461.5 409.2 453.4 419.1C447.4 426.2 437.7 428.7 428.9 425.9L373.2 408.1C359.8 418.4 344.1 427 329.2 433.6L316.7 490.7C314.7 499.7 307.7 506.1 298.5 508.5C284.7 510.8 270.5 512 255.1 512C241.5 512 227.3 510.8 213.5 508.5C204.3 506.1 197.3 499.7 195.3 490.7L182.8 433.6C167 427 152.2 418.4 138.8 408.1L83.14 425.9C74.3 428.7 64.55 426.2 58.63 419.1C50.52 409.2 43.12 398.8 36.52 387.8L31.84 379.7C25.77 368.8 20.49 357.3 16.06 345.4C12.82 336.8 15.55 327.1 22.41 320.8L65.67 281.4C64.57 273.1 64 264.6 64 256C64 247.4 64.57 238.9 65.67 230.6L22.41 191.2C15.55 184.9 12.82 175.3 16.06 166.6C20.49 154.7 25.78 143.2 31.84 132.3L36.51 124.2C43.12 113.2 50.52 102.8 58.63 92.95C64.55 85.8 74.3 83.32 83.14 86.14L138.8 103.9C152.2 93.56 167 84.96 182.8 78.43L195.3 21.33C197.3 12.25 204.3 5.04 213.5 3.51C227.3 1.201 241.5 0 256 0C270.5 0 284.7 1.201 298.5 3.51C307.7 5.04 314.7 12.25 316.7 21.33L329.2 78.43C344.1 84.96 359.8 93.56 373.2 103.9L428.9 86.14C437.7 83.32 447.4 85.8 453.4 92.95C461.5 102.8 468.9 113.2 475.5 124.2L480.2 132.3C486.2 143.2 491.5 154.7 495.9 166.6V166.6zM256 336C300.2 336 336 300.2 336 255.1C336 211.8 300.2 175.1 256 175.1C211.8 175.1 176 211.8 176 255.1C176 300.2 211.8 336 256 336z"
+              /></svg
+            >Options</span
+          ></summary
+        >
         <ul>
-          <li>
-            <details>
-              <summary class="icon-button"
-                ><svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 512 512"
-                  ><!--! Font Awesome Pro 6.1.1 by @fontawesome - https://fontawesome.com License - https://fontawesome.com/license (Commercial License) Copyright 2022 Fonticons, Inc. --><path
-                    d="M105.4 182.6c12.5 12.49 32.76 12.5 45.25 .001L224 109.3V352c0 17.67 14.33 32 32 32c17.67 0 32-14.33 32-32V109.3l73.38 73.38c12.49 12.49 32.75 12.49 45.25-.001c12.49-12.49 12.49-32.75 0-45.25l-128-128C272.4 3.125 264.2 0 256 0S239.6 3.125 233.4 9.375L105.4 137.4C92.88 149.9 92.88 170.1 105.4 182.6zM480 352h-160c0 35.35-28.65 64-64 64s-64-28.65-64-64H32c-17.67 0-32 14.33-32 32v96c0 17.67 14.33 32 32 32h448c17.67 0 32-14.33 32-32v-96C512 366.3 497.7 352 480 352zM432 456c-13.2 0-24-10.8-24-24c0-13.2 10.8-24 24-24s24 10.8 24 24C456 445.2 445.2 456 432 456z"
-                  /></svg
-                >Uploads &nbsp;
-              </summary>
+          <li><button>Load course</button></li>
 
-              <ul>
-                <li><button>Course</button></li>
-
-                <li><button>Routechoices</button></li>
-
-                <li>
-                  <button on:click={() => (isLoadSplitsDialogOpen = true)}
-                    >Split times</button
-                  >
-                </li>
-              </ul>
-            </details>
-          </li>
+          <li><button>Load routechoices</button></li>
 
           <li>
-            <button class="icon-button" on:click={detectRoutechoices}
-              ><svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 512 512"
-                ><!--! Font Awesome Pro 6.1.1 by @fontawesome - https://fontawesome.com License - https://fontawesome.com/license (Commercial License) Copyright 2022 Fonticons, Inc. --><path
-                  d="M320 256C302.3 256 288 270.3 288 288C288 305.7 302.3 320 320 320H416C469 320 512 362.1 512 416C512 469 469 512 416 512H139.6C148.3 502.1 158.9 489.4 169.6 475.2C175.9 466.8 182.4 457.6 188.6 448H416C433.7 448 448 433.7 448 416C448 398.3 433.7 384 416 384H320C266.1 384 223.1 341 223.1 288C223.1 234.1 266.1 192 320 192H362.1C340.2 161.5 320 125.4 320 96C320 42.98 362.1 0 416 0C469 0 512 42.98 512 96C512 160 416 256 416 256H320zM416 128C433.7 128 448 113.7 448 96C448 78.33 433.7 64 416 64C398.3 64 384 78.33 384 96C384 113.7 398.3 128 416 128zM118.3 487.8C118.1 488 117.9 488.2 117.7 488.4C113.4 493.4 109.5 497.7 106.3 501.2C105.9 501.6 105.5 502 105.2 502.4C99.5 508.5 96 512 96 512C96 512 0 416 0 352C0 298.1 42.98 255.1 96 255.1C149 255.1 192 298.1 192 352C192 381.4 171.8 417.5 149.9 448C138.1 463.2 127.7 476.9 118.3 487.8L118.3 487.8zM95.1 384C113.7 384 127.1 369.7 127.1 352C127.1 334.3 113.7 320 95.1 320C78.33 320 63.1 334.3 63.1 352C63.1 369.7 78.33 384 95.1 384z"
-                /></svg
-              >Detect routechoices</button
+            <button on:click={() => (isLoadSplitsDialogOpen = true)}
+              >Load split times</button
             >
           </li>
 
           <li>
-            <button class="icon-button" on:click={togle2dRerunPanel}
-              ><svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 576 512"
-                ><!--! Font Awesome Pro 6.1.1 by @fontawesome - https://fontawesome.com License - https://fontawesome.com/license (Commercial License) Copyright 2022 Fonticons, Inc. --><path
-                  d="M192 352C138.1 352 96 309 96 256C96 202.1 138.1 160 192 160C245 160 288 202.1 288 256C288 309 245 352 192 352zM384 448H192C85.96 448 0 362 0 256C0 149.1 85.96 64 192 64H384C490 64 576 149.1 576 256C576 362 490 448 384 448zM384 128H192C121.3 128 64 185.3 64 256C64 326.7 121.3 384 192 384H384C454.7 384 512 326.7 512 256C512 185.3 454.7 128 384 128z"
-                /></svg
-              >Toggle 2D Rerun</button
-            >
+            <button on:click={detectRoutechoices}>Detect routechoices</button>
           </li>
+
+          <li>
+            <button on:click={togle2dRerunPanel}>Toggle 2D Rerun</button>
+          </li>
+
+          <!-- <li>
+            <button on:click={() => (isSplitsTableDialogOpen = true)}
+              >Split times table</button
+            >
+          </li> -->
         </ul>
-      </nav>
-
-      <!-- <button on:click={() => (isSplitsTableDialogOpen = true)}
-      >Split times table</button
-    > -->
+      </details>
 
       <Toggle
         bind:isFirstValueSelected={isInSplitMode}
@@ -219,22 +206,20 @@
     background-color: white;
   }
 
-  aside nav {
-    margin-bottom: 1rem;
-  }
-
-  details {
-    border: none;
-  }
-
   .icon-button {
     display: flex;
     align-items: center;
+    justify-content: space-between;
   }
 
   .icon-button svg {
     height: 1.25rem;
-    margin: 0 1rem 0 0;
+    margin: 0 0.5rem 0 0;
+  }
+
+  .icon-button span {
+    display: flex;
+    align-items: center;
   }
 
   ul li button {
@@ -296,9 +281,10 @@
   }
 
   @media screen and (max-width: 500px) {
-    nav {
+    .options {
       display: none;
     }
+
     aside {
       position: absolute;
       width: 100%;
