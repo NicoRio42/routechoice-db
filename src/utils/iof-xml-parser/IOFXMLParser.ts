@@ -119,8 +119,11 @@ export class IOFXMLParser {
 
       if (personResult.querySelector("StartTime")) {
         if (IOFXMLVersion === "3.0") {
-          startTime =
-            personResult.querySelector("StartTime").innerHTML + this.timeZone;
+          startTime = personResult
+            .querySelector("StartTime")
+            .innerHTML.includes("+")
+            ? personResult.querySelector("StartTime").innerHTML
+            : personResult.querySelector("StartTime").innerHTML + this.timeZone;
           status = personResult.querySelector("Status").innerHTML;
           if (status) {
             time = Number(personResult.querySelector("Time").innerHTML);
