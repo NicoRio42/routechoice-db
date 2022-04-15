@@ -1,5 +1,4 @@
 <script>
-  import { fly } from "svelte/transition";
   import { createEventDispatcher } from "svelte";
   import { clickOutside } from "../utils/click-outside/clickOutside";
 
@@ -10,55 +9,30 @@
   };
 </script>
 
-<div transition:fly class="modal">
-  <div use:clickOutside on:clickOutside={closeDialog} class="modal-content">
-    <header>
-      <slot name="title" />
-      <span on:click={closeDialog} class="close">&times;</span>
-    </header>
+<dialog open class="modal">
+  <article class="modal-content" use:clickOutside on:clickOutside={closeDialog}>
+    <a
+      href="#close"
+      aria-label="Close"
+      class="close"
+      data-target="modal"
+      on:click={closeDialog}
+    />
+    <slot name="title" />
     <slot name="content" class="slot" />
-  </div>
-</div>
+  </article>
+</dialog>
 
 <style>
-  .modal {
-    position: fixed;
-    z-index: 2;
-    padding-top: 100px;
-    left: 0;
-    top: 0;
-    bottom: 0;
-    right: 0;
-    background-color: rgba(0, 0, 0, 0.4);
-  }
-
   .modal-content {
-    background-color: #fefefe;
-    margin: auto;
-    padding: 20px;
-    border: 1px solid #888;
-    width: 80%;
-    height: 80%;
-    overflow-y: auto;
+    position: relative;
+    padding-bottom: 1rem;
+    width: 500px;
   }
 
-  header {
-    display: flex;
-    justify-content: space-between;
-  }
-
-  .close {
-    color: #aaaaaa;
-    font-size: 28px;
-    font-weight: bold;
-    text-align: right;
-    margin-bottom: 1rem;
-  }
-
-  .close:hover,
-  .close:focus {
-    color: #000;
-    text-decoration: none;
-    cursor: pointer;
+  @media screen and (max-width: 500px) {
+    .modal-content {
+      width: inherit;
+    }
   }
 </style>

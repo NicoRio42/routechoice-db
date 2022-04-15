@@ -1,3 +1,5 @@
+import { RouteChoicesStatistic } from "../../models/route-choices-statistics";
+import { Routechoice } from "../../models/routechoice";
 import type { Runner } from "../../models/runner";
 
 const MISTAKE_DETECTION_RATIO = 1.2;
@@ -15,6 +17,7 @@ export class IOFXMLParser {
   supermanSplits: number[] = [];
   mistakesSum: number[] = [];
   timeOffset = 0;
+  routeChoicesStatistics: Record<string, RouteChoicesStatistic>[] = [];
 
   constructor(
     splitsXmlDoc: XMLDocument,
@@ -32,6 +35,48 @@ export class IOFXMLParser {
     this.timeOffset = timeOffset;
 
     this.loadSplits();
+  }
+
+  computeRoutechoicesStatistics(): void {
+    this.course.forEach((leg, legIndex) => {
+      const legStatistics: Record<string, RouteChoicesStatistic> = {};
+
+      // Make an array with splits and id for one leg
+      const legSplits: RunnerForSort[] = this.runners
+        .map((runner) => {
+          const lg = runner.legs[legIndex];
+          return { id: runner.id, time: lg.time, routeChoice: lg.routeChoice };
+        })
+        .filter((runner) => runner.routeChoice);
+
+      legSplits.sort((a, b) => this.sortRunners(a, b));
+
+      if (legSplits.length !== 0) {
+        const firstQuartileIndex = Math.round(legSplits.length / 4) - 1;
+
+        legSplits.forEach((runner, runnerIndex) => {
+          legStatistics[runner.routeChoice.name] = legStatistics[
+            runner.routeChoice.name
+          ] ?? { numberOfRunners: 0 };
+
+          legStatistics[runner.routeChoice.name].fastestTime =
+            legStatistics[runner.routeChoice.name].fastestTime ?? runner.time;
+
+          // legStatistics[runner.routeChoice.name].firstQuartileTime =
+          //   runnerIndex === firstQuartileIndex
+          //     ? runner.time
+          //     : legStatistics[runner.routeChoice.name].firstQuartileTime;
+
+          legStatistics[runner.routeChoice.name].numberOfRunners += 1;
+          legStatistics[runner.routeChoice.name].color =
+            runner.routeChoice.color;
+        });
+      }
+
+      this.routeChoicesStatistics.push(legStatistics);
+    });
+
+    console.log(this.routeChoicesStatistics);
   }
 
   private loadSplits(): void {
@@ -409,4 +454,5 @@ interface RunnerForSort {
   id: number;
   time: number;
   rankSplit?: number;
+  routeChoice?: Routechoice;
 }

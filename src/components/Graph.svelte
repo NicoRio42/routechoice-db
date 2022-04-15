@@ -1,43 +1,36 @@
-<p class="graph-item">
-  A <span class="bar-group">
-    <span
-      style:opacity="50%"
-      style:background-color="blue"
-      style:width="86%"
-      class="bar"
-    />
-    <span style:background-color="blue" style:width="80%" class="bar" />
-  </span>
-</p>
+<script>
+  export let data;
+  export let suffix = "";
 
-<p class="graph-item">
-  B <span class="bar-group">
-    <span
-      style:opacity="50%"
-      style:background-color="yellow"
-      style:width="81%"
-      class="bar"
-    />
-    <span style:background-color="yellow" style:width="70%" class="bar" />
-  </span>
-</p>
+  let max = 0;
 
-<p class="graph-item">
-  C <span class="bar-group">
-    <span
-      style:opacity="50%"
-      style:background-color="green"
-      style:width="100%"
-      class="bar"
-    />
-    <span style:background-color="green" style:width="96%" class="bar" />
-  </span>
-</p>
+  $: max = Math.max(...data.map((item) => item.value));
+</script>
+
+{#each data as item}
+  <p class="graph-item">
+    {item.label}<span class="bar-group">
+      <!-- <span
+        style:opacity="50%"
+        style:background-color={item.color}
+        style:width={`${(item.secondValue * 100) / max}%`}
+        class="bar"
+      /> -->
+      <span
+        data-tooltip={`${item.value}${suffix}`}
+        style:background-color={`#${item.color}`}
+        style:width={`${(item.value * 100) / max}%`}
+        class="bar"
+      />
+    </span>
+  </p>
+{/each}
 
 <style>
   .graph-item {
     display: flex;
     align-items: center;
+    padding-right: 1rem;
   }
 
   .bar-group {
@@ -45,6 +38,7 @@
     position: relative;
     width: 100%;
     height: 0.5rem;
+    border: none;
   }
 
   .bar {

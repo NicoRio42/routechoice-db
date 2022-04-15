@@ -77,9 +77,11 @@
         {/if}
       </td>
 
-      <td>
+      <td class="right">
         {#if runner.leg.routeChoice}
-          {runner.leg.routeChoice}
+          <strong style:color={`#${runner.leg.routeChoice.color}`}
+            >{runner.leg.routeChoice.name}</strong
+          >
         {/if}
       </td>
     </tr>
@@ -98,6 +100,12 @@
     position: sticky;
     top: 0;
     z-index: 1;
+    background-color: white;
+  }
+
+  .tooltip-container,
+  .tooltip {
+    white-space: nowrap;
   }
 
   .tooltip-container {
@@ -145,5 +153,9 @@
 
   table tr td.mistake {
     background-color: #ffdddd;
+  }
+
+  .right {
+    text-align: end;
   }
 </style>

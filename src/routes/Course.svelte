@@ -1,10 +1,10 @@
 <script lang="ts">
   import Dialog from "../components/Dialog.svelte";
-  import Graph from "../components/Graph.svelte";
   import LegSelector from "../components/LegSelector.svelte";
   import LoadSplitTimes from "../components/LoadSplitTimes.svelte";
   import LegSplitTimesTable from "../components/SplitTimesTable/LegSplitTimesTable.svelte";
   import SplitTimesTable from "../components/SplitTimesTable/SplitTimesTable.svelte";
+  import Statistics from "../components/Statistics.svelte";
   import Toggle from "../components/Toggle.svelte";
   import { selectHack } from "../utils/2d-rerun-hacks/display";
   import { IOFXMLParser } from "../utils/iof-xml-parser/IOFXMLParser";
@@ -13,7 +13,7 @@
   let isLoadSplitsDialogOpen = false;
   let isSplitsTableDialogOpen = false;
   let isInSplitMode = true;
-  let splitTimes: IOFXMLParser = { runners: [] };
+  let splitTimes: IOFXMLParser = { runners: [], routeChoicesStatistics: [] };
   let legNumber = 1;
   let iframe: HTMLElement;
   let numberOfContols: number;
@@ -61,24 +61,24 @@
   };
 
   const detectRoutechoices = () => {
-    splitTimes = {
-      ...splitTimes,
-      runners: detectRunnersRoutechoices(
-        splitTimes.runners,
-        mapviewer,
-        mapviewer.routes
-      ),
-    };
+    splitTimes.runners = detectRunnersRoutechoices(
+      splitTimes.runners,
+      mapviewer,
+      mapviewer.routes
+    );
+
+    splitTimes.computeRoutechoicesStatistics();
   };
 </script>
 
 {#if isLoadSplitsDialogOpen}
   <Dialog on:closeDialog={() => (isLoadSplitsDialogOpen = false)}>
-    <h1 slot="title">Load split times</h1>
+    <h3 slot="title">Load split times</h3>
 
     <LoadSplitTimes
       slot="content"
       bind:savedSplitTimes={splitTimes}
+      on:close={() => (isLoadSplitsDialogOpen = false)}
       {mapviewer}
     />
   </Dialog>
@@ -155,7 +155,7 @@
 
       {#if !isInSplitMode}
         <section class="routechoices-graph">
-          <Graph />
+          <Statistics {legNumber} {splitTimes} />
         </section>
       {/if}
 
@@ -213,7 +213,7 @@
     flex: 0 1 auto;
     display: flex;
     flex-direction: column;
-    width: 20rem;
+    width: 25rem;
     padding: 1rem;
     border-right: 1px solid lightgray;
     background-color: white;
@@ -255,6 +255,11 @@
     margin: 0;
   }
 
+  .routechoices-graph {
+    overflow-y: auto;
+    margin-bottom: 0;
+  }
+
   iframe {
     flex: 1 1 auto;
     display: block;
@@ -272,8 +277,11 @@
   }
 
   .control-bar button {
-    width: 100%;
+    width: 50px;
     border-radius: 50%;
+    display: flex;
+    justify-content: center;
+    align-items: center;
   }
 
   .control-bar button svg {
@@ -281,7 +289,8 @@
   }
 
   @media screen and (min-width: 500px) {
-    .mobile {
+    .mobile,
+    .control-bar .mobile {
       display: none;
     }
   }
@@ -297,6 +306,7 @@
       right: 0;
       bottom: 0;
       left: 0;
+      padding-bottom: 5rem;
     }
   }
 </style>

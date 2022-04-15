@@ -1,4 +1,7 @@
 <script lang="ts">
+  import { slide } from "svelte/transition";
+  import { createEventDispatcher } from "svelte";
+
   import { Runner } from "../models/runner";
 
   import { IOFXMLParser } from "../utils/iof-xml-parser/IOFXMLParser";
@@ -9,7 +12,6 @@
   export let savedSplitTimes: IOFXMLParser;
   export let mapviewer;
 
-  let fileinput: HTMLElement;
   let xmlDoc: XMLDocument;
   let classNames: string[] = [];
   let className: string;
@@ -17,6 +19,9 @@
   let timeOffset = 0;
   let splitTimes: IOFXMLParser;
   let runners: Runner[] = [];
+  let step = 1;
+
+  const dispatch = createEventDispatcher();
 
   const onFileSelected = (event) => {
     let xmlFile = event.target.files[0];
@@ -43,103 +48,130 @@
       [...mapviewer.routes]
     );
 
+    step += 1;
+
     console.log(splitTimes, runners);
   };
 
   const saveSplitTimes = () => {
-    savedSplitTimes = { ...splitTimes, runners: runners };
+    savedSplitTimes = splitTimes;
+    savedSplitTimes.runners = runners;
+    dispatch("close");
   };
 </script>
 
-<form on:submit={parseIOFXML}>
-  <p>
-    <label for="iof-xml-file">IOF XML File</label>
-    <input
-      name="iof-xml-file"
-      id="iof-xml-file"
-      on:change={(e) => onFileSelected(e)}
-      type="file"
-      bind:this={fileinput}
-    />
-    <button type="button" on:click={() => fileinput.click()}
-      >Load IOF XML File</button
+<form class="step" on:submit={parseIOFXML} class:slide-right={step === 2}>
+  <label for="iof-xml-file">Load IOF XML File</label>
+  <input
+    name="iof-xml-file"
+    id="iof-xml-file"
+    on:change={(e) => onFileSelected(e)}
+    type="file"
+  />
+
+  <label for="class">Class</label>
+  <select name="class" id="class" bind:value={className}>
+    {#each classNames as className}
+      <option value={className}>{className}</option>
+    {/each}
+  </select>
+
+  <label for="time-zone">Time zone</label>
+  <select bind:value={timeZone} name="time-zone" id="time-zone"
+    >timeZone
+    {#each timeZones as timeZone}
+      <option value={timeZone}>{timeZone}</option>
+    {/each}
+  </select>
+
+  <label for="time-offset">Time offset (seconds)</label>
+  <input
+    bind:value={timeOffset}
+    type="number"
+    name="time-offset"
+    id="time-offset"
+  />
+
+  <footer class="footer">
+    <button type="button" class="outline" on:click={() => dispatch("close")}
+      >Cancel</button
     >
-  </p>
-
-  <p>
-    <label for="class">Class</label>
-    <select name="class" id="class" bind:value={className}>
-      {#each classNames as className}
-        <option value={className}>{className}</option>
-      {/each}
-    </select>
-  </p>
-
-  <p>
-    <label for="time-zone">Time zone</label>
-    <select bind:value={timeZone} name="time-zone" id="time-zone"
-      >timeZone
-      {#each timeZones as timeZone}
-        <option value={timeZone}>{timeZone}</option>
-      {/each}
-    </select>
-  </p>
-
-  <p>
-    <label for="time-offset">Time offset (seconds)</label>
-    <input
-      bind:value={timeOffset}
-      type="number"
-      name="time-offset"
-      id="time-offset"
-    />
-  </p>
-
-  <button type="submit">Load splits</button>
+    <button type="submit">Load splits</button>
+  </footer>
 </form>
 
-<table>
-  <thead>
-    <tr>
-      <th>Split times</th>
-      <th>GPS track</th>
-      <th>Routechoice DB user</th>
-    </tr>
-  </thead>
-
-  <tbody>
-    {#each runners as runner}
+<form on:submit={saveSplitTimes} class="step" class:slide-left={step === 1}>
+  <table>
+    <thead>
       <tr>
-        <td>{`${runner.firstName} ${runner.lastName}`}</td>
-
-        <td>
-          <select bind:value={runner.rerun2dRouteIndex}>
-            {#each mapviewer.routes as route, index}
-              <option value={index}>{route.runnername}</option>
-            {/each}
-          </select>
-        </td>
-
-        <td>Soon</td>
+        <th>Split times</th>
+        <th>GPS track</th>
+        <!-- <th>Routechoice DB user</th> -->
       </tr>
-    {/each}
-  </tbody>
-</table>
+    </thead>
 
-<button type="submit" on:click={saveSplitTimes}>Save split times</button>
+    <tbody>
+      {#each runners as runner}
+        <tr>
+          <td>{`${runner.firstName} ${runner.lastName}`}</td>
+
+          <td>
+            <select bind:value={runner.rerun2dRouteIndex}>
+              {#each mapviewer.routes as route, index}
+                <option value={index}>{route.runnername}</option>
+              {/each}
+            </select>
+          </td>
+
+          <!-- <td>Soon</td> -->
+        </tr>
+      {/each}
+    </tbody>
+  </table>
+
+  <footer class="footer">
+    <button type="button" class="outline" on:click={() => (step = 1)}
+      >Cancel</button
+    >
+    <button type="submit">Save split times</button>
+  </footer>
+</form>
 
 <style>
-  input[type="file"] {
-    display: none;
+  .step {
+    transform: translateX(0);
+    height: auto;
+    transition: transform 0.5s ease;
   }
 
-  form {
-    display: grid;
-    grid-template-columns: 50% 50%;
+  .slide-left {
+    transform: translateX(-100%);
+    height: 0;
+    overflow: hidden;
+    margin: 0;
   }
 
-  p {
+  .slide-right {
+    transform: translateX(100%);
+    height: 0;
+    overflow: hidden;
+    margin: 0;
+    transition: transform 0.5s ease;
+  }
+
+  .footer {
     display: flex;
-    flex-direction: column;
+    gap: 1rem;
+    position: sticky;
+    left: 0;
+    bottom: -1rem;
+    right: 0;
+    background-color: white;
+    border-top: 1px solid lightgray;
+    padding: 1rem 0;
+  }
+
+  .footer button {
+    margin-bottom: 0;
   }
 </style>

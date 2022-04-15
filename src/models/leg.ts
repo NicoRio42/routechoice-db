@@ -1,3 +1,5 @@
+import { Routechoice } from "./routechoice";
+
 export interface Leg {
   controlCode: number;
   timeOverall: number;
@@ -10,5 +12,5 @@ export interface Leg {
   isMistake?: boolean;
   timeWithoutMistake?: number;
   timeLost?: number;
-  routeChoice?: string;
+  routeChoice?: Routechoice;
 }

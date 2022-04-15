@@ -243,19 +243,23 @@ const distanceGPXToPolyline = (GPXArray, polyline) => {
 const detectRoutechoice = (GPXArray, routechoices) => {
   // Initiallisation with first routechoice
   let routechoiceName = routechoices[0].name;
+  let routechoiceColor = routechoices[0].color;
   let distance = distanceGPXToPolyline(GPXArray, routechoices[0].points);
 
   routechoices.forEach((routechoice) => {
     let d = distanceGPXToPolyline(GPXArray, routechoice.points);
-    console.log(distance, d);
 
     if (d < distance) {
       distance = d;
       routechoiceName = routechoice.name;
+      routechoiceColor = routechoice.color;
     }
   });
 
-  return routechoiceName;
+  return {
+    name: routechoiceName,
+    color: routechoiceColor,
+  };
 };
 
 const cutGpxRemoveTimes = (gpxArray, startTime, finishTime) => {
@@ -377,12 +381,13 @@ const gpxToGpxArray = (gpx) => {
 const prepareRoutechoices = (courseObject, legNumber) => {
   // Prepare routechoices object for findBestRoutechoice() function
   let routechoices = courseObject.tags.filter(
-    (tag) => tag.legNumber == legNumber
+    (tag) => tag.legNumber === legNumber
   );
   let preparedRoutechoices = routechoices.map((routechoice) => ({
     name: routechoice.name,
     legNumber: routechoices.legNumber,
     points: routechoice.points.map((point) => stringToArray(point)),
+    color: routechoice.color,
   }));
 
   return preparedRoutechoices;

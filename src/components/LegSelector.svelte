@@ -61,6 +61,9 @@
   button {
     width: 100%;
     border-radius: 50%;
+    display: flex;
+    justify-content: center;
+    align-items: center;
   }
 
   button svg {
