@@ -12,7 +12,7 @@
   <nav class="container-fluid">
     <ul>
       <li>
-        <a class="logo-link" href="/"
+        <a class="logo-link" href="home"
           ><svg
             id="svg"
             xmlns="http://www.w3.org/2000/svg"
@@ -34,7 +34,7 @@
     <ul>
       <li class="large"><Link to="about">About</Link></li>
       <li class="large"><Link to="login">Login</Link></li>
-      <li class="large"><Link to="courses">Courses</Link></li>
+      <li class="large"><Link to="/">Courses</Link></li>
       <li class="hamburger">
         <details role="list">
           <summary aria-haspopup="listbox">
@@ -48,7 +48,7 @@
           <ul role="listbox">
             <li><Link to="about">About</Link></li>
             <li><Link to="login">Login</Link></li>
-            <li><Link to="courses">Courses</Link></li>
+            <li><Link to="/">Courses</Link></li>
           </ul>
         </details>
       </li>
@@ -56,9 +56,9 @@
   </nav>
 
   <Route path="about" component={About} />
-  <Route path="/"><Home /></Route>
+  <Route path="home"><Home /></Route>
   <Route path="login"><Login /></Route>
-  <Route path="courses"><Course /></Route>
+  <Route path="/"><Course /></Route>
 </Router>
 
 <style>

@@ -78,6 +78,8 @@
         (runner) => runner.rerun2dRouteIndex === routeIndex
       );
 
+      route.splits = [];
+
       if (runner?.legs.length) {
         let date = new Date(runner.startTime);
         let startTime = Math.round(date.valueOf() / 1000);
@@ -95,6 +97,8 @@
         route.manualsplits = 1;
       }
     });
+
+    iframe.contentDocument.getElementById("shown").click();
   };
 </script>
 
@@ -107,6 +111,7 @@
       bind:savedSplitTimes={splitTimes}
       on:close={() => {
         isLoadSplitsDialogOpen = false;
+        detectRoutechoices();
         loadSplits();
       }}
       {mapviewer}
@@ -144,10 +149,6 @@
             <button on:click={() => (isLoadSplitsDialogOpen = true)}
               >Load split times</button
             >
-          </li>
-
-          <li>
-            <button on:click={detectRoutechoices}>Detect routechoices</button>
           </li>
 
           <li>
