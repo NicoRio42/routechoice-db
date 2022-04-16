@@ -71,7 +71,7 @@
     align-items: center;
     gap: 1rem;
     padding: 0;
-    font-size: 1.5rem;
+    font-size: 1.25rem;
     background-color: white;
     color: var(--primary);
   }
@@ -106,6 +106,15 @@
     padding: 0;
   }
 
+  nav ul:first-of-type {
+    margin-left: calc(var(--nav-element-spacing-horizontal) * -2);
+  }
+
+  nav li {
+    padding: calc(var(--nav-element-spacing-vertical) / 2)
+      var(--nav-element-spacing-horizontal);
+  }
+
   @media screen and (max-width: 500px) {
     .hamburger {
       display: block;
@@ -113,6 +122,14 @@
 
     .large {
       display: none;
+    }
+
+    nav li {
+      padding: 0;
+    }
+
+    nav ul:first-of-type {
+      margin-left: calc(var(--nav-element-spacing-horizontal) * -1);
     }
   }
 </style>

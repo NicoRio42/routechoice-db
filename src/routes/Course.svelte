@@ -71,6 +71,31 @@
 
     splitTimes.computeRoutechoicesStatistics();
   };
+
+  const loadSplits = () => {
+    mapviewer.routes.forEach((route, routeIndex) => {
+      let runner = splitTimes.runners.find(
+        (runner) => runner.rerun2dRouteIndex === routeIndex
+      );
+
+      if (runner?.legs.length) {
+        let date = new Date(runner.startTime);
+        let startTime = Math.round(date.valueOf() / 1000);
+
+        // SplitTime for start
+        route.splits.push({ index: startTime - route.zerotime });
+
+        // Rest of the splitTimes
+        runner.legs.forEach((leg) => {
+          route.splits.push({
+            index: startTime + leg.timeOverall - route.zerotime,
+          });
+        });
+
+        route.manualsplits = 1;
+      }
+    });
+  };
 </script>
 
 {#if isLoadSplitsDialogOpen}
@@ -80,7 +105,10 @@
     <LoadSplitTimes
       slot="content"
       bind:savedSplitTimes={splitTimes}
-      on:close={() => (isLoadSplitsDialogOpen = false)}
+      on:close={() => {
+        isLoadSplitsDialogOpen = false;
+        loadSplits();
+      }}
       {mapviewer}
     />
   </Dialog>
