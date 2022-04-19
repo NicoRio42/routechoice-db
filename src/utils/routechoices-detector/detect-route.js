@@ -298,8 +298,14 @@ const timeIsHigher = (time1, time2) => {
   return false;
 };
 
+/**
+ * Check if 2 arrays are the same to a certain index
+ * @param {Array} array1 First array
+ * @param {Array} array2 Second array
+ * @param {number} index index where to check
+ * @return {boolean}
+ */
 const arraysEqualsToIndex = (array1, array2, index) => {
-  // Check if 2 arrays are the same to a certain index
   let areEquals = true;
 
   for (let i = 0; i < index; i++) {
