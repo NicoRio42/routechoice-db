@@ -1,6 +1,10 @@
-import { Runner } from "../../models/runner";
-
-export const detectRunnersByName = (runners: Runner[], routes): Runner[] => {
+/**
+ *
+ * @param {import("../../models/runner").Runner[]} runners
+ * @param {*} routes
+ * @returns {import("../../models/runner").Runner[]}
+ */
+export const detectRunnersByName = (runners, routes) => {
   const modifiedRoutes = routes.map((route) => {
     const [firstName, lastName] = route.runnername.split(" ");
     return { firstName, lastName };

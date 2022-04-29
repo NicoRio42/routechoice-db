@@ -1,31 +1,28 @@
-import { RouteChoicesStatistic } from "../../models/route-choices-statistics";
-import { Routechoice } from "../../models/routechoice";
-import type { Runner } from "../../models/runner";
+/** @typedef {import("../../models/course").Course} Course */
 
 const MISTAKE_DETECTION_RATIO = 1.2;
 
+/**
+ * @class
+ * @implements {Course}
+ * */
 export class IOFXMLParser {
-  splitsXmlDoc: XMLDocument;
-  className: string;
-  mistakeDetectionRatio: number;
-  date: Date;
-  timeZone: string;
-  course: number[] = [];
-  runners: Runner[] = [];
-  leader: number[] = [];
-  superman: number[] = [];
-  supermanSplits: number[] = [];
-  mistakesSum: number[] = [];
-  timeOffset = 0;
-  routeChoicesStatistics: Record<string, RouteChoicesStatistic>[] = [];
-
+  /**
+   * Parse an IOF XML file to a Javascript object, and compute time loss estimations and statistics
+   * @param {XMLDocument} splitsXmlDoc
+   * @param {string} className
+   * @param {string} timeZone
+   * @param {number} [mistakeDetectionRatio]
+   * @param {number} timeOffset
+   * @param {Date} [date]
+   */
   constructor(
-    splitsXmlDoc: XMLDocument,
-    className: string,
+    splitsXmlDoc,
+    className,
+    timeZone,
     mistakeDetectionRatio = MISTAKE_DETECTION_RATIO,
-    timeZone: string,
-    timeOffset?: number,
-    date?: Date
+    timeOffset = 0,
+    date
   ) {
     this.splitsXmlDoc = splitsXmlDoc;
     this.className = className;
@@ -33,16 +30,22 @@ export class IOFXMLParser {
     this.date = date;
     this.timeZone = timeZone;
     this.timeOffset = timeOffset;
+    this.course = [];
+    this.runners = [];
+    this.leader = [];
+    this.superman = [];
+    this.supermanSplits = [];
+    this.mistakesSum = [];
+    this.routeChoicesStatistics = [];
 
     this.loadSplits();
   }
 
-  computeRoutechoicesStatistics(): void {
-    this.course.forEach((leg, legIndex) => {
-      const legStatistics: Record<string, RouteChoicesStatistic> = {};
+  computeRoutechoicesStatistics() {
+    this.course.forEach((_, legIndex) => {
+      const legStatistics = {};
 
-      // Make an array with splits and id for one leg
-      const legSplits: RunnerForSort[] = this.runners
+      const legSplits = this.runners
         .map((runner) => {
           const lg = runner.legs[legIndex];
           return { id: runner.id, time: lg.time, routeChoice: lg.routeChoice };
@@ -79,7 +82,8 @@ export class IOFXMLParser {
     console.log(this.routeChoicesStatistics);
   }
 
-  private loadSplits(): void {
+  /** @private */
+  loadSplits() {
     this.loadSplitsFromXml();
     this.checkIfCourseIsComplete();
     this.calculateRanks();
@@ -89,7 +93,11 @@ export class IOFXMLParser {
     this.calculateMistakes();
   }
 
-  private loadSplitsFromXml(): void {
+  /**
+   * @private
+   * @returns {void}
+   * */
+  loadSplitsFromXml() {
     const classResults = Array.from(
       this.splitsXmlDoc.querySelectorAll("ClassResult")
     );
@@ -154,7 +162,9 @@ export class IOFXMLParser {
             splitTime.querySelector("ControlCode").innerHTML
           );
           const t = splitTime.querySelector("Time");
-          let timeOverall: number;
+
+          /**@type {number} */
+          let timeOverall;
           if (t) {
             if (IOFXMLVersion === "3.0") {
               timeOverall = Number(t.innerHTML);
@@ -190,7 +200,11 @@ export class IOFXMLParser {
     this.course = this.runners[0].course;
   }
 
-  private checkIfCourseIsComplete(): void {
+  /**
+   * @private
+   * @returns {void}
+   */
+  checkIfCourseIsComplete() {
     // Check if there is a SplitTime tag for every controls
     // Possible that there is no Time attached though
     this.runners.forEach((runner) => {
@@ -204,7 +218,11 @@ export class IOFXMLParser {
     this.runners = this.runners.filter((runner) => runner.isComplete === true);
   }
 
-  private calculateRanks(): void {
+  /**
+   * @private
+   * @returns {void}
+   */
+  calculateRanks() {
     this.runners.sort((a, b) => this.sortRunners(a, b));
     const splitsLength = this.runners.length;
     const bestTime = this.runners[0].time;
@@ -224,7 +242,11 @@ export class IOFXMLParser {
     }
   }
 
-  private calculateSplitTimes(): void {
+  /**
+   * @private
+   * @returns {void}
+   */
+  calculateSplitTimes() {
     this.runners.forEach((runner) => {
       runner.legs.forEach((leg, index) => {
         if (index === 0) {
@@ -246,11 +268,17 @@ export class IOFXMLParser {
     });
   }
 
-  private calculateSplitRanksAndTimeBehind(): void {
+  /**
+   * @private
+   * @returns {void}
+   */
+  calculateSplitRanksAndTimeBehind() {
     // For every legs of every runners calculate ranking and time behind
     this.course.forEach((leg, index) => {
       // Make an array with splits and id for one leg
-      const legSplits: RunnerForSort[] = this.runners.map((runner) => {
+
+      /**@type {RunnerForSort[]} */
+      const legSplits = this.runners.map((runner) => {
         const lg = runner.legs.find((l) => l.controlCode === leg);
         return { id: runner.id, time: lg.time };
       });
@@ -289,11 +317,17 @@ export class IOFXMLParser {
     });
   }
 
-  private calculateOverallRanks(): void {
+  /**
+   * @private
+   * @returns {void}
+   */
+  calculateOverallRanks() {
     // For every legs of every runners calculate ranking and time behind
     this.course.forEach((leg, index) => {
       // Make an array with overall times and id for one leg
-      const legOverallTimes: RunnerForSort[] = this.runners.map((runner) => {
+
+      /**@type {RunnerForSort[]} */
+      const legOverallTimes = this.runners.map((runner) => {
         const lg = runner.legs.find((l) => l.controlCode === leg);
         return { id: runner.id, time: lg.timeOverall };
       });
@@ -335,7 +369,11 @@ export class IOFXMLParser {
     });
   }
 
-  private calculateMistakes(): void {
+  /**
+   * @private
+   * @returns {void}
+   */
+  calculateMistakes() {
     // Initialize mistakesSum array for mistake graph
     this.mistakesSum = new Array(this.course.length).fill(0);
 
@@ -405,7 +443,13 @@ export class IOFXMLParser {
 
   // Utils
 
-  private sortRunners(a: RunnerForSort, b: RunnerForSort): number {
+  /**
+   * @private
+   * @param {RunnerForSort} a
+   * @param {RunnerForSort} b
+   * @returns {number}
+   */
+  sortRunners(a, b) {
     if (a.time !== null && b.time !== null) {
       return a.time - b.time;
     } else if (a.time === null && b.time !== null) {
@@ -417,7 +461,13 @@ export class IOFXMLParser {
     }
   }
 
-  private arrayEquals(a: any[], b: any[]): boolean {
+  /**
+   * @private
+   * @param {any[]} a First array
+   * @param {any[]} b Second array
+   * @returns {boolean}
+   */
+  arrayEquals(a, b) {
     return (
       Array.isArray(a) &&
       Array.isArray(b) &&
@@ -426,7 +476,12 @@ export class IOFXMLParser {
     );
   }
 
-  private arrayAverage(a: any[]): number {
+  /**
+   * @private
+   * @param {any[]} a
+   * @returns {number}
+   */
+  arrayAverage(a) {
     const b = a.length;
     let c = 0;
     for (let i = 0; i < b; i++) {
@@ -435,7 +490,12 @@ export class IOFXMLParser {
     return c / b;
   }
 
-  private timeToSeconds(time: string): number {
+  /**
+   *
+   * @param {string} time
+   * @returns number
+   */
+  timeToSeconds(time) {
     // Convert a time in HH:MM:SS format to seconds
     const array = time.split(":");
     const length = array.length;
@@ -453,9 +513,10 @@ export class IOFXMLParser {
   }
 }
 
-interface RunnerForSort {
-  id: number;
-  time: number;
-  rankSplit?: number;
-  routeChoice?: Routechoice;
-}
+/**
+ * @typedef RunnerForSort
+ * @property {number} id
+ * @property {number} time
+ * @property {number} [rankSplit]
+ * @property {import("../../models/routechoice").Routechoice} [routeChoice]
+ */
