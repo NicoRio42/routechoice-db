@@ -1,6 +1,6 @@
 /**
  * @typedef Rerun2dIframe
- * @property {Window & Rerun2dWindow} contentWindow
+ * @property {Window | Rerun2dWindow} contentWindow
  */
 
 /**
@@ -10,7 +10,7 @@
 
 /**
  *
- * @param {HTMLIFrameElement & Rerun2dIframe} iframe
+ * @param {HTMLIFrameElement | Rerun2dIframe} iframe
  * @returns {import("../../models/mapviewer").Mapviewer}
  */
 export function getMapviewer(iframe) {

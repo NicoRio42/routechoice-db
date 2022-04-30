@@ -2,7 +2,12 @@
   let email;
   let password;
 
+  /**
+   *
+   * @param {Event} event
+   */
   const handleSubmit = (event) => {
+    event.preventDefault();
     console.log("toto");
   };
 </script>
