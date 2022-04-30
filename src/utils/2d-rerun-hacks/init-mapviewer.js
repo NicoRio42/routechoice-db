@@ -1,5 +1,11 @@
 import { selectHack } from "./select-hack";
 
+/**
+ *
+ * @param {import("../../models/mapviewer").Mapviewer} mapviewer
+ * @param {HTMLIFrameElement} iframe
+ * @returns {Promise}
+ */
 export async function initMapviewer(mapviewer, iframe) {
   mapviewer.loadseu("http://www.tulospalvelu.fi/gps/", "logatec_3LENA");
 
