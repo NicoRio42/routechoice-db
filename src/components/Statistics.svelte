@@ -1,4 +1,4 @@
-<script lang="ts">
+<script>
   import Graph from "./Graph.svelte";
 
   export let splitTimes;
@@ -35,7 +35,13 @@
     }
   }
 
-  function sortString(a, b): number {
+  /**
+   *
+   * @param a
+   * @param b
+   * @returns {number}
+   */
+  function sortString(a, b) {
     return a.label.localeCompare(b.label);
   }
 </script>

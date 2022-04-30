@@ -1,24 +1,31 @@
-<script lang="ts">
-  import { slide } from "svelte/transition";
+<script>
   import { createEventDispatcher } from "svelte";
-
-  import { Runner } from "../models/runner";
 
   import { IOFXMLParser } from "../utils/iof-xml-parser/IOFXMLParser";
   import { detectRunnersByName } from "../utils/detect-runners-by-name/detectRunnersByName";
 
   import { timeZones } from "./time-zones";
 
-  export let savedSplitTimes: IOFXMLParser;
+  /**@type {IOFXMLParser}*/
+  export let savedSplitTimes;
   export let mapviewer;
 
-  let xmlDoc: XMLDocument;
-  let classNames: string[] = [];
-  let className: string;
+  /**@type {XMLDocument}*/
+  let xmlDoc;
+
+  /**@type {string[]}*/
+  let classNames = [];
+
+  /**@type {string}*/
+  let className;
   let timeZone = timeZones[1];
   let timeOffset = 0;
-  let splitTimes: IOFXMLParser;
-  let runners: Runner[] = [];
+
+  /**@type {IOFXMLParser}*/
+  let splitTimes;
+
+  /**@type {import("../models/runner").Runner[]}*/
+  let runners = [];
   let step = 1;
 
   const dispatch = createEventDispatcher();
@@ -41,7 +48,7 @@
 
   const parseIOFXML = (event) => {
     event.preventDefault();
-    splitTimes = new IOFXMLParser(xmlDoc, className, 1.2, timeZone, timeOffset);
+    splitTimes = new IOFXMLParser(xmlDoc, className, timeZone, 1.2, timeOffset);
 
     runners = detectRunnersByName(
       [...splitTimes.runners],
