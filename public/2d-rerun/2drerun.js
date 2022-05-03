@@ -30612,115 +30612,122 @@ function MapViewer(F, o, D) {
         return;
       },
       success: function (U) {
-        if (U != undefined) {
-          var ab = U.status;
-          if (ab != "OK") {
-            alert("Error: " + ab);
-          } else {
-            mapurl = U.map.imagelink;
-            mapwidth = U.map.width;
-            mapheight = U.map.height;
-            calstring = U.map.calstring;
-            caltype = "3point";
-            if (mapurl) {
-              z.loadmap(
-                mapurl,
-                mapwidth,
-                mapheight,
-                calstring,
-                caltype,
-                null,
-                N
-              );
-              z.redraw();
-            } else {
-              var T = getURLParameter("osm");
-              if (T) {
-                z.loadmap(
-                  mapurl,
-                  mapwidth,
-                  mapheight,
-                  calstring,
-                  "3point",
-                  null,
-                  "OSM"
-                );
-              } else {
-                var Z = getURLParameter("mapid");
-                z.load3DRerun([Z], null, null);
-                z.redraw();
-              }
-            }
-            if (!z.IsLive) {
-              for (var R = 0; R < U.routes.length; R++) {
-                var aa = U.routes[R].unit;
-                var X = U.routes[R].lats;
-                var ac = U.routes[R].lngs;
-                var Q = U.routes[R].times;
-                var Y = U.routes[R].runnername;
-                Y = Y.replace(/^\d+ /, "");
-                var S = z.getnextcolor();
-                Y = Y.replace(/-/, "");
-                var V = new Route(
-                  X,
-                  ac,
-                  Q,
-                  Y,
-                  aa,
-                  S,
-                  1,
-                  z.routes.length + 1,
-                  null,
-                  null,
-                  null
-                );
-                z.routes[R] = V;
-                if (V.zerotime < z.zerotime) {
-                  z.zerotime = V.zerotime;
-                }
-                if (V.zerotime + V.latarray.length > z.maxtime) {
-                  z.maxtime = V.zerotime + V.latarray.length;
-                }
-              }
-              z.playtime = z.zerotime;
-              z.reset_replaystarttime();
-              z.update_routediv(false);
-              var V = z.routes[0];
-              P1 = z.map.toxy(V.latarray[0], V.lngarray[0]);
-              for (var W = 0; W < mapviewer.routes.length; W++) {
-                for (var R = 0; R < mapviewer.routes[W].latarray.length; R++) {
-                  if (isNaN(mapviewer.routes[W].latarray[R])) {
-                    mapviewer.routes[W].latarray[R] =
-                      mapviewer.routes[W].latarray[R - 1];
-                  }
-                }
-              }
-              for (var W = 0; W < mapviewer.routes.length; W++) {
-                for (var R = 0; R < mapviewer.routes[W].latarray.length; R++) {
-                  if (isNaN(mapviewer.routes[W].lngarray[R])) {
-                    mapviewer.routes[W].lngarray[R] =
-                      mapviewer.routes[W].lngarray[R - 1];
-                  }
-                }
-              }
-              z.map_start_x = P1.x;
-              z.map_start_y = P1.y;
-              z.move_mapxy_to_center(z.map_start_x, z.map_start_y);
-              z.AllRoutestoStart();
-            } else {
-              $("#" + z.routemenudiv).html("No routes loaded.");
-            }
-            if ($("#addseurantaroutesinfo")) {
-              $("#addseurantaroutesinfo").html("Data loaded");
-            }
-            z.loadcoursesplitsidstr();
-            z.request_redraw();
-          }
-        }
+        z.handlelLoadseuSuccessResponse(U, N)
       },
     });
     return 1;
   };
+  
+  // HACK
+  this.handlelLoadseuSuccessResponse = function (U, N) {
+    if (U != undefined) {
+      var ab = U.status;
+      if (ab != "OK") {
+        alert("Error: " + ab);
+      } else {
+        mapurl = U.map.imagelink;
+        mapwidth = U.map.width;
+        mapheight = U.map.height;
+        calstring = U.map.calstring;
+        caltype = "3point";
+        if (mapurl) {
+          z.loadmap(
+            mapurl,
+            mapwidth,
+            mapheight,
+            calstring,
+            caltype,
+            null,
+            N
+          );
+          z.redraw();
+        } else {
+          var T = getURLParameter("osm");
+          if (T) {
+            z.loadmap(
+              mapurl,
+              mapwidth,
+              mapheight,
+              calstring,
+              "3point",
+              null,
+              "OSM"
+            );
+          } else {
+            var Z = getURLParameter("mapid");
+            z.load3DRerun([Z], null, null);
+            z.redraw();
+          }
+        }
+        if (!z.IsLive) {
+          for (var R = 0; R < U.routes.length; R++) {
+            var aa = U.routes[R].unit;
+            var X = U.routes[R].lats;
+            var ac = U.routes[R].lngs;
+            var Q = U.routes[R].times;
+            var Y = U.routes[R].runnername;
+            Y = Y.replace(/^\d+ /, "");
+            var S = z.getnextcolor();
+            Y = Y.replace(/-/, "");
+            var V = new Route(
+              X,
+              ac,
+              Q,
+              Y,
+              aa,
+              S,
+              1,
+              z.routes.length + 1,
+              null,
+              null,
+              null
+            );
+            z.routes[R] = V;
+            if (V.zerotime < z.zerotime) {
+              z.zerotime = V.zerotime;
+            }
+            if (V.zerotime + V.latarray.length > z.maxtime) {
+              z.maxtime = V.zerotime + V.latarray.length;
+            }
+          }
+          z.playtime = z.zerotime;
+          z.reset_replaystarttime();
+          z.update_routediv(false);
+          var V = z.routes[0];
+          P1 = z.map.toxy(V.latarray[0], V.lngarray[0]);
+          for (var W = 0; W < mapviewer.routes.length; W++) {
+            for (var R = 0; R < mapviewer.routes[W].latarray.length; R++) {
+              if (isNaN(mapviewer.routes[W].latarray[R])) {
+                mapviewer.routes[W].latarray[R] =
+                  mapviewer.routes[W].latarray[R - 1];
+              }
+            }
+          }
+          for (var W = 0; W < mapviewer.routes.length; W++) {
+            for (var R = 0; R < mapviewer.routes[W].latarray.length; R++) {
+              if (isNaN(mapviewer.routes[W].lngarray[R])) {
+                mapviewer.routes[W].lngarray[R] =
+                  mapviewer.routes[W].lngarray[R - 1];
+              }
+            }
+          }
+          z.map_start_x = P1.x;
+          z.map_start_y = P1.y;
+          z.move_mapxy_to_center(z.map_start_x, z.map_start_y);
+          z.AllRoutestoStart();
+        } else {
+          $("#" + z.routemenudiv).html("No routes loaded.");
+        }
+        if ($("#addseurantaroutesinfo")) {
+          $("#addseurantaroutesinfo").html("Data loaded");
+        }
+        z.loadcoursesplitsidstr();
+        z.request_redraw();
+      }
+    }
+  }
+  // END HACK
+
   this.errormessage = function (M) {
     alert(M);
   };
