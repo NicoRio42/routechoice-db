@@ -1,9 +1,8 @@
-const functions = require("firebase-functions");
+import functions from "firebase-functions";
+import fetch from "node-fetch";
 
-// // Create and Deploy Your First Cloud Functions
-// // https://firebase.google.com/docs/functions/write-firebase-functions
-//
-// exports.helloWorld = functions.https.onRequest((request, response) => {
-//   functions.logger.info("Hello logs!", {structuredData: true});
-//   response.send("Hello from Firebase!");
-// });
+export const get2DRerunData = functions.https.onCall((data, context) => {
+  return fetch(data)
+    .then((response) => response.json())
+    .catch((error) => error);
+});

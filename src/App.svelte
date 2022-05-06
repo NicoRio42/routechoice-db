@@ -7,6 +7,17 @@
   import Login from "./routes/Login.svelte";
   import Course from "./routes/Course.svelte";
 
+  import { getFunctions, httpsCallable } from "firebase/functions";
+
+  const functions = getFunctions();
+  const get2DRerunData = httpsCallable(functions, "get2DRerunData");
+
+  get2DRerunData(
+    "http://loggator2.worldofo.com/getseu_json.php?baseurl=http://www.tulospalvelu.fi/gps/&idstr=logatecmuaoUA"
+  ).then((result) => {
+    console.log(result);
+  });
+
   const routes = {
     "/": Course,
     "/home": Home,
