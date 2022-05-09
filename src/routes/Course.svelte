@@ -13,6 +13,8 @@
   import { IOFXMLParser } from "../utils/iof-xml-parser/IOFXMLParser";
   import { detectRunnersRoutechoices } from "../utils/routechoices-detector/detect-route";
 
+  export let logatorUrl = "https://events.loggator.com/muaoUA";
+
   let isLoadSplitsDialogOpen = false;
   let isSplitsTableDialogOpen = false;
   let isInSplitMode = true;
@@ -34,7 +36,7 @@
   function iframeLoaded() {
     mapviewer = getMapviewer(iframe);
 
-    initMapviewer(mapviewer, iframe).then((data) => {
+    initMapviewer(mapviewer, iframe, logatorUrl).then((data) => {
       numberOfContols = data.coursecoords.length - 1;
       setTimeout(propagateLegChangeTo2DRerun, 3000);
     });

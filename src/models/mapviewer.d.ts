@@ -1,3 +1,5 @@
+import { Rerun2dMapInfos } from "./2d-rerun/map-infos";
+
 export interface Mapviewer {
   tags: Tag[];
   coursecoords: string;
@@ -6,6 +8,7 @@ export interface Mapviewer {
   loadseu: Loadseu;
   request_redraw: VoidFunction;
   update_routediv: VoidFunction;
+  handlelLoadseuSuccessResponse: HandlelLoadseuSuccessResponse;
 }
 
 interface Route {
@@ -20,6 +23,9 @@ interface Route {
 
 interface Loadseu {
   (baseUrl: string, coursId: string): void;
+}
+interface HandlelLoadseuSuccessResponse {
+  (rerun2dMapInfos: Rerun2dMapInfos, coursId: string): void;
 }
 
 interface VoidFunction {
