@@ -11,11 +11,19 @@
   }
 
   const handlePreviousControl = () => {
+    if (!numberOfLegs) {
+      return;
+    }
+
     selectedLeg = selectedLeg !== 1 ? selectedLeg - 1 : selectedLeg;
     dispatchChange();
   };
 
   const handleNextControl = () => {
+    if (!numberOfLegs) {
+      return;
+    }
+
     selectedLeg = selectedLeg !== numberOfLegs ? selectedLeg + 1 : selectedLeg;
     dispatchChange();
   };

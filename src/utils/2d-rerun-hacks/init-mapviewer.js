@@ -5,26 +5,34 @@ import { selectHack } from "./select-hack";
  *
  * @param {import("../../models/mapviewer").Mapviewer} mapviewer
  * @param {HTMLIFrameElement} iframe
- * @param {string} dataUrl
- * @returns {Promise}
+ * @param {any} dataUrl
  */
-export async function initMapviewer(mapviewer, iframe, logatorUrl) {
+export async function initMapviewer(mapviewer, iframe, course) {
   const functions = getFunctions();
   const get2DRerunData = httpsCallable(functions, "get2DRerunData");
 
-  const get2DRerunDataUrl = buildGet2DRerunDataUrlFromLogatorUrl(logatorUrl);
-  get2DRerunData(get2DRerunDataUrl).then(
-    (
-      /**@type {import("../../models/2d-rerun/get-2d-rerun-data-response").Get2DRerunDataResponse} */
-      response
-    ) => {
-      console.log(response.data);
-      mapviewer.handlelLoadseuSuccessResponse(response.data, "");
-    }
+  const get2DRerunDataUrl = buildGet2DRerunDataUrlFromLogatorUrl(
+    course.twoDRerunUrl
   );
 
-  const res = await fetch("course-tags.json");
-  const data = await res.json();
+  const response = await get2DRerunData(get2DRerunDataUrl);
+
+  mapviewer.handlelLoadseuSuccessResponse(response.data, "");
+
+  if (course.courseAndRoutechoices === undefined) {
+    return;
+  }
+
+  buildCourseAndRoutechoices(mapviewer, iframe, course.courseAndRoutechoices);
+}
+
+export function buildCourseAndRoutechoices(
+  mapviewer,
+  iframe,
+  courseAndRoutechoicesData
+) {
+  const data = { ...courseAndRoutechoicesData };
+
   mapviewer.tags = data.tags;
   mapviewer.coursecoords = data.coursecoords;
   mapviewer.otechinfo = data.otechinfo;
@@ -34,8 +42,6 @@ export async function initMapviewer(mapviewer, iframe, logatorUrl) {
   iframe.contentDocument.getElementById("shown").click();
   selectHack(iframe, "selectmode", "analyzecourse");
   selectHack(iframe, "showtagsselect", "1");
-
-  return data;
 }
 
 /**
