@@ -1,6 +1,7 @@
 import App from "./App.svelte";
 import { initializeApp } from "firebase/app";
 import { getFunctions } from "firebase/functions";
+import { getFirestore } from "firebase/firestore";
 
 const firebaseConfig = {
   apiKey: "AIzaSyBTei7EpZgxIZuHFOZBhuQXSyCaaqo_rdg",
@@ -13,6 +14,7 @@ const firebaseConfig = {
 
 const fireBaseApp = initializeApp(firebaseConfig);
 const functions = getFunctions(fireBaseApp);
+const db = getFirestore(fireBaseApp);
 
 const app = new App({
   target: document.body,

@@ -1,6 +1,14 @@
 <script>
+  import { getAuth, signInWithEmailAndPassword } from "firebase/auth";
+  import { push } from "svelte-spa-router";
+  import { userStore } from "../stores/user-store";
+
+  const auth = getAuth();
+
   let email;
   let password;
+  let loading = false;
+  let showErrorMessage = false;
 
   /**
    *
@@ -8,7 +16,21 @@
    */
   const handleSubmit = (event) => {
     event.preventDefault();
-    console.log("toto");
+    loading = true;
+    showErrorMessage = false;
+
+    signInWithEmailAndPassword(auth, email, password)
+      .then((userCredential) => {
+        userStore.set(userCredential);
+
+        loading = false;
+        push("/courses");
+      })
+      .catch((error) => {
+        console.error(`${error.code} ${error.message}`);
+        loading = false;
+        showErrorMessage = false;
+      });
   };
 </script>
 
@@ -28,7 +50,13 @@
         required
       />
 
-      <button type="submit" on:click={handleSubmit}>Login</button>
+      <button aria-busy={loading} type="submit" on:click={handleSubmit}
+        >Login</button
+      >
+
+      {#if showErrorMessage}
+        <p class="error-message">An error occured during login.</p>
+      {/if}
     </form>
   </article>
 </main>
@@ -61,5 +89,9 @@
     article {
       width: 100%;
     }
+  }
+
+  .error-message {
+    color: red;
   }
 </style>

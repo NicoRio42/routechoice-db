@@ -12,7 +12,6 @@
 <dialog open class="modal">
   <article class="modal-content" use:clickOutside on:clickOutside={closeDialog}>
     <a
-      href="#close"
       aria-label="Close"
       class="close"
       data-target="modal"

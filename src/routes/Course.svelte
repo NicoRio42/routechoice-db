@@ -1,4 +1,6 @@
 <script>
+  import { doc, getDoc, getFirestore } from "firebase/firestore";
+
   import Dialog from "../components/Dialog.svelte";
   import LegSelector from "../components/LegSelector.svelte";
   import LoadSplitTimes from "../components/LoadSplitTimes.svelte";
@@ -14,10 +16,13 @@
   import { detectRunnersRoutechoices } from "../utils/routechoices-detector/detect-route";
 
   export let logatorUrl = "https://events.loggator.com/muaoUA";
+  export let params = {};
 
   let isLoadSplitsDialogOpen = false;
   let isSplitsTableDialogOpen = false;
   let isInSplitMode = true;
+
+  const db = getFirestore();
 
   /**@type {IOFXMLParser}*/
   let splitTimes = { runners: [], routeChoicesStatistics: [] };
@@ -33,13 +38,22 @@
   let mapviewer;
   let showSidePanel = true;
 
-  function iframeLoaded() {
+  async function iframeLoaded() {
     mapviewer = getMapviewer(iframe);
 
-    initMapviewer(mapviewer, iframe, logatorUrl).then((data) => {
-      numberOfContols = data.coursecoords.length - 1;
-      setTimeout(propagateLegChangeTo2DRerun, 3000);
-    });
+    const docRef = doc(db, "cities", params.courseId);
+    const docSnap = await getDoc(docRef);
+
+    if (docSnap.exists()) {
+      console.log("Document data:", docSnap.data());
+    } else {
+      // doc.data() will be undefined in this case
+      console.log("No such document!");
+    }
+
+    const data = await initMapviewer(mapviewer, iframe, logatorUrl);
+    numberOfContols = data.coursecoords.length - 1;
+    setTimeout(propagateLegChangeTo2DRerun, 3000);
   }
 
   const togle2dRerunPanel = () => {
