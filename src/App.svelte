@@ -7,16 +7,14 @@
 
 <nav class="container-fluid">
   <ul>
-    <li>
+    <li class="logo-item">
       <a class="logo-link" href="/" use:link><Logo />Routechoice DB</a>
     </li>
   </ul>
 
   <ul>
-    <li class="large"><a href="/about" use:link>About</a></li>
-    <li class="large"><a href="/login" use:link>Login</a></li>
-    <li class="large"><a href="/courses" use:link>Courses</a></li>
-    <li class="hamburger">
+    <li><a href="/login" use:link>Login</a></li>
+    <!-- <li class="hamburger">
       <details role="list">
         <summary aria-haspopup="listbox">
           <Hamburger />
@@ -28,7 +26,7 @@
           <li><a href="/" use:link>Courses</a></li>
         </ul>
       </details>
-    </li>
+    </li> -->
   </ul>
 </nav>
 
@@ -84,7 +82,7 @@
     }
 
     nav li {
-      padding: 0;
+      padding-left: 0;
     }
 
     nav ul:first-of-type {

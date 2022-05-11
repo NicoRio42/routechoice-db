@@ -37,42 +37,28 @@
   </thead>
   {#each legSplitTimes as runner}
     <tr>
-      <td>
-        <div class="tooltip-container">
-          {fullNameToShortName(runner.firstName, runner.lastName)}
-          <span class="tooltip">
-            {`${runner.firstName} ${runner.lastName}`}
-          </span>
-        </div>
+      <td data-tooltip={`${runner.firstName} ${runner.lastName}`}>
+        {fullNameToShortName(runner.firstName, runner.lastName)}
       </td>
 
       <td class={runner.leg.isMistake ? "mistake" : ""}>
-        <div class="tooltip-container {rankToCSSClass(runner.leg.rankSplit)}">
+        <div
+          class="tooltip-container {rankToCSSClass(runner.leg.rankSplit)}"
+          data-tooltip={`+ ${secondsToPrettyTime(runner.leg.timeBehindSplit)}`}
+        >
           {`${secondsToPrettyTime(runner.leg.time)} (${runner.leg.rankSplit})`}
-          <span class="tooltip">
-            <div>
-              {`+ ${secondsToPrettyTime(runner.leg.timeBehindSplit)}`}
-            </div>
-
-            {#if runner.leg.isMistake === true}
-              <div>
-                {`Time loss: ${secondsToPrettyTime(runner.leg.timeLost)}`}
-              </div>
-            {/if}
-          </span>
         </div>
 
         {#if runner.leg.timeOverall !== null}
           <div
             class="tooltip-container {rankToCSSClass(runner.leg.rankOverall)}"
+            data-tooltip={`+ ${secondsToPrettyTime(
+              runner.leg.timeBehindOverall
+            )}`}
           >
             {`${secondsToPrettyTime(runner.leg.timeOverall)} (${
               runner.leg.rankOverall
             })`}
-
-            <span class="tooltip"
-              >{`+ ${secondsToPrettyTime(runner.leg.timeBehindOverall)}`}</span
-            >
           </div>
         {/if}
       </td>
@@ -112,9 +98,8 @@
     position: relative;
   }
 
-  .tooltip-container:hover .tooltip {
-    visibility: visible;
-    opacity: 1;
+  [data-tooltip] {
+    border-bottom: none;
   }
 
   .tooltip {

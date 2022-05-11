@@ -41,16 +41,17 @@
       var mapviewer;
 
       $(document).ready(function () {
-        if (navigator.userAgent.match(/Android/i)) {
-          istouchscreen = 1;
-        }
-        if (
-          navigator.userAgent.match(/iPhone/i) ||
-          navigator.userAgent.match(/iPod/i) ||
-          navigator.userAgent.match(/iPad/i)
-        ) {
-          istouchscreen = 1;
-        }
+        // if (navigator.userAgent.match(/Android/i)) {
+        //   istouchscreen = 1;
+        // }
+        // if (
+        //   navigator.userAgent.match(/iPhone/i) ||
+        //   navigator.userAgent.match(/iPod/i) ||
+        //   navigator.userAgent.match(/iPad/i)
+        // ) {
+        //   istouchscreen = 1;
+        // }
+        istouchscreen = navigator.userAgentData.mobile ? 1 : 0;
 
         isnarrowscreen = 0;
         if ($(document).width() < 600) {

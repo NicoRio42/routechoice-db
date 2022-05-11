@@ -21,11 +21,7 @@ export const secondsToPrettyTime = (seconds) => {
 };
 
 export const fullNameToShortName = (firstName, lastName) => {
-  if (firstName.length === 1 || lastName.length === 1) {
-    return `${firstName} ${lastName}`;
-  }
-
-  return `${firstName.charAt(0)}${lastName.charAt(0)}`;
+  return `${firstName.charAt(0)}. ${lastName}`;
 };
 
 export const rankToCSSClass = (rank) => {

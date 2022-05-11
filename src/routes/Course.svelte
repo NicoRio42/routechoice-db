@@ -6,9 +6,9 @@
   import LegSelector from "../components/LegSelector.svelte";
   import LoadSplitTimes from "../components/LoadSplitTimes.svelte";
   import LegSplitTimesTable from "../components/SplitTimesTable/LegSplitTimesTable.svelte";
-  import SplitTimesTable from "../components/SplitTimesTable/SplitTimesTable.svelte";
   import Statistics from "../components/Statistics.svelte";
   import Toggle from "../components/Toggle.svelte";
+  import { userStore } from "../stores/user-store";
   import { getMapviewer } from "../utils/2d-rerun-hacks/get-mapviewer";
   import {
     buildCourseAndRoutechoices,
@@ -22,8 +22,8 @@
   export let params = {};
 
   let isLoadSplitsDialogOpen = false;
-  let isSplitsTableDialogOpen = false;
   let isInSplitMode = true;
+  let loadingSaveToServer = false;
   let course;
   let loadCourseAndRoutechoicesFromJsonInput;
 
@@ -41,7 +41,7 @@
 
   /**@type {import("../models/mapviewer").Mapviewer}*/
   let mapviewer;
-  let showSidePanel = true;
+  let showSidePanel = !navigator.userAgentData.mobile;
 
   async function iframeLoaded() {
     mapviewer = getMapviewer(iframe);
@@ -63,6 +63,17 @@
 
     numberOfContols = course.courseAndRoutechoices.coursecoords.length - 1;
     setTimeout(propagateLegChangeTo2DRerun, 3000);
+
+    if (course.splitTimes === undefined) {
+      return;
+    }
+
+    Object.keys(course.splitTimes).forEach(
+      (key) => (splitTimes[key] = course.splitTimes[key])
+    );
+
+    detectRoutechoices();
+    loadSplitsTo2dRerun(iframe, mapviewer, splitTimes);
   }
 
   const togle2dRerunPanel = () => {
@@ -88,8 +99,6 @@
       mapviewer,
       mapviewer.routes
     );
-
-    splitTimes.computeRoutechoicesStatistics();
   };
 
   function loadCourseAndRoutechoicesFromJson(event) {
@@ -112,16 +121,32 @@
       return;
     }
 
+    loadingSaveToServer = true;
     await setDoc(doc(db, "courses", params.courseId), course);
+    loadingSaveToServer = false;
   }
 
-  function handleLoadSplitClick() {
+  function handleLoadSplitsClick() {
     if (numberOfContols === undefined) {
       alert("You sould draw a course first.");
       return;
     }
 
     isLoadSplitsDialogOpen = true;
+  }
+
+  function handleSplitDialogSubmit() {
+    isLoadSplitsDialogOpen = false;
+    detectRoutechoices();
+    splitTimes.computeRoutechoicesStatistics();
+    loadSplitsTo2dRerun(iframe, mapviewer, splitTimes);
+    course.splitTimes = {};
+
+    Object.keys(splitTimes).forEach(
+      (key) => (course.splitTimes[key] = splitTimes[key])
+    );
+
+    delete course.splitTimes.splitsXmlDoc;
   }
 </script>
 
@@ -132,23 +157,19 @@
     <LoadSplitTimes
       slot="content"
       bind:savedSplitTimes={splitTimes}
-      on:close={() => {
-        isLoadSplitsDialogOpen = false;
-        detectRoutechoices();
-        loadSplitsTo2dRerun(iframe, mapviewer, splitTimes);
-      }}
+      on:close={handleSplitDialogSubmit}
       {mapviewer}
     />
   </Dialog>
 {/if}
 
-{#if isSplitsTableDialogOpen}
+<!-- {#if isSplitsTableDialogOpen}
   <Dialog on:closeDialog={() => (isSplitsTableDialogOpen = false)}>
     <h1 slot="title">Split times</h1>
 
     <SplitTimesTable slot="content" {splitTimes} />
   </Dialog>
-{/if}
+{/if} -->
 
 <main class="course-container">
   {#if showSidePanel}
@@ -171,18 +192,20 @@
           </li>
 
           <li>
-            <button on:click={handleLoadSplitClick}>Load split times</button>
+            <button on:click={handleLoadSplitsClick}>Load split times</button>
           </li>
 
           <li>
             <button on:click={togle2dRerunPanel}>Toggle 2D Rerun</button>
           </li>
 
-          <li>
-            <button on:click={saveToServer}
-              >Save course, routechoices and splitimes to server</button
-            >
-          </li>
+          {#if $userStore !== null}
+            <li>
+              <button on:click={saveToServer} aria-busy={loadingSaveToServer}
+                >Save course, routechoices and splitTimes to server</button
+              >
+            </li>
+          {/if}
 
           <!-- <li>
             <button on:click={() => (isSplitsTableDialogOpen = true)}
@@ -220,7 +243,7 @@
   />
 
   <div class="control-bar">
-    <button class="mobile">
+    <button class="mobile" disabled>
       <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 576 512"
         ><path
           d="M287.9 0C297.1 0 305.5 5.25 309.5 13.52L378.1 154.8L531.4 177.5C540.4 178.8 547.8 185.1 550.7 193.7C553.5 202.4 551.2 211.9 544.8 218.2L433.6 328.4L459.9 483.9C461.4 492.9 457.7 502.1 450.2 507.4C442.8 512.7 432.1 513.4 424.9 509.1L287.9 435.9L150.1 509.1C142.9 513.4 133.1 512.7 125.6 507.4C118.2 502.1 114.5 492.9 115.1 483.9L142.2 328.4L31.11 218.2C24.65 211.9 22.36 202.4 25.2 193.7C28.03 185.1 35.5 178.8 44.49 177.5L197.7 154.8L266.3 13.52C270.4 5.249 278.7 0 287.9 0L287.9 0zM287.9 78.95L235.4 187.2C231.9 194.3 225.1 199.3 217.3 200.5L98.98 217.9L184.9 303C190.4 308.5 192.9 316.4 191.6 324.1L171.4 443.7L276.6 387.5C283.7 383.7 292.2 383.7 299.2 387.5L404.4 443.7L384.2 324.1C382.9 316.4 385.5 308.5 391 303L476.9 217.9L358.6 200.5C350.7 199.3 343.9 194.3 340.5 187.2L287.9 78.95z"
@@ -281,6 +304,10 @@
     border: none;
     text-align: left;
     padding: 0;
+  }
+
+  ul li button:focus {
+    box-shadow: none;
   }
 
   details ul li button {

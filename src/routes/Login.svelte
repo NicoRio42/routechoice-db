@@ -24,7 +24,7 @@
         userStore.set(userCredential);
 
         loading = false;
-        push("/courses");
+        push("/");
       })
       .catch((error) => {
         console.error(`${error.code} ${error.message}`);

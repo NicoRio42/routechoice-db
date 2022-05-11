@@ -14,7 +14,7 @@ export class IOFXMLParser {
    * @param {string} timeZone
    * @param {number} [mistakeDetectionRatio]
    * @param {number} timeOffset
-   * @param {Date} [date]
+   * @param {string} [date]
    */
   constructor(
     splitsXmlDoc,
@@ -22,7 +22,7 @@ export class IOFXMLParser {
     timeZone,
     mistakeDetectionRatio = MISTAKE_DETECTION_RATIO,
     timeOffset = 0,
-    date
+    date = ""
   ) {
     this.splitsXmlDoc = splitsXmlDoc;
     this.className = className;

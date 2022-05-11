@@ -35,6 +35,23 @@
 
   async function handleSubmit(e) {
     e.preventDefault();
+
+    if (name === "") {
+      alert("Name is required.");
+      return;
+    }
+
+    try {
+      const url = new URL(twoDRerunUrl);
+      if (url.origin !== "https://events.loggator.com") {
+        alert("Only loggator is supported yet.");
+        return;
+      }
+    } catch {
+      alert("Wrong format for your url.");
+      return;
+    }
+
     loading = true;
 
     const docRef = await addDoc(collection(db, "courses"), {
@@ -59,6 +76,10 @@
    * @param {string} courseId
    */
   async function deleteCourse(courseId) {
+    if (!confirm("Are you sure to delete this course?")) {
+      return;
+    }
+
     await deleteDoc(doc(db, "courses", courseId));
 
     courses = courses.filter((course) => course.id !== courseId);
@@ -88,14 +109,16 @@
 
   <button
     on:click={() => (isNewCourseDialogOpen = true)}
-    class="add-course-button"
+    class="add-course-button secondary"
     type="button">Add new course</button
   >
 
   <ul>
     {#each courses as course}
-      <li>
-        <a href={`/courses/${course.id}`} use:link>{course.name}</a>
+      <li class="course-item">
+        <a class="course-link" href={`/courses/${course.id}`} use:link
+          >{course.name}</a
+        >
 
         <button
           on:click={() => deleteCourse(course.id)}
@@ -112,12 +135,21 @@
     width: fit-content;
   }
 
+  .course-link {
+    margin-right: 1rem;
+  }
+
   .delete-button {
+    visibility: hidden;
     display: contents;
     background-color: transparent;
     color: var(--h1-color);
     margin: 0;
     padding: 0;
     cursor: pointer;
+  }
+
+  .course-item:hover .delete-button {
+    visibility: visible;
   }
 </style>

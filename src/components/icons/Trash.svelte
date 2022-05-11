@@ -6,8 +6,8 @@
 
 <style>
   svg {
-    height: 2rem;
-    width: 2rem;
+    height: 1rem;
+    width: 1rem;
     padding: 0;
   }
 </style>
