@@ -30612,12 +30612,12 @@ function MapViewer(F, o, D) {
         return;
       },
       success: function (U) {
-        z.handlelLoadseuSuccessResponse(U, N)
+        z.handlelLoadseuSuccessResponse(U, N);
       },
     });
     return 1;
   };
-  
+
   // HACK
   this.handlelLoadseuSuccessResponse = function (U, N) {
     if (U != undefined) {
@@ -30631,15 +30631,7 @@ function MapViewer(F, o, D) {
         calstring = U.map.calstring;
         caltype = "3point";
         if (mapurl) {
-          z.loadmap(
-            mapurl,
-            mapwidth,
-            mapheight,
-            calstring,
-            caltype,
-            null,
-            N
-          );
+          z.loadmap(mapurl, mapwidth, mapheight, calstring, caltype, null, N);
           z.redraw();
         } else {
           var T = getURLParameter("osm");
@@ -30725,7 +30717,7 @@ function MapViewer(F, o, D) {
         z.request_redraw();
       }
     }
-  }
+  };
   // END HACK
 
   this.errormessage = function (M) {

@@ -1,57 +1,97 @@
 <html class="win firefox firefox9 gecko gecko9">
   <head>
     <meta http-equiv="Content-Type" content="text/html; charset=UTF-8" />
-    <title>2DRerunViewer Offline version</title>
+    <title>2DRerunViewer Alpha-version</title>
     <script type="text/javascript">
+      var seurantabaseurl = "http://www.tulospalvelu.fi/gps/";
+      var seurantaidstr = "logatecmuaoUA";
       var test = 0;
+      var xc = 0;
       var wheelzoom = 1;
-
       var isnarrowscreen = 0;
       var loadcourse = 0;
       var istouchscreen = 0;
       var isinternetexplorer = 0;
-      var index_file = "";
+      var index_file = "index.php";
       var simplified_version = 0;
     </script>
-
-    <script type="text/javascript" src="/2d-rerun/heatmap.js"></script>
-    <script src="/2d-rerun/combined.js" type="text/javascript"></script>
-    <script type="text/javascript" src="/2d-rerun/jquery_002.js"></script>
-    <script type="text/javascript" src="/2d-rerun/jquery_003.js"></script>
-    <script type="text/javascript" src="/2d-rerun/jquery.js"></script>
-    <script src="/2d-rerun/datepickr.js" type="text/javascript"></script>
-    <script type="text/javascript" src="/2d-rerun/CCapture.js"></script>
-    <script type="text/javascript" src="/2d-rerun/Whammy.js"></script>
-    <script type="text/javascript" src="/2d-rerun/gif.js"></script>
-    <script src="/2d-rerun/2drerun.js" type="text/javascript"></script>
     <link rel="stylesheet" href="/2d-rerun/jquery-ui-1.css" />
-    <!--<link rel="stylesheet" href="dep/2drerun.css"> -->
     <link rel="stylesheet" href="/2d-rerun/2drerun.css" />
-
-    <!-- Visualization from Google-->
-    <link rel="stylesheet" href="/2d-rerun/datepickr.css" />
+    <!--<link rel="stylesheet" href="css/introjs.min.css"> -->
+    <!-- <link rel="stylesheet" href="css/anno.css"> -->
     <link rel="stylesheet" href="/2d-rerun/tooltipster.css" />
     <link rel="stylesheet" href="/2d-rerun/simplePagination.css" />
+    <link rel="stylesheet" href="/2d-rerun/datepickr.css" />
+    <!--<script type="text/javascript" src="https://ajax.googleapis.com/ajax/libs/jquery/2.0.3/jquery.min.js"></script>
+<script type="text/javascript" src="https://ajax.googleapis.com/ajax/libs/jqueryui/1.10.4/jquery-ui.min.js"></script>
+-->
+    <script type="text/javascript" src="/2d-rerun/jquery.js"></script>
+    <script type="text/javascript" src="/2d-rerun/jquery-ui.js"></script>
+    <script src="/2d-rerun/jquery_004.js" type="text/javascript"></script>
+    <script type="text/javascript" src="/2d-rerun/sylvester.js"></script>
+    <script type="text/javascript" src="/2d-rerun/jcanvas.js"></script>
+    <script type="text/javascript" src="/2d-rerun/jquery_005.js"></script>
+    <script type="text/javascript" src="/2d-rerun/jquery_003.js"></script>
+    <!-- https://github.com/chingor13/jquery-expose -->
+    <script type="text/javascript" src="/2d-rerun/jquery_006.js"></script>
+    <script type="text/javascript" src="/2d-rerun/jquery_002.js"></script>
+    <script src="/2d-rerun/datepickr.js" type="text/javascript"></script>
+
+    <script type="text/javascript" src="/2d-rerun/CCapture.js"></script>
+    <script type="text/javascript" src="/2d-rerun/Whammy.js"></script>
+
+    <script type="text/javascript" src="/2d-rerun/gif.js"></script>
+
+    <script type="text/javascript" src="/2d-rerun/hammer.js"></script>
+
+    <!--<script type="text/javascript" src="js/anno.js"></script>-->
+    <!--
+tstAnno = new Anno({
+    target: '#advancedoptions',
+    content: 'This is the right menu.',
+    position: 'top'
+  })
+  tstAnno.show()
+-->
+    <!--<script type="text/javascript" src="js/jquery.scrollintoview.min.js"></script>-->
+    <!--<script type="text/javascript" src="js/intro.min.js"></script>-->
+    <!--<script type="text/javascript" src="js/heatmap.js"></script>-->
+
+    <!-- Visualization from Google-->
+    <script type="text/javascript" src="/2d-rerun/jsapi"></script>
+    <script type="text/javascript">
+      google.load("visualization", "1", {
+        packages: ["columnchart", "linechart", "table"],
+      });
+    </script>
+    <script
+      type="text/javascript"
+      charset="UTF-8"
+      src="/2d-rerun/loader.js"
+    ></script>
 
     <!--[if IE
-      ]><script type="text/javascript" src="dep/excanvas.js"></script
+      ]><script type="text/javascript" src="js/excanvas.js"></script
     ><![endif]-->
-    <link rel="stylesheet" type="text/css" href="/2d-rerun/jquery.css" />
+
+    <script src="/2d-rerun/2drerun.js" type="text/javascript"></script>
     <script type="text/javascript">
       var mapviewer;
 
       $(document).ready(function () {
-        // if (navigator.userAgent.match(/Android/i)) {
-        //   istouchscreen = 1;
-        // }
-        // if (
-        //   navigator.userAgent.match(/iPhone/i) ||
-        //   navigator.userAgent.match(/iPod/i) ||
-        //   navigator.userAgent.match(/iPad/i)
-        // ) {
-        //   istouchscreen = 1;
-        // }
-        istouchscreen = navigator.userAgentData.mobile ? 1 : 0;
+        //alert($.os.name);
+        //alert('Need new loading message!');
+
+        if (navigator.userAgent.match(/Android/i)) {
+          istouchscreen = 1;
+        }
+        if (
+          navigator.userAgent.match(/iPhone/i) ||
+          navigator.userAgent.match(/iPod/i) ||
+          navigator.userAgent.match(/iPad/i)
+        ) {
+          istouchscreen = 1;
+        }
 
         isnarrowscreen = 0;
         if ($(document).width() < 600) {
@@ -66,20 +106,71 @@
           isinternetexplorer = 1;
           mapviewer = new MapViewer("map", "infobox", "rightmenu");
         } else {
-          $("#infobox").html(
-            "Drag orienteering map and GPX-files to box below to start"
-          );
+          $("#infobox").html("Please wait - loading map information!");
           $("#rightmenu").height(
             $(document).height() - $("#infobox").height() - 8
           );
 
           mapviewer = new MapViewer("map", "infobox", "rightmenu");
-          mapviewer.prepareoffline();
         }
+        // mapviewer.loadseu(seurantabaseurl, seurantaidstr);
       });
     </script>
+    <!-- Only for ios for now - should do a fix for Android later on -->
+
+    <link
+      id="load-css-0"
+      rel="stylesheet"
+      type="text/css"
+      href="/2d-rerun/tooltip.css"
+    />
+    <link
+      id="load-css-1"
+      rel="stylesheet"
+      type="text/css"
+      href="/2d-rerun/util.css"
+    />
+    <link
+      id="load-css-2"
+      rel="stylesheet"
+      type="text/css"
+      href="/2d-rerun/table.css"
+    />
+    <link
+      id="load-css-3"
+      rel="stylesheet"
+      type="text/css"
+      href="/2d-rerun/format.css"
+    />
+    <script
+      type="text/javascript"
+      charset="UTF-8"
+      src="/2d-rerun/jsapi_compiled_default_module.js"
+    ></script>
+    <script
+      type="text/javascript"
+      charset="UTF-8"
+      src="/2d-rerun/jsapi_compiled_graphics_module.js"
+    ></script>
+    <script
+      type="text/javascript"
+      charset="UTF-8"
+      src="/2d-rerun/jsapi_compiled_ui_module.js"
+    ></script>
+    <script
+      type="text/javascript"
+      charset="UTF-8"
+      src="/2d-rerun/jsapi_compiled_browserchart_module.js"
+    ></script>
+    <script
+      type="text/javascript"
+      charset="UTF-8"
+      src="/2d-rerun/jsapi_compiled_table_module.js"
+    ></script>
   </head>
-  <body style="margin: 0; padding: 0; font-family: Arial">
+  <body
+    style="margin: 0px; padding: 0px; font-family: Arial; overflow-x: hidden"
+  >
     <div
       id="fulldialog_outer"
       style="
@@ -105,9 +196,48 @@
       </div>
     </div>
     <div
+      id="infobox"
+      style="
+        padding: 4px;
+        border-bottom: 1px solid #888;
+        background: #080;
+        color: #fff;
+        font-size: 14px;
+      "
+    >
+      <div id="topinfo" style="height: 16px">
+        <span id="toptitle"><b>2DRerun by WorldofO.com </b></span
+        ><span style="position: relative; left: 50px"
+          ><a
+            href="javascript:void(0);"
+            onclick="mapviewer.wizard_start();"
+            class="topbutton tooltipstered"
+            id="wizardmodebutt"
+            >Help</a
+          >
+          &nbsp; - &nbsp;
+          <a
+            href="http://loggator2.worldofo.com/offline.php"
+            target="_blank"
+            class="topbutton"
+            >Offline version</a
+          ></span
+        >
+        <span
+          style="position: absolute; right: 0; width: 200px; text-align: left"
+          ><a
+            class="topbutton"
+            href="javascript:void(0);"
+            onclick="mapviewer.togglerightmenu('togglerightmenu');"
+            id="togglerightmenu"
+            >Hide menu</a
+          ></span
+        >
+      </div>
+    </div>
+    <div
       id="rightmenu"
       style="
-        display: none;
         padding: 4px;
         border-left: 1px solid rgb(136, 136, 136);
         background: rgb(255, 255, 255) none repeat scroll 0% 0%;
@@ -118,12 +248,12 @@
         right: 0px;
         overflow-y: auto;
         z-index: 10;
-        height: 608px;
+        height: 609px;
       "
     >
       <div id="toprightmenu">
         <select id="selectmode">
-          <option value="replay">Replay mode</option>
+          <option selected="selected" value="replay">Replay mode</option>
           <option value="analysis">Split analysis</option>
           <option value="dotanalysis">Dot analysis</option>
           <option value="autoanalysis">AutOanalysis</option>
@@ -132,10 +262,8 @@
           <option value="detailedanalysis">DetailedAnalysis</option>
           <option value="canalysis">O-tech evaluation</option>
           <option value="calibrate">Map calibration</option>
-          <option value="addroutes" selected="selected">
-            Add routes/Change map
-          </option></select
-        ><select id="playspeedr" style="display: none">
+          <option value="addroutes">Add routes/Change map</option></select
+        ><select id="playspeedr">
           <option value="1">1x</option>
           <option value="2">2x</option>
           <option value="3">3x</option>
@@ -145,11 +273,11 @@
           <option selected="selected" value="10">10x</option>
           <option value="20">20x</option>
           <option value="50">50x</option></select
-        ><select id="realtime" style="display: none">
+        ><select id="realtime">
           <option value="off" selected="selected">RealTime off</option>
           <option value="on">RealTime on</option></select
         ><br />
-        <div id="playcontrol" style="display: none">
+        <div id="playcontrol">
           <button id="backr">&lt;</button><button id="playr">Play/Pause</button
           ><button id="forwr">&gt;</button
           ><input type="checkbox" id="replaydots" title="Select for dotmode" />
@@ -295,7 +423,7 @@
             course' functionality. 2. Selected athletes and parts of the routes
             to evaluate. 3. Adjust corridor width to fit the actual corridor. 4.
             Click 'Evaluate corridor'. You can change corridor width and see
-            live updated results without new calculations.</font
+            live updated results without new calculations </font
           ><br /><br />
           <div>
             <div
@@ -561,25 +689,8 @@
           </select>
         </div>
       </div>
-      <div id="addroutediv" style="display: block">
-        <div id="search3drerun" style="display: none">
-          <b>Search 3DRerun</b><br /><font size="1"
-            >Search for routes/maps in this area.</font
-          ><br /><select id="addroutestype">
-            <option value="routes" selected="selected">Routes</option>
-            <option value="maps">Maps</option></select
-          ><br /><select id="addroutesdate">
-            <option value="any" selected="selected">Any date</option></select
-          ><br /><font size="1">Free text (can be empty)</font><br /><input
-            id="addroutestxt"
-            size="20"
-          /><button onclick="mapviewer.addroutesfrombutton();">
-            Search 3DRerun</button
-          ><br />
-          <hr />
-          <div id="addroutes"></div>
-        </div>
-        <hr />
+      <div id="addroutediv" style="display: none">
+        <div id="search3drerun" style="display: hidden"></div>
         <b>From harddisk</b><br /><font size="1"
           >Choose routes to add and/or map to replace current map.</font
         ><br />
@@ -629,12 +740,187 @@
           for routes in course planning mode will then be wrong.</font
         >
       </div>
-      <div id="routemenu" style="display: none">
-        <hr />
-        <div style="padding-bottom: 4px"><b>Choose athletes</b></div>
+      <div id="routemenu">
         <button id="showa">All</button><button id="shown">None</button>
       </div>
-      <div id="routedesc"></div>
+      <div id="routedesc">
+        <div class="runnerdesc">
+          <div
+            id="showroute-0"
+            class="colorbox"
+            style="background: #0000ff"
+          ></div>
+          <span title="BARROSVALLET Mathias ()"
+            ><span id="routename-0">BARROSVALLET Mathia</span></span
+          >
+          <div class="allinfosmall"></div>
+        </div>
+        <div class="runnerdesc">
+          <div
+            id="showroute-1"
+            class="colorbox"
+            style="background: #ff0000"
+          ></div>
+          <span title="MOULET Quentin ()"
+            ><span id="routename-1">MOULET Quentin</span></span
+          >
+          <div class="allinfosmall"></div>
+        </div>
+        <div class="runnerdesc">
+          <div
+            id="showroute-2"
+            class="colorbox"
+            style="background: #006400"
+          ></div>
+          <span title="MARCHAND Nathan ()"
+            ><span id="routename-2">MARCHAND Nathan</span></span
+          >
+          <div class="allinfosmall"></div>
+        </div>
+        <div class="runnerdesc">
+          <div
+            id="showroute-3"
+            class="colorbox"
+            style="background: #8a2be2"
+          ></div>
+          <span title="MARTY Loïc ()"
+            ><span id="routename-3">MARTY Loïc</span></span
+          >
+          <div class="allinfosmall"></div>
+        </div>
+        <div class="runnerdesc">
+          <div
+            id="showroute-4"
+            class="colorbox"
+            style="background: #daa520"
+          ></div>
+          <span title="PERRIN Arnaud ()"
+            ><span id="routename-4">PERRIN Arnaud</span></span
+          >
+          <div class="allinfosmall"></div>
+        </div>
+        <div class="runnerdesc">
+          <div
+            id="showroute-5"
+            class="colorbox"
+            style="background: #008b8b"
+          ></div>
+          <span title="RADONDY Thomas ()"
+            ><span id="routename-5">RADONDY Thomas</span></span
+          >
+          <div class="allinfosmall"></div>
+        </div>
+        <div class="runnerdesc">
+          <div
+            id="showroute-6"
+            class="colorbox"
+            style="background: #2e8b57"
+          ></div>
+          <span title="RADONDY Théo ()"
+            ><span id="routename-6">RADONDY Théo</span></span
+          >
+          <div class="allinfosmall"></div>
+        </div>
+        <div class="runnerdesc">
+          <div
+            id="showroute-7"
+            class="colorbox"
+            style="background: #7fff00"
+          ></div>
+          <span title="LEPOUTRE Benjamin ()"
+            ><span id="routename-7">LEPOUTRE Benjamin</span></span
+          >
+          <div class="allinfosmall"></div>
+        </div>
+        <div class="runnerdesc">
+          <div
+            id="showroute-8"
+            class="colorbox"
+            style="background: #dc143c"
+          ></div>
+          <span title="BASSET Basile ()"
+            ><span id="routename-8">BASSET Basile</span></span
+          >
+          <div class="allinfosmall"></div>
+        </div>
+        <div class="runnerdesc">
+          <div
+            id="showroute-9"
+            class="colorbox"
+            style="background: #a52a2a"
+          ></div>
+          <span title="PERRIN Mathieu ()"
+            ><span id="routename-9">PERRIN Mathieu</span></span
+          >
+          <div class="allinfosmall"></div>
+        </div>
+        <div class="runnerdesc">
+          <div
+            id="showroute-10"
+            class="colorbox"
+            style="background: #ff0000"
+          ></div>
+          <span title="DELENNE Adrien ()"
+            ><span id="routename-10">DELENNE Adrien</span></span
+          >
+          <div class="allinfosmall"></div>
+        </div>
+        <div class="runnerdesc">
+          <div
+            id="showroute-11"
+            class="colorbox"
+            style="background: #0000ff"
+          ></div>
+          <span title="RAUTURIER Quentin ()"
+            ><span id="routename-11">RAUTURIER Quentin</span></span
+          >
+          <div class="allinfosmall"></div>
+        </div>
+        <div class="runnerdesc">
+          <div
+            id="showroute-12"
+            class="colorbox"
+            style="background: #006400"
+          ></div>
+          <span title="CAPBERN Loïc ()"
+            ><span id="routename-12">CAPBERN Loïc</span></span
+          >
+          <div class="allinfosmall"></div>
+        </div>
+        <div class="runnerdesc">
+          <div
+            id="showroute-13"
+            class="colorbox"
+            style="background: #8a2be2"
+          ></div>
+          <span title="VERGNAUD Alexandre ()"
+            ><span id="routename-13">VERGNAUD Alexandre</span></span
+          >
+          <div class="allinfosmall"></div>
+        </div>
+        <div class="runnerdesc">
+          <div
+            id="showroute-14"
+            class="colorbox"
+            style="background: #daa520"
+          ></div>
+          <span title="ANDRIEUX Quentin ()"
+            ><span id="routename-14">ANDRIEUX Quentin</span></span
+          >
+          <div class="allinfosmall"></div>
+        </div>
+        <div class="runnerdesc">
+          <div
+            id="showroute-15"
+            class="colorbox"
+            style="background: #008b8b"
+          ></div>
+          <span title="BECAERT Antoine ()"
+            ><span id="routename-15">BECAERT Antoine</span></span
+          >
+          <div class="allinfosmall"></div>
+        </div>
+      </div>
       <div id="infobottomdiv">
         <div class="bottomtitle2">Settings</div>
         <div>
@@ -1459,9 +1745,9 @@
         >
         <a
           href="javascript:void(0)"
-          onclick="mapviewer.showeleprofiles(0);"
+          onclick="mapviewer.showeleprofiles(1);"
           style="cursor: pointer; color: rgb(0, 0, 255); font-weight: bold"
-          >Eleprofile</a
+          >Ele</a
         >
         <a
           href="javascript:void(0)"
@@ -1482,14 +1768,19 @@
       <div id="xinfodiv"></div>
     </div>
     <div id="mapholder">
-      <canvas id="map" width="1348" height="608"></canvas>
+      <canvas
+        id="map"
+        style="touch-action: none; user-select: none"
+        width="1365"
+        height="609"
+      ></canvas>
     </div>
     <div id="graphholder" style="display: none"></div>
     <div
       id="realtimesliderdiv"
       style="
         position: absolute;
-        width: 1148px;
+        width: 1165px;
         bottom: 0px;
         left: 0px;
         padding-right: 10px;
@@ -1502,13 +1793,12 @@
         onchange="mapviewer.realtimeslide();"
         oninput="mapviewer.realtimeslide();"
         type="range"
-        min="1e+99"
-        max="-1e+99"
+        min="1650024001"
+        max="1650029425"
         style="width: 100%"
-        value="1e+99"
+        value="1650024001"
       />
     </div>
-    <!-- onChange="showVal(this.value)" -->
 
     <div
       style="
@@ -1621,6 +1911,33 @@
         class="ui-resizable-handle ui-resizable-nw"
         style="z-index: 1004"
       ></div>
+    </div>
+    <div
+      class="tooltipster-base tooltipster-default tooltipster-fade tooltipster-fade-show"
+      style="
+        max-width: 300px;
+        transition-duration: 350ms;
+        animation-duration: 350ms;
+        top: 32px;
+        left: 102px;
+      "
+    >
+      <div class="tooltipster-content">
+        <span
+          ><strong
+            >Click here to start different step-by-step guides for both
+            Beginners and Advanced users. The best way to learn both basic and
+            advanced features in 2DRerun.</strong
+          ></span
+        >
+      </div>
+      <div class="tooltipster-arrow-bottom tooltipster-arrow" style="">
+        <span
+          class="tooltipster-arrow-border"
+          style="margin-top: -3px; border-color: rgb(0, 0, 0)"
+        ></span
+        ><span style="border-color: rgb(76, 76, 76)"></span>
+      </div>
     </div>
   </body>
 </html>
