@@ -38,7 +38,6 @@ export function buildCourseAndRoutechoices(
   mapviewer.otechinfo = data.otechinfo;
   mapviewer.request_redraw();
   mapviewer.update_routediv();
-  console.log(mapviewer);
   iframe.contentDocument.getElementById("shown").click();
   selectHack(iframe, "selectmode", "analyzecourse");
   selectHack(iframe, "showtagsselect", "1");

@@ -1,5 +1,5 @@
 <script>
-  import { doc, getDoc, getFirestore } from "firebase/firestore";
+  import { doc, getDoc, getFirestore, setDoc } from "firebase/firestore";
 
   import Dialog from "../components/Dialog.svelte";
   import Gear from "../components/icons/Gear.svelte";
@@ -10,7 +10,10 @@
   import Statistics from "../components/Statistics.svelte";
   import Toggle from "../components/Toggle.svelte";
   import { getMapviewer } from "../utils/2d-rerun-hacks/get-mapviewer";
-  import { initMapviewer } from "../utils/2d-rerun-hacks/init-mapviewer";
+  import {
+    buildCourseAndRoutechoices,
+    initMapviewer,
+  } from "../utils/2d-rerun-hacks/init-mapviewer";
   import { loadSplitsTo2dRerun } from "../utils/2d-rerun-hacks/load-splits-to-2d-rerun";
   import { selectHack } from "../utils/2d-rerun-hacks/select-hack";
   import { IOFXMLParser } from "../utils/iof-xml-parser/IOFXMLParser";
@@ -71,7 +74,6 @@
   };
 
   function propagateLegChangeTo2DRerun() {
-    console.log(legNumber);
     if (!legNumber) {
       return;
     }
@@ -91,16 +93,35 @@
   };
 
   function loadCourseAndRoutechoicesFromJson(event) {
-    let file = event.target.files[0];
     let reader = new FileReader();
 
     reader.onload = function (e) {
-      console.log(event);
-      const data = JSON.parse(event.target.result);
-      console.log(event.target.result);
+      const data = JSON.parse(e.target.result);
+      buildCourseAndRoutechoices(mapviewer, iframe, data);
+      course.courseAndRoutechoices = data;
+      numberOfContols = course.courseAndRoutechoices.coursecoords.length - 1;
+      propagateLegChangeTo2DRerun();
     };
 
-    reader.readAsText(file);
+    reader.readAsText(event.target.files[0]);
+  }
+
+  async function saveToServer() {
+    if (course === undefined) {
+      alert("Nothing to save");
+      return;
+    }
+
+    await setDoc(doc(db, "courses", params.courseId), course);
+  }
+
+  function handleLoadSplitClick() {
+    if (numberOfContols === undefined) {
+      alert("You sould draw a course first.");
+      return;
+    }
+
+    isLoadSplitsDialogOpen = true;
   }
 </script>
 
@@ -150,13 +171,17 @@
           </li>
 
           <li>
-            <button on:click={() => (isLoadSplitsDialogOpen = true)}
-              >Load split times</button
-            >
+            <button on:click={handleLoadSplitClick}>Load split times</button>
           </li>
 
           <li>
             <button on:click={togle2dRerunPanel}>Toggle 2D Rerun</button>
+          </li>
+
+          <li>
+            <button on:click={saveToServer}
+              >Save course, routechoices and splitimes to server</button
+            >
           </li>
 
           <!-- <li>
