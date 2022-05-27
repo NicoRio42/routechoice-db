@@ -9,7 +9,7 @@
   };
 </script>
 
-<dialog open class="modal">
+<dialog open class="modal modal-is-open modal-is-closing">
   <article class="modal-content" use:clickOutside on:clickOutside={closeDialog}>
     <a
       aria-label="Close"

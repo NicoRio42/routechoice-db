@@ -37122,6 +37122,8 @@ function MapViewer(F, o, D) {
         }
       }
     }
+    url =
+      "https://us-central1-routechoice-db-dev.cloudfunctions.net/getLiveServerTime";
     var M = z.liveformat;
     if (M == "text" && z.liveprovider != "gpsseuranta") {
       M = "json";
