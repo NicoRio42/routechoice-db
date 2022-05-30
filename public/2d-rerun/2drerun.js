@@ -30599,7 +30599,8 @@ function MapViewer(F, o, D) {
     }
   };
   this.loadseu = function (O, N) {
-    var M = "getseu_json.php?baseurl=" + O + "&idstr=" + N;
+    // var M = "getseu_json.php?baseurl=" + O + "&idstr=" + N;
+    var M = "https://europe-west1-routechoice-db-dev.cloudfunctions.net/getLoggatorData?baseurl=" + O + "&idstr=" + N;
     if (getURLParameter("clear")) {
       M = M + "&clear=1";
     }
@@ -37123,7 +37124,7 @@ function MapViewer(F, o, D) {
       }
     }
     url =
-      "https://us-central1-routechoice-db-dev.cloudfunctions.net/getLiveServerTime";
+      "https://europe-west1-routechoice-db-dev.cloudfunctions.net/getLiveServerTime";
     var M = z.liveformat;
     if (M == "text" && z.liveprovider != "gpsseuranta") {
       M = "json";

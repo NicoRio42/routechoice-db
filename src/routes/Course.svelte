@@ -2,7 +2,7 @@
   import { doc, getDoc, getFirestore, setDoc } from "firebase/firestore";
 
   import Dialog from "../components/Dialog.svelte";
-  import Gear from "../components/icons/Gear.svelte";
+  import Gear from "../../shared/icons/Gear.svelte";
   import LegSelector from "../components/LegSelector.svelte";
   import LoadSplitTimes from "../components/LoadSplitTimes.svelte";
   import LegSplitTimesTable from "../components/SplitTimesTable/LegSplitTimesTable.svelte";

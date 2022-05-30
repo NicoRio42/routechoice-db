@@ -10,7 +10,7 @@
   } from "firebase/firestore";
   import { userStore } from "../stores/user-store";
   import { replace, link } from "svelte-spa-router";
-  import Trash from "../components/icons/Trash.svelte";
+  import Trash from "../../shared/icons/Trash.svelte";
 
   let isNewCourseDialogOpen = false;
   let name = "";

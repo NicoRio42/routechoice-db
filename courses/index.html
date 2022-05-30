@@ -1,5 +1,7 @@
-<html class="win firefox firefox9 gecko gecko9">
+<html class="win firefox firefox9 gecko gecko9" data-theme="light">
   <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width,initial-scale=1" />
     <meta http-equiv="Content-Type" content="text/html; charset=UTF-8" />
     <title>2DRerunViewer Alpha-version</title>
     <script type="text/javascript">
@@ -7,7 +9,7 @@
       var seurantaidstr = "logatecmuaoUA";
       var test = 0;
       var xc = 0;
-      var wheelzoom = 1;
+      var wheelzoom = 0.5;
       var isnarrowscreen = 0;
       var loadcourse = 0;
       var istouchscreen = 0;
@@ -15,11 +17,15 @@
       var index_file = "index.php";
       var simplified_version = 0;
     </script>
+    <link
+      rel="stylesheet"
+      href="https://unpkg.com/@picocss/pico@latest/css/pico.min.css"
+    />
     <link rel="stylesheet" href="/2d-rerun/jquery-ui-1.css" />
     <link rel="stylesheet" href="/2d-rerun/2drerun.css" />
     <!--<link rel="stylesheet" href="css/introjs.min.css"> -->
     <!-- <link rel="stylesheet" href="css/anno.css"> -->
-    <link rel="stylesheet" href="/2d-rerun/tooltipster.css" />
+    <!-- <link rel="stylesheet" href="/2d-rerun/tooltipster.css" /> -->
     <link rel="stylesheet" href="/2d-rerun/simplePagination.css" />
     <link rel="stylesheet" href="/2d-rerun/datepickr.css" />
     <!--<script type="text/javascript" src="https://ajax.googleapis.com/ajax/libs/jquery/2.0.3/jquery.min.js"></script>
@@ -114,20 +120,34 @@ tstAnno = new Anno({
           mapviewer = new MapViewer("map", "infobox", "rightmenu");
         }
 
-        mapviewer.IsLive = 1;
-        mapviewer.liveprovider = "tractrac";
-        mapviewer.liveid = "d432b550-b4a9-013a-1a7f-60a44ce903c3";
-        mapviewer.liveiniturl =
-          "https://us-central1-routechoice-db-dev.cloudfunctions.net/getTractracInfo?eventid=d1131c20-76c1-013a-bc67-60a44ce903c3&raceid=d432b550-b4a9-013a-1a7f-60a44ce903c3";
-        mapviewer.livedataurl =
-          "https://us-central1-routechoice-db-dev.cloudfunctions.net/getTractracData?eventid=d1131c20-76c1-013a-bc67-60a44ce903c3&raceid=d432b550-b4a9-013a-1a7f-60a44ce903c3";
-        mapviewer.livedelay = "60";
-        mapviewer.liveupdate = 100000;
-        mapviewer.liveformat = "jsonp";
-        var ids = new Array();
-        mapviewer.initLive(1);
+        // mapviewer.IsLive = 1;
+        // mapviewer.liveprovider = "tractrac";
+        // mapviewer.liveid = "d432b550-b4a9-013a-1a7f-60a44ce903c3";
+        // mapviewer.liveiniturl =
+        //   "https://europe-west1-routechoice-db-dev.cloudfunctions.net/getTractracInfo?eventid=d1131c20-76c1-013a-bc67-60a44ce903c3&raceid=d432b550-b4a9-013a-1a7f-60a44ce903c3";
+        // mapviewer.livedataurl =
+        //   "https://europe-west1-routechoice-db-dev.cloudfunctions.net/getTractracData?eventid=d1131c20-76c1-013a-bc67-60a44ce903c3&raceid=d432b550-b4a9-013a-1a7f-60a44ce903c3";
+        // mapviewer.livedelay = "60";
+        // mapviewer.liveupdate = 100000;
+        // mapviewer.liveformat = "jsonp";
+        // var ids = new Array();
+        // mapviewer.initLive(1);
 
         // mapviewer.loadseu(seurantabaseurl, seurantaidstr);
+
+        // mapviewer.IsLive = 1;
+        // mapviewer.liveprovider = "gpsseuranta";
+        // mapviewer.liveserver = "http://3drerun.worldofo.com/xgps/";
+        // mapviewer.liveid = "20220526WCmen";
+        // mapviewer.liveiniturl =
+        //   "https://europe-west1-routechoice-db-dev.cloudfunctions.net/getGPSSeurantaInit?GPSSeurentaID=20220526WCmen";
+        // mapviewer.livedataurl =
+        //   "https://europe-west1-routechoice-db-dev.cloudfunctions.net/getGPSSeurantaData?GPSSeurentaID=20220526WCmen";
+        // mapviewer.liveupdate = 30;
+        // mapviewer.liveformat = "text";
+        // mapviewer.livedatareset = -1;
+        // var ids = new Array();
+        // mapviewer.initLive(1);
       });
     </script>
     <!-- Only for ios for now - should do a fix for Android later on -->
@@ -1784,17 +1804,7 @@ tstAnno = new Anno({
       <div id="xinfodiv"></div>
     </div>
     <div id="mapholder" style="position: relative">
-      <div
-        id="app"
-        style="
-          position: absolute;
-          top: 0;
-          left: 0;
-          bottom: 0;
-          width: 17rem;
-          background-color: rgb(76, 76, 76);
-        "
-      ></div>
+      <div id="app"></div>
       <canvas
         id="map"
         style="touch-action: none; user-select: none"
@@ -1939,34 +1949,6 @@ tstAnno = new Anno({
         style="z-index: 1004"
       ></div>
     </div>
-    <!-- <div
-      class="tooltipster-base tooltipster-default tooltipster-fade tooltipster-fade-show"
-      style="
-        max-width: 300px;
-        transition-duration: 350ms;
-        animation-duration: 350ms;
-        top: 32px;
-        left: 102px;
-      "
-    >
-      <div class="tooltipster-content">
-        <span
-          ><strong
-            >Click here to start different step-by-step guides for both
-            Beginners and Advanced users. The best way to learn both basic and
-            advanced features in 2DRerun.</strong
-          ></span
-        >
-      </div>
-      <div class="tooltipster-arrow-bottom tooltipster-arrow" style="">
-        <span
-          class="tooltipster-arrow-border"
-          style="margin-top: -3px; border-color: rgb(0, 0, 0)"
-        ></span
-        ><span style="border-color: rgb(76, 76, 76)"></span>
-      </div>
-    </div> -->
-
     <script type="module" src="/courses/main.js"></script>
   </body>
 </html>

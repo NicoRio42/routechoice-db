@@ -1,62 +1,110 @@
 import functions from "firebase-functions";
 import fetch from "node-fetch";
 
-export const getLoggatorData = functions.https.onRequest(async (req, res) => {
-  fetch(req.body.text)
-    .then((response) => response.json())
-    .then((data) => res.json(data))
-    .catch((error) => error);
-});
+const regionalFunctions = functions.region("europe-west1");
 
-export const getTractracInfo = functions.https.onRequest(async (req, res) => {
-  const url = new URL(
-    "https://em.event.tractrac.com/race_status/get_info.json"
-  );
+export const getGPSSeurantaInit = regionalFunctions.https.onRequest(
+  async (req, res) => {
+    const url = `http://3drerun.worldofo.com/xgps/${req.query.GPSSeurentaID}/init.txt`;
 
-  for (let key in req.query) {
-    url.searchParams.append(key, req.query[key]);
+    res.set("Access-Control-Allow-Origin", "*");
+
+    fetch(url.toString())
+      .then((response) => response.text())
+      .then((data) => res.send(data))
+      .catch((error) => res.json(error));
   }
+);
 
-  fetch(url.toString(), {
-    headers: {
-      Referer: "http://3drerun.worldofo.com/",
-      "Content-Type": "application/javascript; charset=utf-8",
-    },
-  })
-    .then((response) => response.text())
-    .then((data) => res.send(data));
-});
+export const getGPSSeurantaData = regionalFunctions.https.onRequest(
+  async (req, res) => {
+    const url = `http://3drerun.worldofo.com/xgps/${req.query.GPSSeurentaID}/`;
 
-export const getTractracData = functions.https.onRequest(async (req, res) => {
-  const url = new URL("http://em.event.tractrac.com/race_status/get_data.json");
+    res.set("Access-Control-Allow-Origin", "*");
 
-  for (let key in req.query) {
-    url.searchParams.append(key, req.query[key]);
+    fetch(url.toString())
+      .then((response) => response.text())
+      .then((data) => res.send(data))
+      .catch((error) => res.json(error));
   }
+);
 
-  fetch(url.toString(), {
-    headers: {
-      Referer: "http://3drerun.worldofo.com/",
-      "Content-Type": "application/javascript; charset=utf-8",
-    },
-  })
-    .then((response) => response.text())
-    .then((data) => res.send(data));
-});
+export const getLoggatorData = regionalFunctions.https.onRequest(
+  async (req, res) => {
+    const url = new URL("http://loggator2.worldofo.com/getseu_json.php");
 
-export const getLiveServerTime = functions.https.onRequest(async (req, res) => {
-  const url = new URL("http://3drerun.worldofo.com/live/time.php");
+    url.searchParams.append("baseurl", req.query.baseurl);
+    url.searchParams.append("idstr", req.query.idstr);
 
-  for (let key in req.query) {
-    url.searchParams.append(key, req.query[key]);
+    res.set("Access-Control-Allow-Origin", "*");
+
+    fetch(url.toString())
+      .then((response) => response.json())
+      .then((data) => res.json(data))
+      .catch((error) => res.json(error));
   }
+);
 
-  fetch(url.toString(), {
-    headers: {
-      Referer: "http://3drerun.worldofo.com/",
-      "Content-Type": "application/javascript; charset=utf-8",
-    },
-  })
-    .then((response) => response.text())
-    .then((data) => res.send(data));
-});
+export const getTractracInfo = regionalFunctions.https.onRequest(
+  async (req, res) => {
+    const url = new URL(
+      "https://em.event.tractrac.com/race_status/get_info.json"
+    );
+
+    for (let key in req.query) {
+      url.searchParams.append(key, req.query[key]);
+    }
+
+    fetch(url.toString(), {
+      headers: {
+        Referer: "http://3drerun.worldofo.com/",
+        "Content-Type": "application/javascript; charset=utf-8",
+      },
+    })
+      .then((response) => response.text())
+      .then((data) => res.send(data))
+      .catch((error) => res.json(error));
+  }
+);
+
+export const getTractracData = regionalFunctions.https.onRequest(
+  async (req, res) => {
+    const url = new URL(
+      "http://em.event.tractrac.com/race_status/get_data.json"
+    );
+
+    for (let key in req.query) {
+      url.searchParams.append(key, req.query[key]);
+    }
+
+    fetch(url.toString(), {
+      headers: {
+        Referer: "http://3drerun.worldofo.com/",
+        "Content-Type": "application/javascript; charset=utf-8",
+      },
+    })
+      .then((response) => response.text())
+      .then((data) => res.send(data))
+      .catch((error) => res.json(error));
+  }
+);
+
+export const getLiveServerTime = regionalFunctions.https.onRequest(
+  async (req, res) => {
+    const url = new URL("http://3drerun.worldofo.com/live/time.php");
+
+    for (let key in req.query) {
+      url.searchParams.append(key, req.query[key]);
+    }
+
+    fetch(url.toString(), {
+      headers: {
+        Referer: "http://3drerun.worldofo.com/",
+        "Content-Type": "application/javascript; charset=utf-8",
+      },
+    })
+      .then((response) => response.text())
+      .then((data) => res.send(data))
+      .catch((error) => res.json(error));
+  }
+);
