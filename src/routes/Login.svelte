@@ -1,7 +1,8 @@
 <script>
   import { getAuth, signInWithEmailAndPassword } from "firebase/auth";
   import { push } from "svelte-spa-router";
-  import { userStore } from "../stores/user-store";
+  import { fade } from "svelte/transition";
+  import userStore from "../../shared/stores/user-store";
 
   const auth = getAuth();
 
@@ -10,34 +11,28 @@
   let loading = false;
   let showErrorMessage = false;
 
-  /**
-   *
-   * @param {Event} event
-   */
-  const handleSubmit = (event) => {
-    event.preventDefault();
+  const handleSubmit = () => {
     loading = true;
     showErrorMessage = false;
 
     signInWithEmailAndPassword(auth, email, password)
       .then((userCredential) => {
-        userStore.set(userCredential);
-
-        loading = false;
+        $userStore = userCredential;
         push("/");
       })
       .catch((error) => {
         console.error(`${error.code} ${error.message}`);
-        loading = false;
         showErrorMessage = false;
-      });
+      })
+      .finally(() => (loading = false));
   };
 </script>
 
-<main>
-  <article class="login-box">
+<main class="container" in:fade={{ duration: 500 }}>
+  <article>
     <h1>Login</h1>
-    <form on:submit={handleSubmit}>
+
+    <form on:submit|preventDefault={handleSubmit}>
       <label for="email">Email</label>
       <input bind:value={email} id="email" type="email" name="email" required />
 
@@ -63,18 +58,13 @@
 
 <style>
   main {
-    flex: 1;
-    margin: 0;
-    padding: 0;
-    display: flex;
-    flex-direction: column;
-    justify-content: center;
-    align-items: center;
+    padding-bottom: 0;
   }
 
   article {
-    margin: 0;
+    margin: 0 auto;
     padding: 1rem;
+    width: 20rem;
   }
 
   h1 {
@@ -82,10 +72,6 @@
   }
 
   @media screen and (max-width: 500px) {
-    main {
-      justify-content: start;
-    }
-
     article {
       width: 100%;
     }

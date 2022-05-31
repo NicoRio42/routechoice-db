@@ -1,11 +1,10 @@
 <script>
   import Gear from "../../shared/icons/Gear.svelte";
+  import userStore from "../../shared/stores/user-store";
   import LegSplitTimesTable from "../../src/components/SplitTimesTable/LegSplitTimesTable.svelte";
   import Statistics from "../../src/components/Statistics.svelte";
   import Toggle from "../../src/components/Toggle.svelte";
   import showSideBar from "../stores/show-sidebar";
-
-  export let params = {};
 
   let isLoadSplitsDialogOpen = false;
   let isInSplitMode = true;
@@ -167,13 +166,13 @@
           <button on:click={togle2dRerunPanel}>Toggle 2D Rerun</button>
         </li>
 
-        <!-- {#if $userStore !== null}
-            <li>
-              <button on:click={saveToServer} aria-busy={loadingSaveToServer}
-                >Save course, routechoices and splitTimes to server</button
-              >
-            </li>
-          {/if} -->
+        {#if $userStore !== null}
+          <li>
+            <button on:click={saveToServer} aria-busy={loadingSaveToServer}
+              >Save course, routechoices and splitTimes to server</button
+            >
+          </li>
+        {/if}
 
         <!-- <li>
               <button on:click={() => (isSplitsTableDialogOpen = true)}

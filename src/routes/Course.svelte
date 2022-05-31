@@ -8,7 +8,7 @@
   import LegSplitTimesTable from "../components/SplitTimesTable/LegSplitTimesTable.svelte";
   import Statistics from "../components/Statistics.svelte";
   import Toggle from "../components/Toggle.svelte";
-  import { userStore } from "../stores/user-store";
+  import userStore from "../../shared/stores/user-store";
   import { getMapviewer } from "../utils/2d-rerun-hacks/get-mapviewer";
   import {
     buildCourseAndRoutechoices,

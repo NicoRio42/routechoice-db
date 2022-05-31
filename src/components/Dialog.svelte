@@ -1,5 +1,6 @@
 <script>
   import { createEventDispatcher } from "svelte";
+  import { fade } from "svelte/transition";
   import { clickOutside } from "../utils/click-outside/clickOutside";
 
   const dispatch = createEventDispatcher();
@@ -9,7 +10,7 @@
   };
 </script>
 
-<dialog open class="modal modal-is-open modal-is-closing">
+<dialog open transition:fade={{ duration: 250 }}>
   <article class="modal-content" use:clickOutside on:clickOutside={closeDialog}>
     <a
       aria-label="Close"

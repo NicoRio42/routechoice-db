@@ -8,9 +8,11 @@
     deleteDoc,
     doc,
   } from "firebase/firestore";
-  import { userStore } from "../stores/user-store";
-  import { replace, link } from "svelte-spa-router";
+  import { link, push } from "svelte-spa-router";
   import Trash from "../../shared/icons/Trash.svelte";
+  import { onMount } from "svelte";
+  import userStore from "../../shared/stores/user-store";
+  import { fade } from "svelte/transition";
 
   let isNewCourseDialogOpen = false;
   let name = "";
@@ -20,17 +22,19 @@
 
   const db = getFirestore();
 
+  onMount(getCourses);
+
+  userStore.subscribe((user) => {
+    if (user === null) {
+      push("/login");
+    }
+  });
+
   async function getCourses() {
     const querySnapshot = await getDocs(collection(db, "courses"));
     const data = [];
     querySnapshot.forEach((doc) => data.push({ ...doc.data(), id: doc.id }));
     courses = data;
-  }
-
-  if ($userStore !== null) {
-    getCourses();
-  } else {
-    replace("/login");
   }
 
   async function handleSubmit(e) {
@@ -102,9 +106,7 @@
   </Dialog>
 {/if}
 
-<form />
-
-<main class="container">
+<main class="container" in:fade={{ duration: 500 }}>
   <h1>Courses</h1>
 
   <button
