@@ -1,7 +1,7 @@
 import App from "./App.svelte";
 import { initializeApp } from "firebase/app";
 import { getFunctions } from "firebase/functions";
-import { getFirestore } from "firebase/firestore";
+import { getFirestore } from "firebase/firestore/lite";
 import { getAuth, onAuthStateChanged } from "firebase/auth";
 import firebaseDevConfig from "../firebase-env/dev";
 import userStore from "../shared/stores/user-store";

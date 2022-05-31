@@ -1,5 +1,5 @@
 <script>
-  import { doc, getDoc, getFirestore, setDoc } from "firebase/firestore";
+  import { doc, getDoc, getFirestore, setDoc } from "firebase/firestore/lite";
 
   import Dialog from "../components/Dialog.svelte";
   import Gear from "../../shared/icons/Gear.svelte";

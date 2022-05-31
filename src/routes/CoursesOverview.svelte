@@ -7,7 +7,7 @@
     getFirestore,
     deleteDoc,
     doc,
-  } from "firebase/firestore";
+  } from "firebase/firestore/lite";
   import { link, push } from "svelte-spa-router";
   import Trash from "../../shared/icons/Trash.svelte";
   import { onMount } from "svelte";
