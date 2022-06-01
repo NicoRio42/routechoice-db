@@ -1,4 +1,28 @@
-export function initFromTractracURL(tractracURL) {
+function initMapviewer(urlString) {
+  const url = new URL(urlString);
+
+  if (url.origin === "https://events.loggator.com") {
+    initFromLoggatorURL(urlString);
+  }
+
+  if (url.origin === "https://live.tractrac.com/viewer/index.html") {
+    initFromTractracURL(urlString);
+  }
+}
+
+function initFromLoggatorURL(loggatorURL) {
+  window.mapviewer.loadseu(
+    "http://www.tulospalvelu.fi/gps/",
+    `logatec${extractLoggatorIDFromLoggatorURL(loggatorURL)}`
+  );
+}
+
+function extractLoggatorIDFromLoggatorURL(logatorUrl) {
+  const urlArray = logatorUrl.split("/");
+  return urlArray[urlArray.length - 1];
+}
+
+function initFromTractracURL(tractracURL) {
   const { eventID, raceID } = extractEventDataFromTractracURL(tractracURL);
 
   mapviewer.IsLive = 1;
@@ -22,4 +46,4 @@ function extractEventDataFromTractracURL(tractracURL) {
   return { eventID, raceID };
 }
 
-("https://live.tractrac.com/viewer/index.html?target=https://em.event.tractrac.com/events/d1131c20-76c1-013a-bc67-60a44ce903c3/races/ee8ee5f0-b294-013a-1007-60a44ce903c3.json");
+export default initMapviewer;

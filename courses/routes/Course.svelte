@@ -1,17 +1,26 @@
 <script>
   import ActionButtons from "../components/ActionButtons.svelte";
   import SideBar from "../components/SideBar.svelte";
-  import { initFromLoggatorURL } from "../utils/2d-rerun-hacks/init-from-loggator-url";
-  import { initFromTractracURL } from "../utils/2d-rerun-hacks/init-from-tractrac-url";
+  import course from "../stores/course";
+  import { onMount } from "svelte";
+  import initMapviewer from "../utils/2d-rerun-hacks/init-mapviewer";
+  import { getCourse } from "../../shared/db/course";
+  import { getFirestore } from "firebase/firestore/lite";
 
   export let params = {};
 
-  //   setTimeout(() => initFromLoggatorURL("https://events.loggator.com/muaoUA"));
-  setTimeout(() =>
-    initFromTractracURL(
-      "https://live.tractrac.com/viewer/index.html?target=https://em.event.tractrac.com/events/d1131c20-76c1-013a-bc67-60a44ce903c3/races/ee8ee5f0-b294-013a-1007-60a44ce903c3.json"
-    )
-  );
+  const db = getFirestore();
+
+  onMount(initCourse);
+
+  async function initCourse() {
+    $course = await getCourse(params.courseID, db);
+    initMapviewer($course.twoDRerunUrl);
+
+    if ($course.courseAndRoutechoices === undefined) {
+      return;
+    }
+  }
 </script>
 
 <SideBar />

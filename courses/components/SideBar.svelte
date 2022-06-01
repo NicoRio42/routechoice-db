@@ -4,6 +4,7 @@
   import LegSplitTimesTable from "../../src/components/SplitTimesTable/LegSplitTimesTable.svelte";
   import Statistics from "../../src/components/Statistics.svelte";
   import Toggle from "../../src/components/Toggle.svelte";
+  import { IOFXMLParser } from "../../src/utils/iof-xml-parser/IOFXMLParser";
   import showSideBar from "../stores/show-sidebar";
 
   let isLoadSplitsDialogOpen = false;
@@ -23,9 +24,6 @@
 
   /**@type {HTMLIFrameElement}*/
   let iframe;
-
-  /**@type {import("../models/mapviewer").Mapviewer}*/
-  let mapviewer;
 
   async function iframeLoaded() {
     // mapviewer = getMapviewer(iframe);

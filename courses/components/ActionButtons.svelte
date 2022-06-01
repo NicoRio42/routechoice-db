@@ -5,8 +5,13 @@
   import Star from "../../shared/icons/Star.svelte";
   import showSideBar from "../stores/show-sidebar";
   import selectedLeg from "../stores/selected-leg";
+  import course from "../stores/course";
 
-  export let numberOfLegs = 10;
+  let numberOfLegs = 0;
+
+  $: numberOfLegs = $course
+    ? $course.courseAndRoutechoices.coursecoords.length - 1
+    : 0;
 
   const handlePreviousControl = () => {
     if (numberOfLegs === 0) {

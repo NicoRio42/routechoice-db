@@ -22,7 +22,7 @@
       })
       .catch((error) => {
         console.error(`${error.code} ${error.message}`);
-        showErrorMessage = false;
+        showErrorMessage = true;
       })
       .finally(() => (loading = false));
   };
@@ -50,7 +50,7 @@
       >
 
       {#if showErrorMessage}
-        <p class="error-message">An error occured during login.</p>
+        <p class="error-message">Wrong email or password</p>
       {/if}
     </form>
   </article>
@@ -79,5 +79,6 @@
 
   .error-message {
     color: red;
+    font-size: smaller;
   }
 </style>
