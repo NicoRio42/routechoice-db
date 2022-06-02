@@ -1,7 +1,7 @@
 <script>
   import { createEventDispatcher } from "svelte";
   import { fade } from "svelte/transition";
-  import { clickOutside } from "../utils/click-outside/clickOutside";
+  import clickOutside from "../utils/click-outside/clickOutside";
 
   const dispatch = createEventDispatcher();
 
