@@ -40,7 +40,7 @@
   }
 
   function addCourse(e) {
-    courses = [...courses, e.detail];
+    getCourses();
   }
 
   async function deleteCourse(courseId) {
