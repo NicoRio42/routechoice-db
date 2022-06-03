@@ -33,17 +33,27 @@
     <h1>Login</h1>
 
     <form on:submit|preventDefault={handleSubmit}>
-      <label for="email">Email</label>
-      <input bind:value={email} id="email" type="email" name="email" required />
+      <label for="email"
+        >Email
+        <input
+          bind:value={email}
+          id="email"
+          type="email"
+          name="email"
+          required
+        />
+      </label>
 
-      <label for="password">Password</label>
-      <input
-        bind:value={password}
-        type="password"
-        id="password"
-        name="password"
-        required
-      />
+      <label for="password"
+        >Password
+        <input
+          bind:value={password}
+          type="password"
+          id="password"
+          name="password"
+          required
+        />
+      </label>
 
       <button aria-busy={loading} type="submit" on:click={handleSubmit}
         >Login</button

@@ -70,14 +70,20 @@
     </header>
 
     <form on:submit|preventDefault={handleSubmit}>
-      <label for="name">Course name</label>
-      <input bind:value={name} type="text" id="name" />
+      <label for="name"
+        >Course name
+        <input bind:value={name} type="text" id="name" />
+      </label>
 
-      <label for="date">Date</label>
-      <input bind:value={date} type="date" id="date" />
+      <label for="date"
+        >Date
+        <input bind:value={date} type="date" id="date" />
+      </label>
 
-      <label for="2d-rerun-url">Loggator or Tractrac url</label>
-      <input bind:value={twoDRerunUrl} type="text" id="2d-rerun-url" />
+      <label for="2d-rerun-url"
+        >Loggator or Tractrac URL
+        <input bind:value={twoDRerunUrl} type="text" id="2d-rerun-url" />
+      </label>
 
       <footer>
         <button on:click={closeDialog} class="outline" type="button"
