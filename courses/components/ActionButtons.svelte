@@ -11,7 +11,7 @@
 
   $: {
     numberOfLegs = $course?.courseAndRoutechoices
-      ? $course.courseAndRoutechoices.coursecoords.length
+      ? $course.courseAndRoutechoices.coursecoords.length - 1
       : 0;
   }
 

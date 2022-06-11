@@ -3,7 +3,6 @@
   import Router, { replace } from "svelte-spa-router";
   import wrap from "svelte-spa-router/wrap";
   import NavBar from "../shared/NavBar.svelte";
-  import Course from "./routes/Course.svelte";
   import CoursesOverview from "./routes/CoursesOverview.svelte";
   import Login from "./routes/Login.svelte";
 
@@ -29,7 +28,6 @@
         return user !== null;
       },
     }),
-    "/courses/:courseId": Course,
     "/login": Login,
   };
 

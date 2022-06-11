@@ -20,8 +20,6 @@
         return returnedRunner;
       });
 
-      console.log(legSplitTimes);
-
       legSplitTimes = legSplitTimes.sort(
         (runner1, runner2) => runner1.leg.time - runner2.leg.time
       );
