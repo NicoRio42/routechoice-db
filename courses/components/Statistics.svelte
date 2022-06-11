@@ -1,15 +1,15 @@
 <script>
+  import course from "../stores/course";
+  import selectedLeg from "../stores/selected-leg";
   import Graph from "./Graph.svelte";
-
-  export let splitTimes;
-  export let legNumber;
 
   let fasestTimeGraphData = [];
   let runnerNumberGraphData = [];
 
   $: {
-    if (splitTimes.routeChoicesStatistics.length !== 0) {
-      const statistics = splitTimes.routeChoicesStatistics[legNumber - 1];
+    if ($course?.splitTimes?.routeChoicesStatistics) {
+      const statistics =
+        $course.splitTimes.routeChoicesStatistics[$selectedLeg - 1];
       const formattedStatistics = Object.keys(statistics).map(
         (routechoiceName) => ({
           ...statistics[routechoiceName],

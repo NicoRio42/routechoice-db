@@ -32,24 +32,9 @@
       rightmenu.style.display === "block" ? "none" : "block";
   };
 
-  function propagateLegChangeTo2DRerun() {
-    // if (!legNumber) {
-    //   return;
-    // }
-    // selectHack(iframe, "selectmode", "analyzecourse");
-    // iframe.contentDocument.getElementById(`ac-${legNumber}`).click();
-  }
-
-  const detectRoutechoices = () => {
-    // splitTimes.runners = detectRunnersRoutechoices(
-    //   splitTimes.runners,
-    //   mapviewer,
-    //   mapviewer.routes
-    // );
-  };
-
   function loadCourseAndRoutechoicesFromJson(event) {
     let reader = new FileReader();
+
     reader.onload = function (e) {
       if (typeof e.target.result !== "string") {
         return;
@@ -60,6 +45,7 @@
       $course.courseAndRoutechoices = data;
       $selectedLeg = 1;
     };
+
     reader.readAsText(event.target.files[0]);
   }
 
@@ -68,43 +54,25 @@
       alert("Nothing to save");
       return;
     }
+
     loadingSaveToServer = true;
     await setDoc(doc(db, "courses", $course.id), $course);
     loadingSaveToServer = false;
   }
 
   function handleLoadSplitsClick() {
-    // if (numberOfContols === undefined) {
-    //   alert("You sould draw a course first.");
-    //   return;
-    // }
-    // isLoadSplitsDialogOpen = true;
-  }
+    if (!$course?.courseAndRoutechoices?.coursecoords.length) {
+      alert("You sould draw a course first.");
+      return;
+    }
 
-  function handleSplitDialogSubmit() {
-    // isLoadSplitsDialogOpen = false;
-    // detectRoutechoices();
-    // splitTimes.computeRoutechoicesStatistics();
-    // loadSplitsTo2dRerun(iframe, mapviewer, splitTimes);
-    // course.splitTimes = {};
-    // Object.keys(splitTimes).forEach(
-    //   (key) => (course.splitTimes[key] = splitTimes[key])
-    // );
-    // delete course.splitTimes.splitsXmlDoc;
+    isLoadSplitsDialogOpen = true;
   }
 </script>
 
 {#if isLoadSplitsDialogOpen}
   <LoadSplitTimesDialog bind:isDialogOpen={isLoadSplitsDialogOpen} />
 {/if}
-
-<!-- {#if isSplitsTableDialogOpen}
-    <Dialog on:closeDialog={() => (isSplitsTableDialogOpen = false)}>
-      <h1 slot="title">Split times</h1>
-  
-      <SplitTimesTable slot="content" {splitTimes} />
-    </Dialog>
-  {/if} -->
 
 {#if $showSideBar}
   <aside>
@@ -140,12 +108,6 @@
             >
           </li>
         {/if}
-
-        <!-- <li>
-              <button on:click={() => (isSplitsTableDialogOpen = true)}
-                >Split times table</button
-              >
-            </li> -->
       </ul>
     </details>
 
@@ -157,7 +119,7 @@
 
     {#if !isInSplitMode}
       <section class="routechoices-graph">
-        <Statistics {legNumber} {splitTimes} />
+        <Statistics />
       </section>
     {/if}
 
@@ -177,6 +139,7 @@
     left: 0;
     display: flex;
     flex-direction: column;
+    width: 20rem;
     padding: 4.375rem 1rem 1rem;
     border-right: 1px solid lightgray;
     background-color: white;

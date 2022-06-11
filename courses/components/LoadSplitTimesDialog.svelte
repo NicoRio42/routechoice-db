@@ -1,10 +1,14 @@
 <script>
   import { IOFXMLParser } from "../utils/iof-xml-parser/IOFXMLParser";
   import { detectRunnersByName } from "../utils/detect-runners-by-name/detectRunnersByName";
-
+  import { detectRunnersRoutechoices } from "../utils/routechoices-detector/detect-route";
   import { timeZones } from "../utils/time-zones";
+  import course from "../stores/course";
+  import { loadSplitsTo2dRerun } from "../utils/2d-rerun-hacks/load-splits-to-2d-rerun";
 
   export let isDialogOpen;
+
+  let splitTimes;
 
   /**@type {XMLDocument}*/
   let xmlDoc;
@@ -38,7 +42,6 @@
   };
 
   const parseIOFXML = (event) => {
-    event.preventDefault();
     splitTimes = new IOFXMLParser(xmlDoc, className, timeZone, 1.2, timeOffset);
 
     runners = detectRunnersByName(
@@ -47,20 +50,39 @@
     );
 
     step += 1;
-
-    console.log(splitTimes, runners);
   };
 
   const saveSplitTimes = () => {
-    savedSplitTimes = splitTimes;
-    savedSplitTimes.runners = runners;
-    dispatch("close");
+    splitTimes.runners = runners;
+
+    splitTimes.runners = splitTimes.runners = detectRunnersRoutechoices(
+      splitTimes.runners,
+      mapviewer,
+      mapviewer.routes
+    );
+
+    splitTimes.computeRoutechoicesStatistics();
+    loadSplitsTo2dRerun(splitTimes);
+
+    $course.splitTimes = {};
+
+    Object.keys(splitTimes).forEach(
+      (key) => ($course.splitTimes[key] = splitTimes[key])
+    );
+
+    delete $course.splitTimes.splitsXmlDoc;
+
+    isDialogOpen = false;
   };
 </script>
 
 <dialog open>
   <article>
-    <form class="step" on:submit={parseIOFXML} class:slide-right={step === 2}>
+    <form
+      class="step"
+      on:submit|preventDefault={parseIOFXML}
+      class:slide-right={step === 2}
+    >
       <label for="iof-xml-file">Load IOF XML File</label>
       <input
         name="iof-xml-file"
@@ -93,20 +115,25 @@
       />
 
       <footer class="footer">
-        <button type="button" class="outline" on:click={() => dispatch("close")}
-          >Cancel</button
+        <button
+          type="button"
+          class="outline"
+          on:click={() => (isDialogOpen = false)}>Cancel</button
         >
         <button type="submit">Load splits</button>
       </footer>
     </form>
 
-    <form on:submit={saveSplitTimes} class="step" class:slide-left={step === 1}>
+    <form
+      on:submit|preventDefault={saveSplitTimes}
+      class="step"
+      class:slide-left={step === 1}
+    >
       <table>
         <thead>
           <tr>
             <th>Split times</th>
             <th>GPS track</th>
-            <!-- <th>Routechoice DB user</th> -->
           </tr>
         </thead>
 
@@ -122,8 +149,6 @@
                   {/each}
                 </select>
               </td>
-
-              <!-- <td>Soon</td> -->
             </tr>
           {/each}
         </tbody>
