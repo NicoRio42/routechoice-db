@@ -9,9 +9,11 @@
 
   let numberOfLegs = 0;
 
-  $: numberOfLegs = $course
-    ? $course.courseAndRoutechoices.coursecoords.length - 1
-    : 0;
+  $: {
+    numberOfLegs = $course?.courseAndRoutechoices
+      ? $course.courseAndRoutechoices.coursecoords.length - 1
+      : 0;
+  }
 
   const handlePreviousControl = () => {
     if (numberOfLegs === 0) {

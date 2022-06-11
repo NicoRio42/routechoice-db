@@ -1,27 +1,31 @@
 <script>
+  import course from "../../stores/course";
+  import selectedLeg from "../../stores/selected-leg";
+
   import {
     rankToCSSClass,
     secondsToPrettyTime,
     fullNameToShortName,
   } from "./utils";
 
-  export let splitTimes;
-  export let legNumber;
-
-  let legSplitTimes;
+  let legSplitTimes = [];
 
   $: {
-    legSplitTimes = splitTimes.runners.map((runner) => {
-      let returnedRunner = { ...runner };
-      let leg = runner.legs[legNumber - 1];
-      delete returnedRunner.legs;
-      returnedRunner.leg = leg;
-      return returnedRunner;
-    });
+    if ($course?.splitTimes !== undefined && $selectedLeg !== undefined) {
+      legSplitTimes = $course.splitTimes.runners.map((runner) => {
+        let returnedRunner = { ...runner };
+        let leg = runner.legs[$selectedLeg - 1];
+        delete returnedRunner.legs;
+        returnedRunner.leg = leg;
+        return returnedRunner;
+      });
 
-    legSplitTimes = legSplitTimes.sort(
-      (runner1, runner2) => runner1.leg.time - runner2.leg.time
-    );
+      console.log(legSplitTimes);
+
+      legSplitTimes = legSplitTimes.sort(
+        (runner1, runner2) => runner1.leg.time - runner2.leg.time
+      );
+    }
   }
 </script>
 
@@ -32,7 +36,7 @@
 
       <th class="sticky-header">Time</th>
 
-      <th class="sticky-header right">Routechoice</th>
+      <th class="sticky-header right">RC</th>
     </tr>
   </thead>
   {#each legSplitTimes as runner}
@@ -76,10 +80,8 @@
 </table>
 
 <style>
-  .table-container {
-    width: 100%;
-    height: 100%;
-    overflow: scroll;
+  table {
+    font-size: smaller;
   }
 
   table th.sticky-header {

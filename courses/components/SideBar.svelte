@@ -1,60 +1,35 @@
 <script>
   import Gear from "../../shared/icons/Gear.svelte";
   import userStore from "../../shared/stores/user-store";
-  import LegSplitTimesTable from "../../src/components/SplitTimesTable/LegSplitTimesTable.svelte";
-  import Statistics from "../../src/components/Statistics.svelte";
-  import Toggle from "../../src/components/Toggle.svelte";
-  import { IOFXMLParser } from "../../src/utils/iof-xml-parser/IOFXMLParser";
+  import LegSplitTimesTable from "./SplitTimesTable/LegSplitTimesTable.svelte";
   import showSideBar from "../stores/show-sidebar";
+  import Statistics from "./Statistics.svelte";
+  import Toggle from "./Toggle.svelte";
+  import course from "../stores/course";
+  import { doc, getFirestore, setDoc } from "firebase/firestore/lite";
+  import selectedLeg from "../stores/selected-leg";
+  import buildCourseAndRoutechoices from "../utils/2d-rerun-hacks/build-course-and-routechoices";
+  import LoadSplitTimesDialog from "./LoadSplitTimesDialog.svelte";
 
   let isLoadSplitsDialogOpen = false;
   let isInSplitMode = true;
   let loadingSaveToServer = false;
-  let course;
   let loadCourseAndRoutechoicesFromJsonInput;
+  let rightmenu;
 
-  //   const db = getFirestore();
+  const db = getFirestore();
 
   /**@type {IOFXMLParser}*/
   let splitTimes = { runners: [], routeChoicesStatistics: [] };
   let legNumber = 1;
 
-  /**@type {number}*/
-  let numberOfContols;
-
-  /**@type {HTMLIFrameElement}*/
-  let iframe;
-
-  async function iframeLoaded() {
-    // mapviewer = getMapviewer(iframe);
-    // const docSnap = await getDoc(doc(db, "courses", params.courseId));
-    // if (docSnap.data() === undefined) {
-    //   alert("An error occured while loading course data.");
-    //   return;
-    // }
-    // course = docSnap.data();
-    // await initMapviewer(mapviewer, iframe, course);
-    // if (course.courseAndRoutechoices === undefined) {
-    //   return;
-    // }
-    // numberOfContols = course.courseAndRoutechoices.coursecoords.length - 1;
-    // setTimeout(propagateLegChangeTo2DRerun, 3000);
-    // if (course.splitTimes === undefined) {
-    //   return;
-    // }
-    // Object.keys(course.splitTimes).forEach(
-    //   (key) => (splitTimes[key] = course.splitTimes[key])
-    // );
-    // detectRoutechoices();
-    // loadSplitsTo2dRerun(iframe, mapviewer, splitTimes);
-  }
-
   const togle2dRerunPanel = () => {
-    // if (iframe) {
-    //   let rightmenu = iframe.contentDocument.getElementById("rightmenu");
-    //   rightmenu.style.display =
-    //     rightmenu.style.display === "block" ? "none" : "block";
-    // }
+    if (!rightmenu) {
+      rightmenu = document.getElementById("rightmenu");
+    }
+
+    rightmenu.style.display =
+      rightmenu.style.display === "block" ? "none" : "block";
   };
 
   function propagateLegChangeTo2DRerun() {
@@ -74,25 +49,28 @@
   };
 
   function loadCourseAndRoutechoicesFromJson(event) {
-    // let reader = new FileReader();
-    // reader.onload = function (e) {
-    //   const data = JSON.parse(e.target.result);
-    //   buildCourseAndRoutechoices(mapviewer, iframe, data);
-    //   course.courseAndRoutechoices = data;
-    //   numberOfContols = course.courseAndRoutechoices.coursecoords.length - 1;
-    //   propagateLegChangeTo2DRerun();
-    // };
-    // reader.readAsText(event.target.files[0]);
+    let reader = new FileReader();
+    reader.onload = function (e) {
+      if (typeof e.target.result !== "string") {
+        return;
+      }
+
+      const data = JSON.parse(e.target.result);
+      buildCourseAndRoutechoices(data);
+      $course.courseAndRoutechoices = data;
+      $selectedLeg = 1;
+    };
+    reader.readAsText(event.target.files[0]);
   }
 
   async function saveToServer() {
-    // if (course === undefined) {
-    //   alert("Nothing to save");
-    //   return;
-    // }
-    // loadingSaveToServer = true;
-    // await setDoc(doc(db, "courses", params.courseId), course);
-    // loadingSaveToServer = false;
+    if ($course === undefined) {
+      alert("Nothing to save");
+      return;
+    }
+    loadingSaveToServer = true;
+    await setDoc(doc(db, "courses", $course.id), $course);
+    loadingSaveToServer = false;
   }
 
   function handleLoadSplitsClick() {
@@ -116,18 +94,9 @@
   }
 </script>
 
-<!-- {#if isLoadSplitsDialogOpen}
-  <Dialog on:closeDialog={() => (isLoadSplitsDialogOpen = false)}>
-    <h3 slot="title">Load split times</h3>
-
-    <LoadSplitTimes
-      slot="content"
-      bind:savedSplitTimes={splitTimes}
-      on:close={handleSplitDialogSubmit}
-      {mapviewer}
-    />
-  </Dialog>
-{/if} -->
+{#if isLoadSplitsDialogOpen}
+  <LoadSplitTimesDialog bind:isDialogOpen={isLoadSplitsDialogOpen} />
+{/if}
 
 <!-- {#if isSplitsTableDialogOpen}
     <Dialog on:closeDialog={() => (isSplitsTableDialogOpen = false)}>
@@ -194,7 +163,7 @@
 
     {#if isInSplitMode}
       <section class="leg-split-times-table-container">
-        <LegSplitTimesTable {legNumber} {splitTimes} />
+        <LegSplitTimesTable />
       </section>
     {/if}
   </aside>
@@ -208,7 +177,6 @@
     left: 0;
     display: flex;
     flex-direction: column;
-    width: 25rem;
     padding: 4.375rem 1rem 1rem;
     border-right: 1px solid lightgray;
     background-color: white;
@@ -223,6 +191,9 @@
   .icon-button span {
     display: flex;
     align-items: center;
+  }
+  details ul {
+    max-width: fit-content;
   }
 
   ul li button {
