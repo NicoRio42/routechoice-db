@@ -4,6 +4,8 @@
   "private": true,
   "scripts": {
     "build": "vite build",
+    "build-dev": "dotenv -e .env.dev vite build",
+    "build-prod": "dotenv -e .env.prod vite build",
     "dev": "vite",
     "start": "vite preview",
     "check": "svelte-check --tsconfig ./tsconfig.json"
@@ -11,6 +13,8 @@
   "devDependencies": {
     "@sveltejs/vite-plugin-svelte": "^1.0.0-next.42",
     "@tsconfig/svelte": "^2.0.0",
+    "cross-env": "^7.0.3",
+    "dotenv": "^16.0.1",
     "svelte": "^3.0.0",
     "svelte-check": "^2.0.0",
     "svelte-preprocess": "^4.0.0",

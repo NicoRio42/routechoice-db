@@ -19,10 +19,6 @@
 
   const db = getFirestore();
 
-  /**@type {IOFXMLParser}*/
-  let splitTimes = { runners: [], routeChoicesStatistics: [] };
-  let legNumber = 1;
-
   const togle2dRerunPanel = () => {
     if (!rightmenu) {
       rightmenu = document.getElementById("rightmenu");
@@ -56,7 +52,11 @@
     }
 
     loadingSaveToServer = true;
-    await setDoc(doc(db, "courses", $course.id), $course);
+
+    const courseToSave = { ...$course };
+    const id = courseToSave.id;
+    delete courseToSave.id;
+    await setDoc(doc(db, "courses", id), courseToSave);
     loadingSaveToServer = false;
   }
 

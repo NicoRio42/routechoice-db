@@ -1,5 +1,6 @@
 {
   "projects": {
-    "default": "routechoice-db-dev"
+    "dev": "routechoice-db-dev",
+    "prod": "routechoice-db"
   }
 }

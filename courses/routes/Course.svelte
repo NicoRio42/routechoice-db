@@ -9,6 +9,7 @@
   import buildCourseAndRoutechoices from "../utils/2d-rerun-hacks/build-course-and-routechoices";
   import selectedLeg from "../stores/selected-leg";
   import { selectHack } from "../utils/2d-rerun-hacks/select-hack";
+  import ZoomButtons from "../components/ZoomButtons.svelte";
 
   export let params = {};
 
@@ -16,8 +17,17 @@
 
   onMount(initCourse);
 
+  $: {
+    if ($selectedLeg) {
+      selectHack("selectmode", "analyzecourse");
+      document.getElementById(`ac-${$selectedLeg}`).click();
+    }
+  }
+
   async function initCourse() {
     $course = await getCourse(params.courseID, db);
+    $course.id = params.courseID;
+
     initMapviewer($course.twoDRerunUrl);
 
     if ($course.courseAndRoutechoices === undefined) {
@@ -28,14 +38,9 @@
 
     setTimeout(() => ($selectedLeg = 1), 3000);
   }
-
-  $: {
-    if ($selectedLeg) {
-      selectHack("selectmode", "analyzecourse");
-      document.getElementById(`ac-${$selectedLeg}`).click();
-    }
-  }
 </script>
+
+<ZoomButtons />
 
 <SideBar />
 
