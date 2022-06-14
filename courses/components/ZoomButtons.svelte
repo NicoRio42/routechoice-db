@@ -1,16 +1,14 @@
-{#if navigator.userAgentData.mobile}
-  <section class="zoom-wrapper">
-    <button
-      class="outline zoom-in"
-      on:click={() => mapviewer.canvas.zoom(4, "wheel")}>+</button
-    >
+<section class="zoom-wrapper">
+  <button
+    class="outline zoom-in"
+    on:click={() => mapviewer.canvas.zoom(4, "wheel")}>+</button
+  >
 
-    <button
-      class="outline zoom-out"
-      on:click={() => mapviewer.canvas.zoom(-4, "wheel")}>-</button
-    >
-  </section>
-{/if}
+  <button
+    class="outline zoom-out"
+    on:click={() => mapviewer.canvas.zoom(-4, "wheel")}>-</button
+  >
+</section>
 
 <style>
   .zoom-wrapper {

@@ -3,11 +3,12 @@
   import ChevronLeft from "../../shared/icons/ChevronLeft.svelte";
   import ChevronRight from "../../shared/icons/ChevronRight.svelte";
   import Star from "../../shared/icons/Star.svelte";
-  import showSideBar from "../stores/show-sidebar";
   import selectedLeg from "../stores/selected-leg";
   import course from "../stores/course";
+  import toggleSideBar from "../stores/toggle-sidebar";
 
   let numberOfLegs = 0;
+  let rightmenu;
 
   $: {
     numberOfLegs = $course?.courseAndRoutechoices
@@ -31,10 +32,19 @@
     $selectedLeg =
       $selectedLeg !== numberOfLegs ? $selectedLeg + 1 : $selectedLeg;
   };
+
+  const togle2dRerunPanel = () => {
+    if (!rightmenu) {
+      rightmenu = document.getElementById("rightmenu");
+    }
+
+    rightmenu.style.display =
+      rightmenu.style.display === "block" ? "none" : "block";
+  };
 </script>
 
 <div class="control-bar">
-  <button class="mobile" disabled><Star /></button>
+  <button on:click={togle2dRerunPanel}>2D</button>
 
   <button on:click={handlePreviousControl}><ChevronLeft /></button>
 
@@ -46,9 +56,7 @@
 
   <button on:click={handleNextControl}><ChevronRight /></button>
 
-  <button class="mobile" on:click={() => showSideBar.update((show) => !show)}
-    ><Chart /></button
-  >
+  <button on:click={() => ($toggleSideBar = !$toggleSideBar)}><Chart /></button>
 </div>
 
 <style>
@@ -75,11 +83,5 @@
     display: flex;
     justify-content: center;
     align-items: center;
-  }
-
-  @media screen and (min-width: 500px) {
-    .mobile {
-      display: none;
-    }
   }
 </style>

@@ -2,7 +2,6 @@
   import Gear from "../../shared/icons/Gear.svelte";
   import userStore from "../../shared/stores/user-store";
   import LegSplitTimesTable from "./SplitTimesTable/LegSplitTimesTable.svelte";
-  import showSideBar from "../stores/show-sidebar";
   import Statistics from "./Statistics.svelte";
   import Toggle from "./Toggle.svelte";
   import course from "../stores/course";
@@ -10,23 +9,14 @@
   import selectedLeg from "../stores/selected-leg";
   import buildCourseAndRoutechoices from "../utils/2d-rerun-hacks/build-course-and-routechoices";
   import LoadSplitTimesDialog from "./LoadSplitTimesDialog.svelte";
+  import toggleSideBar from "../stores/toggle-sidebar";
 
   let isLoadSplitsDialogOpen = false;
   let isInSplitMode = true;
   let loadingSaveToServer = false;
   let loadCourseAndRoutechoicesFromJsonInput;
-  let rightmenu;
 
   const db = getFirestore();
-
-  const togle2dRerunPanel = () => {
-    if (!rightmenu) {
-      rightmenu = document.getElementById("rightmenu");
-    }
-
-    rightmenu.style.display =
-      rightmenu.style.display === "block" ? "none" : "block";
-  };
 
   function loadCourseAndRoutechoicesFromJson(event) {
     let reader = new FileReader();
@@ -74,75 +64,72 @@
   <LoadSplitTimesDialog bind:isDialogOpen={isLoadSplitsDialogOpen} />
 {/if}
 
-{#if $showSideBar}
-  <aside>
-    <details class="options">
-      <summary class="icon-button"><span><Gear />Options</span></summary>
-      <ul>
-        <li>
-          <input
-            bind:this={loadCourseAndRoutechoicesFromJsonInput}
-            on:change={loadCourseAndRoutechoicesFromJson}
-            type="file"
-            style="display: none;"
-          />
+<aside class:toggle-sidebar={$toggleSideBar}>
+  <details class="options">
+    <summary class="icon-button"><span><Gear />Options</span></summary>
+    <ul>
+      <li>
+        <input
+          bind:this={loadCourseAndRoutechoicesFromJsonInput}
+          on:change={loadCourseAndRoutechoicesFromJson}
+          type="file"
+          style="display: none;"
+        />
 
-          <button
-            on:click={() => loadCourseAndRoutechoicesFromJsonInput.click()}
-            >Load course routechoices from json</button
+        <button on:click={() => loadCourseAndRoutechoicesFromJsonInput.click()}
+          >Load course routechoices from json</button
+        >
+      </li>
+
+      <li>
+        <button on:click={handleLoadSplitsClick}>Load split times</button>
+      </li>
+
+      {#if $userStore !== null}
+        <li>
+          <button on:click={saveToServer} aria-busy={loadingSaveToServer}
+            >Save course, routechoices and splitTimes to server</button
           >
         </li>
+      {/if}
+    </ul>
+  </details>
 
-        <li>
-          <button on:click={handleLoadSplitsClick}>Load split times</button>
-        </li>
+  <Toggle
+    bind:isFirstValueSelected={isInSplitMode}
+    firstLabel={"Splits"}
+    secondLabel={"Graph"}
+  />
 
-        <li>
-          <button on:click={togle2dRerunPanel}>Toggle 2D Rerun</button>
-        </li>
+  {#if !isInSplitMode}
+    <section class="routechoices-graph">
+      <Statistics />
+    </section>
+  {/if}
 
-        {#if $userStore !== null}
-          <li>
-            <button on:click={saveToServer} aria-busy={loadingSaveToServer}
-              >Save course, routechoices and splitTimes to server</button
-            >
-          </li>
-        {/if}
-      </ul>
-    </details>
-
-    <Toggle
-      bind:isFirstValueSelected={isInSplitMode}
-      firstLabel={"Splits"}
-      secondLabel={"Graph"}
-    />
-
-    {#if !isInSplitMode}
-      <section class="routechoices-graph">
-        <Statistics />
-      </section>
-    {/if}
-
-    {#if isInSplitMode}
-      <section class="leg-split-times-table-container">
-        <LegSplitTimesTable />
-      </section>
-    {/if}
-  </aside>
-{/if}
+  {#if isInSplitMode}
+    <section class="leg-split-times-table-container">
+      <LegSplitTimesTable />
+    </section>
+  {/if}
+</aside>
 
 <style>
   aside {
+    display: none;
     position: fixed;
     top: 0;
     bottom: 0;
     left: 0;
-    display: flex;
-    flex-direction: column;
     width: 20rem;
     padding: 4.375rem 1rem 1rem;
     border-right: 1px solid lightgray;
     background-color: white;
+  }
+
+  .toggle-sidebar {
+    display: flex;
+    flex-direction: column;
   }
 
   .icon-button {
@@ -195,6 +182,12 @@
       width: 100%;
       right: 0;
       padding-bottom: 5rem;
+      display: flex;
+      flex-direction: column;
+    }
+
+    .toggle-sidebar {
+      display: none;
     }
   }
 </style>
