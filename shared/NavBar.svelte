@@ -11,6 +11,8 @@
     <li class="logo-item">
       <a class="logo-link" href="/#/"><Logo />Routechoice DB</a>
     </li>
+
+    <slot />
   </ul>
 
   {#if $userStore === null}

@@ -10,6 +10,8 @@
   import selectedLeg from "../stores/selected-leg";
   import { selectHack } from "../utils/2d-rerun-hacks/select-hack";
   import ZoomButtons from "../components/ZoomButtons.svelte";
+  import NavBar from "../../shared/NavBar.svelte";
+  import NavbarButtons from "../components/NavbarButtons.svelte";
 
   export let params = {};
 
@@ -40,8 +42,24 @@
   }
 </script>
 
+<div class="navbar-wrapper">
+  <NavBar>
+    <NavbarButtons />
+  </NavBar>
+</div>
+
 <ZoomButtons />
 
 <SideBar />
 
 <ActionButtons />
+
+<style>
+  .navbar-wrapper {
+    position: fixed;
+    top: 0;
+    left: 0;
+    right: 0;
+    z-index: 11;
+  }
+</style>
