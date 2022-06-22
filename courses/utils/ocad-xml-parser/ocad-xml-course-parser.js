@@ -1,32 +1,16 @@
 function iofXmlCourseExportTo2dRerunJson(courseXmlDoc, classIndex) {
-  const ocadTopLeft = {
-    x: courseXmlDoc.querySelector("MapPositionTopLeft").getAttribute("x"),
-    y: courseXmlDoc.querySelector("MapPositionTopLeft").getAttribute("y"),
-  };
-
-  const ocadBottomRight = {
-    x: courseXmlDoc.querySelector("MapPositionBottomRight").getAttribute("x"),
-    y: courseXmlDoc.querySelector("MapPositionBottomRight").getAttribute("y"),
-  };
-
   const controlsToCoordsMapper = {};
 
   Array.from(courseXmlDoc.querySelectorAll("RaceCourseData > Control")).forEach(
     (control) => {
-      const ocadCoords = {
-        x: control.querySelector("MapPosition").getAttribute("x"),
-        y: control.querySelector("MapPosition").getAttribute("y"),
-      };
-
-      const rerun2DCoords = convertOcadCoordsTo2DRerunCoords(
-        ocadCoords,
-        ocadTopLeft,
-        ocadBottomRight
+      const point = mapviewer.map.toxy(
+        control.querySelector("Position").getAttribute("lat"),
+        control.querySelector("Position").getAttribute("lng")
       );
 
       controlsToCoordsMapper[control.querySelector("Id").textContent] = {
-        x: rerun2DCoords.x,
-        y: rerun2DCoords.y,
+        x: point.x,
+        y: point.y,
       };
     }
   );
@@ -41,13 +25,6 @@ function iofXmlCourseExportTo2dRerunJson(courseXmlDoc, classIndex) {
   );
 
   return coursecoords;
-}
-
-function convertOcadCoordsTo2DRerunCoords(coords, topLeft, bottomRight) {
-  return {
-    x: (coords.x * mapviewer.map.width) / (bottomRight.x - topLeft.x),
-    y: (coords.y * mapviewer.map.height) / (bottomRight.y - topLeft.y),
-  };
 }
 
 export default iofXmlCourseExportTo2dRerunJson;

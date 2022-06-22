@@ -1,6 +1,9 @@
 <script>
   import iofXmlCourseExportTo2dRerunJson from "../../utils/ocad-xml-parser/ocad-xml-course-parser";
   import gpxRoutechoicesExportTo2DRerunJson from "../../utils/ocad-xml-parser/ocad-gpx-routechoices-parser";
+  import buildCourseAndRoutechoices from "../../utils/2d-rerun-hacks/build-course-and-routechoices";
+  import course from "../../stores/course";
+  import selectedLeg from "../../stores/selected-leg";
 
   export let isDialogOpen;
 
@@ -56,13 +59,13 @@
   }
 
   function parseXmlFiles() {
-    if (
-      courseXmlDoc === undefined ||
-      classIndex === undefined ||
-      routechoicesXmlDoc === undefined
-    ) {
-      alert("Fill all the inputs");
+    if (courseXmlDoc === undefined) {
+      alert("You have to upload at least a course.");
       return;
+    }
+
+    if (classIndex === undefined) {
+      alert("You have to choose a class.");
     }
 
     const coursecoords = iofXmlCourseExportTo2dRerunJson(
@@ -70,9 +73,17 @@
       classIndex
     );
 
-    const tags = gpxRoutechoicesExportTo2DRerunJson(routechoicesXmlDoc);
+    const tags =
+      routechoicesXmlDoc !== undefined
+        ? gpxRoutechoicesExportTo2DRerunJson(routechoicesXmlDoc)
+        : [];
 
-    console.log(coursecoords, tags);
+    const data = { coursecoords, tags };
+
+    buildCourseAndRoutechoices(data);
+    $course.courseAndRoutechoices = data;
+    $selectedLeg = 1;
+    isDialogOpen = false;
   }
 </script>
 
@@ -109,7 +120,7 @@
   </label>
 
   <label for="routechoices-file-input">
-    Routechoices (XML)
+    Routechoices (GPX)
 
     <input
       on:change={loadRoutechoicesFromOcad}

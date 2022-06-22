@@ -15,6 +15,27 @@ function gpxRoutechoicesExportTo2DRerunJson(routechoicesXmlDoc) {
       return `${pt.x},${pt.y},${index * 3},0`;
     });
 
+    const length = rawPoints.reduce((previous, current, index) => {
+      if (index === rawPoints.length - 1) {
+        return previous;
+      }
+
+      return (
+        previous +
+        calcdistance(
+          current.lat,
+          current.lon,
+          rawPoints[index + 1].lat,
+          rawPoints[index + 1].lon
+        )
+      );
+    }, 0);
+
+    const lastPoint = rawPoints[rawPoints.length - 1];
+    const { x, y } = mapviewer.map.toxy(lastPoint.lat, lastPoint.lon);
+
+    const name = trk.querySelector("name").textContent;
+
     return {
       type: "route",
       opened_dialog: 0,
@@ -31,12 +52,12 @@ function gpxRoutechoicesExportTo2DRerunJson(routechoicesXmlDoc) {
       offsettxt_basex: 0,
       offsettxt_basey: 0,
       group: 0,
-      x: 699.0649944867542,
-      y: 412.40048355447203,
-      length: 385.86708243200695,
-      name: "B",
+      x,
+      y,
+      length,
+      name,
       description: "",
-      color: "005500",
+      color: Math.floor(Math.random() * 16777215).toString(16),
     };
   });
 }
