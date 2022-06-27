@@ -48,11 +48,11 @@
           style="display: none;"
         />
 
-        Upload from OCAD exports
+        Upload from 2DRerun export
       </article>
 
       <article class="upload-option" on:click={() => (step = 2)}>
-        Upload from 2DRerun export
+        Upload from OCAD exports
       </article>
 
       <footer>

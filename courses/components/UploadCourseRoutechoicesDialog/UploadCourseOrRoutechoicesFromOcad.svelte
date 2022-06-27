@@ -4,6 +4,8 @@
   import buildCourseAndRoutechoices from "../../utils/2d-rerun-hacks/build-course-and-routechoices";
   import course from "../../stores/course";
   import selectedLeg from "../../stores/selected-leg";
+  import attributeRoutechoicesToLegs from "../../utils/routechoices-detector/attribute-routechoices-to-legs";
+  import addNiceColorsAndNamesToAttributedRoutechoices from "../../utils/routechoices-detector/add-nices-colors-and-names-to-routechoices";
 
   export let isDialogOpen;
 
@@ -78,7 +80,8 @@
         ? gpxRoutechoicesExportTo2DRerunJson(routechoicesXmlDoc)
         : [];
 
-    const data = { coursecoords, tags };
+    const data = attributeRoutechoicesToLegs({ coursecoords, tags });
+    data.tags = addNiceColorsAndNamesToAttributedRoutechoices(data.tags);
 
     buildCourseAndRoutechoices(data);
     $course.courseAndRoutechoices = data;
