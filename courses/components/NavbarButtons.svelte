@@ -2,36 +2,16 @@
   import userStore from "../../shared/stores/user-store";
   import course from "../stores/course";
   import { doc, getFirestore, setDoc } from "firebase/firestore/lite";
-  import selectedLeg from "../stores/selected-leg";
-  import buildCourseAndRoutechoices from "../utils/2d-rerun-hacks/build-course-and-routechoices";
-  import LoadSplitTimesDialog from "./LoadSplitTimesDialog.svelte";
   import Upload from "../../shared/icons/Upload.svelte";
-  import UploadCourseRoutechoicesDialog from "./UploadCourseRoutechoicesDialog/UploadCourseRoutechoicesDialog.svelte";
 
   let isLoadSplitsDialogOpen = false;
   let loadingSaveToServer = false;
   let isOptionDropdownOpen = false;
   let isUploadCourseRoutechoicesDialogOpen = false;
+  let lazySplitTimesDialog;
+  let lazyCourseRoutechoicesDialog;
 
   const db = getFirestore();
-
-  function loadCourseAndRoutechoicesFromJson(event) {
-    let reader = new FileReader();
-
-    reader.onload = function (e) {
-      if (typeof e.target.result !== "string") {
-        return;
-      }
-
-      const data = JSON.parse(e.target.result);
-      buildCourseAndRoutechoices(data);
-      $course.courseAndRoutechoices = data;
-      $selectedLeg = 1;
-    };
-
-    reader.readAsText(event.target.files[0]);
-    isOptionDropdownOpen = false;
-  }
 
   async function saveToServer() {
     if ($course === undefined) {
@@ -53,25 +33,37 @@
     isOptionDropdownOpen = false;
   }
 
+  function handleLoadCourseRoutechoicesClick() {
+    lazyCourseRoutechoicesDialog = import(
+      "./UploadCourseRoutechoicesDialog/UploadCourseRoutechoicesDialog.svelte"
+    );
+    isUploadCourseRoutechoicesDialogOpen = true;
+  }
+
   function handleLoadSplitsClick() {
     if (!$course?.courseAndRoutechoices?.coursecoords.length) {
       alert("You sould draw a course first.");
       return;
     }
 
+    lazySplitTimesDialog = import("./LoadSplitTimesDialog.svelte");
     isLoadSplitsDialogOpen = true;
     isOptionDropdownOpen = false;
   }
 </script>
 
-{#if isLoadSplitsDialogOpen}
-  <LoadSplitTimesDialog bind:isDialogOpen={isLoadSplitsDialogOpen} />
+{#if isLoadSplitsDialogOpen && lazySplitTimesDialog}
+  {#await lazySplitTimesDialog then { default: LoadSplitTimesDialog }}
+    <LoadSplitTimesDialog bind:isDialogOpen={isLoadSplitsDialogOpen} />
+  {/await}
 {/if}
 
-{#if isUploadCourseRoutechoicesDialogOpen}
-  <UploadCourseRoutechoicesDialog
-    bind:isDialogOpen={isUploadCourseRoutechoicesDialogOpen}
-  />
+{#if isUploadCourseRoutechoicesDialogOpen && lazyCourseRoutechoicesDialog}
+  {#await lazyCourseRoutechoicesDialog then { default: UploadCourseRoutechoicesDialog }}
+    <UploadCourseRoutechoicesDialog
+      bind:isDialogOpen={isUploadCourseRoutechoicesDialogOpen}
+    />
+  {/await}
 {/if}
 
 <li class="menu-list-item large-devices">
@@ -82,7 +74,7 @@
     </summary>
     <ul>
       <li class="option-item">
-        <button on:click={() => (isUploadCourseRoutechoicesDialogOpen = true)}
+        <button on:click={handleLoadCourseRoutechoicesClick}
           >Course and routechoices</button
         >
       </li>

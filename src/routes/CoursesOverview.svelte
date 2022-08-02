@@ -54,6 +54,10 @@
   }
 </script>
 
+<svelte:head>
+  <title>Routechoice DB</title>
+</svelte:head>
+
 {#if isAddCourseDialogOpen}
   <AddCourseDialog bind:isAddCourseDialogOpen on:onAddCourse={addCourse} />
 {/if}

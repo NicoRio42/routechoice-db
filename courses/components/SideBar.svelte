@@ -5,26 +5,47 @@
   import toggleSideBar from "../stores/toggle-sidebar";
 
   let isInSplitMode = true;
+  let width = 400;
+  let isMouseDown = false;
+
+  function handleMousemove(event) {
+    if (isMouseDown) {
+      width = event.clientX < 320 ? 320 : event.clientX;
+    }
+  }
 </script>
 
-<aside class:toggle-sidebar={$toggleSideBar}>
-  <Toggle
-    bind:isFirstValueSelected={isInSplitMode}
-    firstLabel={"Splits"}
-    secondLabel={"Graph"}
-  />
+<svelte:window
+  on:mousemove={handleMousemove}
+  on:mouseup={() => (isMouseDown = false)}
+/>
 
-  {#if !isInSplitMode}
-    <section class="routechoices-graph">
-      <Statistics />
-    </section>
-  {/if}
+<aside
+  class:toggle-sidebar={$toggleSideBar}
+  style:width
+  on:mousedown={() => (isMouseDown = true)}
+>
+  <div class="main-wrapper">
+    <Toggle
+      bind:isFirstValueSelected={isInSplitMode}
+      firstLabel={"Splits"}
+      secondLabel={"Graph"}
+    />
 
-  {#if isInSplitMode}
-    <section class="leg-split-times-table-container">
-      <LegSplitTimesTable />
-    </section>
-  {/if}
+    {#if !isInSplitMode}
+      <section class="routechoices-graph">
+        <Statistics />
+      </section>
+    {/if}
+
+    {#if isInSplitMode}
+      <section class="leg-split-times-table-container">
+        <LegSplitTimesTable />
+      </section>
+    {/if}
+  </div>
+
+  <div class="resize-side" />
 </aside>
 
 <style>
@@ -34,15 +55,24 @@
     top: 0;
     bottom: 0;
     left: 0;
-    width: 20rem;
-    padding: 4.375rem 1rem 1rem;
-    border-right: 1px solid lightgray;
     background-color: white;
+  }
+
+  .main-wrapper {
+    flex-grow: 1;
+    display: flex;
+    flex-direction: column;
+    padding: 4.375rem 1rem 1rem;
+  }
+
+  .resize-side {
+    width: 0.125rem;
+    border-right: 1px solid lightgray;
+    cursor: e-resize;
   }
 
   .toggle-sidebar {
     display: flex;
-    flex-direction: column;
   }
 
   .leg-split-times-table-container {
@@ -58,7 +88,7 @@
 
   @media screen and (max-width: 500px) {
     aside {
-      width: 100%;
+      width: 100% !important;
       right: 0;
       padding-bottom: 5rem;
       display: flex;
@@ -66,6 +96,10 @@
     }
 
     .toggle-sidebar {
+      display: none;
+    }
+
+    .resize-side {
       display: none;
     }
   }

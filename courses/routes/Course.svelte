@@ -14,7 +14,6 @@
   import NavbarButtons from "../components/NavbarButtons.svelte";
 
   export let params = {};
-
   const db = getFirestore();
 
   onMount(initCourse);
@@ -41,6 +40,10 @@
     setTimeout(() => ($selectedLeg = 1), 3000);
   }
 </script>
+
+<svelte:head>
+  <title>{$course?.name ?? "Routechoice DB course"}</title>
+</svelte:head>
 
 <div class="navbar-wrapper">
   <NavBar>

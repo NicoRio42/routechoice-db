@@ -28,6 +28,10 @@
   };
 </script>
 
+<svelte:head>
+  <title>Routechoice DB login</title>
+</svelte:head>
+
 <main class="container" in:fade={{ duration: 500 }}>
   <article>
     <h1>Login</h1>
