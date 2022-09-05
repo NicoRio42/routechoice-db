@@ -2,7 +2,6 @@
   import Chart from "../../shared/icons/Chart.svelte";
   import ChevronLeft from "../../shared/icons/ChevronLeft.svelte";
   import ChevronRight from "../../shared/icons/ChevronRight.svelte";
-  import Star from "../../shared/icons/Star.svelte";
   import selectedLeg from "../stores/selected-leg";
   import course from "../stores/course";
   import toggleSideBar from "../stores/toggle-sidebar";
@@ -17,18 +16,10 @@
   }
 
   const handlePreviousControl = () => {
-    if (numberOfLegs === 0) {
-      return;
-    }
-
     $selectedLeg = $selectedLeg !== 1 ? $selectedLeg - 1 : $selectedLeg;
   };
 
   const handleNextControl = () => {
-    if (numberOfLegs === 0) {
-      return;
-    }
-
     $selectedLeg =
       $selectedLeg !== numberOfLegs ? $selectedLeg + 1 : $selectedLeg;
   };
@@ -46,15 +37,19 @@
 <div class="control-bar">
   <button on:click={togle2dRerunPanel}>2D</button>
 
-  <button on:click={handlePreviousControl}><ChevronLeft /></button>
+  <button on:click={handlePreviousControl} disabled={numberOfLegs === 0}
+    ><ChevronLeft /></button
+  >
 
-  <select bind:value={$selectedLeg}>
+  <select bind:value={$selectedLeg} disabled={numberOfLegs === 0}>
     {#each [...Array(numberOfLegs).keys()] as leg}
       <option value={leg + 1}>{leg + 1}</option>
     {/each}
   </select>
 
-  <button on:click={handleNextControl}><ChevronRight /></button>
+  <button on:click={handleNextControl} disabled={numberOfLegs === 0}
+    ><ChevronRight /></button
+  >
 
   <button on:click={() => ($toggleSideBar = !$toggleSideBar)}><Chart /></button>
 </div>
