@@ -20,11 +20,28 @@ function iofXmlCourseExportTo2dRerunJson(courseXmlDoc, classIndex) {
   const coursecoords = Array.from(course.querySelectorAll("CourseControl")).map(
     (control) => {
       const controlId = control.querySelector("Control").textContent;
-      return `${controlsToCoordsMapper[controlId].x},${controlsToCoordsMapper[controlId].y}`;
+
+      return [
+        controlsToCoordsMapper[controlId].x,
+        controlsToCoordsMapper[controlId].y,
+      ];
     }
   );
 
-  return coursecoords;
+  const filteredCoursecoords = coursecoords.filter((coord, index) => {
+    if (index === 0) return true;
+
+    return (
+      Math.abs(coord[0] - coursecoords[index - 1][0]) > 3 &&
+      Math.abs(coord[1] - coursecoords[index - 1][1]) > 3
+    );
+  });
+
+  const stringCourseCoords = filteredCoursecoords.map(
+    (coord) => `${coord[0]},${coord[1]}`
+  );
+
+  return stringCourseCoords;
 }
 
 export default iofXmlCourseExportTo2dRerunJson;
