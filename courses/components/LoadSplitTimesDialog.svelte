@@ -5,6 +5,7 @@
   import { timeZones } from "../utils/time-zones";
   import course from "../stores/course";
   import { loadSplitsTo2dRerun } from "../utils/2d-rerun-hacks/load-splits-to-2d-rerun";
+  import clickOutside from "../../shared/use/clickOutside";
 
   export let isDialogOpen;
 
@@ -32,10 +33,14 @@
     reader.onload = function (e) {
       let readXml = e.target.result;
       let parser = new DOMParser();
+
       xmlDoc = parser.parseFromString(readXml.toString(), "application/xml");
+
       classNames = Array.from(
         xmlDoc.querySelectorAll("ClassResult Class Name")
       ).map((cl) => cl.innerHTML);
+
+      if (classNames.length > 0) className = classNames[0];
     };
 
     reader.readAsText(xmlFile);
@@ -77,7 +82,17 @@
 </script>
 
 <dialog open>
-  <article>
+  <article use:clickOutside on:clickOutside={() => (isDialogOpen = false)}>
+    <header>
+      <a
+        aria-label="Close"
+        class="close"
+        on:click={() => (isDialogOpen = false)}
+      />
+
+      <strong>Upload split times</strong>
+    </header>
+
     <form
       class="step"
       on:submit|preventDefault={parseIOFXML}
@@ -92,7 +107,12 @@
       />
 
       <label for="class">Class</label>
-      <select name="class" id="class" bind:value={className}>
+      <select
+        name="class"
+        id="class"
+        bind:value={className}
+        disabled={classNames.length === 0}
+      >
         {#each classNames as className}
           <option value={className}>{className}</option>
         {/each}

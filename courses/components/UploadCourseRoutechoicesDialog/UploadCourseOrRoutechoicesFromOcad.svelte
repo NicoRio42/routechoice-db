@@ -6,6 +6,8 @@
   import selectedLeg from "../../stores/selected-leg";
   import attributeRoutechoicesToLegs from "../../utils/routechoices-detector/attribute-routechoices-to-legs";
   import addNiceColorsAndNamesToAttributedRoutechoices from "../../utils/routechoices-detector/add-nice-colors-and-names-to-routechoices";
+  import { fade } from "svelte/transition";
+  import { createEventDispatcher } from "svelte";
 
   export let isDialogOpen;
 
@@ -13,13 +15,25 @@
   let routechoicesXmlDoc;
   let classNames = [];
   let classIndex;
+  let isCourseFileInvalid;
+  let isRoutechoicesFileInvalid;
+
+  const dispatch = createEventDispatcher();
 
   function loadCourseFromOCAD(event) {
-    if (event.target.files.length === 0) {
+    if (event.target.files.length !== 1) {
       return;
     }
 
     const xmlFile = event.target.files[0];
+
+    if (xmlFile.type !== "text/xml") {
+      isCourseFileInvalid = true;
+      return;
+    }
+
+    isCourseFileInvalid = false;
+
     const reader = new FileReader();
 
     reader.onload = (e) => {
@@ -34,6 +48,8 @@
       classNames = Array.from(courseXmlDoc.querySelectorAll("Course Name")).map(
         (cl) => cl.innerHTML
       );
+
+      if (classNames.length > 0) classIndex = 0;
     };
 
     reader.readAsText(xmlFile);
@@ -45,6 +61,14 @@
     }
 
     const xmlFile = event.target.files[0];
+
+    if (xmlFile.name.split(".").pop() !== "gpx") {
+      isRoutechoicesFileInvalid = true;
+      return;
+    }
+
+    isRoutechoicesFileInvalid = false;
+
     const reader = new FileReader();
 
     reader.onload = (e) => {
@@ -90,11 +114,10 @@
   }
 </script>
 
-<header>
-  <h2>Upload from OCAD exports</h2>
-</header>
-
-<form on:submit|preventDefault={parseXmlFiles}>
+<form
+  on:submit|preventDefault={parseXmlFiles}
+  transition:fade={{ duration: 200 }}
+>
   <label for="course-file-input">
     Course file (IOF XML 3.0)
 
@@ -103,11 +126,16 @@
       id="course-file-input"
       name="course-file-input"
       type="file"
+      accept="application/xml"
     />
+
+    {#if isCourseFileInvalid}
+      <p class="error-message">Invalid file extension</p>
+    {/if}
   </label>
 
   <label for="class-select">
-    class
+    Class
 
     <select
       bind:value={classIndex}
@@ -115,7 +143,6 @@
       id="class-select"
       disabled={classNames.length === 0}
     >
-      <option />
       {#each classNames as clsName, index}
         <option value={index}>{clsName}</option>
       {/each}
@@ -123,21 +150,24 @@
   </label>
 
   <label for="routechoices-file-input">
-    Routechoices (GPX)
+    Routechoices (GPX export)
 
     <input
       on:change={loadRoutechoicesFromOcad}
       id="routechoices-file-input"
       name="routechoices-file-input"
       type="file"
+      accept=".gpx"
     />
+
+    {#if isRoutechoicesFileInvalid}
+      <p class="error-message">Invalid file extension</p>
+    {/if}
   </label>
 
   <footer class="button-wrapper">
-    <button
-      class="outline"
-      type="button"
-      on:click={() => (isDialogOpen = false)}>Cancel</button
+    <button class="outline" type="button" on:click={() => dispatch("previous")}
+      >Cancel</button
     >
 
     <button type="submit">Upload</button>
@@ -149,5 +179,11 @@
     display: flex;
     justify-content: center;
     gap: 1rem;
+  }
+
+  .error-message {
+    color: rgba(198, 40, 40, 0.999);
+    font-size: smaller;
+    margin-top: calc(var(--spacing) * -1);
   }
 </style>

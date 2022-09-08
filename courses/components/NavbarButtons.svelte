@@ -6,10 +6,10 @@
 
   let isLoadSplitsDialogOpen = false;
   let loadingSaveToServer = false;
-  let isOptionDropdownOpen = false;
   let isUploadCourseRoutechoicesDialogOpen = false;
   let lazySplitTimesDialog;
   let lazyCourseRoutechoicesDialog;
+  let uploadsDropdown;
 
   const db = getFirestore();
 
@@ -30,25 +30,30 @@
     delete courseToSave.id;
     await setDoc(doc(db, "courses", id), courseToSave);
     loadingSaveToServer = false;
-    isOptionDropdownOpen = false;
   }
 
   function handleLoadCourseRoutechoicesClick() {
     lazyCourseRoutechoicesDialog = import(
       "./UploadCourseRoutechoicesDialog/UploadCourseRoutechoicesDialog.svelte"
     );
+
     isUploadCourseRoutechoicesDialogOpen = true;
+
+    lazyCourseRoutechoicesDialog.then(() =>
+      uploadsDropdown.removeAttribute("open")
+    );
   }
 
   function handleLoadSplitsClick() {
     if (!$course?.courseAndRoutechoices?.coursecoords.length) {
-      alert("You sould draw a course first.");
+      alert("You sould import a course first.");
       return;
     }
 
     lazySplitTimesDialog = import("./LoadSplitTimesDialog.svelte");
     isLoadSplitsDialogOpen = true;
-    isOptionDropdownOpen = false;
+
+    lazySplitTimesDialog.then(() => uploadsDropdown.removeAttribute("open"));
   }
 </script>
 
@@ -67,7 +72,7 @@
 {/if}
 
 <li class="menu-list-item large-devices">
-  <details role="list" open={isOptionDropdownOpen}>
+  <details role="list" bind:this={uploadsDropdown}>
     <summary aria-haspopup="listbox">
       <Upload />
       Upload

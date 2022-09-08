@@ -1,5 +1,6 @@
 <script>
   import { fade } from "svelte/transition";
+  import clickOutside from "../../../shared/use/clickOutside";
 
   import course from "../../stores/course";
   import selectedLeg from "../../stores/selected-leg";
@@ -31,29 +32,41 @@
 </script>
 
 <dialog open transition:fade={{ duration: 200 }}>
-  <article>
-    {#if step === 1}
-      <header>
-        <h2>Upload course and routechoices</h2>
-      </header>
+  <article use:clickOutside on:clickOutside={() => (isDialogOpen = false)}>
+    <header>
+      <a
+        aria-label="Close"
+        class="close"
+        on:click={() => (isDialogOpen = false)}
+      />
 
-      <article
-        class="upload-option"
-        on:click={() => loadCourseAndRoutechoicesFromJsonInput.click()}
+      <strong
+        >{step === 1
+          ? "Upload course and routechoices"
+          : "Upload from OCAD exports"}</strong
       >
-        <input
-          bind:this={loadCourseAndRoutechoicesFromJsonInput}
-          on:change={loadCourseAndRoutechoicesFromJson}
-          type="file"
-          style="display: none;"
-        />
+    </header>
 
-        Upload from 2DRerun export
-      </article>
+    {#if step === 1}
+      <div class="options-wrapper">
+        <article
+          class="upload-option"
+          on:click={() => loadCourseAndRoutechoicesFromJsonInput.click()}
+        >
+          <input
+            bind:this={loadCourseAndRoutechoicesFromJsonInput}
+            on:change={loadCourseAndRoutechoicesFromJson}
+            type="file"
+            style="display: none;"
+          />
 
-      <article class="upload-option" on:click={() => (step = 2)}>
-        Upload from OCAD exports
-      </article>
+          Upload from 2DRerun export
+        </article>
+
+        <article class="upload-option" on:click={() => (step = 2)}>
+          Upload from OCAD exports
+        </article>
+      </div>
 
       <footer>
         <button on:click={() => (isDialogOpen = false)}>Cancel</button>
@@ -61,17 +74,22 @@
     {/if}
 
     {#if step === 2}
-      <UploadCourseOrRoutechoicesFromOcad bind:isDialogOpen />
+      <UploadCourseOrRoutechoicesFromOcad
+        bind:isDialogOpen
+        on:previous={() => (step = 1)}
+      />
     {/if}
   </article>
 </dialog>
 
 <style>
-  h2 {
+  .upload-option {
+    cursor: pointer;
     margin: 0;
   }
 
-  .upload-option {
-    cursor: pointer;
+  .options-wrapper {
+    display: flex;
+    gap: 1rem;
   }
 </style>

@@ -2,7 +2,7 @@
   import { addDoc, collection, getFirestore } from "firebase/firestore/lite";
   import { createEventDispatcher } from "svelte";
   import { fade } from "svelte/transition";
-  import clickOutside from "../utils/click-outside/clickOutside";
+  import clickOutside from "../../shared/use/clickOutside";
 
   export let isAddCourseDialogOpen;
   let name = "";
@@ -66,7 +66,7 @@
     <header>
       <a aria-label="Close" class="close" on:click={closeDialog} />
 
-      Add course
+      <strong>Add course</strong>
     </header>
 
     <form on:submit|preventDefault={handleSubmit}>
