@@ -1,5 +1,7 @@
 function gpxRoutechoicesExportTo2DRerunJson(routechoicesXmlDoc) {
-  return Array.from(routechoicesXmlDoc.querySelectorAll("trk")).map((trk) => {
+  const rawRoutechoices = Array.from(
+    routechoicesXmlDoc.querySelectorAll("trk")
+  ).map((trk) => {
     const rawPoints = Array.from(trk.querySelectorAll("trkpt")).map(
       (trkpt) => ({
         lat: trkpt.getAttribute("lat"),
@@ -7,6 +9,25 @@ function gpxRoutechoicesExportTo2DRerunJson(routechoicesXmlDoc) {
       })
     );
 
+    const pointsString = rawPoints
+      .map((point) => `${point.lat}${point.lon}`)
+      .join("");
+
+    const name = trk.querySelector("name").textContent;
+
+    return { rawPoints, pointsString, name };
+  });
+
+  const filteredRoutechoices = rawRoutechoices.filter((route, index) =>
+    rawRoutechoices
+      .slice(0, index)
+      .every(
+        (previousRoutes) => previousRoutes.pointsString !== route.pointsString
+      )
+  );
+
+  return filteredRoutechoices.map((routeChoice) => {
+    const rawPoints = routeChoice.rawPoints;
     const points = rawPoints.map((point) => `${point.lat},${point.lon}`);
 
     const pointsxy = rawPoints.map((point, index) => {
@@ -34,8 +55,6 @@ function gpxRoutechoicesExportTo2DRerunJson(routechoicesXmlDoc) {
     const lastPoint = rawPoints[rawPoints.length - 1];
     const { x, y } = mapviewer.map.toxy(lastPoint.lat, lastPoint.lon);
 
-    const name = trk.querySelector("name").textContent;
-
     return {
       type: "route",
       opened_dialog: 0,
@@ -55,7 +74,7 @@ function gpxRoutechoicesExportTo2DRerunJson(routechoicesXmlDoc) {
       x,
       y,
       length,
-      name,
+      name: routeChoice.name,
       description: "",
       color: Math.floor(Math.random() * 16777215).toString(16),
     };
