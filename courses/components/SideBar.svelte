@@ -5,26 +5,9 @@
   import toggleSideBar from "../stores/toggle-sidebar";
 
   let isInSplitMode = true;
-  let width = 400;
-  let isMouseDown = false;
-
-  function handleMousemove(event) {
-    if (isMouseDown) {
-      width = event.clientX < 320 ? 320 : event.clientX;
-    }
-  }
 </script>
 
-<svelte:window
-  on:mousemove={handleMousemove}
-  on:mouseup={() => (isMouseDown = false)}
-/>
-
-<aside
-  class:toggle-sidebar={$toggleSideBar}
-  style:width
-  on:mousedown={() => (isMouseDown = true)}
->
+<aside class:toggle-sidebar={$toggleSideBar}>
   <div class="main-wrapper">
     <Toggle
       bind:isFirstValueSelected={isInSplitMode}
@@ -56,6 +39,9 @@
     bottom: 0;
     left: 0;
     background-color: white;
+    width: 20rem;
+    resize: horizontal;
+    overflow-x: auto;
   }
 
   .main-wrapper {

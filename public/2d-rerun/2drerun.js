@@ -30716,6 +30716,9 @@ function MapViewer(F, o, D) {
         }
         z.loadcoursesplitsidstr();
         z.request_redraw();
+
+        const event = new Event('twoDRerunloaded');
+        document.dispatchEvent(event)
       }
     }
   };

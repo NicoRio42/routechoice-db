@@ -12,6 +12,7 @@
   import ZoomButtons from "../components/ZoomButtons.svelte";
   import NavBar from "../../shared/NavBar.svelte";
   import NavbarButtons from "../components/NavbarButtons.svelte";
+  import { loadSplitsTo2dRerun } from "../utils/2d-rerun-hacks/load-splits-to-2d-rerun";
 
   export let params = {};
   const db = getFirestore();
@@ -37,7 +38,11 @@
 
     buildCourseAndRoutechoices($course.courseAndRoutechoices);
 
-    setTimeout(() => ($selectedLeg = 1), 3000);
+    document.addEventListener("twoDRerunloaded", () => {
+      setTimeout(() => ($selectedLeg = 1), 1000);
+
+      loadSplitsTo2dRerun($course.splitTimes);
+    });
   }
 </script>
 

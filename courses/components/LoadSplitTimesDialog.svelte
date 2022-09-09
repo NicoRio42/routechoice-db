@@ -58,10 +58,8 @@
   };
 
   const saveSplitTimes = () => {
-    splitTimes.runners = runners;
-
-    splitTimes.runners = splitTimes.runners = detectRunnersRoutechoices(
-      splitTimes.runners,
+    splitTimes.runners = detectRunnersRoutechoices(
+      runners,
       mapviewer,
       mapviewer.routes
     );

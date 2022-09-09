@@ -15,12 +15,14 @@
     <slot />
   </ul>
 
-  {#if $userStore === null}
-    <ul>
+  <ul>
+    <li>
+      <a href="/#/help">Help</a>
+    </li>
+
+    {#if $userStore === null}
       <li><a href="/#/login">Login</a></li>
-    </ul>
-  {:else}
-    <ul>
+    {:else}
       <li>
         <button
           class="logoutButton"
@@ -28,8 +30,8 @@
           on:click={() => signOut(auth)}>Logout</button
         >
       </li>
-    </ul>
-  {/if}
+    {/if}
+  </ul>
 </nav>
 
 <style>

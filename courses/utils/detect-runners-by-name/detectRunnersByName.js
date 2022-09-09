@@ -9,7 +9,6 @@ export const detectRunnersByName = (runners, routes) => {
     const [firstName, lastName] = route.runnername.split(" ");
     return { firstName, lastName };
   });
-  console.log(modifiedRoutes);
 
   runners.forEach((runner) => {
     runner.rerun2dRouteIndex = null;

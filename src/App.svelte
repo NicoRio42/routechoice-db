@@ -4,6 +4,7 @@
   import wrap from "svelte-spa-router/wrap";
   import NavBar from "../shared/NavBar.svelte";
   import CoursesOverview from "./routes/CoursesOverview.svelte";
+  import Help from "./routes/Help.svelte";
   import Login from "./routes/Login.svelte";
 
   const auth = getAuth();
@@ -29,6 +30,7 @@
       },
     }),
     "/login": Login,
+    "/help": Help,
   };
 
   function conditionsFailed() {
