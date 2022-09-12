@@ -5,6 +5,7 @@
   import selectedLeg from "../stores/selected-leg";
   import course from "../stores/course";
   import toggleSideBar from "../stores/toggle-sidebar";
+  import is2DRerunLoaded from "../stores/rerun-2d-loaded";
 
   let numberOfLegs = 0;
   let rightmenu;
@@ -37,18 +38,23 @@
 <div class="control-bar">
   <button on:click={togle2dRerunPanel}>2D</button>
 
-  <button on:click={handlePreviousControl} disabled={numberOfLegs === 0}
-    ><ChevronLeft /></button
+  <button
+    on:click={handlePreviousControl}
+    disabled={numberOfLegs === 0 || !$is2DRerunLoaded}><ChevronLeft /></button
   >
 
-  <select bind:value={$selectedLeg} disabled={numberOfLegs === 0}>
+  <select
+    bind:value={$selectedLeg}
+    disabled={numberOfLegs === 0 || !$is2DRerunLoaded}
+  >
     {#each [...Array(numberOfLegs).keys()] as leg}
       <option value={leg + 1}>{leg + 1}</option>
     {/each}
   </select>
 
-  <button on:click={handleNextControl} disabled={numberOfLegs === 0}
-    ><ChevronRight /></button
+  <button
+    on:click={handleNextControl}
+    disabled={numberOfLegs === 0 || !$is2DRerunLoaded}><ChevronRight /></button
   >
 
   <button on:click={() => ($toggleSideBar = !$toggleSideBar)}><Chart /></button>

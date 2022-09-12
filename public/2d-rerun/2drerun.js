@@ -2037,6 +2037,9 @@ function Mapp() {
       }
       f.loaded = 1;
       f.onmapload();
+
+      const event = new Event('twoDRerunloaded');
+      document.dispatchEvent(event)
     };
     if (
       mapviewer.settings.enableprintscreen &&
@@ -30716,9 +30719,6 @@ function MapViewer(F, o, D) {
         }
         z.loadcoursesplitsidstr();
         z.request_redraw();
-
-        const event = new Event('twoDRerunloaded');
-        document.dispatchEvent(event)
       }
     }
   };

@@ -13,6 +13,7 @@
   import NavBar from "../../shared/NavBar.svelte";
   import NavbarButtons from "../components/NavbarButtons.svelte";
   import { loadSplitsTo2dRerun } from "../utils/2d-rerun-hacks/load-splits-to-2d-rerun";
+  import is2DRerunLoaded from "../stores/rerun-2d-loaded";
 
   export let params = {};
   const db = getFirestore();
@@ -38,9 +39,10 @@
 
     buildCourseAndRoutechoices($course.courseAndRoutechoices);
 
+    // Custom event emitted from 2DRerun.js
     document.addEventListener("twoDRerunloaded", () => {
-      setTimeout(() => ($selectedLeg = 1), 1000);
-
+      $selectedLeg = 1;
+      $is2DRerunLoaded = true;
       loadSplitsTo2dRerun($course.splitTimes);
     });
   }
