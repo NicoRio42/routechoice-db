@@ -28,23 +28,27 @@
   }
 
   async function initCourse() {
+    // Custom event emitted from 2DRerun.js
+    document.addEventListener("twoDRerunloaded", () => {
+      $is2DRerunLoaded = true;
+
+      if ($course?.courseAndRoutechoices !== undefined) {
+        $selectedLeg = 1;
+      }
+
+      if ($course?.splitTimes !== undefined) {
+        loadSplitsTo2dRerun($course.splitTimes);
+      }
+    });
+
     $course = await getCourse(params.courseID, db);
     $course.id = params.courseID;
 
     initMapviewer($course.twoDRerunUrl);
 
-    if ($course.courseAndRoutechoices === undefined) {
-      return;
-    }
+    if ($course?.courseAndRoutechoices === undefined) return;
 
     buildCourseAndRoutechoices($course.courseAndRoutechoices);
-
-    // Custom event emitted from 2DRerun.js
-    document.addEventListener("twoDRerunloaded", () => {
-      $selectedLeg = 1;
-      $is2DRerunLoaded = true;
-      loadSplitsTo2dRerun($course.splitTimes);
-    });
   }
 </script>
 
