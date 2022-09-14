@@ -16,21 +16,23 @@
   </ul>
 
   <ul>
-    <li>
-      <a href="/#/help">Help</a>
-    </li>
-
-    {#if $userStore === null}
-      <li><a href="/#/login">Login</a></li>
-    {:else}
+    {#if $userStore !== null}
       <li>
+        <a href="/#/help">Help</a>
+      </li>
+    {/if}
+
+    <li>
+      {#if $userStore === null}
+        <a href="/#/login">Login</a>
+      {:else}
         <button
           class="logoutButton"
           type="button"
           on:click={() => signOut(auth)}>Logout</button
         >
-      </li>
-    {/if}
+      {/if}
+    </li>
   </ul>
 </nav>
 
