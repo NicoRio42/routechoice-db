@@ -1806,14 +1806,78 @@ tstAnno = new Anno({
       <div id="xinfodiv"></div>
     </div>
     <div id="mapholder" style="position: relative">
-      <div id="app"></div>
       <canvas
         id="map"
         style="touch-action: none; user-select: none"
         width="1365"
         height="609"
       ></canvas>
+
+      <div id="canvas-interceptor"></div>
+
+      <div id="app"></div>
     </div>
+
+    <style>
+      #canvas-interceptor {
+        display: none;
+      }
+
+      @media only screen and (max-width: 600px) {
+        #canvas-interceptor {
+          display: block;
+          position: absolute;
+          top: 0;
+          right: 0;
+          bottom: 0;
+          left: 0;
+          background-color: transparent;
+        }
+      }
+    </style>
+
+    <script>
+      // This dirty hack is for preventing pinch zooming on touch screen, which is somehow
+      // broken on "course analysis" in 2D Rerun
+
+      const canvas = document.getElementById("map");
+      const canvasInterceptor = document.getElementById("canvas-interceptor");
+
+      const dispatchTouchEventOnCanvas = (eventType, event) => {
+        touchEvent = new TouchEvent(eventType, {
+          ...event,
+          target: map,
+          targetTouches: [...event.targetTouches],
+        });
+
+        map.dispatchEvent(touchEvent);
+      };
+
+      interceptor.ontouchstart = (e) => {
+        e.preventDefault();
+
+        if (e.targetTouches.length > 1) return;
+
+        dispatchTouchEventOnCanvas("touchstart", e);
+      };
+
+      interceptor.ontouchmove = (e) => {
+        e.preventDefault();
+
+        if (e.targetTouches.length > 1) return;
+
+        dispatchTouchEventOnCanvas("touchmove", e);
+      };
+
+      interceptor.ontouchend = (e) => {
+        e.preventDefault();
+
+        if (e.targetTouches.length > 1) return;
+
+        dispatchTouchEventOnCanvas("touchend", e);
+      };
+    </script>
+
     <div id="graphholder" style="display: none"></div>
     <div
       id="realtimesliderdiv"
