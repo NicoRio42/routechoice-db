@@ -1853,7 +1853,7 @@ tstAnno = new Anno({
         map.dispatchEvent(touchEvent);
       };
 
-      interceptor.ontouchstart = (e) => {
+      canvasInterceptor.ontouchstart = (e) => {
         e.preventDefault();
 
         if (e.targetTouches.length > 1) return;
@@ -1861,7 +1861,7 @@ tstAnno = new Anno({
         dispatchTouchEventOnCanvas("touchstart", e);
       };
 
-      interceptor.ontouchmove = (e) => {
+      canvasInterceptor.ontouchmove = (e) => {
         e.preventDefault();
 
         if (e.targetTouches.length > 1) return;
@@ -1869,7 +1869,7 @@ tstAnno = new Anno({
         dispatchTouchEventOnCanvas("touchmove", e);
       };
 
-      interceptor.ontouchend = (e) => {
+      canvasInterceptor.ontouchend = (e) => {
         e.preventDefault();
 
         if (e.targetTouches.length > 1) return;
