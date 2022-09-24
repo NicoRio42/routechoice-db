@@ -6,6 +6,8 @@
   import course from "../stores/course";
   import toggleSideBar from "../stores/toggle-sidebar";
   import is2DRerunLoaded from "../stores/rerun-2d-loaded";
+  import { selectHack } from "../utils/2d-rerun-hacks/select-hack";
+  import Eye from "../../shared/icons/Eye.svelte";
 
   let numberOfLegs = 0;
   let rightmenu;
@@ -33,10 +35,20 @@
     rightmenu.style.display =
       rightmenu.style.display === "block" ? "none" : "block";
   };
+
+  const toggleRoutechoices = () => {
+    selectHack("selectmode", "analyzecourse");
+
+    const newValue =
+      document.getElementById("showtagsselect").value === "1" ? "0" : "1";
+
+    selectHack("showtagsselect", newValue);
+  };
 </script>
 
 <div class="control-bar">
-  <button on:click={togle2dRerunPanel}>2D</button>
+  <!-- <button on:click={togle2dRerunPanel}>2D</button> -->
+  <button on:click={toggleRoutechoices}><Eye /></button>
 
   <button
     on:click={handlePreviousControl}

@@ -46,7 +46,7 @@
   }
 </script>
 
-<h3>Fastest Time</h3>
+<h3>Fastest time</h3>
 
 <Graph data={fasestTimeGraphData} suffix={" s"} />
 

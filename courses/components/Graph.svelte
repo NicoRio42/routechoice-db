@@ -17,11 +17,10 @@
         class="bar"
       /> -->
       <span
-        data-tooltip={`${item.value}${suffix}`}
         style:background-color={`#${item.color}`}
         style:width={`${(item.value * 100) / max}%`}
-        class="bar"
-      />
+        class="bar"><span class="value">{item.value}{suffix}</span></span
+      >
     </span>
   </p>
 {/each}
@@ -45,5 +44,12 @@
     position: absolute;
     border-radius: 2px;
     height: 100%;
+  }
+
+  .value {
+    position: absolute;
+    right: 0.25rem;
+    top: 0.5rem;
+    font-size: smaller;
   }
 </style>
