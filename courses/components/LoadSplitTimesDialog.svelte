@@ -36,9 +36,18 @@
 
       xmlDoc = parser.parseFromString(readXml.toString(), "application/xml");
 
-      classNames = Array.from(
-        xmlDoc.querySelectorAll("ClassResult Class Name")
-      ).map((cl) => cl.innerHTML);
+      const IOFXMLVersion = xmlDoc
+        .querySelector("ResultList")
+        .getAttribute("iofVersion");
+
+      const classQuerySelector =
+        IOFXMLVersion === "3.0"
+          ? "ClassResult Class Name"
+          : "ClassResult ClassShortName";
+
+      classNames = Array.from(xmlDoc.querySelectorAll(classQuerySelector)).map(
+        (cl) => cl.innerHTML
+      );
 
       if (classNames.length > 0) className = classNames[0];
     };
@@ -47,7 +56,16 @@
   };
 
   const parseIOFXML = (event) => {
-    splitTimes = new IOFXMLParser(xmlDoc, className, timeZone, 1.2, timeOffset);
+    const date = new Date($course.date);
+
+    splitTimes = new IOFXMLParser(
+      xmlDoc,
+      className,
+      timeZone,
+      1.2,
+      timeOffset,
+      date.toISOString().split("T")[0]
+    );
 
     runners = detectRunnersByName(
       [...splitTimes.runners],

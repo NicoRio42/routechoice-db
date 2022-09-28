@@ -140,7 +140,7 @@ export class IOFXMLParser {
           startTime =
             this.date +
             "T" +
-            personResult.querySelector("StartTime").innerHTML +
+            personResult.querySelector("StartTime Clock").innerHTML +
             this.timeZone;
           status = personResult
             .querySelector("CompetitorStatus")
@@ -151,6 +151,9 @@ export class IOFXMLParser {
             ); // TODO
           }
         }
+
+        const date = new Date(startTime);
+        startTime = date.getTime() + this.timeOffset * 1000;
       }
 
       const runnerCourse = Array.from(
