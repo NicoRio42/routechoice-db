@@ -115,6 +115,7 @@ export class IOFXMLParser {
     });
 
     const personResults = classResult[0].querySelectorAll("PersonResult");
+
     personResults.forEach((personResult, index) => {
       const id = index + 1;
       const familyName = personResult.querySelector("Family")
@@ -159,6 +160,7 @@ export class IOFXMLParser {
       const runnerCourse = Array.from(
         personResult.querySelectorAll("ControlCode")
       ).map((controlCode) => Number(controlCode.innerHTML));
+
       const legs = Array.from(personResult.querySelectorAll("SplitTime")).map(
         (splitTime) => {
           const controlCode = Number(

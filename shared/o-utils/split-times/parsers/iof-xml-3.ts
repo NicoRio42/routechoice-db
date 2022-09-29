@@ -1,0 +1,224 @@
+import EmptyRunnerLeg from "../../models/empty-runner-leg";
+import RunnerStatusEnum from "../../models/enums/runner-status-enum";
+import Runner from "../../models/Runner";
+import RunnerLeg from "../../models/runner-leg";
+import {
+  isRunner,
+  isRunnerLegOrEmpltyRunnerLeg,
+} from "../../type-guards/runner-guards";
+import { extractNumberFromElementOrThrowError } from "../utils/xml-parser-utils";
+import computeSplitsRanksMistakes from "./compute-splits-ranks-mistakes";
+
+export function parseIOFXMLSplitTimesFile(
+  xmlDocument: XMLDocument,
+  className: string,
+  timeZone: string,
+  timeOffset: number
+): Runner[] {
+  const IOFXMLVersion = xmlDocument
+    .querySelector("ResultList")
+    ?.getAttribute("iofVersion");
+
+  if (IOFXMLVersion !== "3.0") {
+    throw new Error("Not an IOF XML 3.0 file");
+  }
+
+  const classResults = Array.from(xmlDocument.querySelectorAll("ClassResult"));
+
+  const classResult = classResults.find((classR) => {
+    const name = classR.querySelector("Class Name")?.textContent;
+    return name === className;
+  });
+
+  if (classResult === undefined) {
+    throw new Error("There is no ClassResult matching the given class name");
+  }
+
+  const personResults = classResult.querySelectorAll("PersonResult");
+  const runners = getRunners(personResults, timeZone, timeOffset);
+
+  return computeSplitsRanksMistakes(runners);
+}
+
+function getRunners(
+  personResults: NodeListOf<Element>,
+  timeZone: string,
+  timeOffset: number
+): Runner[] {
+  const rawRunners: (Runner | null)[] = Array.from(personResults).map(
+    (personResult, index) => {
+      const statusTag = personResult.querySelector("Status");
+      const IOFXMLStatus = statusTag !== null ? statusTag.textContent : null;
+
+      // We skip runners with no split at all
+      if (
+        IOFXMLStatus === null ||
+        !VALID_IOF_XML_STATUS.includes(IOFXMLStatus)
+      ) {
+        return null;
+      }
+
+      const status = OK_IOF_XML_STATUS.includes(IOFXMLStatus)
+        ? RunnerStatusEnum.OK
+        : RunnerStatusEnum.NOT_OK;
+
+      const id = index + 1;
+
+      const family = personResult.querySelector("Family");
+      const lastName = family !== null ? family.textContent : "";
+
+      const given = personResult.querySelector("Given");
+      const firstName = given !== null ? given.textContent : "";
+
+      const startTimeTag = personResult.querySelector("StartTime");
+      const startTime = computeStartTime(startTimeTag, timeZone, timeOffset);
+
+      const timeTag = personResult.querySelector("Time");
+      const time =
+        status === RunnerStatusEnum.OK
+          ? extractNumberFromElementOrThrowError(timeTag, "Not a valid time")
+          : null;
+
+      const legs: (RunnerLeg | EmptyRunnerLeg)[] =
+        extractLegsFromPersonResult(personResult);
+      const foreignKeys: Record<string, unknown> = {};
+
+      return {
+        id,
+        foreignKeys,
+        status,
+        firstName: firstName ?? "",
+        lastName: lastName ?? "",
+        startTime,
+        time,
+        legs,
+        rank: null,
+        timeBehind: null,
+        totalTimeLost: 0,
+      };
+    }
+  );
+
+  const runners = rawRunners.filter(isRunner);
+
+  if (runners.length === 0) {
+    throw new Error("No valid runners in this file");
+  }
+
+  const firstRunnerLegsLenth = runners[0].legs.length;
+
+  if (runners.some((runner) => runner.legs.length !== firstRunnerLegsLenth)) {
+    throw new Error(
+      "Not all runners have the same legs number in their course"
+    );
+  }
+
+  return runners;
+}
+
+function computeStartTime(
+  startTimeTag: Element | null,
+  timeZone: string,
+  timeOffset: number
+): number {
+  if (startTimeTag === null || startTimeTag.textContent === null) {
+    throw new Error("No start time with a valid runner status");
+  }
+
+  const time = startTimeTag.textContent.includes("+")
+    ? startTimeTag.textContent
+    : startTimeTag.textContent + timeZone;
+
+  const dateTime = new Date(time);
+
+  return dateTime.valueOf() / 1000 + timeOffset;
+}
+
+function extractLegsFromPersonResult(
+  personResult: Element
+): (RunnerLeg | EmptyRunnerLeg)[] {
+  const legTags = Array.from(personResult.querySelectorAll("SplitTime"));
+
+  const rawLegs: (RunnerLeg | EmptyRunnerLeg | null)[] = legTags.map(
+    (splitTime) => {
+      const status = splitTime.getAttribute("status");
+
+      if (status === IOFXMLSplitTimeStatusEnum.Additional.valueOf()) {
+        return null;
+      }
+
+      const controlCodeTag = splitTime.querySelector("ControlCode");
+
+      const controlCode = extractNumberFromElementOrThrowError(
+        controlCodeTag,
+        "No valid control code for this leg"
+      );
+
+      if (status === IOFXMLSplitTimeStatusEnum.Missing.valueOf()) {
+        return { controlCode };
+      }
+
+      const timeTag = splitTime.querySelector("Time");
+
+      const timeOverall = extractNumberFromElementOrThrowError(
+        timeTag,
+        "No valid split time"
+      );
+
+      return {
+        controlCode,
+        timeOverall,
+        time: 0,
+        rankSplit: 0,
+        timeBehindSplit: 0,
+        rankOverall: 0,
+        timeBehindOverall: 0,
+        timeBehindSuperman: 0,
+        isMistake: false,
+        timeLoss: 0,
+        routeChoiceTimeLoss: null,
+        detectedRouteChoice: null,
+        manualRouteChoice: null,
+      };
+    }
+  );
+
+  return rawLegs.filter(isRunnerLegOrEmpltyRunnerLeg);
+}
+
+enum IOFXML3RunnerStatusEnum {
+  OK = "OK",
+  Finished = "Finished",
+  MissingPunch = "MissingPunch",
+  Disqualified = "Disqualified",
+  DidNotFinish = "DidNotFinish",
+  Active = "Active",
+  Inactive = "Inactive",
+  OverTime = "OverTime",
+  SportingWithdrawal = "SportingWithdrawal",
+  NotCompeting = "NotCompeting",
+  Moved = "Moved",
+  MovedUp = "MovedUp",
+  DidNotStart = "DidNotStart",
+  DidNotEnter = "DidNotEnter",
+  Cancelled = "Cancelled",
+}
+
+enum IOFXMLSplitTimeStatusEnum {
+  Missing = "Missing",
+  Additional = "Additional",
+}
+
+const OK_IOF_XML_STATUS = [
+  IOFXML3RunnerStatusEnum.OK.valueOf(),
+  IOFXML3RunnerStatusEnum.Finished.valueOf(),
+];
+
+const VALID_IOF_XML_STATUS = [
+  IOFXML3RunnerStatusEnum.OK.valueOf(),
+  IOFXML3RunnerStatusEnum.Finished.valueOf(),
+  IOFXML3RunnerStatusEnum.MissingPunch.valueOf(),
+  IOFXML3RunnerStatusEnum.Disqualified.valueOf(),
+  IOFXML3RunnerStatusEnum.DidNotFinish.valueOf(),
+  IOFXML3RunnerStatusEnum.OverTime.valueOf(),
+];
