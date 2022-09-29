@@ -1,5 +1,6 @@
 import Runner from "../../models/Runner";
 import computeRunnersRanks from "../utils/compute-ranks";
+import { computeSplitRanksAndTimeBehind } from "../utils/compute-split-ranks-time-behind";
 import computeRunnersSplitTimes from "../utils/compute-split-times";
 
 export default function computeSplitsRanksMistakes(
@@ -8,9 +9,9 @@ export default function computeSplitsRanksMistakes(
   const rankedRunners = computeRunnersRanks(runners);
   const runnersWithSplitTimes = computeRunnersSplitTimes(rankedRunners);
 
-  //   const splitRankedRunners = computeSplitRanksAndTimeBehind(
-  //     runnersWithSplitTimes
-  //   );
+  const splitRankedRunners = computeSplitRanksAndTimeBehind(
+    runnersWithSplitTimes
+  );
 
   //   const overallSplitRankedRunners =
   //     computeOverallSplitRanks(splitRankedRunners);

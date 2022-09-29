@@ -356,6 +356,7 @@ export class IOFXMLParser {
         const runnerIndex = this.runners.findIndex(
           (r) => legOverallTime.id === r.id
         );
+
         this.runners[runnerIndex].legs[index].rankOverall =
           legOverallTime.rankSplit;
 

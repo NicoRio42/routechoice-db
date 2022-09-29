@@ -1,11 +1,7 @@
-import EmptyRunnerLeg from "../../models/empty-runner-leg";
 import RunnerStatusEnum from "../../models/enums/runner-status-enum";
 import Runner from "../../models/Runner";
-import RunnerLeg from "../../models/runner-leg";
-import {
-  isRunner,
-  isRunnerLegOrEmpltyRunnerLeg,
-} from "../../type-guards/runner-guards";
+import { RunnerLeg } from "../../models/runner-leg";
+import { isNotNullRunnerLeg, isRunner } from "../../type-guards/runner-guards";
 import { extractNumberFromElementOrThrowError } from "../utils/xml-parser-utils";
 import computeSplitsRanksMistakes from "./compute-splits-ranks-mistakes";
 
@@ -79,8 +75,7 @@ function getRunners(
           ? extractNumberFromElementOrThrowError(timeTag, "Not a valid time")
           : null;
 
-      const legs: (RunnerLeg | EmptyRunnerLeg)[] =
-        extractLegsFromPersonResult(personResult);
+      const legs: RunnerLeg[] = extractLegsFromPersonResult(personResult);
       const foreignKeys: Record<string, unknown> = {};
 
       return {
@@ -134,56 +129,41 @@ function computeStartTime(
   return dateTime.valueOf() / 1000 + timeOffset;
 }
 
-function extractLegsFromPersonResult(
-  personResult: Element
-): (RunnerLeg | EmptyRunnerLeg)[] {
+function extractLegsFromPersonResult(personResult: Element): RunnerLeg[] {
   const legTags = Array.from(personResult.querySelectorAll("SplitTime"));
 
-  const rawLegs: (RunnerLeg | EmptyRunnerLeg | null)[] = legTags.map(
-    (splitTime) => {
-      const status = splitTime.getAttribute("status");
+  const rawLegs: (RunnerLeg | null)[] = legTags.map((splitTime) => {
+    const status = splitTime.getAttribute("status");
 
-      if (status === IOFXMLSplitTimeStatusEnum.Additional.valueOf()) {
-        return null;
-      }
-
-      const controlCodeTag = splitTime.querySelector("ControlCode");
-
-      const controlCode = extractNumberFromElementOrThrowError(
-        controlCodeTag,
-        "No valid control code for this leg"
-      );
-
-      if (status === IOFXMLSplitTimeStatusEnum.Missing.valueOf()) {
-        return { controlCode };
-      }
-
-      const timeTag = splitTime.querySelector("Time");
-
-      const timeOverall = extractNumberFromElementOrThrowError(
-        timeTag,
-        "No valid split time"
-      );
-
-      return {
-        controlCode,
-        timeOverall,
-        time: 0,
-        rankSplit: 0,
-        timeBehindSplit: 0,
-        rankOverall: 0,
-        timeBehindOverall: 0,
-        timeBehindSuperman: 0,
-        isMistake: false,
-        timeLoss: 0,
-        routeChoiceTimeLoss: null,
-        detectedRouteChoice: null,
-        manualRouteChoice: null,
-      };
+    if (status === IOFXMLSplitTimeStatusEnum.Additional.valueOf()) {
+      return null;
     }
-  );
 
-  return rawLegs.filter(isRunnerLegOrEmpltyRunnerLeg);
+    const controlCodeTag = splitTime.querySelector("ControlCode");
+
+    const controlCode = extractNumberFromElementOrThrowError(
+      controlCodeTag,
+      "No valid control code for this leg"
+    );
+
+    if (status === IOFXMLSplitTimeStatusEnum.Missing.valueOf()) {
+      return { controlCode };
+    }
+
+    const timeTag = splitTime.querySelector("Time");
+
+    const timeOverall = extractNumberFromElementOrThrowError(
+      timeTag,
+      "No valid split time"
+    );
+
+    return {
+      controlCode,
+      timeOverall,
+    };
+  });
+
+  return rawLegs.filter(isNotNullRunnerLeg);
 }
 
 enum IOFXML3RunnerStatusEnum {

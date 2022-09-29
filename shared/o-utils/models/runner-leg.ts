@@ -1,7 +1,12 @@
-import EmptyRunnerLeg from "./empty-runner-leg";
+export interface MissingRunnerLeg {
+  controlCode: number;
+}
 
-export default interface RunnerLeg extends EmptyRunnerLeg {
+export interface PartialRunnerLeg extends MissingRunnerLeg {
   timeOverall: number;
+}
+
+export interface CompleteRunnerLeg extends PartialRunnerLeg {
   time: number;
   rankSplit: number;
   timeBehindSplit: number;
@@ -14,3 +19,5 @@ export default interface RunnerLeg extends EmptyRunnerLeg {
   detectedRouteChoice: number | null;
   manualRouteChoice: number | null;
 }
+
+export type RunnerLeg = MissingRunnerLeg | PartialRunnerLeg | CompleteRunnerLeg;
