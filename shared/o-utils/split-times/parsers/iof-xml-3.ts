@@ -5,7 +5,7 @@ import { isNotNullRunnerLeg, isRunner } from "../../type-guards/runner-guards";
 import { extractNumberFromElementOrThrowError } from "../utils/xml-parser-utils";
 import computeSplitsRanksMistakes from "./compute-splits-ranks-mistakes";
 
-export function parseIOFXMLSplitTimesFile(
+export function parseIOFXML3SplitTimesFile(
   xmlDocument: XMLDocument,
   className: string,
   timeZone: string,
