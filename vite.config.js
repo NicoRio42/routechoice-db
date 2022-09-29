@@ -1,3 +1,6 @@
+/// <reference types="vitest" />
+/// <reference types="vite/client" />
+
 import { defineConfig } from "vite";
 import { resolve } from "path";
 
@@ -12,5 +15,9 @@ export default defineConfig({
         courses: resolve(__dirname, "courses/index.html"),
       },
     },
+  },
+  test: {
+    globals: true,
+    environment: "jsdom",
   },
 });
