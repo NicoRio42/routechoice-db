@@ -1,13 +1,6 @@
-import Runner from "../../models/Runner";
-import {
-  CompleteRunnerLeg,
-  MissingRunnerLeg,
-  PartialRunnerLeg,
-} from "../../models/runner-leg";
-import {
-  isPartialOrCompleteRunnerLeg,
-  isPartialRunnerLeg,
-} from "../../type-guards/runner-guards";
+import type Runner from "../../models/Runner";
+import type { CompleteRunnerLeg } from "../../models/runner-leg";
+import { isPartialOrCompleteRunnerLeg } from "../../type-guards/runner-guards";
 
 export default function computeRunnersSplitTimes(runners: Runner[]): Runner[] {
   const clonedRunners = structuredClone(runners);

@@ -1,4 +1,4 @@
-import Routechoice from "./routechoice";
+import type Routechoice from "./routechoice";
 
 export default interface Leg {
   code: number;

@@ -20,4 +20,6 @@ export interface CompleteRunnerLeg extends PartialRunnerLeg {
   manualRouteChoice: number | null;
 }
 
-export type RunnerLeg = MissingRunnerLeg | PartialRunnerLeg | CompleteRunnerLeg;
+type RunnerLeg = MissingRunnerLeg | PartialRunnerLeg | CompleteRunnerLeg;
+
+export type { RunnerLeg };

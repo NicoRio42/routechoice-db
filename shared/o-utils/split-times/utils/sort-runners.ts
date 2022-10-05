@@ -1,4 +1,4 @@
-import Runner from "../../models/Runner";
+import type Runner from "../../models/Runner";
 
 export default function sortRunners(
   runnerA: Runner | RunnerForSort,

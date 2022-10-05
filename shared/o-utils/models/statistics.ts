@@ -1,4 +1,4 @@
-import { RouteChoicesStatistic } from "./route-choices-statistics";
+import type { RouteChoicesStatistic } from "./route-choices-statistics";
 
 export default interface Statistics {
   leader: number[];

@@ -1,9 +1,9 @@
-<?xml version="1.0"?>
+export const IOF_XML_3_SPLIT_TIMES = `<?xml version="1.0"?>
 <ResultList xmlns:ws="http://www.winsplits.se/IofXmlExtensions" xmlns:eventor="http://eventor.orientering.se/iofxmlextensions" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" iofVersion="3.0" createTime="2022-08-03T13:06:05Z" creator="WinSplits.Api" xmlns="http://www.orienteering.org/datastandard/3.0">
     <Event>
         <Id>83737</Id>
         <Name>EOC 2022 Middle Qualification</Name>
-        <StartTime>
+        <StartTime id="toto">
             <Date>2022-08-03</Date>
         </StartTime>
         <Classification>International</Classification>
@@ -4040,3 +4040,4 @@
         </PersonResult>
     </ClassResult>
 </ResultList>
+`;

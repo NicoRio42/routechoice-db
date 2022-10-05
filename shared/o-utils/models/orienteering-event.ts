@@ -1,7 +1,7 @@
-import Leg from "./leg";
-import CourseMap from "./course-map";
-import Runner from "./runner";
-import Statistics from "./statistics";
+import type Leg from "./leg";
+import type CourseMap from "./course-map";
+import type Runner from "./runner";
+import type Statistics from "./statistics";
 
 export default interface OrienteeringEvent {
   course: Leg[];

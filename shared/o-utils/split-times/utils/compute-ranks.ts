@@ -1,4 +1,4 @@
-import Runner from "../../models/Runner";
+import type Runner from "../../models/Runner";
 import sortRunners from "./sort-runners";
 
 export default function computeRunnersRanks(runners: Runner[]): Runner[] {

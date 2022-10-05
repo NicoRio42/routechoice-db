@@ -1,6 +1,6 @@
 import RunnerStatusEnum from "../../models/enums/runner-status-enum";
-import Runner from "../../models/Runner";
-import { RunnerLeg } from "../../models/runner-leg";
+import type Runner from "../../models/Runner";
+import type { RunnerLeg } from "../../models/runner-leg";
 import { isNotNullRunnerLeg, isRunner } from "../../type-guards/runner-guards";
 import { extractNumberFromElementOrThrowError } from "../utils/xml-parser-utils";
 import computeSplitsRanksMistakes from "./compute-splits-ranks-mistakes";
@@ -22,7 +22,9 @@ export function parseIOFXML3SplitTimesFile(
   const classResults = Array.from(xmlDocument.querySelectorAll("ClassResult"));
 
   const classResult = classResults.find((classR) => {
-    const name = classR.querySelector("Class Name")?.textContent;
+    const classTag = classR.querySelector("Class");
+    const name = classTag?.querySelector("Name")?.textContent;
+
     return name === className;
   });
 

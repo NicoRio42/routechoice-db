@@ -1,4 +1,5 @@
-import Runner from "../../models/Runner";
+import type Runner from "../../models/Runner";
+import computeRunnersMistakes from "../utils/compute-mistakes";
 import { computeOverallSplitRanks } from "../utils/compute-overall-split-ranks";
 import computeRunnersRanks from "../utils/compute-ranks";
 import { computeSplitRanksAndTimeBehind } from "../utils/compute-split-ranks-time-behind";
@@ -17,9 +18,8 @@ export default function computeSplitsRanksMistakes(
   const overallSplitRankedRunners =
     computeOverallSplitRanks(splitRankedRunners);
 
-  //   const runnersWithMistakes = computeRunnersMistakes(overallSplitRankedRunners);
+  const runnersWithMistakes = computeRunnersMistakes(overallSplitRankedRunners);
 
-  //   return runnersWithMistakes;
-
-  return overallSplitRankedRunners;
+  console.log(runnersWithMistakes.at(-1)?.legs);
+  return runnersWithMistakes;
 }

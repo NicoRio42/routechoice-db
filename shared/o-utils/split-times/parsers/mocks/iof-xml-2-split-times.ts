@@ -1,4 +1,4 @@
-<?xml version="1.0" encoding="ISO-8859-1"?>
+export const IOF_XML_2_SPLIT_TIMES = `<?xml version="1.0" encoding="ISO-8859-1"?>
 <!DOCTYPE ResultList SYSTEM "iofData.dtd">
 <ResultList>
     <IOFVersion version="2.0.3" />
@@ -656,3 +656,4 @@
         </PersonResult>
     </ClassResult>
 </ResultList>
+`;

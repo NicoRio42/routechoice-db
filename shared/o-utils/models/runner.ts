@@ -1,5 +1,5 @@
-import RunnerStatusEnum from "./enums/runner-status-enum";
-import { RunnerLeg } from "./runner-leg";
+import type RunnerStatusEnum from "./enums/runner-status-enum";
+import type { RunnerLeg } from "./runner-leg";
 
 export default interface Runner {
   id: number;

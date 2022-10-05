@@ -1,5 +1,5 @@
-import Runner from "../models/Runner";
-import {
+import type Runner from "../models/Runner";
+import type {
   CompleteRunnerLeg,
   MissingRunnerLeg,
   PartialRunnerLeg,

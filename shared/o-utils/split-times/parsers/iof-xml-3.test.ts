@@ -1,672 +1,264 @@
-import { expect, test } from "vitest";
+import { describe, expect, test } from "vitest";
 import { parseIOFXML3SplitTimesFile } from "./iof-xml-3";
+import { IOF_XML_2_SPLIT_TIMES } from "./mocks/iof-xml-2-split-times";
+import { IOF_XML_3_SPLIT_TIMES } from "./mocks/iof-xml-3-split-times";
 
-test("Math.sqrt()", () => {
-  const parser = new DOMParser();
-  const xmlDoc = parser.parseFromString(xml, "application/xml");
+describe("parseIOFXML3SplitTimesFile()", () => {
+  test("throw error when iof xml version is not 3.0.", () => {
+    const parser = new DOMParser();
+    const xmlDoc2 = parser.parseFromString(IOF_XML_2_SPLIT_TIMES, "text/xml");
 
-  expect(() =>
-    parseIOFXML3SplitTimesFile(xmlDoc, "Dames", "+02:00", 0)
-  ).toThrowError("Not an IOF XML 3.0 file");
+    expect(() =>
+      parseIOFXML3SplitTimesFile(xmlDoc2, "Men-A", "+02:00", 0)
+    ).toThrow();
+  });
+
+  test("expecte first runner to be strict equal.", () => {
+    const parser = new DOMParser();
+    const xmlDoc3 = parser.parseFromString(IOF_XML_3_SPLIT_TIMES, "text/xml");
+
+    expect(
+      parseIOFXML3SplitTimesFile(xmlDoc3, "Men-A", "+02:00", 0)[0]
+    ).toStrictEqual(expected);
+  });
 });
 
-const xml = `
-<?xml version="1.0" encoding="ISO-8859-1"?>
-<!DOCTYPE ResultList SYSTEM "iofData.dtd">
-<ResultList>
-    <IOFVersion version="2.0.3" />
-    <ClassResult>
-        <ClassShortName>Dames</ClassShortName>
-        <PersonResult>
-            <Person>
-                <PersonName>
-                    <Family>DELENNE</Family>
-                    <Given>Annabelle</Given>
-                </PersonName>
-                <PersonId />
-                <Nationality>
-                    <CountryId value="other" />
-                </Nationality>
-            </Person>
-            <Club>
-                <ClubId />
-                <ShortName>PFCO Loire</ShortName>
-                <CountryId value="other" />
-            </Club>
-            <Result>
-                <CCardId>8518877</CCardId>
-                <StartTime>
-                    <Clock clockFormat="HH:MM:SS">18:16:37</Clock>
-                </StartTime>
-                <FinishTime>
-                    <Clock clockFormat="HH:MM:SS">18:32:36</Clock>
-                </FinishTime>
-                <Time timeFormat="HH:MM:SS">00:15:59</Time>
-                <CompetitorStatus value="OK" />
-                <CourseLength>0</CourseLength>
-                <SplitTime sequence="1">
-                    <ControlCode>31</ControlCode>
-                    <Time timeFormat="HH:MM:SS">00:00:55</Time>
-                </SplitTime>
-                <SplitTime sequence="2">
-                    <ControlCode>32</ControlCode>
-                    <Time timeFormat="HH:MM:SS">00:02:16</Time>
-                </SplitTime>
-                <SplitTime sequence="3">
-                    <ControlCode>33</ControlCode>
-                    <Time timeFormat="HH:MM:SS">00:04:50</Time>
-                </SplitTime>
-                <SplitTime sequence="4">
-                    <ControlCode>34</ControlCode>
-                    <Time timeFormat="HH:MM:SS">00:05:41</Time>
-                </SplitTime>
-                <SplitTime sequence="5">
-                    <ControlCode>37</ControlCode>
-                    <Time timeFormat="HH:MM:SS">00:07:08</Time>
-                </SplitTime>
-                <SplitTime sequence="6">
-                    <ControlCode>38</ControlCode>
-                    <Time timeFormat="HH:MM:SS">00:08:46</Time>
-                </SplitTime>
-                <SplitTime sequence="7">
-                    <ControlCode>39</ControlCode>
-                    <Time timeFormat="HH:MM:SS">00:09:55</Time>
-                </SplitTime>
-                <SplitTime sequence="8">
-                    <ControlCode>40</ControlCode>
-                    <Time timeFormat="HH:MM:SS">00:10:26</Time>
-                </SplitTime>
-                <SplitTime sequence="9">
-                    <ControlCode>41</ControlCode>
-                    <Time timeFormat="HH:MM:SS">00:11:01</Time>
-                </SplitTime>
-                <SplitTime sequence="10">
-                    <ControlCode>42</ControlCode>
-                    <Time timeFormat="HH:MM:SS">00:11:56</Time>
-                </SplitTime>
-                <SplitTime sequence="11">
-                    <ControlCode>43</ControlCode>
-                    <Time timeFormat="HH:MM:SS">00:12:19</Time>
-                </SplitTime>
-                <SplitTime sequence="12">
-                    <ControlCode>44</ControlCode>
-                    <Time timeFormat="HH:MM:SS">00:14:13</Time>
-                </SplitTime>
-                <SplitTime sequence="13">
-                    <ControlCode>45</ControlCode>
-                    <Time timeFormat="HH:MM:SS">00:15:30</Time>
-                </SplitTime>
-                <SplitTime sequence="14">
-                    <ControlCode>46</ControlCode>
-                    <Time timeFormat="HH:MM:SS">00:15:49</Time>
-                </SplitTime>
-                <SplitTime sequence="15">
-                    <ControlCode>3</ControlCode>
-                    <Time timeFormat="HH:MM:SS">00:15:59</Time>
-                </SplitTime>
-            </Result>
-        </PersonResult>
-        <PersonResult>
-            <Person>
-                <PersonName>
-                    <Family>BODY</Family>
-                    <Given>Diane</Given>
-                </PersonName>
-                <PersonId />
-                <Nationality>
-                    <CountryId value="other" />
-                </Nationality>
-            </Person>
-            <Club>
-                <ClubId />
-                <ShortName>EDF Junior</ShortName>
-                <CountryId value="other" />
-            </Club>
-            <Result>
-                <CCardId>8002194</CCardId>
-                <StartTime>
-                    <Clock clockFormat="HH:MM:SS">17:57:29</Clock>
-                </StartTime>
-                <FinishTime>
-                    <Clock clockFormat="HH:MM:SS">18:13:57</Clock>
-                </FinishTime>
-                <Time timeFormat="HH:MM:SS">00:16:28</Time>
-                <CompetitorStatus value="OK" />
-                <CourseLength>0</CourseLength>
-                <SplitTime sequence="1">
-                    <ControlCode>31</ControlCode>
-                    <Time timeFormat="HH:MM:SS">00:00:58</Time>
-                </SplitTime>
-                <SplitTime sequence="2">
-                    <ControlCode>32</ControlCode>
-                    <Time timeFormat="HH:MM:SS">00:02:24</Time>
-                </SplitTime>
-                <SplitTime sequence="3">
-                    <ControlCode>33</ControlCode>
-                    <Time timeFormat="HH:MM:SS">00:04:54</Time>
-                </SplitTime>
-                <SplitTime sequence="4">
-                    <ControlCode>34</ControlCode>
-                    <Time timeFormat="HH:MM:SS">00:05:44</Time>
-                </SplitTime>
-                <SplitTime sequence="5">
-                    <ControlCode>37</ControlCode>
-                    <Time timeFormat="HH:MM:SS">00:07:12</Time>
-                </SplitTime>
-                <SplitTime sequence="6">
-                    <ControlCode>38</ControlCode>
-                    <Time timeFormat="HH:MM:SS">00:08:49</Time>
-                </SplitTime>
-                <SplitTime sequence="7">
-                    <ControlCode>39</ControlCode>
-                    <Time timeFormat="HH:MM:SS">00:09:56</Time>
-                </SplitTime>
-                <SplitTime sequence="8">
-                    <ControlCode>40</ControlCode>
-                    <Time timeFormat="HH:MM:SS">00:10:29</Time>
-                </SplitTime>
-                <SplitTime sequence="9">
-                    <ControlCode>41</ControlCode>
-                    <Time timeFormat="HH:MM:SS">00:11:07</Time>
-                </SplitTime>
-                <SplitTime sequence="10">
-                    <ControlCode>42</ControlCode>
-                    <Time timeFormat="HH:MM:SS">00:12:02</Time>
-                </SplitTime>
-                <SplitTime sequence="11">
-                    <ControlCode>43</ControlCode>
-                    <Time timeFormat="HH:MM:SS">00:12:26</Time>
-                </SplitTime>
-                <SplitTime sequence="12">
-                    <ControlCode>44</ControlCode>
-                    <Time timeFormat="HH:MM:SS">00:14:15</Time>
-                </SplitTime>
-                <SplitTime sequence="13">
-                    <ControlCode>45</ControlCode>
-                    <Time timeFormat="HH:MM:SS">00:15:39</Time>
-                </SplitTime>
-                <SplitTime sequence="14">
-                    <ControlCode>46</ControlCode>
-                    <Time timeFormat="HH:MM:SS">00:16:17</Time>
-                </SplitTime>
-                <SplitTime sequence="15">
-                    <ControlCode>3</ControlCode>
-                    <Time timeFormat="HH:MM:SS">00:16:28</Time>
-                </SplitTime>
-            </Result>
-        </PersonResult>
-        <PersonResult>
-            <Person>
-                <PersonName>
-                    <Family>VILLAR</Family>
-                    <Given>Alix</Given>
-                </PersonName>
-                <PersonId />
-                <Nationality>
-                    <CountryId value="other" />
-                </Nationality>
-            </Person>
-            <Club>
-                <ClubId />
-                <ShortName>EDF Junior</ShortName>
-                <CountryId value="other" />
-            </Club>
-            <Result>
-                <CCardId>8171020</CCardId>
-                <StartTime>
-                    <Clock clockFormat="HH:MM:SS">17:56:29</Clock>
-                </StartTime>
-                <FinishTime>
-                    <Clock clockFormat="HH:MM:SS">18:13:55</Clock>
-                </FinishTime>
-                <Time timeFormat="HH:MM:SS">00:17:26</Time>
-                <CompetitorStatus value="OK" />
-                <CourseLength>0</CourseLength>
-                <SplitTime sequence="1">
-                    <ControlCode>31</ControlCode>
-                    <Time timeFormat="HH:MM:SS">00:00:58</Time>
-                </SplitTime>
-                <SplitTime sequence="2">
-                    <ControlCode>32</ControlCode>
-                    <Time timeFormat="HH:MM:SS">00:02:28</Time>
-                </SplitTime>
-                <SplitTime sequence="3">
-                    <ControlCode>33</ControlCode>
-                    <Time timeFormat="HH:MM:SS">00:05:07</Time>
-                </SplitTime>
-                <SplitTime sequence="4">
-                    <ControlCode>34</ControlCode>
-                    <Time timeFormat="HH:MM:SS">00:06:09</Time>
-                </SplitTime>
-                <SplitTime sequence="5">
-                    <ControlCode>37</ControlCode>
-                    <Time timeFormat="HH:MM:SS">00:07:45</Time>
-                </SplitTime>
-                <SplitTime sequence="6">
-                    <ControlCode>38</ControlCode>
-                    <Time timeFormat="HH:MM:SS">00:09:39</Time>
-                </SplitTime>
-                <SplitTime sequence="7">
-                    <ControlCode>39</ControlCode>
-                    <Time timeFormat="HH:MM:SS">00:10:56</Time>
-                </SplitTime>
-                <SplitTime sequence="8">
-                    <ControlCode>40</ControlCode>
-                    <Time timeFormat="HH:MM:SS">00:11:29</Time>
-                </SplitTime>
-                <SplitTime sequence="9">
-                    <ControlCode>41</ControlCode>
-                    <Time timeFormat="HH:MM:SS">00:12:07</Time>
-                </SplitTime>
-                <SplitTime sequence="10">
-                    <ControlCode>42</ControlCode>
-                    <Time timeFormat="HH:MM:SS">00:13:03</Time>
-                </SplitTime>
-                <SplitTime sequence="11">
-                    <ControlCode>43</ControlCode>
-                    <Time timeFormat="HH:MM:SS">00:13:26</Time>
-                </SplitTime>
-                <SplitTime sequence="12">
-                    <ControlCode>44</ControlCode>
-                    <Time timeFormat="HH:MM:SS">00:15:15</Time>
-                </SplitTime>
-                <SplitTime sequence="13">
-                    <ControlCode>45</ControlCode>
-                    <Time timeFormat="HH:MM:SS">00:16:41</Time>
-                </SplitTime>
-                <SplitTime sequence="14">
-                    <ControlCode>46</ControlCode>
-                    <Time timeFormat="HH:MM:SS">00:17:14</Time>
-                </SplitTime>
-                <SplitTime sequence="15">
-                    <ControlCode>3</ControlCode>
-                    <Time timeFormat="HH:MM:SS">00:17:26</Time>
-                </SplitTime>
-            </Result>
-        </PersonResult>
-        <PersonResult>
-            <Person>
-                <PersonName>
-                    <Family>WYMER</Family>
-                    <Given>Alyssia</Given>
-                </PersonName>
-                <PersonId />
-                <Nationality>
-                    <CountryId value="other" />
-                </Nationality>
-            </Person>
-            <Club>
-                <ClubId />
-                <ShortName>EDF Junior</ShortName>
-                <CountryId value="other" />
-            </Club>
-            <Result>
-                <CCardId>8230105</CCardId>
-                <StartTime>
-                    <Clock clockFormat="HH:MM:SS">18:14:04</Clock>
-                </StartTime>
-                <FinishTime>
-                    <Clock clockFormat="HH:MM:SS">18:33:58</Clock>
-                </FinishTime>
-                <Time timeFormat="HH:MM:SS">00:19:54</Time>
-                <CompetitorStatus value="OK" />
-                <CourseLength>0</CourseLength>
-                <SplitTime sequence="1">
-                    <ControlCode>31</ControlCode>
-                    <Time timeFormat="HH:MM:SS">00:01:04</Time>
-                </SplitTime>
-                <SplitTime sequence="2">
-                    <ControlCode>32</ControlCode>
-                    <Time timeFormat="HH:MM:SS">00:02:51</Time>
-                </SplitTime>
-                <SplitTime sequence="3">
-                    <ControlCode>33</ControlCode>
-                    <Time timeFormat="HH:MM:SS">00:06:14</Time>
-                </SplitTime>
-                <SplitTime sequence="4">
-                    <ControlCode>34</ControlCode>
-                    <Time timeFormat="HH:MM:SS">00:07:15</Time>
-                </SplitTime>
-                <SplitTime sequence="5">
-                    <ControlCode>37</ControlCode>
-                    <Time timeFormat="HH:MM:SS">00:09:06</Time>
-                </SplitTime>
-                <SplitTime sequence="6">
-                    <ControlCode>38</ControlCode>
-                    <Time timeFormat="HH:MM:SS">00:11:15</Time>
-                </SplitTime>
-                <SplitTime sequence="7">
-                    <ControlCode>39</ControlCode>
-                    <Time timeFormat="HH:MM:SS">00:12:32</Time>
-                </SplitTime>
-                <SplitTime sequence="8">
-                    <ControlCode>40</ControlCode>
-                    <Time timeFormat="HH:MM:SS">00:13:06</Time>
-                </SplitTime>
-                <SplitTime sequence="9">
-                    <ControlCode>41</ControlCode>
-                    <Time timeFormat="HH:MM:SS">00:13:48</Time>
-                </SplitTime>
-                <SplitTime sequence="10">
-                    <ControlCode>42</ControlCode>
-                    <Time timeFormat="HH:MM:SS">00:14:55</Time>
-                </SplitTime>
-                <SplitTime sequence="11">
-                    <ControlCode>43</ControlCode>
-                    <Time timeFormat="HH:MM:SS">00:15:27</Time>
-                </SplitTime>
-                <SplitTime sequence="12">
-                    <ControlCode>44</ControlCode>
-                    <Time timeFormat="HH:MM:SS">00:17:42</Time>
-                </SplitTime>
-                <SplitTime sequence="13">
-                    <ControlCode>45</ControlCode>
-                    <Time timeFormat="HH:MM:SS">00:19:22</Time>
-                </SplitTime>
-                <SplitTime sequence="14">
-                    <ControlCode>46</ControlCode>
-                    <Time timeFormat="HH:MM:SS">00:19:41</Time>
-                </SplitTime>
-                <SplitTime sequence="15">
-                    <ControlCode>3</ControlCode>
-                    <Time timeFormat="HH:MM:SS">00:19:54</Time>
-                </SplitTime>
-            </Result>
-        </PersonResult>
-    </ClassResult>
-    <ClassResult>
-        <ClassShortName>Hommes</ClassShortName>
-        <PersonResult>
-            <Person>
-                <PersonName>
-                    <Family>RADONDY</Family>
-                    <Given>Thomas</Given>
-                </PersonName>
-                <PersonId />
-                <Nationality>
-                    <CountryId value="other" />
-                </Nationality>
-            </Person>
-            <Club>
-                <ClubId />
-                <ShortName>EDF Junior</ShortName>
-                <CountryId value="other" />
-            </Club>
-            <Result>
-                <CCardId>8009995</CCardId>
-                <StartTime>
-                    <Clock clockFormat="HH:MM:SS">18:11:29</Clock>
-                </StartTime>
-                <FinishTime>
-                    <Clock clockFormat="HH:MM:SS">18:25:06</Clock>
-                </FinishTime>
-                <Time timeFormat="HH:MM:SS">00:13:37</Time>
-                <CompetitorStatus value="OK" />
-                <CourseLength>0</CourseLength>
-                <SplitTime sequence="1">
-                    <ControlCode>31</ControlCode>
-                    <Time timeFormat="HH:MM:SS">00:00:43</Time>
-                </SplitTime>
-                <SplitTime sequence="2">
-                    <ControlCode>32</ControlCode>
-                    <Time timeFormat="HH:MM:SS">00:01:52</Time>
-                </SplitTime>
-                <SplitTime sequence="3">
-                    <ControlCode>33</ControlCode>
-                    <Time timeFormat="HH:MM:SS">00:03:56</Time>
-                </SplitTime>
-                <SplitTime sequence="4">
-                    <ControlCode>34</ControlCode>
-                    <Time timeFormat="HH:MM:SS">00:04:37</Time>
-                </SplitTime>
-                <SplitTime sequence="5">
-                    <ControlCode>35</ControlCode>
-                    <Time timeFormat="HH:MM:SS">00:05:11</Time>
-                </SplitTime>
-                <SplitTime sequence="6">
-                    <ControlCode>36</ControlCode>
-                    <Time timeFormat="HH:MM:SS">00:05:27</Time>
-                </SplitTime>
-                <SplitTime sequence="7">
-                    <ControlCode>37</ControlCode>
-                    <Time timeFormat="HH:MM:SS">00:06:39</Time>
-                </SplitTime>
-                <SplitTime sequence="8">
-                    <ControlCode>38</ControlCode>
-                    <Time timeFormat="HH:MM:SS">00:08:00</Time>
-                </SplitTime>
-                <SplitTime sequence="9">
-                    <ControlCode>39</ControlCode>
-                    <Time timeFormat="HH:MM:SS">00:08:57</Time>
-                </SplitTime>
-                <SplitTime sequence="10">
-                    <ControlCode>40</ControlCode>
-                    <Time timeFormat="HH:MM:SS">00:09:23</Time>
-                </SplitTime>
-                <SplitTime sequence="11">
-                    <ControlCode>41</ControlCode>
-                    <Time timeFormat="HH:MM:SS">00:09:54</Time>
-                </SplitTime>
-                <SplitTime sequence="12">
-                    <ControlCode>42</ControlCode>
-                    <Time timeFormat="HH:MM:SS">00:10:37</Time>
-                </SplitTime>
-                <SplitTime sequence="13">
-                    <ControlCode>43</ControlCode>
-                    <Time timeFormat="HH:MM:SS">00:10:57</Time>
-                </SplitTime>
-                <SplitTime sequence="14">
-                    <ControlCode>44</ControlCode>
-                    <Time timeFormat="HH:MM:SS">00:12:26</Time>
-                </SplitTime>
-                <SplitTime sequence="15">
-                    <ControlCode>45</ControlCode>
-                    <Time timeFormat="HH:MM:SS">00:13:16</Time>
-                </SplitTime>
-                <SplitTime sequence="16">
-                    <ControlCode>46</ControlCode>
-                    <Time timeFormat="HH:MM:SS">00:13:29</Time>
-                </SplitTime>
-                <SplitTime sequence="17">
-                    <ControlCode>999</ControlCode>
-                    <Time timeFormat="HH:MM:SS">00:13:37</Time>
-                </SplitTime>
-            </Result>
-        </PersonResult>
-        <PersonResult>
-            <Person>
-                <PersonName>
-                    <Family>VEROVE</Family>
-                    <Given>Guilhem</Given>
-                </PersonName>
-                <PersonId />
-                <Nationality>
-                    <CountryId value="other" />
-                </Nationality>
-            </Person>
-            <Club>
-                <ClubId />
-                <ShortName>PFCO Loire</ShortName>
-                <CountryId value="other" />
-            </Club>
-            <Result>
-                <CCardId>8055907</CCardId>
-                <StartTime>
-                    <Clock clockFormat="HH:MM:SS">18:10:28</Clock>
-                </StartTime>
-                <FinishTime>
-                    <Clock clockFormat="HH:MM:SS">18:24:37</Clock>
-                </FinishTime>
-                <Time timeFormat="HH:MM:SS">00:14:09</Time>
-                <CompetitorStatus value="OK" />
-                <CourseLength>0</CourseLength>
-                <SplitTime sequence="1">
-                    <ControlCode>31</ControlCode>
-                    <Time timeFormat="HH:MM:SS">00:00:40</Time>
-                </SplitTime>
-                <SplitTime sequence="2">
-                    <ControlCode>32</ControlCode>
-                    <Time timeFormat="HH:MM:SS">00:02:00</Time>
-                </SplitTime>
-                <SplitTime sequence="3">
-                    <ControlCode>33</ControlCode>
-                    <Time timeFormat="HH:MM:SS">00:04:00</Time>
-                </SplitTime>
-                <SplitTime sequence="4">
-                    <ControlCode>34</ControlCode>
-                    <Time timeFormat="HH:MM:SS">00:04:41</Time>
-                </SplitTime>
-                <SplitTime sequence="5">
-                    <ControlCode>35</ControlCode>
-                    <Time timeFormat="HH:MM:SS">00:05:22</Time>
-                </SplitTime>
-                <SplitTime sequence="6">
-                    <ControlCode>36</ControlCode>
-                    <Time timeFormat="HH:MM:SS">00:05:42</Time>
-                </SplitTime>
-                <SplitTime sequence="7">
-                    <ControlCode>37</ControlCode>
-                    <Time timeFormat="HH:MM:SS">00:06:55</Time>
-                </SplitTime>
-                <SplitTime sequence="8">
-                    <ControlCode>38</ControlCode>
-                    <Time timeFormat="HH:MM:SS">00:08:13</Time>
-                </SplitTime>
-                <SplitTime sequence="9">
-                    <ControlCode>39</ControlCode>
-                    <Time timeFormat="HH:MM:SS">00:09:18</Time>
-                </SplitTime>
-                <SplitTime sequence="10">
-                    <ControlCode>40</ControlCode>
-                    <Time timeFormat="HH:MM:SS">00:09:45</Time>
-                </SplitTime>
-                <SplitTime sequence="11">
-                    <ControlCode>41</ControlCode>
-                    <Time timeFormat="HH:MM:SS">00:10:11</Time>
-                </SplitTime>
-                <SplitTime sequence="12">
-                    <ControlCode>42</ControlCode>
-                    <Time timeFormat="HH:MM:SS">00:10:58</Time>
-                </SplitTime>
-                <SplitTime sequence="13">
-                    <ControlCode>43</ControlCode>
-                    <Time timeFormat="HH:MM:SS">00:11:28</Time>
-                </SplitTime>
-                <SplitTime sequence="14">
-                    <ControlCode>44</ControlCode>
-                    <Time timeFormat="HH:MM:SS">00:12:59</Time>
-                </SplitTime>
-                <SplitTime sequence="15">
-                    <ControlCode>45</ControlCode>
-                    <Time timeFormat="HH:MM:SS">00:13:47</Time>
-                </SplitTime>
-                <SplitTime sequence="16">
-                    <ControlCode>46</ControlCode>
-                    <Time timeFormat="HH:MM:SS">00:14:00</Time>
-                </SplitTime>
-                <SplitTime sequence="17">
-                    <ControlCode>999</ControlCode>
-                    <Time timeFormat="HH:MM:SS">00:14:09</Time>
-                </SplitTime>
-            </Result>
-        </PersonResult>
-        <PersonResult>
-            <Person>
-                <PersonName>
-                    <Family>LATASTE</Family>
-                    <Given>Mathias</Given>
-                </PersonName>
-                <PersonId />
-                <Nationality>
-                    <CountryId value="other" />
-                </Nationality>
-            </Person>
-            <Club>
-                <ClubId />
-                <ShortName>EDF Junior</ShortName>
-                <CountryId value="other" />
-            </Club>
-            <Result>
-                <CCardId>8052004</CCardId>
-                <StartTime>
-                    <Clock clockFormat="HH:MM:SS">18:12:29</Clock>
-                </StartTime>
-                <FinishTime>
-                    <Clock clockFormat="HH:MM:SS">18:28:45</Clock>
-                </FinishTime>
-                <Time timeFormat="HH:MM:SS">00:16:16</Time>
-                <CompetitorStatus value="OK" />
-                <CourseLength>0</CourseLength>
-                <SplitTime sequence="1">
-                    <ControlCode>31</ControlCode>
-                    <Time timeFormat="HH:MM:SS">00:00:54</Time>
-                </SplitTime>
-                <SplitTime sequence="2">
-                    <ControlCode>32</ControlCode>
-                    <Time timeFormat="HH:MM:SS">00:02:19</Time>
-                </SplitTime>
-                <SplitTime sequence="3">
-                    <ControlCode>33</ControlCode>
-                    <Time timeFormat="HH:MM:SS">00:04:48</Time>
-                </SplitTime>
-                <SplitTime sequence="4">
-                    <ControlCode>34</ControlCode>
-                    <Time timeFormat="HH:MM:SS">00:05:36</Time>
-                </SplitTime>
-                <SplitTime sequence="5">
-                    <ControlCode>35</ControlCode>
-                    <Time timeFormat="HH:MM:SS">00:06:15</Time>
-                </SplitTime>
-                <SplitTime sequence="6">
-                    <ControlCode>36</ControlCode>
-                    <Time timeFormat="HH:MM:SS">00:06:34</Time>
-                </SplitTime>
-                <SplitTime sequence="7">
-                    <ControlCode>37</ControlCode>
-                    <Time timeFormat="HH:MM:SS">00:07:59</Time>
-                </SplitTime>
-                <SplitTime sequence="8">
-                    <ControlCode>38</ControlCode>
-                    <Time timeFormat="HH:MM:SS">00:09:38</Time>
-                </SplitTime>
-                <SplitTime sequence="9">
-                    <ControlCode>39</ControlCode>
-                    <Time timeFormat="HH:MM:SS">00:10:45</Time>
-                </SplitTime>
-                <SplitTime sequence="10">
-                    <ControlCode>40</ControlCode>
-                    <Time timeFormat="HH:MM:SS">00:11:14</Time>
-                </SplitTime>
-                <SplitTime sequence="11">
-                    <ControlCode>41</ControlCode>
-                    <Time timeFormat="HH:MM:SS">00:11:46</Time>
-                </SplitTime>
-                <SplitTime sequence="12">
-                    <ControlCode>42</ControlCode>
-                    <Time timeFormat="HH:MM:SS">00:12:43</Time>
-                </SplitTime>
-                <SplitTime sequence="13">
-                    <ControlCode>43</ControlCode>
-                    <Time timeFormat="HH:MM:SS">00:13:16</Time>
-                </SplitTime>
-                <SplitTime sequence="14">
-                    <ControlCode>44</ControlCode>
-                    <Time timeFormat="HH:MM:SS">00:14:54</Time>
-                </SplitTime>
-                <SplitTime sequence="15">
-                    <ControlCode>45</ControlCode>
-                    <Time timeFormat="HH:MM:SS">00:15:51</Time>
-                </SplitTime>
-                <SplitTime sequence="16">
-                    <ControlCode>46</ControlCode>
-                    <Time timeFormat="HH:MM:SS">00:16:07</Time>
-                </SplitTime>
-                <SplitTime sequence="17">
-                    <ControlCode>999</ControlCode>
-                    <Time timeFormat="HH:MM:SS">00:16:16</Time>
-                </SplitTime>
-            </Result>
-        </PersonResult>
-    </ClassResult>
-</ResultList>
-`;
+const expected = {
+  id: 1,
+  foreignKeys: {},
+  status: "ok",
+  firstName: "Miika",
+  lastName: "Kirmula",
+  startTime: 1659529800,
+  time: 1765,
+  legs: [
+    {
+      controlCode: 101,
+      timeOverall: 74,
+      time: 74,
+      rankSplit: 2,
+      timeBehindSplit: 3,
+      rankOverall: 2,
+      timeBehindOverall: 3,
+      timeBehindSuperman: 0,
+      isMistake: false,
+      timeLoss: 0,
+      routeChoiceTimeLoss: null,
+      detectedRouteChoice: null,
+      manualRouteChoice: null,
+    },
+    {
+      controlCode: 105,
+      timeOverall: 222,
+      time: 148,
+      rankSplit: 6,
+      timeBehindSplit: 8,
+      rankOverall: 1,
+      timeBehindOverall: 0,
+      timeBehindSuperman: 0,
+      isMistake: false,
+      timeLoss: 0,
+      routeChoiceTimeLoss: null,
+      detectedRouteChoice: null,
+      manualRouteChoice: null,
+    },
+    {
+      controlCode: 107,
+      timeOverall: 475,
+      time: 253,
+      rankSplit: 17,
+      timeBehindSplit: 44,
+      rankOverall: 6,
+      timeBehindOverall: 39,
+      timeBehindSuperman: 0,
+      isMistake: false,
+      timeLoss: 0,
+      routeChoiceTimeLoss: null,
+      detectedRouteChoice: null,
+      manualRouteChoice: null,
+    },
+    {
+      controlCode: 109,
+      timeOverall: 523,
+      time: 48,
+      rankSplit: 7,
+      timeBehindSplit: 4,
+      rankOverall: 5,
+      timeBehindOverall: 41,
+      timeBehindSuperman: 0,
+      isMistake: false,
+      timeLoss: 0,
+      routeChoiceTimeLoss: null,
+      detectedRouteChoice: null,
+      manualRouteChoice: null,
+    },
+    {
+      controlCode: 110,
+      timeOverall: 676,
+      time: 153,
+      rankSplit: 39,
+      timeBehindSplit: 49,
+      rankOverall: 11,
+      timeBehindOverall: 69,
+      timeBehindSuperman: 0,
+      isMistake: false,
+      timeLoss: 0,
+      routeChoiceTimeLoss: null,
+      detectedRouteChoice: null,
+      manualRouteChoice: null,
+    },
+    {
+      controlCode: 113,
+      timeOverall: 751,
+      time: 75,
+      rankSplit: 1,
+      timeBehindSplit: 0,
+      rankOverall: 8,
+      timeBehindOverall: 63,
+      timeBehindSuperman: 0,
+      isMistake: false,
+      timeLoss: 0,
+      routeChoiceTimeLoss: null,
+      detectedRouteChoice: null,
+      manualRouteChoice: null,
+    },
+    {
+      controlCode: 115,
+      timeOverall: 948,
+      time: 197,
+      rankSplit: 3,
+      timeBehindSplit: 1,
+      rankOverall: 4,
+      timeBehindOverall: 54,
+      timeBehindSuperman: 0,
+      isMistake: false,
+      timeLoss: 0,
+      routeChoiceTimeLoss: null,
+      detectedRouteChoice: null,
+      manualRouteChoice: null,
+    },
+    {
+      controlCode: 116,
+      timeOverall: 998,
+      time: 50,
+      rankSplit: 9,
+      timeBehindSplit: 5,
+      rankOverall: 4,
+      timeBehindOverall: 58,
+      timeBehindSuperman: 0,
+      isMistake: false,
+      timeLoss: 0,
+      routeChoiceTimeLoss: null,
+      detectedRouteChoice: null,
+      manualRouteChoice: null,
+    },
+    {
+      controlCode: 118,
+      timeOverall: 1208,
+      time: 210,
+      rankSplit: 3,
+      timeBehindSplit: 4,
+      rankOverall: 4,
+      timeBehindOverall: 62,
+      timeBehindSuperman: 0,
+      isMistake: false,
+      timeLoss: 0,
+      routeChoiceTimeLoss: null,
+      detectedRouteChoice: null,
+      manualRouteChoice: null,
+    },
+    {
+      controlCode: 121,
+      timeOverall: 1288,
+      time: 80,
+      rankSplit: 12,
+      timeBehindSplit: 10,
+      rankOverall: 4,
+      timeBehindOverall: 71,
+      timeBehindSuperman: 0,
+      isMistake: false,
+      timeLoss: 0,
+      routeChoiceTimeLoss: null,
+      detectedRouteChoice: null,
+      manualRouteChoice: null,
+    },
+    {
+      controlCode: 123,
+      timeOverall: 1342,
+      time: 54,
+      rankSplit: 1,
+      timeBehindSplit: 0,
+      rankOverall: 3,
+      timeBehindOverall: 28,
+      timeBehindSuperman: 0,
+      isMistake: false,
+      timeLoss: 0,
+      routeChoiceTimeLoss: null,
+      detectedRouteChoice: null,
+      manualRouteChoice: null,
+    },
+    {
+      controlCode: 125,
+      timeOverall: 1479,
+      time: 137,
+      rankSplit: 2,
+      timeBehindSplit: 1,
+      rankOverall: 3,
+      timeBehindOverall: 11,
+      timeBehindSuperman: 0,
+      isMistake: false,
+      timeLoss: 0,
+      routeChoiceTimeLoss: null,
+      detectedRouteChoice: null,
+      manualRouteChoice: null,
+    },
+    {
+      controlCode: 127,
+      timeOverall: 1579,
+      time: 100,
+      rankSplit: 6,
+      timeBehindSplit: 16,
+      rankOverall: 3,
+      timeBehindOverall: 81,
+      timeBehindSuperman: 0,
+      isMistake: false,
+      timeLoss: 0,
+      routeChoiceTimeLoss: null,
+      detectedRouteChoice: null,
+      manualRouteChoice: null,
+    },
+    {
+      controlCode: 130,
+      timeOverall: 1696,
+      time: 117,
+      rankSplit: 1,
+      timeBehindSplit: 0,
+      rankOverall: 2,
+      timeBehindOverall: 71,
+      timeBehindSuperman: 0,
+      isMistake: false,
+      timeLoss: 0,
+      routeChoiceTimeLoss: null,
+      detectedRouteChoice: null,
+      manualRouteChoice: null,
+    },
+    {
+      controlCode: 100,
+      timeOverall: 1741,
+      time: 45,
+      rankSplit: 1,
+      timeBehindSplit: 0,
+      rankOverall: 2,
+      timeBehindOverall: 69,
+      timeBehindSuperman: 0,
+      isMistake: false,
+      timeLoss: 0,
+      routeChoiceTimeLoss: null,
+      detectedRouteChoice: null,
+      manualRouteChoice: null,
+    },
+  ],
+  rank: 1,
+  timeBehind: 0,
+  totalTimeLost: 0,
+};

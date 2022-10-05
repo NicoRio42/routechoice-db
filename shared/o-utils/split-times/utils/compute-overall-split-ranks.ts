@@ -1,7 +1,8 @@
-import Runner from "../../models/Runner";
+import type Runner from "../../models/Runner";
 import { isCompleteRunnerLeg } from "../../type-guards/runner-guards";
 import { computeRanksplit } from "./compute-split-ranks-time-behind";
-import sortRunners, { RunnerForSort } from "./sort-runners";
+import sortRunners from "./sort-runners";
+import type { RunnerForSort } from "./sort-runners";
 
 export function computeOverallSplitRanks(runners: Runner[]): Runner[] {
   const clonedRunners = structuredClone(runners);
