@@ -1,10 +1,7 @@
 import { describe, expect, test } from "vitest";
 import { parseIOFXML3SplitTimesFile } from "./iof-xml-3";
 import { IOF_XML_2_SPLIT_TIMES } from "./mocks/iof-xml-2-split-times";
-import {
-  IOF_XML_3_SPLIT_TIMES,
-  IOF_XML_3_SPLIT_TIMES_2,
-} from "./mocks/iof-xml-3-split-times";
+import { IOF_XML_3_SPLIT_TIMES } from "./mocks/iof-xml-3-split-times";
 
 describe("parseIOFXML3SplitTimesFile()", () => {
   test("throw error when iof xml version is not 3.0.", () => {
