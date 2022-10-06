@@ -1,11 +1,12 @@
-import RunnerStatusEnum from "../../models/enums/runner-status-enum";
 import type Runner from "../../models/Runner";
-import type { CompleteRunnerLeg, RunnerLeg } from "../../models/runner-leg";
+import type { RunnerLeg } from "../../models/runner-leg";
+import SupermanSplit from "../../models/superman";
 import { isCompleteRunnerLeg } from "../../type-guards/runner-guards";
 import { arrayAverage } from "./shared";
 
 export default function computeRunnersMistakes(
   runners: Runner[],
+  supermanSplits: SupermanSplit[],
   mistakeDetectionRatio = 1.2
 ): Runner[] {
   const clonedRunners = structuredClone(runners);
@@ -16,9 +17,7 @@ export default function computeRunnersMistakes(
         return null;
       }
 
-      return (
-        leg.time / (clonedRunners[0].legs[legIndex] as CompleteRunnerLeg).time
-      );
+      return leg.time / supermanSplits[legIndex].time;
     });
 
     const averagePercentage = arrayAverage(percentagesBehindSuperman);
@@ -51,14 +50,13 @@ export default function computeRunnersMistakes(
 
     runner.totalTimeLost = runner.legs.reduce(
       (timeLost: number, leg: RunnerLeg, legIndex: number) => {
-        if (!isCompleteRunnerLeg(leg)) {
+        if (!isCompleteRunnerLeg(leg) || !leg.isMistake) {
           return 0;
         }
 
         const timeWithoutMistake = Math.round(
           // First runner is supposed to have only complete legs
-          (clonedRunners[0].legs[legIndex] as CompleteRunnerLeg).time *
-            newClearedAveragePercentage
+          supermanSplits[legIndex].time * newClearedAveragePercentage
         );
 
         leg.timeLoss = leg.time - timeWithoutMistake;

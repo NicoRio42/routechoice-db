@@ -9,6 +9,7 @@ export function arrayEquals(a: unknown[], b: unknown[]) {
 
 export function arrayAverage(a: (number | null)[]): number {
   let sum = 0;
+  let length = 0;
 
   a.forEach((item) => {
     if (item === null) {
@@ -16,9 +17,10 @@ export function arrayAverage(a: (number | null)[]): number {
     }
 
     sum += item;
+    length++;
   });
 
-  return sum / a.length;
+  return sum / length;
 }
 
 /**

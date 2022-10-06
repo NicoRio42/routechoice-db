@@ -3,8 +3,12 @@ import { isCompleteRunnerLeg } from "../../type-guards/runner-guards";
 import { computeRanksplit } from "./compute-split-ranks-time-behind";
 import sortRunners from "./sort-runners";
 import type { RunnerForSort } from "./sort-runners";
+import type SupermanSplit from "../../models/superman";
 
-export function computeOverallSplitRanks(runners: Runner[]): Runner[] {
+export function computeOverallSplitRanks(
+  runners: Runner[],
+  supermanSplits: SupermanSplit[]
+): Runner[] {
   const clonedRunners = structuredClone(runners);
   const course = clonedRunners[0].legs.map((leg) => leg.controlCode);
 
@@ -51,6 +55,9 @@ export function computeOverallSplitRanks(runners: Runner[]): Runner[] {
 
       runnerLeg.timeBehindOverall =
         runnerLeg.timeOverall - legOverallBestTime.time;
+
+      runnerLeg.timeBehindSuperman =
+        runnerLeg.timeOverall - supermanSplits[index].timeOverall;
     });
   });
 

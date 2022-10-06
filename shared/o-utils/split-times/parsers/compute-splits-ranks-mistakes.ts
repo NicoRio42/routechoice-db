@@ -11,15 +11,18 @@ export default function computeSplitsRanksMistakes(
   const rankedRunners = computeRunnersRanks(runners);
   const runnersWithSplitTimes = computeRunnersSplitTimes(rankedRunners);
 
-  const splitRankedRunners = computeSplitRanksAndTimeBehind(
+  const [splitRankedRunners, supermanSplits] = computeSplitRanksAndTimeBehind(
     runnersWithSplitTimes
   );
 
-  const overallSplitRankedRunners =
-    computeOverallSplitRanks(splitRankedRunners);
+  const overallSplitRankedRunners = computeOverallSplitRanks(
+    splitRankedRunners,
+    supermanSplits
+  );
 
-  const runnersWithMistakes = computeRunnersMistakes(overallSplitRankedRunners);
-
-  console.log(runnersWithMistakes.at(-1)?.legs);
+  const runnersWithMistakes = computeRunnersMistakes(
+    overallSplitRankedRunners,
+    supermanSplits
+  );
   return runnersWithMistakes;
 }

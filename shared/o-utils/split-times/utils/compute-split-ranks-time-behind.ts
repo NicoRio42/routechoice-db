@@ -2,10 +2,14 @@ import type Runner from "../../models/Runner";
 import { isCompleteRunnerLeg } from "../../type-guards/runner-guards";
 import sortRunners from "./sort-runners";
 import type { RunnerForSort } from "./sort-runners";
+import type SupermanSplit from "../../models/superman";
 
-export function computeSplitRanksAndTimeBehind(runners: Runner[]): Runner[] {
+export function computeSplitRanksAndTimeBehind(
+  runners: Runner[]
+): [Runner[], SupermanSplit[]] {
   const clonedRunners = structuredClone(runners);
   const course = clonedRunners[0].legs.map((leg) => leg.controlCode);
+  const supermanSplits: SupermanSplit[] = [];
 
   // For every legs of every runners calculate ranking and time behind
   course.forEach((leg, index) => {
@@ -24,6 +28,18 @@ export function computeSplitRanksAndTimeBehind(runners: Runner[]): Runner[] {
     });
 
     legSplits.sort(sortRunners);
+    const bestSplitTime = legSplits[0].time;
+    if (bestSplitTime === null) {
+      throw new Error("First runner should have a complete race");
+    }
+
+    supermanSplits.push({
+      time: bestSplitTime,
+      timeOverall:
+        index === 0
+          ? bestSplitTime
+          : supermanSplits[index - 1].timeOverall + bestSplitTime,
+    });
 
     legSplits.forEach((legSplit, i) => {
       legSplit.rankSplit =
@@ -52,7 +68,7 @@ export function computeSplitRanksAndTimeBehind(runners: Runner[]): Runner[] {
     });
   });
 
-  return clonedRunners;
+  return [clonedRunners, supermanSplits];
 }
 
 export function computeRanksplit(

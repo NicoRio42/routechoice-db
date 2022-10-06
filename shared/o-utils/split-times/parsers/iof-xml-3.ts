@@ -1,6 +1,6 @@
 import RunnerStatusEnum from "../../models/enums/runner-status-enum";
 import type Runner from "../../models/Runner";
-import type { RunnerLeg } from "../../models/runner-leg";
+import { RunnerLeg } from "../../models/runner-leg";
 import { isNotNullRunnerLeg, isRunner } from "../../type-guards/runner-guards";
 import { extractNumberFromElementOrThrowError } from "../utils/xml-parser-utils";
 import computeSplitsRanksMistakes from "./compute-splits-ranks-mistakes";
@@ -78,6 +78,17 @@ function getRunners(
           : null;
 
       const legs: RunnerLeg[] = extractLegsFromPersonResult(personResult);
+
+      const lastLeg =
+        status === RunnerStatusEnum.OK
+          ? {
+              controlCode: 0,
+              timeOverall: time,
+            }
+          : { controlCode: 0 };
+
+      legs.push(lastLeg);
+
       const foreignKeys: Record<string, unknown> = {};
 
       return {
