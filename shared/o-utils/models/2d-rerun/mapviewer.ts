@@ -4,14 +4,15 @@ export interface Mapviewer {
   tags: Tag[];
   coursecoords: string;
   otechinfo: Record<string, any>;
-  routes: Route[];
+  routes: TwoDRerunRoute[];
   loadseu: Loadseu;
   request_redraw: VoidFunction;
   update_routediv: VoidFunction;
   handlelLoadseuSuccessResponse: HandlelLoadseuSuccessResponse;
 }
 
-interface Route {
+export interface TwoDRerunRoute {
+  indexnumber: number;
   runnername: string;
   latarray: number[];
   lngarray: number[];

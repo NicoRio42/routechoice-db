@@ -3,5 +3,5 @@ export default interface Routechoice {
   name: string;
   color: string;
   length: number;
-  track: [number, number, number][];
+  track: [number, number][];
 }
