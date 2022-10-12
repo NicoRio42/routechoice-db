@@ -1,8 +1,7 @@
 import { describe, expect, test } from "vitest";
 import {
+  CoordinatesConverter,
   getMapCalibrationFromCalString,
-  latLongToXY,
-  xYToLatLong,
 } from "./coords-converter";
 import type { MapCalibration } from "./coords-converter";
 
@@ -13,19 +12,19 @@ describe("Coordinates converter", () => {
     expect(mapCallibration).toStrictEqual(expectedMapCallibration);
   });
 
-  const [x, y] = latLongToXY(
-    [45.79130295443253, 4.848683532105073],
-    expectedMapCallibration
-  );
+  const coordsConverter = new CoordinatesConverter(expectedMapCallibration);
+
+  const [x, y] = coordsConverter.latLongToXY([
+    45.79130295443253, 4.848683532105073,
+  ]);
 
   test("latLongToXY", () => {
     expect([x, y]).toStrictEqual([863.5162690847026, 2867.6643295786716]);
   });
 
-  const [lat, lon] = xYToLatLong(
-    [863.5162690847026, 2867.6643295786716],
-    expectedMapCallibration
-  );
+  const [lat, lon] = coordsConverter.xYToLatLong([
+    863.5162690847026, 2867.6643295786716,
+  ]);
 
   test("xYToLatLong", () => {
     expect([lat, lon]).toStrictEqual([45.79130295443253, 4.848683532105073]);
