@@ -33,7 +33,7 @@ interface VoidFunction {
   (): void;
 }
 
-interface Tag {
+export interface Tag {
   type: string;
   opened_dialog: number;
   ready_for_dialog: number;
