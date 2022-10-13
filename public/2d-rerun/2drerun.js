@@ -2071,18 +2071,18 @@ function Mapp() {
   this.initcalibration = function (z) {
     var v = z.split("|");
     this.calstring_points = z;
-    var p = parseFloat(v[0]);
-    var I = parseFloat(v[1]);
-    var m = parseFloat(v[4]);
-    var G = parseFloat(v[5]);
-    var g = parseFloat(v[8]);
-    var D = parseFloat(v[9]);
-    var u = parseFloat(v[2]);
-    var J = parseFloat(v[3]);
-    var o = parseFloat(v[6]);
-    var H = parseFloat(v[7]);
-    var j = parseFloat(v[10]);
-    var F = parseFloat(v[11]);
+    var p = parseFloat(v[0]); // lon1
+    var I = parseFloat(v[1]); // lat1
+    var m = parseFloat(v[4]); // lon2
+    var G = parseFloat(v[5]); // lat2
+    var g = parseFloat(v[8]); // lon3
+    var D = parseFloat(v[9]); // lat3
+    var u = parseFloat(v[2]); // x1
+    var J = parseFloat(v[3]); // y1
+    var o = parseFloat(v[6]); // x2
+    var H = parseFloat(v[7]); // y2
+    var j = parseFloat(v[10]); // x3
+    var F = parseFloat(v[11]); // y3
     if (p == J && I == u && m == H && G == o && g == F && D == j) {
       mapviewer.dummycalibration = 1;
       J = J * 100000;
@@ -2100,14 +2100,23 @@ function Mapp() {
       [g, 0, D, 0, 1, 0],
       [0, g, 0, D, 0, 1],
     ]);
+    // q = [
+    //   [lon1, 0,    lat1, 0,    1, 0],
+    //   [0,    lon1, 0,    lat1, 0, 1],
+    //   [lon2, 0,    lat2, 0,    1, 0],
+    //   [0,    lon2, 0,    lat2, 0, 1],
+    //   [lon3, 0,    lat3, 0,    1, 0],
+    //   [0,    lon3, 0,    lat3, 0, 1],
+    // ]
     var E = $V([u, J, o, H, j, F]);
+    // E = [x1, y1, x2, y2, x3, y3]
     var B = q.inverse();
     c = B.x(E);
     this.c1 = c.elements[0];
-    this.c2 = c.elements[2];
-    this.c3 = c.elements[4];
     this.c4 = c.elements[1];
+    this.c2 = c.elements[2];
     this.c5 = c.elements[3];
+    this.c3 = c.elements[4];
     this.c6 = c.elements[5];
     var q = $M([
       [u, 0, J, 0, 1, 0],

@@ -1,89 +1,76 @@
+import { inv, matrix, multiply } from "mathjs";
+import type { MapCalibration } from "../models/course-map";
+
 export class CoordinatesConverter {
-  private c1: number;
-  private c2: number;
-  private c3: number;
-  private c4: number;
-  private c5: number;
-  private c6: number;
-  private c1inv: number;
-  private c2inv: number;
-  private c3inv: number;
-  private c4inv: number;
-  private c5inv: number;
-  private c6inv: number;
+  private latLongToXYCoef: [number, number, number, number, number, number];
+  private xYToLatLongCoef: [number, number, number, number, number, number];
 
   constructor(mapCallibration: MapCalibration) {
-    this.c1 =
-      mapCallibration[0].pointxy.x * mapCallibration[0].gps.lon +
-      mapCallibration[1].pointxy.x * mapCallibration[1].gps.lon +
-      mapCallibration[2].pointxy.x * mapCallibration[2].gps.lon;
+    this.latLongToXYCoef = multiply(
+      inv(
+        matrix([
+          [mapCallibration[0].gps.lon, 0, mapCallibration[0].gps.lat, 0, 1, 0],
+          [0, mapCallibration[0].gps.lon, 0, mapCallibration[0].gps.lat, 0, 1],
+          [mapCallibration[1].gps.lon, 0, mapCallibration[1].gps.lat, 0, 1, 0],
+          [0, mapCallibration[1].gps.lon, 0, mapCallibration[1].gps.lat, 0, 1],
+          [mapCallibration[2].gps.lon, 0, mapCallibration[2].gps.lat, 0, 1, 0],
+          [0, mapCallibration[2].gps.lon, 0, mapCallibration[2].gps.lat, 0, 1],
+        ])
+      ),
+      [
+        mapCallibration[0].point.x,
+        mapCallibration[0].point.y,
+        mapCallibration[1].point.x,
+        mapCallibration[1].point.y,
+        mapCallibration[2].point.x,
+        mapCallibration[2].point.y,
+      ]
+    ).toArray() as [number, number, number, number, number, number];
 
-    this.c2 =
-      mapCallibration[0].pointxy.x * mapCallibration[0].gps.lat +
-      mapCallibration[1].pointxy.x * mapCallibration[1].gps.lat +
-      mapCallibration[2].pointxy.x * mapCallibration[2].gps.lat;
-
-    this.c3 =
-      mapCallibration[0].pointxy.x +
-      mapCallibration[1].pointxy.x +
-      mapCallibration[2].pointxy.x;
-
-    this.c4 =
-      mapCallibration[0].pointxy.y * mapCallibration[0].gps.lon +
-      mapCallibration[1].pointxy.y * mapCallibration[1].gps.lon +
-      mapCallibration[2].pointxy.y * mapCallibration[2].gps.lon;
-
-    this.c5 =
-      mapCallibration[0].pointxy.y * mapCallibration[0].gps.lat +
-      mapCallibration[1].pointxy.y * mapCallibration[1].gps.lat +
-      mapCallibration[2].pointxy.y * mapCallibration[2].gps.lat;
-
-    this.c6 =
-      mapCallibration[0].pointxy.y +
-      mapCallibration[1].pointxy.y +
-      mapCallibration[2].pointxy.y;
-
-    this.c1inv =
-      mapCallibration[0].pointxy.x * mapCallibration[0].gps.lon +
-      mapCallibration[1].pointxy.x * mapCallibration[1].gps.lon +
-      mapCallibration[2].pointxy.x * mapCallibration[2].gps.lon;
-
-    this.c4inv =
-      mapCallibration[0].pointxy.x * mapCallibration[0].gps.lat +
-      mapCallibration[1].pointxy.x * mapCallibration[1].gps.lat +
-      mapCallibration[2].pointxy.x * mapCallibration[2].gps.lat;
-
-    this.c2inv =
-      mapCallibration[0].pointxy.y * mapCallibration[0].gps.lon +
-      mapCallibration[1].pointxy.y * mapCallibration[1].gps.lon +
-      mapCallibration[2].pointxy.y * mapCallibration[2].gps.lon;
-
-    this.c5inv =
-      mapCallibration[0].pointxy.y * mapCallibration[0].gps.lat +
-      mapCallibration[1].pointxy.y * mapCallibration[1].gps.lat +
-      mapCallibration[2].pointxy.y * mapCallibration[2].gps.lat;
-
-    this.c3inv =
-      mapCallibration[0].gps.lon +
-      mapCallibration[1].gps.lon +
-      mapCallibration[2].gps.lon;
-
-    this.c6inv =
-      mapCallibration[0].gps.lat +
-      mapCallibration[1].gps.lat +
-      mapCallibration[2].gps.lat;
+    this.xYToLatLongCoef = multiply(
+      inv(
+        matrix([
+          [mapCallibration[0].point.x, 0, mapCallibration[0].point.y, 0, 1, 0],
+          [0, mapCallibration[0].point.x, 0, mapCallibration[0].point.y, 0, 1],
+          [mapCallibration[1].point.x, 0, mapCallibration[1].point.y, 0, 1, 0],
+          [0, mapCallibration[1].point.x, 0, mapCallibration[1].point.y, 0, 1],
+          [mapCallibration[2].point.x, 0, mapCallibration[2].point.y, 0, 1, 0],
+          [0, mapCallibration[2].point.x, 0, mapCallibration[2].point.y, 0, 1],
+        ])
+      ),
+      [
+        mapCallibration[0].gps.lon,
+        mapCallibration[0].gps.lat,
+        mapCallibration[1].gps.lon,
+        mapCallibration[1].gps.lat,
+        mapCallibration[2].gps.lon,
+        mapCallibration[2].gps.lat,
+      ]
+    ).toArray() as [number, number, number, number, number, number];
   }
 
   latLongToXY([lat, lon]: [number, number]): [number, number] {
-    const x = this.c1 * lon + this.c2 * lat + this.c3;
-    const y = this.c4 * lon + this.c5 * lat + this.c6;
+    const x =
+      this.latLongToXYCoef[0] * lon +
+      this.latLongToXYCoef[2] * lat +
+      this.latLongToXYCoef[4];
+    const y =
+      this.latLongToXYCoef[1] * lon +
+      this.latLongToXYCoef[3] * lat +
+      this.latLongToXYCoef[5];
 
-    return [x, y];
+    return [Math.floor(x), Math.floor(y)];
   }
 
   xYToLatLong([x, y]: [number, number]): [number, number] {
-    const lon = this.c1inv * x + this.c2inv * y + this.c3inv;
-    const lat = this.c4inv * x + this.c5inv * y + this.c6inv;
+    const lon =
+      this.xYToLatLongCoef[0] * x +
+      this.xYToLatLongCoef[2] * y +
+      this.xYToLatLongCoef[4];
+    const lat =
+      this.xYToLatLongCoef[1] * x +
+      this.xYToLatLongCoef[3] * y +
+      this.xYToLatLongCoef[5];
 
     return [lat, lon];
   }
@@ -107,26 +94,15 @@ export function getMapCalibrationFromCalString(
   return [
     {
       gps: { lat: lat1, lon: lon1 },
-      pointxy: { x: x1, y: y1 },
+      point: { x: x1, y: y1 },
     },
     {
       gps: { lat: lat2, lon: lon2 },
-      pointxy: { x: x2, y: y2 },
+      point: { x: x2, y: y2 },
     },
     {
       gps: { lat: lat3, lon: lon3 },
-      pointxy: { x: x3, y: y3 },
+      point: { x: x3, y: y3 },
     },
   ];
 }
-
-export interface MapCalibrationPoint {
-  gps: { lat: number; lon: number };
-  pointxy: { x: number; y: number };
-}
-
-export type MapCalibration = [
-  MapCalibrationPoint,
-  MapCalibrationPoint,
-  MapCalibrationPoint
-];
