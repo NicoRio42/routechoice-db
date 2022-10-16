@@ -3,7 +3,7 @@ import { initializeApp } from "firebase/app";
 import { getFunctions } from "firebase/functions";
 import { getFirestore } from "firebase/firestore/lite";
 import { getAuth, onAuthStateChanged } from "firebase/auth";
-import firebaseConfig from "../firebase-env/.env.dev";
+import firebaseConfig from "../firebase-env/dev";
 import userStore from "../shared/stores/user-store";
 
 const fireBaseApp = initializeApp(firebaseConfig);

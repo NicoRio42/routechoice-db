@@ -1,4 +1,4 @@
-<script>
+<script lang="ts">
   import {
     collection,
     getDocs,
@@ -15,9 +15,11 @@
   import { fade } from "svelte/transition";
   import AddCourseDialog from "../components/AddCourseDialog.svelte";
   import { flip } from "svelte/animate";
+  import { courseValidator } from "../../shared/models/course";
+  import type { Course } from "../../shared/models/course";
 
   let isAddCourseDialogOpen = false;
-  let courses = [];
+  let courses: Course[] = [];
 
   const db = getFirestore();
 
@@ -34,16 +36,20 @@
     const q = query(coursesRef, orderBy("date", "desc"));
 
     const querySnapshot = await getDocs(q);
-    const data = [];
-    querySnapshot.forEach((doc) => data.push({ ...doc.data(), id: doc.id }));
+    const data: Course[] = [];
+
+    querySnapshot.forEach((doc) => {
+      try {
+        data.push(courseValidator.parse({ ...doc.data(), id: doc.id }));
+      } catch (error) {
+        console.error(error);
+      }
+    });
+
     courses = data;
   }
 
-  function addCourse(e) {
-    getCourses();
-  }
-
-  async function deleteCourse(courseId) {
+  async function deleteCourse(courseId: string) {
     if (!confirm("Are you sure to delete this course?")) {
       return;
     }
@@ -59,7 +65,7 @@
 </svelte:head>
 
 {#if isAddCourseDialogOpen}
-  <AddCourseDialog bind:isAddCourseDialogOpen on:onAddCourse={addCourse} />
+  <AddCourseDialog bind:isAddCourseDialogOpen on:onAddCourse={getCourses} />
 {/if}
 
 <main class="container" in:fade={{ duration: 500 }}>
@@ -89,7 +95,7 @@
             >
           </td>
 
-          <td>{course.date}</td>
+          <td>{new Date(course.date).toLocaleDateString()}</td>
 
           <td class="action-row">
             <button

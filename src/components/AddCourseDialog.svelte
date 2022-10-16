@@ -1,13 +1,22 @@
-<script>
+<script lang="ts">
   import { addDoc, collection, getFirestore } from "firebase/firestore/lite";
+  import type { Course, CourseWithoutID } from "shared/models/course";
   import { createEventDispatcher } from "svelte";
   import { fade } from "svelte/transition";
   import clickOutside from "../../shared/use/clickOutside";
 
   export let isAddCourseDialogOpen;
   let name = "";
-  let twoDRerunUrl = "";
-  let date = "";
+  let liveProviderURL = "";
+  const today = new Date();
+
+  let date =
+    today.getFullYear().toString() +
+    "-" +
+    (today.getMonth() + 1).toString().padStart(2, "0") +
+    "-" +
+    today.getDate().toString().padStart(2, "0");
+
   let loading = false;
 
   const db = getFirestore();
@@ -18,14 +27,15 @@
 
   const dispatch = createEventDispatcher();
 
-  async function handleSubmit() {
+  async function handleSubmit(): Promise<void> {
     if (name === "") {
       alert("Name is required.");
       return;
     }
 
     try {
-      const url = new URL(twoDRerunUrl);
+      const url = new URL(liveProviderURL);
+
       if (!allowedOrigins.includes(url.origin)) {
         alert("Only Loggator and Tractrac are supported currently.");
         return;
@@ -36,27 +46,29 @@
     }
 
     loading = true;
+    const timeStamp = new Date(date).getTime();
 
-    const docRef = await addDoc(collection(db, "courses"), {
+    const courseWithoutID: CourseWithoutID = {
       name,
-      twoDRerunUrl,
-      date,
-    });
+      liveProviderURL: liveProviderURL,
+      date: timeStamp,
+      tags: [],
+      data: null,
+    };
 
+    const docRef = await addDoc(collection(db, "courses"), courseWithoutID);
     loading = false;
 
-    const newCourse = {
-      name,
-      twoDRerunUrl,
+    const newCourse: Course = {
+      ...courseWithoutID,
       id: docRef.id,
-      date,
     };
 
     dispatch("onAddCourse", newCourse);
     closeDialog();
   }
 
-  function closeDialog() {
+  function closeDialog(): void {
     isAddCourseDialogOpen = false;
   }
 </script>
@@ -82,7 +94,7 @@
 
       <label for="2d-rerun-url"
         >Loggator or Tractrac URL
-        <input bind:value={twoDRerunUrl} type="text" id="2d-rerun-url" />
+        <input bind:value={liveProviderURL} type="text" id="2d-rerun-url" />
       </label>
 
       <footer>
