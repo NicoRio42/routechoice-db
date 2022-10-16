@@ -103,6 +103,7 @@ function getRunners(
         rank: null,
         timeBehind: null,
         totalTimeLost: 0,
+        track: null,
       };
     }
   );

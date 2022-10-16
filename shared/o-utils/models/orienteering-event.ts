@@ -8,6 +8,7 @@ export default interface OrienteeringEvent {
   runners: Runner[];
   map: CourseMap;
 
+  name: string;
   date: Date;
   timeOffset: number;
 

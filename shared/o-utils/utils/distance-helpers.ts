@@ -1,21 +1,25 @@
-export const stringToArray = (string) => {
-  // Convert a vector from a string notation like "x,y" to a array like [x, y]
-  return string.split(",").map((x) => Number(x));
-};
-
-export const magnitude = (vector) => {
+export const magnitude = (vector: [number, number]): number => {
   return Math.sqrt(Math.pow(vector[0], 2) + Math.pow(vector[1], 2));
 };
 
-export const dotProduct = (vector1, vector2) => {
+export const dotProduct = (
+  vector1: [number, number],
+  vector2: [number, number]
+) => {
   return vector1[0] * vector2[0] + vector1[1] * vector2[1];
 };
 
-export const substractVectors = (vector1, vector2) => {
+export const substractVectors = (
+  vector1: [number, number],
+  vector2: [number, number]
+): [number, number] => {
   return [vector1[0] - vector2[0], vector1[1] - vector2[1]];
 };
 
-export const distance = (vector1, vector2) => {
+export const distance = (
+  vector1: [number, number],
+  vector2: [number, number]
+): number => {
   return magnitude(substractVectors(vector1, vector2));
 };
 

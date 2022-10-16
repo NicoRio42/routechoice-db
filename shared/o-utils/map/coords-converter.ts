@@ -59,7 +59,7 @@ export class CoordinatesConverter {
       this.latLongToXYCoef[3] * lat +
       this.latLongToXYCoef[5];
 
-    return [Math.floor(x), Math.floor(y)];
+    return [x, y];
   }
 
   xYToLatLong([x, y]: [number, number]): [number, number] {

@@ -13,4 +13,11 @@ export default interface Runner {
   rank: number | null;
   timeBehind: number | null;
   totalTimeLost: number;
+  track: RunnerTrack | null;
+}
+
+export interface RunnerTrack {
+  lats: number[];
+  lons: number[];
+  times: number[];
 }

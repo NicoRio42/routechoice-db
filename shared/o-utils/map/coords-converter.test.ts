@@ -19,7 +19,7 @@ describe("Coordinates converter", () => {
   ]);
 
   test("latLongToXY", () => {
-    expect([x, y]).toStrictEqual([863, 2867]);
+    expect([x, y]).toStrictEqual([863.5162690882571, 2867.664329510182]);
   });
 
   const [lat, lon] = coordsConverter.xYToLatLong([

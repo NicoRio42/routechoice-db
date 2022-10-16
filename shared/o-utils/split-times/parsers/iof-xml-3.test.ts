@@ -237,6 +237,7 @@ const expectedNotOK = {
   rank: null,
   timeBehind: null,
   totalTimeLost: 0,
+  track: null,
 };
 
 const expectedOK = {
@@ -492,4 +493,5 @@ const expectedOK = {
   rank: 1,
   timeBehind: 0,
   totalTimeLost: 0,
+  track: null,
 };
