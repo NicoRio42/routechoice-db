@@ -1,3 +1,21 @@
+import { z } from "zod";
+
+const mapCalibrationPointValidator = z.object({
+  gps: z.object({ lat: z.number(), lon: z.number() }),
+  point: z.object({ x: z.number(), y: z.number() }),
+});
+
+export const mapCalibrationValidator = z.tuple([
+  mapCalibrationPointValidator,
+  mapCalibrationPointValidator,
+  mapCalibrationPointValidator,
+]);
+
+export const courseMapValidator = z.object({
+  url: z.string(),
+  calibration: mapCalibrationValidator,
+});
+
 export default interface CourseMap {
   url: string;
   calibration: MapCalibration;
@@ -13,3 +31,8 @@ export type MapCalibration = [
   MapCalibrationPoint,
   MapCalibrationPoint
 ];
+
+export default interface CourseMap {
+  url: string;
+  calibration: MapCalibration;
+}

@@ -1,6 +1,6 @@
 <script lang="ts">
   import { addDoc, collection, getFirestore } from "firebase/firestore/lite";
-  import type { Course, CourseWithoutID } from "shared/models/course";
+  import { courseWithoutIDValidator } from "@shared/models/course";
   import { createEventDispatcher } from "svelte";
   import { fade } from "svelte/transition";
   import clickOutside from "../../shared/use/clickOutside";
@@ -48,18 +48,26 @@
     loading = true;
     const timeStamp = new Date(date).getTime();
 
-    const courseWithoutID: CourseWithoutID = {
+    const courseWithoutIDParsing = courseWithoutIDValidator.safeParse({
       name,
       liveProviderURL: liveProviderURL,
       date: timeStamp,
       tags: [],
       data: null,
-    };
+    });
+
+    if (!courseWithoutIDParsing.success) {
+      alert("Wrong course format");
+      closeDialog();
+      return;
+    }
+
+    const courseWithoutID = courseWithoutIDParsing.data;
 
     const docRef = await addDoc(collection(db, "courses"), courseWithoutID);
     loading = false;
 
-    const newCourse: Course = {
+    const newCourse = {
       ...courseWithoutID,
       id: docRef.id,
     };

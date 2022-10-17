@@ -1,3 +1,33 @@
+import { z } from "zod";
+
+export const missingRunnerLegValidator = z.object({
+  controlCode: z.number(),
+});
+
+export const partialRunnerLegValidator = missingRunnerLegValidator.extend({
+  timeOverall: z.number(),
+});
+
+export const completeRunnerLegValidator = partialRunnerLegValidator.extend({
+  time: z.number(),
+  rankSplit: z.number(),
+  timeBehindSplit: z.number(),
+  rankOverall: z.number(),
+  timeBehindOverall: z.number(),
+  timeBehindSuperman: z.number(),
+  isMistake: z.boolean(),
+  timeLoss: z.number(),
+  routeChoiceTimeLoss: z.nullable(z.number()),
+  detectedRouteChoice: z.nullable(z.number()),
+  manualRouteChoice: z.nullable(z.number()),
+});
+
+export const runnerLegValidator = z.union([
+  missingRunnerLegValidator,
+  partialRunnerLegValidator,
+  completeRunnerLegValidator,
+]);
+
 export interface MissingRunnerLeg {
   controlCode: number;
 }

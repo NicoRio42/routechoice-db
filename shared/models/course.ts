@@ -8,10 +8,10 @@ export const courseWithoutIDValidator = z.object({
   liveProviderURL: z.string(),
 });
 
-export type CourseWithoutID = i<typeof courseWithoutIDValidator>;
+export type CourseWithoutID = z.infer<typeof courseWithoutIDValidator>;
 
 export const courseValidator = courseWithoutIDValidator.extend({
   id: z.string(),
 });
 
-export type Course = i<typeof courseValidator>;
+export type Course = z.infer<typeof courseValidator>;

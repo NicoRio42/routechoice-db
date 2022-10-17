@@ -1,4 +1,4 @@
-<script>
+<script lang="ts">
   import ActionButtons from "../components/ActionButtons.svelte";
   import SideBar from "../components/SideBar.svelte";
   import course from "../stores/course";
@@ -23,7 +23,7 @@
   $: {
     if ($selectedLeg) {
       selectHack("selectmode", "analyzecourse");
-      document.getElementById(`ac-${$selectedLeg}`).click();
+      document.getElementById(`ac-${$selectedLeg}`)?.click();
     }
   }
 
