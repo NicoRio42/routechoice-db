@@ -1,9 +1,11 @@
 <script lang="ts">
   import ActionButtons from "../components/ActionButtons.svelte";
   import SideBar from "../components/SideBar.svelte";
-  import course from "../stores/course";
+  import courseData from "../stores/course";
   import { onMount } from "svelte";
-  import initMapviewer from "../utils/2d-rerun-hacks/init-mapviewer";
+  import initMapviewer, {
+    getLoggatorDataURL,
+  } from "../utils/2d-rerun-hacks/init-mapviewer";
   import { getCourse } from "../../shared/db/course";
   import { getFirestore } from "firebase/firestore/lite";
   import buildCourseAndRoutechoices from "../utils/2d-rerun-hacks/build-course-and-routechoices";
@@ -14,8 +16,11 @@
   import NavbarButtons from "../components/NavbarButtons.svelte";
   import { loadSplitsTo2dRerun } from "../utils/2d-rerun-hacks/load-splits-to-2d-rerun";
   import is2DRerunLoaded from "../stores/rerun-2d-loaded";
+  import type { Course } from "../../shared/models/course";
 
-  export let params = {};
+  export let params: { courseID: string };
+  let course: Course;
+
   const db = getFirestore();
 
   onMount(initCourse);
@@ -41,8 +46,18 @@
       }
     });
 
-    $course = await getCourse(params.courseID, db);
-    $course.id = params.courseID;
+    try {
+      course = await getCourse(params.courseID, db);
+    } catch (error) {
+      alert("An error occured while loading the course.");
+      return;
+    }
+
+    const loggatorPing = await fetch(
+      getLoggatorDataURL(course.liveProviderURL)
+    );
+
+    if (loggatorPing) $course.id = params.courseID;
 
     initMapviewer($course.twoDRerunUrl);
 

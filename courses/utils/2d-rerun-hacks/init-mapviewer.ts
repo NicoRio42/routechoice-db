@@ -17,6 +17,12 @@ function initFromLoggatorURL(loggatorURL) {
   );
 }
 
+export function getLoggatorDataURL(logatorUrl: string): string {
+  return `https://europe-west1-routechoice-db-dev.cloudfunctions.net/getLoggatorData?baseurl=http://www.tulospalvelu.fi/gps/&idstr=logatec${extractLoggatorIDFromLoggatorURL(
+    logatorUrl
+  )}`;
+}
+
 function extractLoggatorIDFromLoggatorURL(logatorUrl) {
   const urlArray = logatorUrl.split("/");
   return urlArray[urlArray.length - 1];
