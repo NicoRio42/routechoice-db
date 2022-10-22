@@ -8,6 +8,7 @@
     query,
     orderBy,
   } from "firebase/firestore/lite";
+  import type { DocumentReference } from "firebase/firestore/lite";
   import { push } from "svelte-spa-router";
   import Trash from "../../shared/icons/Trash.svelte";
   import { onMount } from "svelte";
@@ -49,14 +50,15 @@
     courses = data;
   }
 
-  async function deleteCourse(courseId: string) {
+  async function deleteCourse(course: Course) {
     if (!confirm("Are you sure to delete this course?")) {
       return;
     }
 
-    await deleteDoc(doc(db, "courses", courseId));
+    await deleteDoc(course.data as DocumentReference<unknown>);
+    await deleteDoc(doc(db, "courses", course.id));
 
-    courses = courses.filter((course) => course.id !== courseId);
+    courses = courses.filter((c) => c.id !== course.id);
   }
 </script>
 
@@ -99,7 +101,7 @@
 
           <td class="action-row">
             <button
-              on:click={() => deleteCourse(course.id)}
+              on:click={() => deleteCourse(course)}
               class="delete-button"
               type="button"><Trash /></button
             >

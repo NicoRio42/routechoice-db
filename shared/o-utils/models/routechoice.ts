@@ -5,7 +5,7 @@ export const routechoiceValidator = z.object({
   name: z.string(),
   color: z.string(),
   length: z.number(),
-  track: z.tuple([z.number(), z.number()]),
+  track: z.array(z.tuple([z.number(), z.number()])),
 });
 
 export default interface Routechoice {

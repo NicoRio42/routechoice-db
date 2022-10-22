@@ -1,5 +1,6 @@
 import { z } from "zod";
-import CourseMap, { courseMapValidator } from "./course-map";
+import { courseMapValidator } from "./course-map";
+import type CourseMap from "./course-map";
 import { legValidator } from "./leg";
 import type Leg from "./leg";
 import { runnerValidator } from "./runner";
@@ -7,24 +8,27 @@ import type Runner from "./runner";
 import { statisticsValidator } from "./statistics";
 import type Statistics from "./statistics";
 
-export const courseDataValidator = z.object({
+export const courseDataWithoutRunnersValidator = z.object({
   course: z.array(legValidator),
-  runners: z.array(runnerValidator),
-  map: courseMapValidator,
+  map: courseMapValidator.nullable(),
   name: z.string(),
   date: z.number(),
   timeOffset: z.number(),
-  statistics: statisticsValidator,
+  statistics: statisticsValidator.nullable(),
 });
 
-export default interface OrienteeringEvent {
+export const courseDataValidator = courseDataWithoutRunnersValidator.extend({
+  runners: z.array(runnerValidator),
+});
+
+export default interface CourseData {
   course: Leg[];
   runners: Runner[];
-  map: CourseMap;
+  map: CourseMap | null;
 
   name: string;
-  date: Date;
+  date: number;
   timeOffset: number;
 
-  statistics: Statistics;
+  statistics: Statistics | null;
 }

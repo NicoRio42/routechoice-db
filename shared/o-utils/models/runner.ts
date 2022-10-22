@@ -2,7 +2,8 @@ import { z } from "zod";
 import RunnerStatusEnum, {
   runnerStatusEnumValidator,
 } from "./enums/runner-status-enum";
-import { RunnerLeg, runnerLegValidator } from "./runner-leg";
+import { runnerLegValidator } from "./runner-leg";
+import type { RunnerLeg } from "./runner-leg";
 
 export const runnerTrackValidator = z.object({
   lats: z.array(z.number()),

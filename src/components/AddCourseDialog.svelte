@@ -1,6 +1,5 @@
 <script lang="ts">
   import { addDoc, collection, getFirestore } from "firebase/firestore/lite";
-  import { courseWithoutIDValidator } from "@shared/models/course";
   import { createEventDispatcher } from "svelte";
   import { fade } from "svelte/transition";
   import clickOutside from "../../shared/use/clickOutside";
@@ -48,31 +47,33 @@
     loading = true;
     const timeStamp = new Date(date).getTime();
 
-    const courseWithoutIDParsing = courseWithoutIDValidator.safeParse({
+    const courseData = {
+      course: [],
+      map: null,
+      name,
+      date: timeStamp,
+      timeOffset: 0,
+      statistics: null,
+    };
+
+    const courseDataRef = await addDoc(
+      collection(db, "coursesData"),
+      courseData
+    );
+
+    const courseWithoutID = {
       name,
       liveProviderURL: liveProviderURL,
       date: timeStamp,
       tags: [],
-      data: null,
-    });
-
-    if (!courseWithoutIDParsing.success) {
-      alert("Wrong course format");
-      closeDialog();
-      return;
-    }
-
-    const courseWithoutID = courseWithoutIDParsing.data;
-
-    const docRef = await addDoc(collection(db, "courses"), courseWithoutID);
-    loading = false;
-
-    const newCourse = {
-      ...courseWithoutID,
-      id: docRef.id,
+      data: courseDataRef,
     };
 
-    dispatch("onAddCourse", newCourse);
+    await addDoc(collection(db, "courses"), courseWithoutID);
+
+    loading = false;
+
+    dispatch("onAddCourse");
     closeDialog();
   }
 
@@ -82,7 +83,7 @@
 </script>
 
 <dialog open transition:fade={{ duration: 250 }}>
-  <article use:clickOutside on:clickOutside={closeDialog}>
+  <article use:clickOutside={closeDialog}>
     <header>
       <a aria-label="Close" class="close" on:click={closeDialog} />
 

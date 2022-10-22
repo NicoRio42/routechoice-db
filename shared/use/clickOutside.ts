@@ -1,14 +1,17 @@
 /** Dispatch event on click outside of node */
-function clickOutside(node) {
+function clickOutside(node: Element, callback: Function) {
   const handleClick = (event) => {
     if (node && !node.contains(event.target) && !event.defaultPrevented) {
-      node.dispatchEvent(new CustomEvent("clickOutside", node));
+      callback();
     }
   };
 
   document.addEventListener("click", handleClick, true);
 
   return {
+    update(newCallback: Function) {
+      callback = newCallback;
+    },
     destroy() {
       document.removeEventListener("click", handleClick, true);
     },
