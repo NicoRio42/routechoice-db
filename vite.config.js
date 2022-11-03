@@ -12,13 +12,6 @@ const __dirname = dirname(__filename);
 import { svelte } from "@sveltejs/vite-plugin-svelte";
 
 export default defineConfig({
-  resolve: {
-    alias: {
-      "@src": resolve(__dirname, "./src"),
-      "@shared": resolve(__dirname, "./shared"),
-      "@course": resolve(__dirname, "./course"),
-    },
-  },
   plugins: [svelte()],
   build: {
     rollupOptions: {

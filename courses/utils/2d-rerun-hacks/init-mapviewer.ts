@@ -11,7 +11,7 @@ function initMapviewer(urlString) {
 }
 
 function initFromLoggatorURL(loggatorURL) {
-  window.mapviewer.loadseu(
+  mapviewer.loadseu(
     "http://www.tulospalvelu.fi/gps/",
     `logatec${extractLoggatorIDFromLoggatorURL(loggatorURL)}`
   );

@@ -9,6 +9,15 @@ export interface Mapviewer {
   request_redraw: VoidFunction;
   update_routediv: VoidFunction;
   handlelLoadseuSuccessResponse: HandlelLoadseuSuccessResponse;
+  IsLive: number;
+  liveprovider: string;
+  liveid: string;
+  liveiniturl: string;
+  livedataurl: string;
+  livedelay: string;
+  liveupdate: number;
+  liveformat: string;
+  initLive: (number) => void;
 }
 
 export interface TwoDRerunRoute {

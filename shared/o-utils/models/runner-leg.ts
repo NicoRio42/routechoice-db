@@ -1,14 +1,9 @@
 import { z } from "zod";
 
-export const missingRunnerLegValidator = z.object({
-  controlCode: z.number(),
-});
-
-export const partialRunnerLegValidator = missingRunnerLegValidator.extend({
+export const runnerLegValidator = z.object({
+  startControlCode: z.string(),
+  finishControlCode: z.string(),
   timeOverall: z.number(),
-});
-
-export const completeRunnerLegValidator = partialRunnerLegValidator.extend({
   time: z.number(),
   rankSplit: z.number(),
   timeBehindSplit: z.number(),
@@ -22,21 +17,10 @@ export const completeRunnerLegValidator = partialRunnerLegValidator.extend({
   manualRouteChoice: z.nullable(z.number()),
 });
 
-export const runnerLegValidator = z.union([
-  missingRunnerLegValidator,
-  partialRunnerLegValidator,
-  completeRunnerLegValidator,
-]);
-
-export interface MissingRunnerLeg {
-  controlCode: number;
-}
-
-export interface PartialRunnerLeg extends MissingRunnerLeg {
+export interface RunnerLeg {
+  startControlCode: string;
+  finishControlCode: string;
   timeOverall: number;
-}
-
-export interface CompleteRunnerLeg extends PartialRunnerLeg {
   time: number;
   rankSplit: number;
   timeBehindSplit: number;
@@ -50,6 +34,19 @@ export interface CompleteRunnerLeg extends PartialRunnerLeg {
   manualRouteChoice: number | null;
 }
 
-type RunnerLeg = MissingRunnerLeg | PartialRunnerLeg | CompleteRunnerLeg;
-
-export type { RunnerLeg };
+export const EMPTY_RUNNER_LEG: RunnerLeg = {
+  startControlCode: "0",
+  finishControlCode: "0",
+  timeOverall: 0,
+  time: 0,
+  rankSplit: 0,
+  timeBehindSplit: 0,
+  rankOverall: 0,
+  timeBehindOverall: 0,
+  timeBehindSuperman: 0,
+  isMistake: false,
+  timeLoss: 0,
+  routeChoiceTimeLoss: null,
+  detectedRouteChoice: null,
+  manualRouteChoice: null,
+};

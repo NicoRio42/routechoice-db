@@ -1,35 +1,36 @@
-<script>
+<script lang="ts">
   import Chart from "../../shared/icons/Chart.svelte";
   import ChevronLeft from "../../shared/icons/ChevronLeft.svelte";
   import ChevronRight from "../../shared/icons/ChevronRight.svelte";
   import selectedLeg from "../stores/selected-leg";
-  import course from "../stores/course";
+  import courseData from "../stores/course-data";
   import toggleSideBar from "../stores/toggle-sidebar";
   import is2DRerunLoaded from "../stores/rerun-2d-loaded";
   import { selectHack } from "../utils/2d-rerun-hacks/select-hack";
   import Eye from "../../shared/icons/Eye.svelte";
 
   let numberOfLegs = 0;
-  let rightmenu;
+  let rightmenu: HTMLDivElement | null = null;
 
   $: {
-    numberOfLegs = $course?.courseAndRoutechoices
-      ? $course.courseAndRoutechoices.coursecoords.length - 1
-      : 0;
+    numberOfLegs = $courseData.course ? $courseData.course.length - 1 : 0;
   }
 
   const handlePreviousControl = () => {
+    if ($selectedLeg === null) return;
     $selectedLeg = $selectedLeg !== 1 ? $selectedLeg - 1 : $selectedLeg;
   };
 
   const handleNextControl = () => {
+    if ($selectedLeg === null) return;
+
     $selectedLeg =
       $selectedLeg !== numberOfLegs ? $selectedLeg + 1 : $selectedLeg;
   };
 
   const togle2dRerunPanel = () => {
     if (!rightmenu) {
-      rightmenu = document.getElementById("rightmenu");
+      rightmenu = document.getElementById("rightmenu") as HTMLDivElement;
     }
 
     rightmenu.style.display =
@@ -40,7 +41,10 @@
     selectHack("selectmode", "analyzecourse");
 
     const newValue =
-      document.getElementById("showtagsselect").value === "1" ? "0" : "1";
+      (document.getElementById("showtagsselect") as HTMLSelectElement | null)
+        ?.value === "1"
+        ? "0"
+        : "1";
 
     selectHack("showtagsselect", newValue);
   };

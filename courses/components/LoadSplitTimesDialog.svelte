@@ -3,7 +3,7 @@
   import { detectRunnersByName } from "../utils/detect-runners-by-name/detectRunnersByName";
   import { detectRunnersRoutechoices } from "../utils/routechoices-detector/detect-route";
   import { timeZones } from "../utils/time-zones";
-  import course from "../stores/course";
+  import course from "../stores/course-data";
   import { loadSplitsTo2dRerun } from "../utils/2d-rerun-hacks/load-splits-to-2d-rerun";
   import clickOutside from "../../shared/use/clickOutside";
 

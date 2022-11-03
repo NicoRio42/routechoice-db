@@ -1,7 +1,6 @@
 import type Runner from "../../models/Runner";
 import type { RunnerLeg } from "../../models/runner-leg";
 import SupermanSplit from "../../models/superman";
-import { isCompleteRunnerLeg } from "../../type-guards/runner-guards";
 import { arrayAverage } from "./shared";
 
 export default function computeRunnersMistakes(
@@ -12,13 +11,9 @@ export default function computeRunnersMistakes(
   const clonedRunners = structuredClone(runners);
 
   clonedRunners.forEach((runner) => {
-    const percentagesBehindSuperman = runner.legs.map((leg, legIndex) => {
-      if (!isCompleteRunnerLeg(leg)) {
-        return null;
-      }
-
-      return leg.time / supermanSplits[legIndex].time;
-    });
+    const percentagesBehindSuperman = runner.legs.map((leg, legIndex) =>
+      leg === null ? null : leg.time / supermanSplits[legIndex].time
+    );
 
     const averagePercentage = arrayAverage(percentagesBehindSuperman);
 
@@ -48,9 +43,11 @@ export default function computeRunnersMistakes(
       newClearedPercentagesBehindSuperman
     );
 
+    let timeLost = 0;
+
     runner.totalTimeLost = runner.legs.reduce(
-      (timeLost: number, leg: RunnerLeg, legIndex: number) => {
-        if (!isCompleteRunnerLeg(leg) || !leg.isMistake) {
+      (timeLost: number, leg: RunnerLeg | null, legIndex: number) => {
+        if (leg === null || !leg.isMistake) {
           return 0;
         }
 
@@ -79,7 +76,7 @@ function clearPercentageBehindAndComputeIsMistake(
   return percentagesBehindSuperman.map((percentage, legIndex) => {
     const leg = runner.legs[legIndex];
 
-    if (!isCompleteRunnerLeg(leg) || percentage === null) {
+    if (leg === null || percentage === null) {
       return null;
     }
 

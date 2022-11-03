@@ -1,6 +1,6 @@
 import RunnerStatusEnum from "../../models/enums/runner-status-enum";
 import type Runner from "../../models/Runner";
-import { RunnerLeg } from "../../models/runner-leg";
+import { EMPTY_RUNNER_LEG, RunnerLeg } from "../../models/runner-leg";
 import { isNotNullRunnerLeg, isRunner } from "../../type-guards/runner-guards";
 import { extractNumberFromElementOrThrowError } from "../utils/xml-parser-utils";
 import computeSplitsRanksMistakes from "./compute-splits-ranks-mistakes";
@@ -77,17 +77,12 @@ function getRunners(
           ? extractNumberFromElementOrThrowError(timeTag, "Not a valid time")
           : null;
 
-      const legs: RunnerLeg[] = extractLegsFromPersonResult(personResult);
+      const legs: (RunnerLeg | null)[] =
+        extractLegsFromPersonResult(personResult);
 
-      const lastLeg =
-        status === RunnerStatusEnum.OK
-          ? {
-              controlCode: 0,
-              timeOverall: time,
-            }
-          : { controlCode: 0 };
+      if (legs.length === 0) return null;
 
-      legs.push(lastLeg);
+      legs.push(computeLastLeg(time, legs));
 
       const foreignKeys: Record<string, unknown> = {};
 
@@ -125,6 +120,27 @@ function getRunners(
   return runners;
 }
 
+function computeLastLeg(time: number | null, legs: (RunnerLeg | null)[]) {
+  const secondLastLeg = legs.at(-1);
+
+  if (
+    time == null ||
+    secondLastLeg === null ||
+    secondLastLeg?.timeOverall === undefined
+  )
+    return null;
+
+  const startControlCode = secondLastLeg.finishControlCode;
+
+  return {
+    ...EMPTY_RUNNER_LEG,
+    startControlCode,
+    finishControlCode: "finish",
+    timeOverall: time,
+    time: time - secondLastLeg.timeOverall,
+  };
+}
+
 function computeStartTime(
   startTimeTag: Element | null,
   timeZone: string,
@@ -143,26 +159,41 @@ function computeStartTime(
   return dateTime.valueOf() / 1000 + timeOffset;
 }
 
-function extractLegsFromPersonResult(personResult: Element): RunnerLeg[] {
+function extractLegsFromPersonResult(
+  personResult: Element
+): (RunnerLeg | null)[] {
   const legTags = Array.from(personResult.querySelectorAll("SplitTime"));
 
-  const rawLegs: (RunnerLeg | null)[] = legTags.map((splitTime) => {
+  return legTags.map((splitTime, index) => {
     const status = splitTime.getAttribute("status");
 
-    if (status === IOFXMLSplitTimeStatusEnum.Additional.valueOf()) {
+    if (
+      status === IOFXMLSplitTimeStatusEnum.Additional.valueOf() ||
+      status === IOFXMLSplitTimeStatusEnum.Missing.valueOf()
+    ) {
       return null;
     }
 
+    if (index > 0) {
+      const previousControlStatus = legTags[index - 1].getAttribute("status");
+
+      if (
+        previousControlStatus ===
+          IOFXMLSplitTimeStatusEnum.Additional.valueOf() ||
+        previousControlStatus === IOFXMLSplitTimeStatusEnum.Missing.valueOf()
+      ) {
+        return null;
+      }
+    }
+
+    const startControlCode = getStartControlCode(legTags, index);
+
     const controlCodeTag = splitTime.querySelector("ControlCode");
 
-    const controlCode = extractNumberFromElementOrThrowError(
-      controlCodeTag,
-      "No valid control code for this leg"
-    );
+    if (controlCodeTag === null || controlCodeTag.textContent === null)
+      throw new Error("No control code found for leg finish control");
 
-    if (status === IOFXMLSplitTimeStatusEnum.Missing.valueOf()) {
-      return { controlCode };
-    }
+    const finishControlCode = controlCodeTag.textContent;
 
     const timeTag = splitTime.querySelector("Time");
 
@@ -171,13 +202,44 @@ function extractLegsFromPersonResult(personResult: Element): RunnerLeg[] {
       "No valid split time"
     );
 
+    const time = getTime(legTags, index, timeOverall);
+
     return {
-      controlCode,
+      ...EMPTY_RUNNER_LEG,
+      startControlCode,
+      finishControlCode,
       timeOverall,
+      time,
     };
   });
+}
 
-  return rawLegs.filter(isNotNullRunnerLeg);
+function getTime(
+  legTags: Element[],
+  index: number,
+  timeOverall: number
+): number {
+  if (index === 0) return timeOverall;
+
+  const previousControlTimeTag = legTags[index - 1].querySelector("Time");
+
+  const previousControlTimeOverall = extractNumberFromElementOrThrowError(
+    previousControlTimeTag,
+    "No valid split time"
+  );
+
+  return timeOverall - previousControlTimeOverall;
+}
+
+function getStartControlCode(legTags: Element[], index: number): string {
+  if (index === 0) return "start";
+
+  const controlCodeTag = legTags[index - 1].querySelector("ControlCode");
+
+  if (controlCodeTag === null || controlCodeTag.textContent === null)
+    throw new Error("Previous control sould exist");
+
+  return controlCodeTag.textContent;
 }
 
 enum IOFXML3RunnerStatusEnum {

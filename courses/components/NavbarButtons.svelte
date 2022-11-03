@@ -1,6 +1,6 @@
 <script>
   import userStore from "../../shared/stores/user-store";
-  import course from "../stores/course";
+  import course from "../stores/course-data";
   import { doc, getFirestore, setDoc } from "firebase/firestore/lite";
   import Upload from "../../shared/icons/Upload.svelte";
 

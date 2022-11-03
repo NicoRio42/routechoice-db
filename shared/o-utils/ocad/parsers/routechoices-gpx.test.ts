@@ -1,12 +1,12 @@
 import { describe, expect, test } from "vitest";
 import { ROUTECHOICES_GPX } from "./mocks/routechoices-gpx";
-import parseGPXRoutechoicesOCADExpor from "./routechoices-gpx";
+import parseGPXRoutechoicesOCADExport from "./routechoices-gpx";
 
 describe("parseGPXRoutechoicesOCADExpor()", () => {
   test("returns expected routechoices", () => {
     const parser = new DOMParser();
     const xmlDoc = parser.parseFromString(ROUTECHOICES_GPX, "text/xml");
-    const legs = parseGPXRoutechoicesOCADExpor(xmlDoc, inputLegs);
+    const legs = parseGPXRoutechoicesOCADExport(xmlDoc, inputLegs);
 
     expect(legs).toStrictEqual(expectedLegs);
   });

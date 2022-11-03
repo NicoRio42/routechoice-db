@@ -2,25 +2,27 @@
   import {
     collection,
     doc,
+    getDoc,
     getDocs,
+    getFirestore,
     orderBy,
     query,
     type DocumentReference,
   } from "firebase/firestore/lite";
-  import { getDoc, getFirestore } from "firebase/firestore/lite";
-  import type CourseData from "../../shared/o-utils/models/course-data";
-  import type Runner from "../../shared/o-utils/models/runner";
-  import { runnerValidator } from "../../shared/o-utils/models/runner";
+  import { getMapCalibrationFromCalString } from "../../shared/o-utils/map/coords-converter";
   import { onMount } from "svelte";
-  import { getCourse } from "../../shared/db/course";
   import { courseValidator, type Course } from "../../shared/models/course";
   import NavBar from "../../shared/NavBar.svelte";
+  import { rerun2DEventDataSchema } from "../../shared/o-utils/models/2d-rerun/get-2d-rerun-data-response";
+  import type CourseData from "../../shared/o-utils/models/course-data";
   import { courseDataWithoutRunnersValidator } from "../../shared/o-utils/models/course-data";
+  import type Runner from "../../shared/o-utils/models/runner";
+  import { runnerValidator } from "../../shared/o-utils/models/runner";
   import ActionButtons from "../components/ActionButtons.svelte";
   import NavbarButtons from "../components/NavbarButtons.svelte";
   import SideBar from "../components/SideBar.svelte";
   import ZoomButtons from "../components/ZoomButtons.svelte";
-  import courseData from "../stores/course";
+  import courseData from "../stores/course-data";
   import is2DRerunLoaded from "../stores/rerun-2d-loaded";
   import selectedLeg from "../stores/selected-leg";
   import buildCourseAndRoutechoices from "../utils/2d-rerun-hacks/build-course-and-routechoices";
@@ -29,6 +31,7 @@
   } from "../utils/2d-rerun-hacks/init-mapviewer";
   import { loadSplitsTo2dRerun } from "../utils/2d-rerun-hacks/load-splits-to-2d-rerun";
   import { selectHack } from "../utils/2d-rerun-hacks/select-hack";
+  import mapCourseAndRoutechoicesTo2DRerun from "../../shared/o-utils/two-d-rerun/course-mappers";
 
   export let params: { courseID: string };
   let course: Course;
@@ -38,7 +41,7 @@
   onMount(initCourse);
 
   $: {
-    if ($selectedLeg) {
+    if ($selectedLeg !== null) {
       selectHack("selectmode", "analyzecourse");
       document.getElementById(`ac-${$selectedLeg}`)?.click();
     }
@@ -49,11 +52,11 @@
     document.addEventListener("twoDRerunloaded", () => {
       $is2DRerunLoaded = true;
 
-      if ($courseData.course.length !== 0) {
+      if ($courseData?.course.length !== 0) {
         $selectedLeg = 1;
       }
 
-      if ($courseData.runners.length !== 0) {
+      if ($courseData?.runners.length !== 0) {
         loadSplitsTo2dRerun($courseData.runners);
       }
     });
@@ -105,16 +108,28 @@
       )}`
     );
 
-    const loggatorEvent = await loggatorEventRequest.json();
-    const loggatorEventStarted = loggatorEvent.routes.length > 0;
+    const loggatorEventJSON = await loggatorEventRequest.json();
+    const loggatorEventStarted = loggatorEventJSON.routes.length > 0;
 
     if (!loggatorEventStarted) return;
+
+    const loggatorEvent = rerun2DEventDataSchema.parse(loggatorEventJSON);
+
+    $courseData.map = {
+      calibration: getMapCalibrationFromCalString(loggatorEvent.map.calstring),
+      url: loggatorEvent.map.imagelink,
+    };
 
     initMapviewer(course.liveProviderURL);
 
     if ($courseData.course.length === 0) return;
 
-    buildCourseAndRoutechoices($courseData.course);
+    const twoDRerunCourseAndRoutechoices = mapCourseAndRoutechoicesTo2DRerun(
+      $courseData.course,
+      $courseData.map.calibration
+    );
+
+    buildCourseAndRoutechoices(twoDRerunCourseAndRoutechoices);
   }
 </script>
 

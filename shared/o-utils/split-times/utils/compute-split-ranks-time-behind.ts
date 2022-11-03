@@ -1,29 +1,24 @@
 import type Runner from "../../models/Runner";
-import { isCompleteRunnerLeg } from "../../type-guards/runner-guards";
-import sortRunners from "./sort-runners";
-import type { RunnerForSort } from "./sort-runners";
 import type SupermanSplit from "../../models/superman";
+import type { RunnerForSort } from "./sort-runners";
+import sortRunners from "./sort-runners";
 
 export function computeSplitRanksAndTimeBehind(
   runners: Runner[]
 ): [Runner[], SupermanSplit[]] {
   const clonedRunners = structuredClone(runners);
-  const course = clonedRunners[0].legs.map((leg) => leg.controlCode);
+  const course = clonedRunners[0].legs.map((leg) =>
+    leg === null ? null : leg.finishControlCode
+  );
   const supermanSplits: SupermanSplit[] = [];
 
   // For every legs of every runners calculate ranking and time behind
   course.forEach((leg, index) => {
     // Make an array with splits and id for one leg
     const legSplits: RunnerForSort[] = clonedRunners.map((runner) => {
-      const lg = runner.legs.find((l) => l.controlCode === leg);
+      const lg = runner.legs.find((l) => l?.finishControlCode === leg);
 
-      if (lg === undefined) {
-        throw new Error(
-          `Cannot find leg ${leg} in ${runner.firstName} ${runner.lastName}'s legs.`
-        );
-      }
-
-      const time = isCompleteRunnerLeg(lg) ? lg.time : null;
+      const time = lg === undefined || lg === null ? null : lg.time;
       return { id: runner.id, time, rankSplit: 0 };
     });
 
@@ -53,7 +48,7 @@ export function computeSplitRanksAndTimeBehind(
 
       const runnerLeg = runner.legs[index];
 
-      if (!isCompleteRunnerLeg(runnerLeg)) {
+      if (runnerLeg === null) {
         return;
       }
 

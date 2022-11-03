@@ -1,31 +1,30 @@
-<script>
-  import iofXmlCourseExportTo2dRerunJson from "../../utils/ocad-xml-parser/ocad-xml-course-parser";
-  import gpxRoutechoicesExportTo2DRerunJson from "../../utils/ocad-xml-parser/ocad-gpx-routechoices-parser";
-  import buildCourseAndRoutechoices from "../../utils/2d-rerun-hacks/build-course-and-routechoices";
-  import course from "../../stores/course";
-  import selectedLeg from "../../stores/selected-leg";
-  import attributeRoutechoicesToLegs from "../../utils/routechoices-detector/attribute-routechoices-to-legs";
-  import addNiceColorsAndNamesToAttributedRoutechoices from "../../utils/routechoices-detector/add-nice-colors-and-names-to-routechoices";
-  import { fade } from "svelte/transition";
+<script lang="ts">
   import { createEventDispatcher } from "svelte";
+  import { fade } from "svelte/transition";
+  import parseIOFXML3CourseOCADExport from "../../../shared/o-utils/ocad/parsers/iof-xml-3-course";
+  import parseGPXRoutechoicesOCADExport from "../../../shared/o-utils/ocad/parsers/routechoices-gpx";
+  import mapCourseAndRoutechoicesTo2DRerun from "../../../shared/o-utils/two-d-rerun/course-mappers";
+  import courseData from "../../stores/course-data";
+  import selectedLeg from "../../stores/selected-leg";
+  import buildCourseAndRoutechoices from "../../utils/2d-rerun-hacks/build-course-and-routechoices";
 
-  export let isDialogOpen;
+  export let isDialogOpen = false;
 
-  let courseXmlDoc;
-  let routechoicesXmlDoc;
-  let classNames = [];
-  let classIndex;
-  let isCourseFileInvalid;
-  let isRoutechoicesFileInvalid;
+  let courseXmlDoc: XMLDocument | null = null;
+  let routechoicesXmlDoc: XMLDocument | null = null;
+  let classNames: string[] = [];
+  let classIndex: number | null = null;
+  let isCourseFileInvalid = false;
+  let isRoutechoicesFileInvalid = false;
 
   const dispatch = createEventDispatcher();
 
-  function loadCourseFromOCAD(event) {
-    if (event.target.files.length !== 1) {
-      return;
-    }
+  function loadCourseFromOCAD(event: Event): void {
+    const target = event.target as HTMLInputElement;
 
-    const xmlFile = event.target.files[0];
+    if (target === null || target.files?.length !== 1) return;
+
+    const xmlFile = target.files[0];
 
     if (xmlFile.type !== "text/xml") {
       isCourseFileInvalid = true;
@@ -36,8 +35,10 @@
 
     const reader = new FileReader();
 
-    reader.onload = (e) => {
+    reader.onload = (e: ProgressEvent<FileReader>) => {
+      if (e.target === null) return;
       const readXml = e.target.result;
+      if (readXml === null) return;
       const parser = new DOMParser();
 
       courseXmlDoc = parser.parseFromString(
@@ -55,12 +56,12 @@
     reader.readAsText(xmlFile);
   }
 
-  function loadRoutechoicesFromOcad(event) {
-    if (event.target.files.length === 0) {
-      return;
-    }
+  function loadRoutechoicesFromOcad(event: Event) {
+    const target = event.target as HTMLInputElement;
 
-    const xmlFile = event.target.files[0];
+    if (target === null || target.files?.length !== 1) return;
+
+    const xmlFile = target.files[0];
 
     if (xmlFile.name.split(".").pop() !== "gpx") {
       isRoutechoicesFileInvalid = true;
@@ -68,11 +69,12 @@
     }
 
     isRoutechoicesFileInvalid = false;
-
     const reader = new FileReader();
 
-    reader.onload = (e) => {
+    reader.onload = (e: ProgressEvent<FileReader>) => {
+      if (e.target === null) return;
       const readXml = e.target.result;
+      if (readXml === null) return;
       const parser = new DOMParser();
 
       routechoicesXmlDoc = parser.parseFromString(
@@ -85,30 +87,40 @@
   }
 
   function parseXmlFiles() {
-    if (courseXmlDoc === undefined) {
+    if (courseXmlDoc === null) {
       alert("You have to upload at least a course.");
       return;
     }
 
-    if (classIndex === undefined) {
+    if (classIndex === null) {
       alert("You have to choose a class.");
     }
 
-    const coursecoords = iofXmlCourseExportTo2dRerunJson(
+    const legsWithoutRoutechoices = parseIOFXML3CourseOCADExport(
       courseXmlDoc,
-      classIndex
+      0
     );
 
-    const tags =
-      routechoicesXmlDoc !== undefined
-        ? gpxRoutechoicesExportTo2DRerunJson(routechoicesXmlDoc)
-        : [];
+    if (routechoicesXmlDoc === null) {
+      $courseData.course = legsWithoutRoutechoices;
+    } else {
+      const legs = parseGPXRoutechoicesOCADExport(
+        routechoicesXmlDoc,
+        legsWithoutRoutechoices
+      );
 
-    const data = attributeRoutechoicesToLegs({ coursecoords, tags });
-    data.tags = addNiceColorsAndNamesToAttributedRoutechoices(data.tags);
+      $courseData.course = legs;
+    }
 
-    buildCourseAndRoutechoices(data);
-    $course.courseAndRoutechoices = data;
+    if ($courseData.map === null)
+      throw new Error("No map callibration, event migth not have started yet.");
+
+    const twoDRerunCourseAndRoutechoices = mapCourseAndRoutechoicesTo2DRerun(
+      $courseData.course,
+      $courseData.map.calibration
+    );
+
+    buildCourseAndRoutechoices(twoDRerunCourseAndRoutechoices);
     $selectedLeg = 1;
     isDialogOpen = false;
   }

@@ -2,7 +2,7 @@ import type Leg from "../../models/leg";
 import { distanceBetweenTwoGPSPoints } from "../../utils/distance-helpers";
 import { names, routesColors } from "../utils/routechoices-names-colors";
 
-export default function parseGPXRoutechoicesOCADExpor(
+export default function parseGPXRoutechoicesOCADExport(
   routechoicesXmlDoc: XMLDocument,
   legs: Leg[]
 ): Leg[] {

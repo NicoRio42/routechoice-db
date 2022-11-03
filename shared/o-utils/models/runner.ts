@@ -25,7 +25,7 @@ export default interface Runner {
   lastName: string;
   startTime: number;
   time: number | null;
-  legs: RunnerLeg[];
+  legs: (RunnerLeg | null)[];
   rank: number | null;
   timeBehind: number | null;
   totalTimeLost: number;
@@ -40,7 +40,7 @@ export const runnerValidator = z.object({
   lastName: z.string(),
   startTime: z.number(),
   time: z.nullable(z.number()),
-  legs: z.array(runnerLegValidator),
+  legs: z.array(z.nullable(runnerLegValidator)),
   rank: z.nullable(z.number()),
   timeBehind: z.nullable(z.number()),
   totalTimeLost: z.number(),

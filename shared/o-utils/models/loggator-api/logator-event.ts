@@ -37,15 +37,33 @@ export interface Settings {
   show_distance_info: string;
   show_relative_time: string;
 }
+export interface Point {
+  lat: number;
+  lng: number;
+}
 
-export interface Map {}
+export interface Coordinates {
+  bottomLeft: Point;
+  bottomRight: Point;
+  topRight: Point;
+  topLeft: Point;
+}
 
-export interface RootObject {
+export interface Map {
+  url: string;
+  width: number;
+  height: number;
+  coordinates: Coordinates;
+  tiles: string;
+  name: string;
+}
+
+export interface LoggatorEvent {
   event: Event;
   competitors: Competitor[];
   tracks: string;
   settings: Settings;
-  map: Map;
+  map: Map | {};
   overlays: any[];
 }
 
@@ -87,13 +105,32 @@ export const settingsSchema = z.object({
   show_relative_time: z.string(),
 });
 
-export const mapSchema = z.object({});
+export const pointSchema = z.object({
+  lat: z.number(),
+  lng: z.number(),
+});
 
-export const rootObjectSchema = z.object({
+export const coordinatesSchema = z.object({
+  bottomLeft: pointSchema,
+  bottomRight: pointSchema,
+  topRight: pointSchema,
+  topLeft: pointSchema,
+});
+
+export const mapSchema = z.object({
+  url: z.string(),
+  width: z.number(),
+  height: z.number(),
+  coordinates: coordinatesSchema,
+  tiles: z.string(),
+  name: z.string(),
+});
+
+export const loggatorEventSchema = z.object({
   event: eventSchema,
   competitors: z.array(competitorSchema),
   tracks: z.string(),
   settings: settingsSchema,
-  map: mapSchema,
+  map: z.union([mapSchema, z.object({})]),
   overlays: z.array(z.any()),
 });

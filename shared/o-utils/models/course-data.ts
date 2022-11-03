@@ -7,6 +7,7 @@ import { runnerValidator } from "./runner";
 import type Runner from "./runner";
 import { statisticsValidator } from "./statistics";
 import type Statistics from "./statistics";
+import type Control from "./control";
 
 export const courseDataWithoutRunnersValidator = z.object({
   course: z.array(legValidator),
@@ -22,7 +23,8 @@ export const courseDataValidator = courseDataWithoutRunnersValidator.extend({
 });
 
 export default interface CourseData {
-  course: Leg[];
+  course: Control[];
+  legs: Leg[];
   runners: Runner[];
   map: CourseMap | null;
 

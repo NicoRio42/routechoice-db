@@ -1,4 +1,6 @@
 import { describe, expect, test } from "vitest";
+import RunnerStatusEnum from "../../models/enums/runner-status-enum";
+import Runner from "../../models/Runner";
 import { parseIOFXML3SplitTimesFile } from "./iof-xml-3";
 import { IOF_XML_2_SPLIT_TIMES } from "./mocks/iof-xml-2-split-times";
 import { IOF_XML_3_SPLIT_TIMES } from "./mocks/iof-xml-3-split-times";
@@ -21,22 +23,23 @@ describe("parseIOFXML3SplitTimesFile()", () => {
     expect(runners[0]).toStrictEqual(expectedOK);
   });
 
-  test("expecte first runner to be strict equal.", () => {
+  test("expecte last runner with missing controls to be strict equal.", () => {
     expect(runners.at(-1)).toStrictEqual(expectedNotOK);
   });
 });
 
-const expectedNotOK = {
+const expectedNotOK: Runner = {
   id: 48,
   foreignKeys: {},
-  status: "not-ok",
+  status: RunnerStatusEnum.NOT_OK,
   firstName: "Angus",
   lastName: "Haines",
   startTime: 1659525360,
   time: null,
   legs: [
     {
-      controlCode: 101,
+      startControlCode: "start",
+      finishControlCode: "101",
       timeOverall: 123,
       time: 123,
       rankSplit: 37,
@@ -51,7 +54,8 @@ const expectedNotOK = {
       manualRouteChoice: null,
     },
     {
-      controlCode: 105,
+      startControlCode: "101",
+      finishControlCode: "105",
       timeOverall: 798,
       time: 675,
       rankSplit: 48,
@@ -66,7 +70,8 @@ const expectedNotOK = {
       manualRouteChoice: null,
     },
     {
-      controlCode: 107,
+      startControlCode: "105",
+      finishControlCode: "107",
       timeOverall: 1489,
       time: 691,
       rankSplit: 46,
@@ -81,7 +86,8 @@ const expectedNotOK = {
       manualRouteChoice: null,
     },
     {
-      controlCode: 109,
+      startControlCode: "107",
+      finishControlCode: "109",
       timeOverall: 1553,
       time: 64,
       rankSplit: 39,
@@ -96,7 +102,8 @@ const expectedNotOK = {
       manualRouteChoice: null,
     },
     {
-      controlCode: 110,
+      startControlCode: "109",
+      finishControlCode: "110",
       timeOverall: 1682,
       time: 129,
       rankSplit: 23,
@@ -110,10 +117,11 @@ const expectedNotOK = {
       detectedRouteChoice: null,
       manualRouteChoice: null,
     },
-    { controlCode: 113 },
-    { controlCode: 115, timeOverall: 1985 },
+    null,
+    null,
     {
-      controlCode: 116,
+      startControlCode: "115",
+      finishControlCode: "116",
       timeOverall: 2044,
       time: 59,
       rankSplit: 29,
@@ -128,7 +136,8 @@ const expectedNotOK = {
       manualRouteChoice: null,
     },
     {
-      controlCode: 118,
+      startControlCode: "116",
+      finishControlCode: "118",
       timeOverall: 2343,
       time: 299,
       rankSplit: 40,
@@ -143,7 +152,8 @@ const expectedNotOK = {
       manualRouteChoice: null,
     },
     {
-      controlCode: 121,
+      startControlCode: "118",
+      finishControlCode: "121",
       timeOverall: 2448,
       time: 105,
       rankSplit: 40,
@@ -158,7 +168,8 @@ const expectedNotOK = {
       manualRouteChoice: null,
     },
     {
-      controlCode: 123,
+      startControlCode: "121",
+      finishControlCode: "123",
       timeOverall: 2538,
       time: 90,
       rankSplit: 41,
@@ -173,7 +184,8 @@ const expectedNotOK = {
       manualRouteChoice: null,
     },
     {
-      controlCode: 125,
+      startControlCode: "123",
+      finishControlCode: "125",
       timeOverall: 2723,
       time: 185,
       rankSplit: 32,
@@ -188,7 +200,8 @@ const expectedNotOK = {
       manualRouteChoice: null,
     },
     {
-      controlCode: 127,
+      startControlCode: "125",
+      finishControlCode: "127",
       timeOverall: 2825,
       time: 102,
       rankSplit: 9,
@@ -203,7 +216,8 @@ const expectedNotOK = {
       manualRouteChoice: null,
     },
     {
-      controlCode: 130,
+      startControlCode: "127",
+      finishControlCode: "130",
       timeOverall: 3078,
       time: 253,
       rankSplit: 46,
@@ -218,7 +232,8 @@ const expectedNotOK = {
       manualRouteChoice: null,
     },
     {
-      controlCode: 100,
+      startControlCode: "130",
+      finishControlCode: "100",
       timeOverall: 3152,
       time: 74,
       rankSplit: 44,
@@ -232,7 +247,7 @@ const expectedNotOK = {
       detectedRouteChoice: null,
       manualRouteChoice: null,
     },
-    { controlCode: 0 },
+    null,
   ],
   rank: null,
   timeBehind: null,
@@ -240,17 +255,18 @@ const expectedNotOK = {
   track: null,
 };
 
-const expectedOK = {
+const expectedOK: Runner = {
   id: 1,
   foreignKeys: {},
-  status: "ok",
+  status: RunnerStatusEnum.OK,
   firstName: "Miika",
   lastName: "Kirmula",
   startTime: 1659529800,
   time: 1765,
   legs: [
     {
-      controlCode: 101,
+      startControlCode: "start",
+      finishControlCode: "101",
       timeOverall: 74,
       time: 74,
       rankSplit: 2,
@@ -265,7 +281,8 @@ const expectedOK = {
       manualRouteChoice: null,
     },
     {
-      controlCode: 105,
+      startControlCode: "101",
+      finishControlCode: "105",
       timeOverall: 222,
       time: 148,
       rankSplit: 6,
@@ -280,7 +297,8 @@ const expectedOK = {
       manualRouteChoice: null,
     },
     {
-      controlCode: 107,
+      startControlCode: "105",
+      finishControlCode: "107",
       timeOverall: 475,
       time: 253,
       rankSplit: 17,
@@ -295,7 +313,8 @@ const expectedOK = {
       manualRouteChoice: null,
     },
     {
-      controlCode: 109,
+      startControlCode: "107",
+      finishControlCode: "109",
       timeOverall: 523,
       time: 48,
       rankSplit: 7,
@@ -310,7 +329,8 @@ const expectedOK = {
       manualRouteChoice: null,
     },
     {
-      controlCode: 110,
+      startControlCode: "109",
+      finishControlCode: "110",
       timeOverall: 676,
       time: 153,
       rankSplit: 39,
@@ -325,7 +345,8 @@ const expectedOK = {
       manualRouteChoice: null,
     },
     {
-      controlCode: 113,
+      startControlCode: "110",
+      finishControlCode: "113",
       timeOverall: 751,
       time: 75,
       rankSplit: 1,
@@ -340,7 +361,8 @@ const expectedOK = {
       manualRouteChoice: null,
     },
     {
-      controlCode: 115,
+      startControlCode: "113",
+      finishControlCode: "115",
       timeOverall: 948,
       time: 197,
       rankSplit: 3,
@@ -355,7 +377,8 @@ const expectedOK = {
       manualRouteChoice: null,
     },
     {
-      controlCode: 116,
+      startControlCode: "115",
+      finishControlCode: "116",
       timeOverall: 998,
       time: 50,
       rankSplit: 9,
@@ -370,7 +393,8 @@ const expectedOK = {
       manualRouteChoice: null,
     },
     {
-      controlCode: 118,
+      startControlCode: "116",
+      finishControlCode: "118",
       timeOverall: 1208,
       time: 210,
       rankSplit: 3,
@@ -385,7 +409,8 @@ const expectedOK = {
       manualRouteChoice: null,
     },
     {
-      controlCode: 121,
+      startControlCode: "118",
+      finishControlCode: "121",
       timeOverall: 1288,
       time: 80,
       rankSplit: 12,
@@ -400,7 +425,8 @@ const expectedOK = {
       manualRouteChoice: null,
     },
     {
-      controlCode: 123,
+      startControlCode: "121",
+      finishControlCode: "123",
       timeOverall: 1342,
       time: 54,
       rankSplit: 1,
@@ -415,7 +441,8 @@ const expectedOK = {
       manualRouteChoice: null,
     },
     {
-      controlCode: 125,
+      startControlCode: "123",
+      finishControlCode: "125",
       timeOverall: 1479,
       time: 137,
       rankSplit: 2,
@@ -430,7 +457,8 @@ const expectedOK = {
       manualRouteChoice: null,
     },
     {
-      controlCode: 127,
+      startControlCode: "125",
+      finishControlCode: "127",
       timeOverall: 1579,
       time: 100,
       rankSplit: 6,
@@ -445,7 +473,8 @@ const expectedOK = {
       manualRouteChoice: null,
     },
     {
-      controlCode: 130,
+      startControlCode: "127",
+      finishControlCode: "130",
       timeOverall: 1696,
       time: 117,
       rankSplit: 1,
@@ -460,7 +489,8 @@ const expectedOK = {
       manualRouteChoice: null,
     },
     {
-      controlCode: 100,
+      startControlCode: "130",
+      finishControlCode: "100",
       timeOverall: 1741,
       time: 45,
       rankSplit: 1,
@@ -475,7 +505,8 @@ const expectedOK = {
       manualRouteChoice: null,
     },
     {
-      controlCode: 0,
+      startControlCode: "100",
+      finishControlCode: "finish",
       timeOverall: 1765,
       time: 24,
       rankSplit: 21,

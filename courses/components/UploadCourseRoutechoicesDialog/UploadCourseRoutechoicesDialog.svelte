@@ -1,15 +1,15 @@
-<script>
+<script lang="ts">
   import { fade } from "svelte/transition";
   import clickOutside from "../../../shared/use/clickOutside";
 
-  import course from "../../stores/course";
+  import course from "../../stores/course-data";
   import selectedLeg from "../../stores/selected-leg";
   import buildCourseAndRoutechoices from "../../utils/2d-rerun-hacks/build-course-and-routechoices";
   import UploadCourseOrRoutechoicesFromOcad from "./UploadCourseOrRoutechoicesFromOcad.svelte";
 
-  export let isDialogOpen;
+  export let isDialogOpen = false;
 
-  let loadCourseAndRoutechoicesFromJsonInput;
+  let loadCourseAndRoutechoicesFromJsonInput: HTMLInputElement;
 
   let step = 1;
 
@@ -32,7 +32,7 @@
 </script>
 
 <dialog open transition:fade={{ duration: 200 }}>
-  <article use:clickOutside on:clickOutside={() => (isDialogOpen = false)}>
+  <article use:clickOutside={() => (isDialogOpen = false)}>
     <header>
       <a
         aria-label="Close"

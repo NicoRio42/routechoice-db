@@ -3,15 +3,17 @@ import type Routechoice from "./routechoice";
 import { routechoiceValidator } from "./routechoice";
 
 export const legValidator = z.object({
-  code: z.string(),
-  lat: z.number(),
-  lon: z.number(),
+  startControlCode: z.string(),
+  finishControlCode: z.string(),
+  startLat: z.number(),
+  startLon: z.number(),
   routechoices: z.array(routechoiceValidator),
 });
 
 export default interface Leg {
-  code: string;
-  lat: number;
-  lon: number;
+  startControlCode: string;
+  finishControlCode: string;
+  startLat: number;
+  startLon: number;
   routechoices: Routechoice[];
 }

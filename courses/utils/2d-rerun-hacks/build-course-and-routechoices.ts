@@ -1,6 +1,9 @@
+import type { TwoDRerunCourseExport } from "../../../shared/o-utils/models/2d-rerun/course-export";
 import { selectHack } from "./select-hack";
 
-function buildCourseAndRoutechoices(courseAndRoutechoicesData) {
+function buildCourseAndRoutechoices(
+  courseAndRoutechoicesData: TwoDRerunCourseExport
+): void {
   const data = { ...courseAndRoutechoicesData };
 
   mapviewer.tags = data.tags;
