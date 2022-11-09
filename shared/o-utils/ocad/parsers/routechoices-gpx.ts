@@ -68,13 +68,13 @@ export default function parseGPXRoutechoicesOCADExport(
 
     let distance = distanceBetweenTwoGPSPoints(
       [rc.rawPoints[0][0], rc.rawPoints[0][1]],
-      [clonedLegs[0].lat, clonedLegs[0].lon]
+      [clonedLegs[0].startLat, clonedLegs[0].startLon]
     );
 
     clonedLegs.forEach((leg, i) => {
       const newDistance = distanceBetweenTwoGPSPoints(
         [rc.rawPoints[0][0], rc.rawPoints[0][1]],
-        [leg.lat, leg.lon]
+        [leg.startLat, leg.startLon]
       );
 
       if (newDistance < distance) {

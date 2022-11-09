@@ -2,8 +2,7 @@ import type Leg from "../models/leg";
 import Routechoice from "../models/routechoice";
 import type Runner from "../models/runner";
 import { RunnerTrack } from "../models/runner";
-import { CompleteRunnerLeg, PartialRunnerLeg } from "../models/runner-leg";
-import { isCompleteRunnerLeg } from "../type-guards/runner-guards";
+import { isNotNullRunnerLeg } from "../type-guards/runner-guards";
 import { dotProduct, magnitude } from "../utils/distance-helpers";
 
 export function detectRunnersRoutechoices(
@@ -21,7 +20,7 @@ export function detectRunnersRoutechoices(
     return {
       ...runner,
       legs: runner.legs.map((leg, index) => {
-        if (!isCompleteRunnerLeg(leg)) {
+        if (leg === null) {
           return leg;
         }
 
@@ -31,9 +30,7 @@ export function detectRunnersRoutechoices(
         const startTime =
           index === 0
             ? raceStartTimeInSeconds
-            : raceStartTimeInSeconds +
-              (runner.legs[index - 1] as PartialRunnerLeg | CompleteRunnerLeg) // if leg is complete, previous leg cannot be missing
-                .timeOverall;
+            : raceStartTimeInSeconds + leg.timeOverall - leg.time;
 
         const finishTime = raceStartTimeInSeconds + leg.timeOverall;
 
@@ -67,7 +64,7 @@ function isRunnerTrackConsistentWithSplitTimes(runner: Runner): boolean {
 
   const lastCompleteLeg = structuredClone(runner.legs)
     .reverse()
-    .find(isCompleteRunnerLeg);
+    .find(isNotNullRunnerLeg);
 
   if (lastCompleteLeg === undefined) return false;
 

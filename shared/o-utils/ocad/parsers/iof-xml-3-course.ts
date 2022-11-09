@@ -1,10 +1,11 @@
+import type Control from "../../models/control";
 import type Leg from "../../models/leg";
 import { distanceBetweenTwoGPSPoints } from "../../utils/distance-helpers";
 
 export default function parseIOFXML3CourseOCADExport(
   courseXmlDoc: XMLDocument,
   classIndex: number
-): Leg[] {
+): [Control[], Leg[]] {
   const courseDataTag = courseXmlDoc.querySelector("CourseData");
 
   if (courseDataTag === null)
@@ -57,40 +58,58 @@ export default function parseIOFXML3CourseOCADExport(
   if (course === undefined)
     throw new Error("No class matching the class index.");
 
-  const legs = Array.from(course.querySelectorAll("CourseControl")).map(
-    (control) => {
-      const controlTag = control.querySelector("Control");
+  const controls: Control[] = Array.from(
+    course.querySelectorAll("CourseControl")
+  ).map((control) => {
+    const controlTag = control.querySelector("Control");
 
-      if (controlTag === null)
-        throw new Error("No control code for this control");
+    if (controlTag === null)
+      throw new Error("No control code for this control");
 
-      const code = controlTag.textContent;
+    const code = controlTag.textContent;
 
-      if (code === null)
-        throw new Error("No valid control code for this control");
+    if (code === null)
+      throw new Error("No valid control code for this control");
 
-      const coords = controlsToCoordsMapper[code];
+    const coords = controlsToCoordsMapper[code];
 
-      return {
-        code,
-        lat: coords.lat,
-        lon: coords.lon,
-        routechoices: [],
-      };
-    }
-  );
+    if (coords === undefined)
+      throw new Error(
+        "The finish control for this leg was not found in the control list."
+      );
+
+    return {
+      code,
+      lat: coords.lat,
+      lon: coords.lon,
+    };
+  });
 
   // Remove duplicates
-  const filteredCoursecoords = legs.filter((leg, index) => {
+  const filteredcontrols = controls.filter((leg, index) => {
     if (index === 0) return true;
 
     return (
       distanceBetweenTwoGPSPoints(
         [leg.lat, leg.lon],
-        [legs[index - 1].lat, legs[index - 1].lon]
+        [controls[index - 1].lat, controls[index - 1].lon]
       ) > 20
     );
   });
 
-  return filteredCoursecoords;
+  const legs: Leg[] = [];
+
+  filteredcontrols.forEach((control, index) => {
+    if (index === 0) return;
+
+    legs.push({
+      startControlCode: filteredcontrols[index - 1].code,
+      finishControlCode: control.code,
+      startLat: filteredcontrols[index - 1].lat,
+      startLon: filteredcontrols[index - 1].lon,
+      routechoices: [],
+    });
+  });
+
+  return [filteredcontrols, legs];
 }

@@ -1,4 +1,5 @@
 import { describe, expect, test } from "vitest";
+import type Leg from "../../models/leg";
 import { ROUTECHOICES_GPX } from "./mocks/routechoices-gpx";
 import parseGPXRoutechoicesOCADExport from "./routechoices-gpx";
 
@@ -12,11 +13,12 @@ describe("parseGPXRoutechoicesOCADExpor()", () => {
   });
 });
 
-const expectedLegs = [
+const expectedLegs: Leg[] = [
   {
-    code: "S1",
-    lat: 45.212847,
-    lon: 5.793802,
+    startControlCode: "S1",
+    finishControlCode: "31",
+    startLat: 45.212847,
+    startLon: 5.793802,
     routechoices: [
       {
         id: 15,
@@ -91,9 +93,10 @@ const expectedLegs = [
     ],
   },
   {
-    code: "31",
-    lat: 45.213173,
-    lon: 5.792364,
+    startControlCode: "31",
+    finishControlCode: "32",
+    startLat: 45.213173,
+    startLon: 5.792364,
     routechoices: [
       {
         id: 8,
@@ -220,9 +223,10 @@ const expectedLegs = [
     ],
   },
   {
-    code: "32",
-    lat: 45.212336,
-    lon: 5.78996,
+    startControlCode: "32",
+    finishControlCode: "33",
+    startLat: 45.212336,
+    startLon: 5.78996,
     routechoices: [
       {
         id: 19,
@@ -259,9 +263,10 @@ const expectedLegs = [
     ],
   },
   {
-    code: "33",
-    lat: 45.212446,
-    lon: 5.789548,
+    startControlCode: "33",
+    finishControlCode: "34",
+    startLat: 45.212446,
+    startLon: 5.789548,
     routechoices: [
       {
         id: 1,
@@ -365,9 +370,10 @@ const expectedLegs = [
     ],
   },
   {
-    code: "34",
-    lat: 45.212793,
-    lon: 5.787053,
+    startControlCode: "34",
+    finishControlCode: "35",
+    startLat: 45.212793,
+    startLon: 5.787053,
     routechoices: [
       {
         id: 20,
@@ -408,9 +414,10 @@ const expectedLegs = [
     ],
   },
   {
-    code: "35",
-    lat: 45.213601,
-    lon: 5.787004,
+    startControlCode: "35",
+    finishControlCode: "36",
+    startLat: 45.213601,
+    startLon: 5.787004,
     routechoices: [
       {
         id: 21,
@@ -501,9 +508,10 @@ const expectedLegs = [
     ],
   },
   {
-    code: "36",
-    lat: 45.214257,
-    lon: 5.785209,
+    startControlCode: "36",
+    finishControlCode: "37",
+    startLat: 45.214257,
+    startLon: 5.785209,
     routechoices: [
       {
         id: 3,
@@ -565,9 +573,10 @@ const expectedLegs = [
     ],
   },
   {
-    code: "37",
-    lat: 45.214023,
-    lon: 5.784339,
+    startControlCode: "37",
+    finishControlCode: "38",
+    startLat: 45.214023,
+    startLon: 5.784339,
     routechoices: [
       {
         id: 0,
@@ -636,9 +645,10 @@ const expectedLegs = [
     ],
   },
   {
-    code: "38",
-    lat: 45.213519,
-    lon: 5.785003,
+    startControlCode: "38",
+    finishControlCode: "46",
+    startLat: 45.213519,
+    startLon: 5.785003,
     routechoices: [
       {
         id: 25,
@@ -682,9 +692,10 @@ const expectedLegs = [
     ],
   },
   {
-    code: "46",
-    lat: 45.2133,
-    lon: 5.78612,
+    startControlCode: "46",
+    finishControlCode: "39",
+    startLat: 45.2133,
+    startLon: 5.78612,
     routechoices: [
       {
         id: 4,
@@ -770,9 +781,10 @@ const expectedLegs = [
     ],
   },
   {
-    code: "39",
-    lat: 45.213758,
-    lon: 5.787612,
+    startControlCode: "39",
+    finishControlCode: "40",
+    startLat: 45.213758,
+    startLon: 5.787612,
     routechoices: [
       {
         id: 28,
@@ -928,9 +940,10 @@ const expectedLegs = [
     ],
   },
   {
-    code: "40",
-    lat: 45.21394,
-    lon: 5.78926,
+    startControlCode: "40",
+    finishControlCode: "41",
+    startLat: 45.21394,
+    startLon: 5.78926,
     routechoices: [
       {
         id: 30,
@@ -985,9 +998,10 @@ const expectedLegs = [
     ],
   },
   {
-    code: "41",
-    lat: 45.214394,
-    lon: 5.789118,
+    startControlCode: "41",
+    finishControlCode: "42",
+    startLat: 45.214394,
+    startLon: 5.789118,
     routechoices: [
       {
         id: 31,
@@ -1077,9 +1091,10 @@ const expectedLegs = [
     ],
   },
   {
-    code: "42",
-    lat: 45.214319,
-    lon: 5.790881,
+    startControlCode: "42",
+    finishControlCode: "43",
+    startLat: 45.214319,
+    startLon: 5.790881,
     routechoices: [
       {
         id: 34,
@@ -1120,9 +1135,10 @@ const expectedLegs = [
     ],
   },
   {
-    code: "43",
-    lat: 45.213396,
-    lon: 5.790756,
+    startControlCode: "43",
+    finishControlCode: "44",
+    startLat: 45.213396,
+    startLon: 5.790756,
     routechoices: [
       {
         id: 36,
@@ -1173,9 +1189,10 @@ const expectedLegs = [
     ],
   },
   {
-    code: "44",
-    lat: 45.213072,
-    lon: 5.793086,
+    startControlCode: "44",
+    finishControlCode: "45",
+    startLat: 45.213072,
+    startLon: 5.793086,
     routechoices: [
       {
         id: 37,
@@ -1195,9 +1212,10 @@ const expectedLegs = [
     ],
   },
   {
-    code: "45",
-    lat: 45.213652,
-    lon: 5.793643,
+    startControlCode: "45",
+    finishControlCode: "47",
+    startLat: 45.213652,
+    startLon: 5.793643,
     routechoices: [
       {
         id: 5,
@@ -1212,9 +1230,10 @@ const expectedLegs = [
     ],
   },
   {
-    code: "47",
-    lat: 45.21361,
-    lon: 5.795543,
+    startControlCode: "47",
+    finishControlCode: "48",
+    startLat: 45.21361,
+    startLon: 5.795543,
     routechoices: [
       {
         id: 13,
@@ -1265,9 +1284,10 @@ const expectedLegs = [
     ],
   },
   {
-    code: "48",
-    lat: 45.212894,
-    lon: 5.796382,
+    startControlCode: "48",
+    finishControlCode: "49",
+    startLat: 45.212894,
+    startLon: 5.796382,
     routechoices: [
       {
         id: 10,
@@ -1318,9 +1338,10 @@ const expectedLegs = [
     ],
   },
   {
-    code: "49",
-    lat: 45.212282,
-    lon: 5.795804,
+    startControlCode: "49",
+    finishControlCode: "50",
+    startLat: 45.212282,
+    startLon: 5.795804,
     routechoices: [
       {
         id: 40,
@@ -1336,9 +1357,10 @@ const expectedLegs = [
     ],
   },
   {
-    code: "50",
-    lat: 45.21234,
-    lon: 5.796351,
+    startControlCode: "50",
+    finishControlCode: "51",
+    startLat: 45.21234,
+    startLon: 5.796351,
     routechoices: [
       {
         id: 41,
@@ -1394,9 +1416,10 @@ const expectedLegs = [
     ],
   },
   {
-    code: "51",
-    lat: 45.213149,
-    lon: 5.795548,
+    startControlCode: "51",
+    finishControlCode: "52",
+    startLat: 45.213149,
+    startLon: 5.795548,
     routechoices: [
       {
         id: 11,
@@ -1414,9 +1437,10 @@ const expectedLegs = [
     ],
   },
   {
-    code: "52",
-    lat: 45.213071,
-    lon: 5.794389,
+    startControlCode: "52",
+    finishControlCode: "F1",
+    startLat: 45.213071,
+    startLon: 5.794389,
     routechoices: [
       {
         id: 14,
@@ -1430,84 +1454,168 @@ const expectedLegs = [
       },
     ],
   },
-  {
-    code: "F1",
-    lat: 45.213317,
-    lon: 5.794046,
-    routechoices: [
-      {
-        id: 2,
-        name: "A",
-        color: "0000FF",
-        length: 137.4157490594455,
-        track: [
-          [45.21369362, 5.79425856],
-          [45.21329548, 5.79475869],
-          [45.21333552, 5.79503093],
-          [45.21356219, 5.79519016],
-          [45.21360955, 5.79545767],
-          [45.21360738, 5.79554424],
-        ],
-      },
-      {
-        id: 12,
-        name: "B",
-        color: "FF0000",
-        length: 143.66253525351186,
-        track: [
-          [45.21368989, 5.79426347],
-          [45.21329548, 5.79475869],
-          [45.21337272, 5.79527244],
-          [45.21340196, 5.79554414],
-          [45.21360366, 5.79554915],
-        ],
-      },
-      {
-        id: 38,
-        name: "C",
-        color: "006400",
-        length: 148.17581856166706,
-        track: [
-          [45.21369362, 5.79425856],
-          [45.21353496, 5.79469421],
-          [45.21356869, 5.79493044],
-          [45.21358592, 5.7949619],
-          [45.21382686, 5.79512693],
-          [45.21386702, 5.79539409],
-          [45.21384453, 5.79542865],
-          [45.21369313, 5.79557403],
-          [45.2136241, 5.79559606],
-          [45.21361356, 5.79558534],
-          [45.21360738, 5.79554424],
-        ],
-      },
-    ],
-  },
 ];
 
-const inputLegs = [
-  { code: "S1", lat: 45.212847, lon: 5.793802, routechoices: [] },
-  { code: "31", lat: 45.213173, lon: 5.792364, routechoices: [] },
-  { code: "32", lat: 45.212336, lon: 5.78996, routechoices: [] },
-  { code: "33", lat: 45.212446, lon: 5.789548, routechoices: [] },
-  { code: "34", lat: 45.212793, lon: 5.787053, routechoices: [] },
-  { code: "35", lat: 45.213601, lon: 5.787004, routechoices: [] },
-  { code: "36", lat: 45.214257, lon: 5.785209, routechoices: [] },
-  { code: "37", lat: 45.214023, lon: 5.784339, routechoices: [] },
-  { code: "38", lat: 45.213519, lon: 5.785003, routechoices: [] },
-  { code: "46", lat: 45.2133, lon: 5.78612, routechoices: [] },
-  { code: "39", lat: 45.213758, lon: 5.787612, routechoices: [] },
-  { code: "40", lat: 45.21394, lon: 5.78926, routechoices: [] },
-  { code: "41", lat: 45.214394, lon: 5.789118, routechoices: [] },
-  { code: "42", lat: 45.214319, lon: 5.790881, routechoices: [] },
-  { code: "43", lat: 45.213396, lon: 5.790756, routechoices: [] },
-  { code: "44", lat: 45.213072, lon: 5.793086, routechoices: [] },
-  { code: "45", lat: 45.213652, lon: 5.793643, routechoices: [] },
-  { code: "47", lat: 45.21361, lon: 5.795543, routechoices: [] },
-  { code: "48", lat: 45.212894, lon: 5.796382, routechoices: [] },
-  { code: "49", lat: 45.212282, lon: 5.795804, routechoices: [] },
-  { code: "50", lat: 45.21234, lon: 5.796351, routechoices: [] },
-  { code: "51", lat: 45.213149, lon: 5.795548, routechoices: [] },
-  { code: "52", lat: 45.213071, lon: 5.794389, routechoices: [] },
-  { code: "F1", lat: 45.213317, lon: 5.794046, routechoices: [] },
+const inputLegs: Leg[] = [
+  {
+    startControlCode: "S1",
+    finishControlCode: "31",
+    startLat: 45.212847,
+    startLon: 5.793802,
+    routechoices: [],
+  },
+  {
+    startControlCode: "31",
+    finishControlCode: "32",
+    startLat: 45.213173,
+    startLon: 5.792364,
+    routechoices: [],
+  },
+  {
+    startControlCode: "32",
+    finishControlCode: "33",
+    startLat: 45.212336,
+    startLon: 5.78996,
+    routechoices: [],
+  },
+  {
+    startControlCode: "33",
+    finishControlCode: "34",
+    startLat: 45.212446,
+    startLon: 5.789548,
+    routechoices: [],
+  },
+  {
+    startControlCode: "34",
+    finishControlCode: "35",
+    startLat: 45.212793,
+    startLon: 5.787053,
+    routechoices: [],
+  },
+  {
+    startControlCode: "35",
+    finishControlCode: "36",
+    startLat: 45.213601,
+    startLon: 5.787004,
+    routechoices: [],
+  },
+  {
+    startControlCode: "36",
+    finishControlCode: "37",
+    startLat: 45.214257,
+    startLon: 5.785209,
+    routechoices: [],
+  },
+  {
+    startControlCode: "37",
+    finishControlCode: "38",
+    startLat: 45.214023,
+    startLon: 5.784339,
+    routechoices: [],
+  },
+  {
+    startControlCode: "38",
+    finishControlCode: "46",
+    startLat: 45.213519,
+    startLon: 5.785003,
+    routechoices: [],
+  },
+  {
+    startControlCode: "46",
+    finishControlCode: "39",
+    startLat: 45.2133,
+    startLon: 5.78612,
+    routechoices: [],
+  },
+  {
+    startControlCode: "39",
+    finishControlCode: "40",
+    startLat: 45.213758,
+    startLon: 5.787612,
+    routechoices: [],
+  },
+  {
+    startControlCode: "40",
+    finishControlCode: "41",
+    startLat: 45.21394,
+    startLon: 5.78926,
+    routechoices: [],
+  },
+  {
+    startControlCode: "41",
+    finishControlCode: "42",
+    startLat: 45.214394,
+    startLon: 5.789118,
+    routechoices: [],
+  },
+  {
+    startControlCode: "42",
+    finishControlCode: "43",
+    startLat: 45.214319,
+    startLon: 5.790881,
+    routechoices: [],
+  },
+  {
+    startControlCode: "43",
+    finishControlCode: "44",
+    startLat: 45.213396,
+    startLon: 5.790756,
+    routechoices: [],
+  },
+  {
+    startControlCode: "44",
+    finishControlCode: "45",
+    startLat: 45.213072,
+    startLon: 5.793086,
+    routechoices: [],
+  },
+  {
+    startControlCode: "45",
+    finishControlCode: "47",
+    startLat: 45.213652,
+    startLon: 5.793643,
+    routechoices: [],
+  },
+  {
+    startControlCode: "47",
+    finishControlCode: "48",
+    startLat: 45.21361,
+    startLon: 5.795543,
+    routechoices: [],
+  },
+  {
+    startControlCode: "48",
+    finishControlCode: "49",
+    startLat: 45.212894,
+    startLon: 5.796382,
+    routechoices: [],
+  },
+  {
+    startControlCode: "49",
+    finishControlCode: "50",
+    startLat: 45.212282,
+    startLon: 5.795804,
+    routechoices: [],
+  },
+  {
+    startControlCode: "50",
+    finishControlCode: "51",
+    startLat: 45.21234,
+    startLon: 5.796351,
+    routechoices: [],
+  },
+  {
+    startControlCode: "51",
+    finishControlCode: "52",
+    startLat: 45.213149,
+    startLon: 5.795548,
+    routechoices: [],
+  },
+  {
+    startControlCode: "52",
+    finishControlCode: "F1",
+    startLat: 45.213071,
+    startLon: 5.794389,
+    routechoices: [],
+  },
 ];
