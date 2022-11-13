@@ -13,7 +13,7 @@
   let rightmenu: HTMLDivElement | null = null;
 
   $: {
-    numberOfLegs = $courseData.course ? $courseData.course.length - 1 : 0;
+    numberOfLegs = $courseData.legs.length;
   }
 
   const handlePreviousControl = () => {

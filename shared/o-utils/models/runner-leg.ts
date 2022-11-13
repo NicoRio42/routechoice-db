@@ -1,5 +1,6 @@
 import { z } from "zod";
 import type Routechoice from "./routechoice";
+import { routechoiceValidator } from "./routechoice";
 
 export const runnerLegValidator = z.object({
   startControlCode: z.string(),
@@ -14,8 +15,8 @@ export const runnerLegValidator = z.object({
   isMistake: z.boolean(),
   timeLoss: z.number(),
   routeChoiceTimeLoss: z.nullable(z.number()),
-  detectedRouteChoice: z.nullable(z.number()),
-  manualRouteChoice: z.nullable(z.number()),
+  detectedRouteChoice: z.nullable(routechoiceValidator),
+  manualRouteChoice: z.nullable(routechoiceValidator),
 });
 
 export interface RunnerLeg {

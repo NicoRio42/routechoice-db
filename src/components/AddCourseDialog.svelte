@@ -2,6 +2,7 @@
   import { addDoc, collection, getFirestore } from "firebase/firestore/lite";
   import { createEventDispatcher } from "svelte";
   import { fade } from "svelte/transition";
+  import type { CourseDataWithoutRunners } from "../../shared/o-utils/models/course-data";
   import clickOutside from "../../shared/use/clickOutside";
 
   export let isAddCourseDialogOpen;
@@ -47,8 +48,9 @@
     loading = true;
     const timeStamp = new Date(date).getTime();
 
-    const courseData = {
+    const courseData: CourseDataWithoutRunners = {
       course: [],
+      legs: [],
       map: null,
       name,
       date: timeStamp,

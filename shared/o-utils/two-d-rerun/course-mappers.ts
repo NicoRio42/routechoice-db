@@ -3,19 +3,24 @@ import type { TwoDRerunCourseExport } from "../models/2d-rerun/course-export";
 import type { Tag } from "../models/2d-rerun/mapviewer";
 import type { MapCalibration } from "../models/course-map";
 import type Leg from "../models/leg";
+import type Control from "../models/control";
 
 export default function mapCourseAndRoutechoicesTo2DRerun(
-  course: Leg[],
+  legs: Leg[],
+  course: Control[],
   callibration: MapCalibration
 ): TwoDRerunCourseExport {
   const coordinatesConverter = new CoordinatesConverter(callibration);
 
   return {
-    tags: course.flatMap((leg) =>
+    tags: legs.flatMap((leg) =>
       formatRoutechoicesForTwoDRerun(leg, coordinatesConverter)
     ),
-    coursecoords: course.map((leg) => {
-      const xyPoint = coordinatesConverter.latLongToXY([leg.lat, leg.lon]);
+    coursecoords: course.map((control) => {
+      const xyPoint = coordinatesConverter.latLongToXY([
+        control.lat,
+        control.lon,
+      ]);
 
       return `${xyPoint[0]},${xyPoint[1]}`;
     }),
@@ -38,9 +43,12 @@ function formatRoutechoicesForTwoDRerun(
       opened_dialog: 0,
       ready_for_dialog: 0,
       runnername: "Route",
-      points: routechoice.track.map((point) => `${point[0]},${point[1]}`),
-      pointsxy: routechoice.track.map((point) =>
-        coordinatesConverter.latLongToXY([point[0], point[1]]).join("'")
+      points: routechoice.track.map((point) => point.join(",")),
+      pointsxy: routechoice.track.map(
+        (point, index) =>
+          `${coordinatesConverter
+            .latLongToXY([point[0], point[1]])
+            .join(",")},${index * 3},0`
       ),
       currenttime: 36,
       currentalt: 0,

@@ -96,26 +96,29 @@
       alert("You have to choose a class.");
     }
 
-    const legsWithoutRoutechoices = parseIOFXML3CourseOCADExport(
+    const [course, legsWithoutRoutechoices] = parseIOFXML3CourseOCADExport(
       courseXmlDoc,
       0
     );
 
+    $courseData.course = course;
+
     if (routechoicesXmlDoc === null) {
-      $courseData.course = legsWithoutRoutechoices;
+      $courseData.legs = legsWithoutRoutechoices;
     } else {
       const legs = parseGPXRoutechoicesOCADExport(
         routechoicesXmlDoc,
         legsWithoutRoutechoices
       );
 
-      $courseData.course = legs;
+      $courseData.legs = legs;
     }
 
     if ($courseData.map === null)
       throw new Error("No map callibration, event migth not have started yet.");
 
     const twoDRerunCourseAndRoutechoices = mapCourseAndRoutechoicesTo2DRerun(
+      $courseData.legs,
       $courseData.course,
       $courseData.map.calibration
     );

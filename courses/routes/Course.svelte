@@ -9,15 +9,15 @@
     query,
     type DocumentReference,
   } from "firebase/firestore/lite";
-  import { getMapCalibrationFromCalString } from "../../shared/o-utils/map/coords-converter";
-  import { onMount } from "svelte";
   import { courseValidator, type Course } from "../../shared/models/course";
   import NavBar from "../../shared/NavBar.svelte";
+  import { getMapCalibrationFromCalString } from "../../shared/o-utils/map/coords-converter";
   import { rerun2DEventDataSchema } from "../../shared/o-utils/models/2d-rerun/get-2d-rerun-data-response";
   import type CourseData from "../../shared/o-utils/models/course-data";
   import { courseDataWithoutRunnersValidator } from "../../shared/o-utils/models/course-data";
   import type Runner from "../../shared/o-utils/models/runner";
   import { runnerValidator } from "../../shared/o-utils/models/runner";
+  import mapCourseAndRoutechoicesTo2DRerun from "../../shared/o-utils/two-d-rerun/course-mappers";
   import ActionButtons from "../components/ActionButtons.svelte";
   import NavbarButtons from "../components/NavbarButtons.svelte";
   import SideBar from "../components/SideBar.svelte";
@@ -31,14 +31,13 @@
   } from "../utils/2d-rerun-hacks/init-mapviewer";
   import { loadSplitsTo2dRerun } from "../utils/2d-rerun-hacks/load-splits-to-2d-rerun";
   import { selectHack } from "../utils/2d-rerun-hacks/select-hack";
-  import mapCourseAndRoutechoicesTo2DRerun from "../../shared/o-utils/two-d-rerun/course-mappers";
 
   export let params: { courseID: string };
   let course: Course;
 
   const db = getFirestore();
 
-  onMount(initCourse);
+  initCourse();
 
   $: {
     if ($selectedLeg !== null) {
@@ -81,6 +80,7 @@
         course.data as DocumentReference<CourseData>,
         "runners"
       );
+
       const q = query(runnersRef, orderBy("rank", "desc"));
 
       const querySnapshot = await getDocs(q);
@@ -98,6 +98,7 @@
     } catch (error) {
       console.error(error);
       alert(`An error occured while loading the course.`);
+
       return;
     }
 
@@ -125,6 +126,7 @@
     if ($courseData.course.length === 0) return;
 
     const twoDRerunCourseAndRoutechoices = mapCourseAndRoutechoicesTo2DRerun(
+      $courseData.legs,
       $courseData.course,
       $courseData.map.calibration
     );
