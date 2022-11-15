@@ -1,14 +1,25 @@
 <script lang="ts">
+  import {
+    DocumentReference,
+    getFirestore,
+    updateDoc,
+  } from "firebase/firestore/lite";
+  import type { CourseDataWithoutRunnersWithSerializedNestedArrays } from "shared/o-utils/models/course-data";
+  import type CourseData from "shared/o-utils/models/course-data";
+  import { serializeNestedArraysInLegs } from "shared/o-utils/models/leg";
   import { createEventDispatcher } from "svelte";
   import { fade } from "svelte/transition";
   import parseIOFXML3CourseOCADExport from "../../../shared/o-utils/ocad/parsers/iof-xml-3-course";
   import parseGPXRoutechoicesOCADExport from "../../../shared/o-utils/ocad/parsers/routechoices-gpx";
   import mapCourseAndRoutechoicesTo2DRerun from "../../../shared/o-utils/two-d-rerun/course-mappers";
+  import course from "../../stores/course";
   import courseData from "../../stores/course-data";
   import selectedLeg from "../../stores/selected-leg";
   import buildCourseAndRoutechoices from "../../utils/2d-rerun-hacks/build-course-and-routechoices";
 
   export let isDialogOpen = false;
+
+  const db = getFirestore();
 
   let courseXmlDoc: XMLDocument | null = null;
   let routechoicesXmlDoc: XMLDocument | null = null;
@@ -86,7 +97,7 @@
     reader.readAsText(xmlFile);
   }
 
-  function parseXmlFiles() {
+  async function parseXmlFiles() {
     if (courseXmlDoc === null) {
       alert("You have to upload at least a course.");
       return;
@@ -96,12 +107,12 @@
       alert("You have to choose a class.");
     }
 
-    const [course, legsWithoutRoutechoices] = parseIOFXML3CourseOCADExport(
+    const [controls, legsWithoutRoutechoices] = parseIOFXML3CourseOCADExport(
       courseXmlDoc,
       0
     );
 
-    $courseData.course = course;
+    $courseData.course = controls;
 
     if (routechoicesXmlDoc === null) {
       $courseData.legs = legsWithoutRoutechoices;
@@ -113,6 +124,24 @@
 
       $courseData.legs = legs;
     }
+
+    console.log({
+      legs: $courseData.legs.map((leg) =>
+        leg.routechoices.map((rc) => ({
+          ...rc,
+          track: JSON.stringify(rc.track),
+        }))
+      ),
+      course: $courseData.course,
+    });
+
+    await updateDoc(
+      $course.data as DocumentReference<CourseDataWithoutRunnersWithSerializedNestedArrays>,
+      {
+        legs: serializeNestedArraysInLegs($courseData.legs),
+        course: $courseData.course,
+      }
+    );
 
     if ($courseData.map === null)
       throw new Error("No map callibration, event migth not have started yet.");

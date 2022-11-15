@@ -4,7 +4,7 @@ import { controlSchema } from "./control";
 import type CourseMap from "./course-map";
 import { courseMapValidator } from "./course-map";
 import type Leg from "./leg";
-import { legValidator } from "./leg";
+import { legValidator, type LegWithSerializedNestedArrays } from "./leg";
 import type Runner from "./runner";
 import { runnerValidator } from "./runner";
 import type Statistics from "./statistics";
@@ -24,9 +24,8 @@ export const courseDataValidator = courseDataWithoutRunnersValidator.extend({
   runners: z.array(runnerValidator),
 });
 
-export interface CourseDataWithoutRunners {
+export interface CourseDataWithoutRunnersAndLegs {
   course: Control[];
-  legs: Leg[];
   map: CourseMap | null;
 
   name: string;
@@ -34,6 +33,14 @@ export interface CourseDataWithoutRunners {
   timeOffset: number;
 
   statistics: Statistics | null;
+}
+export interface CourseDataWithoutRunnersWithSerializedNestedArrays
+  extends CourseDataWithoutRunnersAndLegs {
+  legs: LegWithSerializedNestedArrays[];
+}
+export interface CourseDataWithoutRunners
+  extends CourseDataWithoutRunnersAndLegs {
+  legs: Leg[];
 }
 
 export default interface CourseData extends CourseDataWithoutRunners {

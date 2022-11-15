@@ -9,12 +9,16 @@
     query,
     type DocumentReference,
   } from "firebase/firestore/lite";
-  import { courseValidator, type Course } from "../../shared/models/course";
+  import { courseValidator } from "../../shared/models/course";
   import NavBar from "../../shared/NavBar.svelte";
   import { getMapCalibrationFromCalString } from "../../shared/o-utils/map/coords-converter";
   import { rerun2DEventDataSchema } from "../../shared/o-utils/models/2d-rerun/get-2d-rerun-data-response";
   import type CourseData from "../../shared/o-utils/models/course-data";
-  import { courseDataWithoutRunnersValidator } from "../../shared/o-utils/models/course-data";
+  import {
+    courseDataWithoutRunnersValidator,
+    type CourseDataWithoutRunnersWithSerializedNestedArrays,
+  } from "../../shared/o-utils/models/course-data";
+  import { parseNestedArraysInLegs } from "../../shared/o-utils/models/leg";
   import type Runner from "../../shared/o-utils/models/runner";
   import { runnerValidator } from "../../shared/o-utils/models/runner";
   import mapCourseAndRoutechoicesTo2DRerun from "../../shared/o-utils/two-d-rerun/course-mappers";
@@ -22,6 +26,7 @@
   import NavbarButtons from "../components/NavbarButtons.svelte";
   import SideBar from "../components/SideBar.svelte";
   import ZoomButtons from "../components/ZoomButtons.svelte";
+  import course from "../stores/course";
   import courseData from "../stores/course-data";
   import is2DRerunLoaded from "../stores/rerun-2d-loaded";
   import selectedLeg from "../stores/selected-leg";
@@ -33,7 +38,6 @@
   import { selectHack } from "../utils/2d-rerun-hacks/select-hack";
 
   export let params: { courseID: string };
-  let course: Course;
 
   const db = getFirestore();
 
@@ -63,21 +67,26 @@
     try {
       const docSnap = await getDoc(doc(db, "courses", params.courseID));
 
-      course = courseValidator.parse({
+      $course = courseValidator.parse({
         ...docSnap.data(),
         id: params.courseID,
       });
 
       const courseDataRef = await getDoc(
-        course.data as DocumentReference<CourseData>
+        $course.data as DocumentReference<CourseDataWithoutRunnersWithSerializedNestedArrays>
       );
 
-      const courseDataWithoutRunners = courseDataWithoutRunnersValidator.parse(
-        courseDataRef.data()
-      );
+      const legs = courseDataRef.data()?.legs;
+
+      if (legs === undefined) return;
+
+      const courseDataWithoutRunners = courseDataWithoutRunnersValidator.parse({
+        ...courseDataRef.data(),
+        legs: parseNestedArraysInLegs(legs),
+      });
 
       const runnersRef = collection(
-        course.data as DocumentReference<CourseData>,
+        $course.data as DocumentReference<CourseData>,
         "runners"
       );
 
@@ -105,7 +114,7 @@
     // Check if loggator event has started, and if the map is available
     const loggatorEventRequest = await fetch(
       `https://europe-west1-routechoice-db-dev.cloudfunctions.net/getLoggatorData?baseurl=http://www.tulospalvelu.fi/gps/&idstr=logatec${extractLoggatorIDFromLoggatorURL(
-        course.liveProviderURL
+        $course.liveProviderURL
       )}`
     );
 
@@ -121,7 +130,7 @@
       url: loggatorEvent.map.imagelink,
     };
 
-    initMapviewer(course.liveProviderURL);
+    initMapviewer($course.liveProviderURL);
 
     if ($courseData.course.length === 0) return;
 
