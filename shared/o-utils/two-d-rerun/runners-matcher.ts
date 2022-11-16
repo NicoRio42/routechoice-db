@@ -120,7 +120,6 @@ export function matchRunnersByName(
 
         if (allNamesExceptInitialMatch && initialMatch) {
           runner.foreignKeys.twoDRerunRouteIndexNumber = route.indexnumber;
-          break;
         }
       }
     }

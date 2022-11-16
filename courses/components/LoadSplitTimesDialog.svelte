@@ -1,44 +1,63 @@
-<script>
-  import { IOFXMLParser } from "../utils/iof-xml-parser/IOFXMLParser";
-  import { detectRunnersByName } from "../utils/detect-runners-by-name/detectRunnersByName";
-  import { detectRunnersRoutechoices } from "../utils/routechoices-detector/detect-route";
-  import { timeZones } from "../utils/time-zones";
-  import course from "../stores/course-data";
-  import { loadSplitsTo2dRerun } from "../utils/2d-rerun-hacks/load-splits-to-2d-rerun";
+<script lang="ts">
+  import courseData from "../stores/course-data";
+  import { loadRunnersSplitsTo2dRerun } from "../utils/2d-rerun-hacks/load-splits-to-2d-rerun";
+  import type { Mapviewer } from "../../shared/o-utils/models/2d-rerun/mapviewer";
+  import type Runner from "../../shared/o-utils/models/runner";
+  import { detectRunnersRoutechoices } from "../../shared/o-utils/routechoice-detector/routechoice-detector";
+  import { parseIOFXML3SplitTimesFile } from "../../shared/o-utils/split-times/parsers/iof-xml-3";
+  import {
+    attribute2DRerunTrackToMatchedRunner,
+    matchRunnersByName,
+  } from "../../shared/o-utils/two-d-rerun/runners-matcher";
   import clickOutside from "../../shared/use/clickOutside";
+  import { timeZones } from "../utils/time-zones";
 
-  export let isDialogOpen;
+  export let isDialogOpen = false;
 
-  let splitTimes;
+  let parser: DOMParser;
+  let reader: FileReader;
 
-  /**@type {XMLDocument}*/
-  let xmlDoc;
+  // @ts-ignore
+  const mapViewer: Mapviewer = mapviewer;
 
-  /**@type {string[]}*/
-  let classNames = [];
-
-  /**@type {string}*/
-  let className;
-  let timeZone = timeZones[1];
+  let className: string;
+  let xmlDoc: XMLDocument;
   let timeOffset = 0;
-
-  /**@type {import("../models/runner").Runner[]}*/
-  let runners = [];
+  let timeZone = timeZones[1];
+  let classNames: string[] = [];
   let step = 1;
+  let runners: Runner[] = [];
 
-  const onFileSelected = (event) => {
-    let xmlFile = event.target.files[0];
-    let reader = new FileReader();
+  interface FormEventHandler<T> {
+    currentTarget: T;
+  }
 
-    reader.onload = function (e) {
-      let readXml = e.target.result;
-      let parser = new DOMParser();
+  const onFileSelected = (event: FormEventHandler<HTMLInputElement>) => {
+    const fileInputElement = event.currentTarget;
+
+    if (fileInputElement === null || fileInputElement.files === null) return;
+
+    let xmlFile = fileInputElement.files[0];
+    if (xmlFile === undefined) return;
+    if (reader === undefined) reader = new FileReader();
+
+    reader.onload = function (e: ProgressEvent<FileReader>) {
+      if (e.target === null) return;
+      const readXml = e.target.result;
+      if (readXml === null) return;
+      if (parser === undefined) parser = new DOMParser();
 
       xmlDoc = parser.parseFromString(readXml.toString(), "application/xml");
 
-      const IOFXMLVersion = xmlDoc
-        .querySelector("ResultList")
-        .getAttribute("iofVersion");
+      if (xmlDoc === null) return;
+      const resultListTag = xmlDoc.querySelector("ResultList");
+      if (resultListTag === null) return;
+      const IOFXMLVersion = resultListTag.getAttribute("iofVersion");
+
+      if (IOFXMLVersion !== "3.0") {
+        alert("Only IOF XML 3.0 split times files are supported yet.");
+        return;
+      }
 
       const classQuerySelector =
         IOFXMLVersion === "3.0"
@@ -55,50 +74,50 @@
     reader.readAsText(xmlFile);
   };
 
-  const parseIOFXML = (event) => {
-    const date = new Date($course.date);
+  const parseIOFXML = () => {
+    if (xmlDoc === undefined || className === undefined) {
+      alert("You have to load a file and select a class.");
+      return;
+    }
 
-    splitTimes = new IOFXMLParser(
-      xmlDoc,
-      className,
-      timeZone,
-      1.2,
-      timeOffset,
-      date.toISOString().split("T")[0]
-    );
+    try {
+      const rawRunners = parseIOFXML3SplitTimesFile(
+        xmlDoc,
+        className,
+        timeZone,
+        timeOffset
+      );
 
-    runners = detectRunnersByName(
-      [...splitTimes.runners],
-      [...mapviewer.routes]
-    );
+      const matchedRunners = matchRunnersByName(rawRunners, mapViewer.routes);
+
+      runners = attribute2DRerunTrackToMatchedRunner(
+        matchedRunners,
+        mapViewer.routes
+      );
+    } catch (error) {
+      alert("An error occured while parsing the split times.");
+      console.error(error);
+      return;
+    }
 
     step += 1;
   };
 
   const saveSplitTimes = () => {
-    splitTimes.runners = detectRunnersRoutechoices(
-      runners,
-      mapviewer,
-      mapviewer.routes
-    );
+    runners = detectRunnersRoutechoices($courseData.legs, runners);
+    runners.forEach((runner) => (runner.track = null)); // So the runner track is not persisted t Firebase
 
-    splitTimes.computeRoutechoicesStatistics();
-    loadSplitsTo2dRerun(splitTimes);
+    // TODO reimplement statistics
+    loadRunnersSplitsTo2dRerun(runners);
 
-    $course.splitTimes = {};
-
-    Object.keys(splitTimes).forEach(
-      (key) => ($course.splitTimes[key] = splitTimes[key])
-    );
-
-    delete $course.splitTimes.splitsXmlDoc;
+    $courseData.runners = runners;
 
     isDialogOpen = false;
   };
 </script>
 
 <dialog open>
-  <article use:clickOutside on:clickOutside={() => (isDialogOpen = false)}>
+  <article use:clickOutside={() => (isDialogOpen = false)}>
     <header>
       <a
         aria-label="Close"
@@ -118,7 +137,7 @@
       <input
         name="iof-xml-file"
         id="iof-xml-file"
-        on:change={(e) => onFileSelected(e)}
+        on:change={onFileSelected}
         type="file"
       />
 
@@ -156,6 +175,7 @@
           class="outline"
           on:click={() => (isDialogOpen = false)}>Cancel</button
         >
+
         <button type="submit">Load splits</button>
       </footer>
     </form>
@@ -179,9 +199,12 @@
               <td>{`${runner.firstName} ${runner.lastName}`}</td>
 
               <td>
-                <select bind:value={runner.rerun2dRouteIndex}>
-                  {#each mapviewer.routes as route, index}
-                    <option value={index}>{route.runnername}</option>
+                <select
+                  bind:value={runner.foreignKeys.twoDRerunRouteIndexNumber}
+                >
+                  {#each mapViewer.routes as route}
+                    <option value={route.indexnumber}>{route.runnername}</option
+                    >
                   {/each}
                 </select>
               </td>

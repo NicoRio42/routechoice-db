@@ -1,7 +1,7 @@
 import type Leg from "../models/leg";
-import Routechoice from "../models/routechoice";
+import type Routechoice from "../models/routechoice";
 import type Runner from "../models/runner";
-import { RunnerTrack } from "../models/runner";
+import type { RunnerTrack } from "../models/runner";
 import { isNotNullRunnerLeg } from "../type-guards/runner-guards";
 import { dotProduct, magnitude } from "../utils/distance-helpers";
 

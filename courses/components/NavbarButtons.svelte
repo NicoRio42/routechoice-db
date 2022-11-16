@@ -1,36 +1,19 @@
-<script>
-  import userStore from "../../shared/stores/user-store";
-  import course from "../stores/course-data";
-  import { doc, getFirestore, setDoc } from "firebase/firestore/lite";
+<script lang="ts">
   import Upload from "../../shared/icons/Upload.svelte";
+  import courseData from "../stores/course-data";
 
   let isLoadSplitsDialogOpen = false;
-  let loadingSaveToServer = false;
   let isUploadCourseRoutechoicesDialogOpen = false;
-  let lazySplitTimesDialog;
-  let lazyCourseRoutechoicesDialog;
-  let uploadsDropdown;
 
-  const db = getFirestore();
+  let lazySplitTimesDialog: Promise<
+    typeof import("./LoadSplitTimesDialog.svelte")
+  >;
 
-  async function saveToServer() {
-    if ($course === undefined) {
-      alert("Nothing to save");
-      return;
-    }
+  let lazyCourseRoutechoicesDialog: Promise<
+    typeof import("./UploadCourseRoutechoicesDialog/UploadCourseRoutechoicesDialog.svelte")
+  >;
 
-    if (!confirm("Are you sure you want to save to server ?")) {
-      return;
-    }
-
-    loadingSaveToServer = true;
-
-    const courseToSave = { ...$course };
-    const id = courseToSave.id;
-    delete courseToSave.id;
-    await setDoc(doc(db, "courses", id), courseToSave);
-    loadingSaveToServer = false;
-  }
+  let uploadsDropdown: HTMLDetailsElement;
 
   function handleLoadCourseRoutechoicesClick() {
     lazyCourseRoutechoicesDialog = import(
@@ -45,7 +28,7 @@
   }
 
   function handleLoadSplitsClick() {
-    if (!$course?.courseAndRoutechoices?.coursecoords.length) {
+    if (!$courseData?.legs.length === undefined) {
       alert("You sould import a course first.");
       return;
     }
@@ -90,16 +73,6 @@
     </ul>
   </details>
 </li>
-
-{#if $userStore !== null}
-  <li class="menu-list-item large-devices">
-    <button
-      on:click={saveToServer}
-      aria-busy={loadingSaveToServer}
-      class="outline save-button">Save</button
-    >
-  </li>
-{/if}
 
 <style>
   .menu-list-item {

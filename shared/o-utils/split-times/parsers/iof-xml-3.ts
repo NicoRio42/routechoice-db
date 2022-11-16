@@ -1,7 +1,7 @@
 import RunnerStatusEnum from "../../models/enums/runner-status-enum";
 import type Runner from "../../models/Runner";
-import { EMPTY_RUNNER_LEG, RunnerLeg } from "../../models/runner-leg";
-import { isNotNullRunnerLeg, isRunner } from "../../type-guards/runner-guards";
+import { EMPTY_RUNNER_LEG, type RunnerLeg } from "../../models/runner-leg";
+import { isRunner } from "../../type-guards/runner-guards";
 import { extractNumberFromElementOrThrowError } from "../utils/xml-parser-utils";
 import computeSplitsRanksMistakes from "./compute-splits-ranks-mistakes";
 

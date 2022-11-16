@@ -34,7 +34,7 @@
   import initMapviewer, {
     extractLoggatorIDFromLoggatorURL,
   } from "../utils/2d-rerun-hacks/init-mapviewer";
-  import { loadSplitsTo2dRerun } from "../utils/2d-rerun-hacks/load-splits-to-2d-rerun";
+  import { loadRunnersSplitsTo2dRerun } from "../utils/2d-rerun-hacks/load-splits-to-2d-rerun";
   import { selectHack } from "../utils/2d-rerun-hacks/select-hack";
 
   export let params: { courseID: string };
@@ -60,7 +60,7 @@
       }
 
       if ($courseData?.runners.length !== 0) {
-        loadSplitsTo2dRerun($courseData.runners);
+        loadRunnersSplitsTo2dRerun($courseData.runners);
       }
     });
 
