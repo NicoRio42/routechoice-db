@@ -2,7 +2,7 @@
   import { fade } from "svelte/transition";
   import clickOutside from "../../../shared/use/clickOutside";
 
-  import course from "../../stores/course-data";
+  import courseData from "../../stores/course-data";
   import selectedLeg from "../../stores/selected-leg";
   import buildCourseAndRoutechoices from "../../utils/2d-rerun-hacks/build-course-and-routechoices";
   import UploadCourseOrRoutechoicesFromOcad from "./UploadCourseOrRoutechoicesFromOcad.svelte";
@@ -13,22 +13,22 @@
 
   let step = 1;
 
-  function loadCourseAndRoutechoicesFromJson(event) {
-    let reader = new FileReader();
+  // function loadCourseAndRoutechoicesFromJson(event) {
+  //   let reader = new FileReader();
 
-    reader.onload = function (e) {
-      if (typeof e.target.result !== "string") {
-        return;
-      }
+  //   reader.onload = function (e) {
+  //     if (typeof e.target.result !== "string") {
+  //       return;
+  //     }
 
-      const data = JSON.parse(e.target.result);
-      buildCourseAndRoutechoices(data);
-      $course.courseAndRoutechoices = data;
-      $selectedLeg = 1;
-    };
+  //     const data = JSON.parse(e.target.result);
+  //     buildCourseAndRoutechoices(data);
+  //     $courseData.courseAndRoutechoices = data;
+  //     $selectedLeg = 1;
+  //   };
 
-    reader.readAsText(event.target.files[0]);
-  }
+  //   reader.readAsText(event.target.files[0]);
+  // }
 </script>
 
 <dialog open transition:fade={{ duration: 200 }}>
@@ -55,10 +55,10 @@
         >
           <input
             bind:this={loadCourseAndRoutechoicesFromJsonInput}
-            on:change={loadCourseAndRoutechoicesFromJson}
             type="file"
             style="display: none;"
           />
+          <!-- on:change={loadCourseAndRoutechoicesFromJson} -->
 
           Upload from 2DRerun export
         </article>

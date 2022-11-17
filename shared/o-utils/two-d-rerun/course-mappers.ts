@@ -4,6 +4,7 @@ import type { Tag } from "../models/2d-rerun/mapviewer";
 import type { MapCalibration } from "../models/course-map";
 import type Leg from "../models/leg";
 import type Control from "../models/control";
+import { distanceBetweenTwoGPSPoints } from "../utils/distance-helpers";
 
 export default function mapCourseAndRoutechoicesTo2DRerun(
   legs: Leg[],
@@ -33,10 +34,24 @@ function formatRoutechoicesForTwoDRerun(
 ): Tag[] {
   return leg.routechoices.map((routechoice) => {
     const lastPoint = routechoice.track.at(-1);
+
     const lastPointXY =
       lastPoint !== undefined
         ? coordinatesConverter.latLongToXY(lastPoint)
         : [0, 0];
+
+    let length = 0;
+
+    const routechoiceTrackLength = routechoice.track.length;
+
+    if (routechoiceTrackLength > 1) {
+      for (let i = 1; i < routechoiceTrackLength; i++) {
+        length += distanceBetweenTwoGPSPoints(
+          routechoice.track[i - 1],
+          routechoice.track[i]
+        );
+      }
+    }
 
     return {
       type: "route",
