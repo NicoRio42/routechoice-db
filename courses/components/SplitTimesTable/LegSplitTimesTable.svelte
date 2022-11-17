@@ -1,27 +1,44 @@
-<script>
-  import course from "../../stores/course-data";
+<script lang="ts">
+  import type Runner from "shared/o-utils/models/runner";
+  import courseData from "../../stores/course-data";
   import selectedLeg from "../../stores/selected-leg";
 
   import {
+    fullNameToShortName,
     rankToCSSClass,
     secondsToPrettyTime,
-    fullNameToShortName,
   } from "./utils";
 
-  let legSplitTimes = [];
+  let sortedRunnersWithOneLeg: Runner[] = [];
 
   $: {
-    if ($course?.splitTimes !== undefined && $selectedLeg !== undefined) {
-      legSplitTimes = $course.splitTimes.runners.map((runner) => {
-        let returnedRunner = { ...runner };
-        let leg = runner.legs[$selectedLeg - 1];
-        delete returnedRunner.legs;
-        returnedRunner.leg = leg;
-        return returnedRunner;
-      });
+    if ($selectedLeg !== null) {
+      const clonedRunnerWithOneLeg = structuredClone($courseData.runners).map(
+        (runner) => ({
+          ...runner,
+          legs: runner.legs.filter((l, i) => i + 1 === $selectedLeg),
+        })
+      );
 
-      legSplitTimes = legSplitTimes.sort(
-        (runner1, runner2) => runner1.leg.time - runner2.leg.time
+      sortedRunnersWithOneLeg = clonedRunnerWithOneLeg.sort(
+        (runner1, runner2) => {
+          const runner1Leg = runner1.legs[0];
+          const runner2Leg = runner2.legs[0];
+
+          if (runner1Leg !== null && runner2Leg !== null) {
+            return runner1Leg.time - runner2Leg.time;
+          }
+
+          if (runner1Leg === null && runner2Leg !== null) {
+            return 1;
+          }
+
+          if (runner1Leg !== null && runner2Leg === null) {
+            return -1;
+          }
+
+          return 0;
+        }
       );
     }
   }
@@ -37,38 +54,44 @@
       <th class="sticky-header right">RC</th>
     </tr>
   </thead>
-  {#each legSplitTimes as runner}
+  {#each sortedRunnersWithOneLeg as runner}
     <tr>
       <td data-tooltip={`${runner.firstName} ${runner.lastName}`}>
         {fullNameToShortName(runner.firstName, runner.lastName)}
       </td>
 
-      <td class={runner.leg.isMistake ? "mistake" : ""}>
+      <td class:mistake={runner.legs[0]?.isMistake}>
         <div
-          class="tooltip-container {rankToCSSClass(runner.leg.rankSplit)}"
-          data-tooltip={`+ ${secondsToPrettyTime(runner.leg.timeBehindSplit)}`}
+          class="tooltip-container {rankToCSSClass(runner.legs[0]?.rankSplit)}"
+          data-tooltip={`+ ${secondsToPrettyTime(
+            runner.legs[0]?.timeBehindSplit
+          )}`}
         >
-          {`${secondsToPrettyTime(runner.leg.time)} (${runner.leg.rankSplit})`}
+          {`${secondsToPrettyTime(runner.legs[0]?.time)} (${
+            runner.legs[0]?.rankSplit
+          })`}
         </div>
 
-        {#if runner.leg.timeOverall !== null}
+        {#if runner.legs[0]?.timeOverall !== null}
           <div
-            class="tooltip-container {rankToCSSClass(runner.leg.rankOverall)}"
+            class="tooltip-container {rankToCSSClass(
+              runner.legs[0]?.rankOverall
+            )}"
             data-tooltip={`+ ${secondsToPrettyTime(
-              runner.leg.timeBehindOverall
+              runner.legs[0]?.timeBehindOverall
             )}`}
           >
-            {`${secondsToPrettyTime(runner.leg.timeOverall)} (${
-              runner.leg.rankOverall
+            {`${secondsToPrettyTime(runner.legs[0]?.timeOverall)} (${
+              runner.legs[0]?.rankOverall
             })`}
           </div>
         {/if}
       </td>
 
       <td class="right">
-        {#if runner.leg.routeChoice}
-          <strong style:color={`#${runner.leg.routeChoice.color}`}
-            >{runner.leg.routeChoice.name}</strong
+        {#if runner.legs[0]?.detectedRouteChoice}
+          <strong style:color={`#${runner.legs[0]?.detectedRouteChoice.color}`}
+            >{runner.legs[0]?.detectedRouteChoice.name}</strong
           >
         {/if}
       </td>

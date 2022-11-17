@@ -152,14 +152,14 @@ function replaceAll(
 ): string {
   if (typeof stringToBeReplaced === "string") {
     while (str.includes(stringToBeReplaced)) {
-      str.replace(stringToBeReplaced, stringToReaplace);
+      str = str.replace(stringToBeReplaced, stringToReaplace);
     }
 
     return str;
   }
 
   while (stringToBeReplaced.test(str)) {
-    str.replace(stringToBeReplaced, stringToReaplace);
+    str = str.replace(stringToBeReplaced, stringToReaplace);
   }
 
   return str;

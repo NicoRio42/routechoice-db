@@ -14,8 +14,7 @@ export function detectRunnersRoutechoices(
   return clonedRunners.map((runner) => {
     if (runner.track === null) return runner;
 
-    if (!isRunnerTrackConsistentWithSplitTimes(runner))
-      throw new Error("Runner's track and split times are not consistents");
+    checkIfRunnerTrackConsistentWithSplitTimes(runner);
 
     return {
       ...runner,
@@ -24,15 +23,12 @@ export function detectRunnersRoutechoices(
           return leg;
         }
 
-        const raceStartTime = new Date(runner.startTime);
-        const raceStartTimeInSeconds = raceStartTime.getTime() / 1000;
-
         const startTime =
           index === 0
-            ? raceStartTimeInSeconds
-            : raceStartTimeInSeconds + leg.timeOverall - leg.time;
+            ? runner.startTime
+            : runner.startTime + leg.timeOverall - leg.time;
 
-        const finishTime = raceStartTimeInSeconds + leg.timeOverall;
+        const finishTime = runner.startTime + leg.timeOverall;
 
         const runnerLegTrack = prepareRunnerTrackForDetection(
           runner.track as RunnerTrack, // Typescript doesn't mind about my early return
@@ -52,33 +48,33 @@ export function detectRunnersRoutechoices(
   });
 }
 
-function isRunnerTrackConsistentWithSplitTimes(runner: Runner): boolean {
-  if (runner.track === null) return false;
-
-  const raceStartTime = new Date(runner.startTime);
-  const raceStartTimeInSeconds = raceStartTime.getTime() / 1000;
-
+function checkIfRunnerTrackConsistentWithSplitTimes(runner: Runner): void {
+  if (runner.track === null) throw new Error("Runner doesn't have a track.");
   const lastTrackTime = runner.track.times.at(-1);
-
-  if (lastTrackTime === undefined) return false;
+  if (lastTrackTime === undefined) throw new Error("2DRerun track's is empty.");
 
   const lastCompleteLeg = structuredClone(runner.legs)
     .reverse()
     .find(isNotNullRunnerLeg);
 
-  if (lastCompleteLeg === undefined) return false;
+  if (lastCompleteLeg === undefined)
+    throw new Error("Runner have no valid legs.");
 
   const lastRunnerTimeInSeconds =
-    raceStartTimeInSeconds + lastCompleteLeg.timeOverall;
+    runner.startTime + lastCompleteLeg.timeOverall;
 
-  return (
-    runner.track.lats.length === runner.track.lons.length &&
-    runner.track.lats.length === runner.track.times.length &&
-    raceStartTimeInSeconds >= runner.track.times[0] &&
-    raceStartTimeInSeconds <= lastTrackTime &&
-    lastRunnerTimeInSeconds >= runner.track.times[0] &&
-    lastRunnerTimeInSeconds <= lastTrackTime
-  );
+  if (runner.track.lats.length !== runner.track.lons.length)
+    throw new Error("Lats and lons don't have the same length");
+  if (runner.track.lats.length !== runner.track.lons.length)
+    throw new Error("Lats and times don't have the same length");
+  if (runner.startTime < runner.track.times[0])
+    throw new Error("Runner start time is smaller than first track time");
+  if (runner.startTime > lastTrackTime)
+    throw new Error("Runner start time is higher than last track time");
+  if (lastRunnerTimeInSeconds < runner.track.times[0])
+    throw new Error("Runner finish time is smaller than first track time");
+  if (lastRunnerTimeInSeconds > lastTrackTime)
+    throw new Error("Runner finish time is higher than last track time");
 }
 
 const distancePointToSegment = (
@@ -134,6 +130,7 @@ const distancePointToPolyline = (
 
   for (let i = 1; i < polyline.length; i++) {
     const d = distancePointToSegment(point, polyline[i - 1], polyline[i]);
+
     if (d < distance) {
       distance = d;
     }
@@ -146,10 +143,13 @@ const distanceGPXToPolyline = (
   GPXArray: [number, number][],
   polyline: [number, number][]
 ): number => {
-  return GPXArray.reduce(
-    (acc, point) => acc + distancePointToPolyline(point, polyline),
-    0
+  let distance = 0;
+
+  GPXArray.forEach(
+    (point) => (distance += distancePointToPolyline(point, polyline))
   );
+
+  return distance;
 };
 
 const detectRoutechoice = (
@@ -160,14 +160,14 @@ const detectRoutechoice = (
   let detectedRoutechoice = routechoices[0];
   let distance = distanceGPXToPolyline(runnerLegTrack, routechoices[0].track);
 
-  routechoices.forEach((routechoice) => {
-    let d = distanceGPXToPolyline(runnerLegTrack, routechoice.track);
+  for (let i = 1; i < routechoices.length; i++) {
+    let d = distanceGPXToPolyline(runnerLegTrack, routechoices[i].track);
 
     if (d < distance) {
       distance = d;
-      detectedRoutechoice = routechoice;
+      detectedRoutechoice = routechoices[i];
     }
-  });
+  }
 
   return detectedRoutechoice;
 };
@@ -182,5 +182,5 @@ const prepareRunnerTrackForDetection = (
 
   return runnerTrack.lats
     .slice(startIndex, finishIndex)
-    .map((lat, index) => [lat, runnerTrack.lons[index]]);
+    .map((lat, index) => [lat, runnerTrack.lons[startIndex + index]]);
 };

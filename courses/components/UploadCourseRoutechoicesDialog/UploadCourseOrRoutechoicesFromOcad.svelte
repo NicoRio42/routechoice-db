@@ -5,8 +5,7 @@
     updateDoc,
   } from "firebase/firestore/lite";
   import type { CourseDataWithoutRunnersWithSerializedNestedArrays } from "shared/o-utils/models/course-data";
-  import type CourseData from "shared/o-utils/models/course-data";
-  import { serializeNestedArraysInLegs } from "shared/o-utils/models/leg";
+  import { serializeNestedArraysInLegs } from "../../../shared/o-utils/models/leg";
   import { createEventDispatcher } from "svelte";
   import { fade } from "svelte/transition";
   import parseIOFXML3CourseOCADExport from "../../../shared/o-utils/ocad/parsers/iof-xml-3-course";
