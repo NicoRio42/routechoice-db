@@ -1,5 +1,6 @@
 <script lang="ts">
   import {
+    doc,
     DocumentReference,
     getFirestore,
     updateDoc,
@@ -124,23 +125,10 @@
       $courseData.legs = legs;
     }
 
-    console.log({
-      legs: $courseData.legs.map((leg) =>
-        leg.routechoices.map((rc) => ({
-          ...rc,
-          track: JSON.stringify(rc.track),
-        }))
-      ),
+    await updateDoc(doc(db, "coursesData", $course.data), {
+      legs: serializeNestedArraysInLegs($courseData.legs),
       course: $courseData.course,
     });
-
-    await updateDoc(
-      $course.data as DocumentReference<CourseDataWithoutRunnersWithSerializedNestedArrays>,
-      {
-        legs: serializeNestedArraysInLegs($courseData.legs),
-        course: $courseData.course,
-      }
-    );
 
     if ($courseData.map === null)
       throw new Error("No map callibration, event migth not have started yet.");

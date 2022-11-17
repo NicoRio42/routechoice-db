@@ -36,12 +36,20 @@ export function detectRunnersRoutechoices(
           finishTime
         );
 
+        let detectedRouteChoice: Routechoice | null = null;
+
+        if (course[index].routechoices.length !== 0) {
+          const d = detectRoutechoice(
+            runnerLegTrack,
+            course[index].routechoices
+          );
+          // Because of Firebase nested arrays problème
+          detectedRouteChoice = { ...d, track: [] };
+        }
+
         return {
           ...leg,
-          detectedRouteChoice:
-            course[index].routechoices.length !== 0
-              ? detectRoutechoice(runnerLegTrack, course[index].routechoices)
-              : null,
+          detectedRouteChoice,
         };
       }),
     };

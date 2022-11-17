@@ -4,6 +4,7 @@ import { EMPTY_RUNNER_LEG, type RunnerLeg } from "../../models/runner-leg";
 import { isRunner } from "../../type-guards/runner-guards";
 import { extractNumberFromElementOrThrowError } from "../utils/xml-parser-utils";
 import computeSplitsRanksMistakes from "./compute-splits-ranks-mistakes";
+import { v4 as uuidv4 } from "uuid";
 
 export function parseIOFXML3SplitTimesFile(
   xmlDocument: XMLDocument,
@@ -44,7 +45,7 @@ function getRunners(
   timeOffset: number
 ): Runner[] {
   const rawRunners: (Runner | null)[] = Array.from(personResults).map(
-    (personResult, index) => {
+    (personResult) => {
       const statusTag = personResult.querySelector("Status");
       const IOFXMLStatus = statusTag !== null ? statusTag.textContent : null;
 
@@ -60,7 +61,7 @@ function getRunners(
         ? RunnerStatusEnum.OK
         : RunnerStatusEnum.NOT_OK;
 
-      const id = index + 1;
+      const id = uuidv4();
 
       const family = personResult.querySelector("Family");
       const lastName = family !== null ? family.textContent : "";

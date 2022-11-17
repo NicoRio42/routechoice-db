@@ -20,7 +20,7 @@ export default function sortRunners(
 }
 
 export interface RunnerForSort {
-  id: number;
+  id: string;
   time: number | null;
   rankSplit: number;
 }

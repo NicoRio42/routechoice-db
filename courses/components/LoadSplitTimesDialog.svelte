@@ -1,6 +1,16 @@
 <script lang="ts">
-  import courseData from "../stores/course-data";
-  import { loadRunnersSplitsTo2dRerun } from "../utils/2d-rerun-hacks/load-splits-to-2d-rerun";
+  import {
+    addDoc,
+    collection,
+    deleteDoc,
+    doc,
+    DocumentReference,
+    getFirestore,
+    setDoc,
+    updateDoc,
+    writeBatch,
+    type DocumentData,
+  } from "firebase/firestore/lite";
   import type { Mapviewer } from "../../shared/o-utils/models/2d-rerun/mapviewer";
   import type Runner from "../../shared/o-utils/models/runner";
   import { detectRunnersRoutechoices } from "../../shared/o-utils/routechoice-detector/routechoice-detector";
@@ -10,10 +20,15 @@
     matchRunnersByName,
   } from "../../shared/o-utils/two-d-rerun/runners-matcher";
   import clickOutside from "../../shared/use/clickOutside";
+  import courseData from "../stores/course-data";
+  import course from "../stores/course";
+  import { loadRunnersSplitsTo2dRerun } from "../utils/2d-rerun-hacks/load-splits-to-2d-rerun";
   import { timeZones } from "../utils/time-zones";
+  import type CourseData from "shared/o-utils/models/course-data";
 
   export let isDialogOpen = false;
 
+  const db = getFirestore();
   let parser: DOMParser;
   let reader: FileReader;
 
@@ -103,12 +118,58 @@
     step += 1;
   };
 
-  const saveSplitTimes = () => {
+  const saveSplitTimes = async () => {
     runners = detectRunnersRoutechoices($courseData.legs, runners);
     runners.forEach((runner) => (runner.track = null)); // So the runner track is not persisted t Firebase
 
     // TODO reimplement statistics
     loadRunnersSplitsTo2dRerun(runners);
+
+    if ($courseData.runners.length === 0) {
+      // Add all runners
+    }
+
+    const updatedRunnersIDs: string[] = [];
+
+    runners.forEach(async (runner) => {
+      const runnerToUpdate = $courseData.runners.find(
+        (r) =>
+          r.firstName === runner.firstName && r.lastName === runner.lastName
+      );
+
+      if (runnerToUpdate === undefined) {
+        runner.foreignKeys.firestoreRunnerID;
+
+        await setDoc(
+          doc(db, "coursesData", $course.data, "runners", runner.id),
+          runner
+        );
+
+        console.log(
+          `New runner ${runner.firstName} ${runner.lastName} created`
+        );
+
+        return;
+      }
+
+      updatedRunnersIDs.push(runnerToUpdate.id);
+      runner.id = runnerToUpdate.id;
+
+      await updateDoc(
+        doc(db, "coursesData", $course.data, "runners", runnerToUpdate.id),
+        { ...runner }
+      );
+
+      console.log(`Runner ${runner.firstName} ${runner.lastName} updated`);
+
+      $courseData.runners.forEach(async (r) => {
+        if (updatedRunnersIDs.includes(r.id)) return;
+
+        await deleteDoc(doc(db, "coursesData", $course.data, "runners", r.id));
+
+        console.log(`Runner ${runner.firstName} ${runner.lastName} deleted`);
+      });
+    });
 
     $courseData.runners = runners;
 

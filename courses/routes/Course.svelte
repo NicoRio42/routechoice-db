@@ -72,10 +72,7 @@
         id: params.courseID,
       });
 
-      const courseDataRef = await getDoc(
-        $course.data as DocumentReference<CourseDataWithoutRunnersWithSerializedNestedArrays>
-      );
-
+      const courseDataRef = await getDoc(doc(db, "coursesData", $course.data));
       const legs = courseDataRef.data()?.legs;
 
       if (legs === undefined) return;
@@ -85,11 +82,7 @@
         legs: parseNestedArraysInLegs(legs),
       });
 
-      const runnersRef = collection(
-        $course.data as DocumentReference<CourseData>,
-        "runners"
-      );
-
+      const runnersRef = collection(db, "coursesData", $course.data, "runners");
       const q = query(runnersRef, orderBy("rank", "desc"));
 
       const querySnapshot = await getDocs(q);

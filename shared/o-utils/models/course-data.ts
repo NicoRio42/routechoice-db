@@ -11,6 +11,7 @@ import type Statistics from "./statistics";
 import { statisticsValidator } from "./statistics";
 
 export const courseDataWithoutRunnersValidator = z.object({
+  id: z.string(),
   legs: z.array(legValidator),
   course: z.array(controlSchema),
   map: courseMapValidator.nullable(),
@@ -25,6 +26,7 @@ export const courseDataValidator = courseDataWithoutRunnersValidator.extend({
 });
 
 export interface CourseDataWithoutRunnersAndLegs {
+  id: string;
   course: Control[];
   map: CourseMap | null;
 

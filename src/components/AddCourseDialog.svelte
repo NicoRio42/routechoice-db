@@ -1,9 +1,16 @@
 <script lang="ts">
-  import { addDoc, collection, getFirestore } from "firebase/firestore/lite";
+  import {
+    addDoc,
+    collection,
+    doc,
+    getFirestore,
+    setDoc,
+  } from "firebase/firestore/lite";
   import { createEventDispatcher } from "svelte";
   import { fade } from "svelte/transition";
   import type { CourseDataWithoutRunners } from "../../shared/o-utils/models/course-data";
   import clickOutside from "../../shared/use/clickOutside";
+  import { v4 as uuidv4 } from "uuid";
 
   export let isAddCourseDialogOpen;
   let name = "";
@@ -48,7 +55,10 @@
     loading = true;
     const timeStamp = new Date(date).getTime();
 
+    const id = uuidv4();
+
     const courseData: CourseDataWithoutRunners = {
+      id,
       course: [],
       legs: [],
       map: null,
@@ -58,17 +68,14 @@
       statistics: null,
     };
 
-    const courseDataRef = await addDoc(
-      collection(db, "coursesData"),
-      courseData
-    );
+    await setDoc(doc(db, "coursesData", id), courseData);
 
     const courseWithoutID = {
       name,
       liveProviderURL: liveProviderURL,
       date: timeStamp,
       tags: [],
-      data: courseDataRef,
+      data: id,
     };
 
     await addDoc(collection(db, "courses"), courseWithoutID);

@@ -18,7 +18,7 @@ export interface RunnerTrack {
 }
 
 export default interface Runner {
-  id: number;
+  id: string;
   foreignKeys: Record<string, unknown>;
   status: RunnerStatusEnum;
   firstName: string;
@@ -33,8 +33,8 @@ export default interface Runner {
 }
 
 export const runnerValidator = z.object({
-  id: z.number(),
-  foreignKeys: z.record(z.string()),
+  id: z.string(),
+  foreignKeys: z.record(z.unknown()),
   status: runnerStatusEnumValidator,
   firstName: z.string(),
   lastName: z.string(),

@@ -55,8 +55,9 @@
       return;
     }
 
-    await deleteDoc(course.data as DocumentReference<unknown>);
+    await deleteDoc(doc(db, "coursesData", course.data));
     await deleteDoc(doc(db, "courses", course.id));
+    // Delete also runners
 
     courses = courses.filter((c) => c.id !== course.id);
   }
