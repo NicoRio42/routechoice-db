@@ -1,4 +1,4 @@
-<script>
+<script lang="ts">
   import course from "../stores/course-data";
   import selectedLeg from "../stores/selected-leg";
   import Graph from "./Graph.svelte";

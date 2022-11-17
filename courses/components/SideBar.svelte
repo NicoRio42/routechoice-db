@@ -21,11 +21,12 @@
       </section>
     {/if}
 
-    {#if isInSplitMode}
-      <section class="leg-split-times-table-container">
-        <LegSplitTimesTable />
-      </section>
-    {/if}
+    <section
+      style:display={isInSplitMode ? "block" : "none"}
+      class="leg-split-times-table-container"
+    >
+      <LegSplitTimesTable />
+    </section>
   </div>
 
   <div class="resize-side" />

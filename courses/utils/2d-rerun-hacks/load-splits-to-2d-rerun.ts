@@ -13,15 +13,14 @@ export function loadRunnersSplitsTo2dRerun(runners: Runner[]) {
 
     route.splits = [];
 
-    const date = new Date(runner.startTime);
-    const startTime = Math.round(date.valueOf() / 1000);
-
-    route.splits.push({ index: startTime - route.zerotime });
+    route.splits.push({ index: runner.startTime - route.zerotime });
 
     runner.legs.forEach((leg) => {
       route.splits.push({
         index:
-          leg === null ? null : startTime + leg.timeOverall - route.zerotime,
+          leg === null
+            ? null
+            : runner.startTime + leg.timeOverall - route.zerotime,
       });
     });
 

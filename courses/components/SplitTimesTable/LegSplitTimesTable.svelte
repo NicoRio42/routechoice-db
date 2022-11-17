@@ -2,6 +2,7 @@
   import type Runner from "shared/o-utils/models/runner";
   import courseData from "../../stores/course-data";
   import selectedLeg from "../../stores/selected-leg";
+  import RunnerTrackToggle from "../RunnerTrackToggle.svelte";
 
   import {
     fullNameToShortName,
@@ -52,6 +53,8 @@
       <th class="sticky-header">Time</th>
 
       <th class="sticky-header right">RC</th>
+
+      <th />
     </tr>
   </thead>
   {#each sortedRunnersWithOneLeg as runner}
@@ -95,6 +98,13 @@
           >
         {/if}
       </td>
+
+      <td
+        ><RunnerTrackToggle
+          twoDRerunRouteIndexNumber={runner.foreignKeys
+            .twoDRerunRouteIndexNumber}
+        /></td
+      >
     </tr>
   {/each}
   <tbody />
