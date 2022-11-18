@@ -1,23 +1,23 @@
 <script lang="ts">
   import {
     collection,
-    getDocs,
-    getFirestore,
     deleteDoc,
     doc,
-    query,
+    getDocs,
+    getFirestore,
     orderBy,
+    query,
   } from "firebase/firestore/lite";
-  import type { DocumentReference } from "firebase/firestore/lite";
-  import { push } from "svelte-spa-router";
-  import Trash from "../../shared/icons/Trash.svelte";
   import { onMount } from "svelte";
-  import userStore from "../../shared/stores/user-store";
-  import { fade } from "svelte/transition";
-  import AddCourseDialog from "../components/AddCourseDialog.svelte";
+  import { push } from "svelte-spa-router";
   import { flip } from "svelte/animate";
-  import { courseValidator } from "../../shared/models/course";
+  import { fade } from "svelte/transition";
+  import { deleteAllRunners } from "../../shared/db/runners";
+  import Trash from "../../shared/icons/Trash.svelte";
   import type { Course } from "../../shared/models/course";
+  import { courseValidator } from "../../shared/models/course";
+  import userStore from "../../shared/stores/user-store";
+  import AddCourseDialog from "../components/AddCourseDialog.svelte";
 
   let isAddCourseDialogOpen = false;
   let courses: Course[] = [];

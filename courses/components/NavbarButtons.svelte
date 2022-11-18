@@ -6,7 +6,7 @@
   let isUploadCourseRoutechoicesDialogOpen = false;
 
   let lazySplitTimesDialog: Promise<
-    typeof import("./LoadSplitTimesDialog.svelte")
+    typeof import("./LoadSplitTimes/LoadSplitTimesDialog.svelte")
   >;
 
   let lazyCourseRoutechoicesDialog: Promise<
@@ -33,7 +33,9 @@
       return;
     }
 
-    lazySplitTimesDialog = import("./LoadSplitTimesDialog.svelte");
+    lazySplitTimesDialog = import(
+      "./LoadSplitTimes/LoadSplitTimesDialog.svelte"
+    );
     isLoadSplitsDialogOpen = true;
 
     lazySplitTimesDialog.then(() => uploadsDropdown.removeAttribute("open"));

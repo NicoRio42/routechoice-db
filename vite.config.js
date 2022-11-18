@@ -20,6 +20,7 @@ export default defineConfig({
         courses: resolve(__dirname, "courses/index.html"),
       },
     },
+    sourcemap: true,
   },
   test: {
     globals: true,
