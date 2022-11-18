@@ -108,3 +108,20 @@ export const getLiveServerTime = regionalFunctions.https.onRequest(
       .catch((error) => res.json(error));
   }
 );
+
+export const getWinsplitData = regionalFunctions.https.onRequest(
+  async (req, res) => {
+    const url = new URL("http://loggator2.worldofo.com/loadwinsplits.php");
+
+    for (let key in req.query) {
+      url.searchParams.append(key, req.query[key]);
+    }
+
+    res.set("Access-Control-Allow-Origin", "*");
+
+    fetch(url.toString())
+      .then((response) => response.text())
+      .then((data) => res.send(data))
+      .catch((error) => res.json(error));
+  }
+);

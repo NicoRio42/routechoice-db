@@ -53,3 +53,10 @@
     <button type="submit">Save split times</button>
   </footer>
 </form>
+
+<style>
+  .footer {
+    display: flex;
+    gap: 1rem;
+  }
+</style>

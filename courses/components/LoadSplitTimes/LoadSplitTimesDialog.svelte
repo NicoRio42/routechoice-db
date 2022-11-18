@@ -105,7 +105,7 @@
     {#if step === 2}
       <LoadSplitTimesFromWinsplitForm
         on:previous={() => (step = 1)}
-        on:submit={() => (step = 4)}
+        on:submit={parseIOFXML}
       />
     {/if}
 
