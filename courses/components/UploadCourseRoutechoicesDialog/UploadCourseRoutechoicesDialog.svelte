@@ -1,11 +1,18 @@
 <script lang="ts">
+  import { parseTwoDRerunCourseAndRoutechoicesExport } from "../../../shared/o-utils/two-d-rerun/course-mappers";
   import { fade } from "svelte/transition";
   import clickOutside from "../../../shared/use/clickOutside";
 
   import courseData from "../../stores/course-data";
+  import course from "../../stores/course";
   import selectedLeg from "../../stores/selected-leg";
   import buildCourseAndRoutechoices from "../../utils/2d-rerun-hacks/build-course-and-routechoices";
   import UploadCourseOrRoutechoicesFromOcad from "./UploadCourseOrRoutechoicesFromOcad.svelte";
+  import { CoordinatesConverter } from "../../../shared/o-utils/map/coords-converter";
+  import { doc, getFirestore, updateDoc } from "firebase/firestore/lite";
+  import { serializeNestedArraysInLegs } from "../../../shared/o-utils/models/leg";
+
+  const db = getFirestore();
 
   export let isDialogOpen = false;
 
@@ -13,22 +20,52 @@
 
   let step = 1;
 
-  // function loadCourseAndRoutechoicesFromJson(event) {
-  //   let reader = new FileReader();
+  interface FormEventHandler<T> {
+    currentTarget: T;
+  }
 
-  //   reader.onload = function (e) {
-  //     if (typeof e.target.result !== "string") {
-  //       return;
-  //     }
+  function loadCourseAndRoutechoicesFromJson(
+    event: FormEventHandler<HTMLInputElement>
+  ) {
+    let reader = new FileReader();
 
-  //     const data = JSON.parse(e.target.result);
-  //     buildCourseAndRoutechoices(data);
-  //     $courseData.courseAndRoutechoices = data;
-  //     $selectedLeg = 1;
-  //   };
+    reader.onload = async function (e: ProgressEvent<FileReader>) {
+      if (e.target === null) return;
+      const data = e.target.result;
+      if (typeof data !== "string") return;
 
-  //   reader.readAsText(event.target.files[0]);
-  // }
+      const twoDRerunCourseAndRoutechoices = JSON.parse(data);
+
+      if ($courseData.map === null)
+        throw new Error(
+          "No map callibration, event migth not have started yet."
+        );
+
+      const coordinatesConverter = new CoordinatesConverter(
+        $courseData.map.calibration
+      );
+
+      const [controls, legs] = parseTwoDRerunCourseAndRoutechoicesExport(
+        twoDRerunCourseAndRoutechoices,
+        coordinatesConverter
+      );
+
+      $courseData.legs = legs;
+      $courseData.course = controls;
+
+      await updateDoc(doc(db, "coursesData", $course.data), {
+        legs: serializeNestedArraysInLegs($courseData.legs),
+        course: $courseData.course,
+      });
+
+      buildCourseAndRoutechoices(twoDRerunCourseAndRoutechoices);
+      $selectedLeg = 1;
+      isDialogOpen = false;
+    };
+
+    if (event.currentTarget.files === null) return;
+    reader.readAsText(event.currentTarget.files[0]);
+  }
 </script>
 
 <dialog open transition:fade={{ duration: 200 }}>
@@ -57,8 +94,8 @@
             bind:this={loadCourseAndRoutechoicesFromJsonInput}
             type="file"
             style="display: none;"
+            on:change={loadCourseAndRoutechoicesFromJson}
           />
-          <!-- on:change={loadCourseAndRoutechoicesFromJson} -->
 
           Upload from 2DRerun export
         </article>

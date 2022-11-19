@@ -5,6 +5,8 @@ import type { MapCalibration } from "../models/course-map";
 import type Leg from "../models/leg";
 import type Control from "../models/control";
 import { distanceBetweenTwoGPSPoints } from "../utils/distance-helpers";
+import type Routechoice from "../models/routechoice";
+import { findRoutechoiceLegIndex } from "../utils/routechoice-leg-attributer";
 
 export default function mapCourseAndRoutechoicesTo2DRerun(
   legs: Leg[],
@@ -82,4 +84,67 @@ function formatRoutechoicesForTwoDRerun(
       color: routechoice.color,
     };
   });
+}
+
+export function parseTwoDRerunCourseAndRoutechoicesExport(
+  twoDRerunExport: TwoDRerunCourseExport,
+  coordinatesConverter: CoordinatesConverter
+): [Control[], Leg[]] {
+  const constrolsLength = twoDRerunExport.coursecoords.length;
+
+  const controls = twoDRerunExport.coursecoords.map((coord, index) => {
+    let code = index.toString();
+    if (index === 0) code = "start";
+    if (index === constrolsLength - 1) code = "finish";
+
+    const [x, y] = coord.split(",").map((c) => parseFloat(c));
+
+    if (isNaN(x) || isNaN(y))
+      throw new Error("Problem with course coordinates.");
+
+    const [lat, lon] = coordinatesConverter.xYToLatLong([x, y]);
+
+    return {
+      code,
+      lat,
+      lon,
+    };
+  });
+
+  const legs: Leg[] = [];
+  if (constrolsLength === 0) return [controls, legs];
+
+  for (let i = 1; i < constrolsLength; i++) {
+    legs.push({
+      startControlCode: controls[i - 1].code,
+      finishControlCode: controls[i].code,
+      startLat: controls[i - 1].lat,
+      startLon: controls[i - 1].lon,
+      routechoices: [],
+    });
+  }
+
+  const routechoices: Routechoice[] = twoDRerunExport.tags.map((tag, index) => {
+    return {
+      id: index,
+      name: tag.name,
+      color: tag.color,
+      length: tag.length,
+      track: tag.points.map((point) => {
+        const [lat, lon] = point.split(",").map((c) => parseFloat(c));
+
+        if (isNaN(lat) || isNaN(lon))
+          throw new Error("Problem with course coordinates.");
+
+        return [lat, lon];
+      }),
+    };
+  });
+
+  routechoices.forEach((rc) => {
+    const legIndex = findRoutechoiceLegIndex(rc, legs);
+    legs[legIndex].routechoices.push(rc);
+  });
+
+  return [controls, legs];
 }

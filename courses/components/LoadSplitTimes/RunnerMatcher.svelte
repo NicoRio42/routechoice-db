@@ -34,6 +34,8 @@
 
           <td>
             <select bind:value={runner.foreignKeys.twoDRerunRouteIndexNumber}>
+              <option />
+
               {#each mapViewer.routes as route}
                 <option value={route.indexnumber}>{route.runnername}</option>
               {/each}
