@@ -4,6 +4,7 @@
 
   let isLoadSplitsDialogOpen = false;
   let isUploadCourseRoutechoicesDialogOpen = false;
+  let twoDRerunPanel: HTMLElement;
 
   let lazySplitTimesDialog: Promise<
     typeof import("./LoadSplitTimes/LoadSplitTimesDialog.svelte")
@@ -39,6 +40,17 @@
     isLoadSplitsDialogOpen = true;
 
     lazySplitTimesDialog.then(() => uploadsDropdown.removeAttribute("open"));
+  }
+
+  function toggle2DRerunPanel() {
+    if (twoDRerunPanel === undefined) {
+      const panel = document.getElementById("rightmenu");
+      if (panel === null) return;
+      twoDRerunPanel = panel;
+    }
+
+    twoDRerunPanel.style.display =
+      twoDRerunPanel.style.display === "none" ? "block" : "none";
   }
 </script>
 
@@ -76,6 +88,12 @@
   </details>
 </li>
 
+<li class="menu-list-item large-devices">
+  <button class="toggle-2d-rerun-button outline" on:click={toggle2DRerunPanel}
+    >Toggle 2D Rerun panel</button
+  >
+</li>
+
 <style>
   .menu-list-item {
     margin-left: 2rem;
@@ -103,7 +121,7 @@
     background-color: lightgray;
   }
 
-  .save-button {
+  .toggle-2d-rerun-button {
     height: auto;
     padding: var(--nav-link-spacing-vertical) var(--nav-link-spacing-horizontal);
   }

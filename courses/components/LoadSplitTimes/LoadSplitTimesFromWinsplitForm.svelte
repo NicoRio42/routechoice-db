@@ -3,6 +3,8 @@
   import { createEventDispatcher } from "svelte";
   import { fade } from "svelte/transition";
   import type { SplitSubmitEvent } from "./models/split-submit-event";
+  import course from "../../stores/course";
+  import { formatDateForDateInput } from "../../../shared/utils/date";
 
   interface WinsplitObject {
     id: string;
@@ -13,11 +15,14 @@
     "https://europe-west1-routechoice-db-dev.cloudfunctions.net/getWinsplitData";
   const parser = new DOMParser();
 
-  let date: string;
-  let eventId: number;
-  let classInfo: WinsplitObject;
+  let date: string | null = null;
+  let eventId: number | null = null;
+  let classInfo: WinsplitObject | null = null;
   let timeZone = timeZones[2];
   let timeOffset = 0;
+
+  let eventsAreLoading = false;
+  let classesAreLoading = false;
 
   let events: WinsplitObject[] = [];
   let classes: WinsplitObject[] = [];
@@ -25,8 +30,19 @@
   const dispatchSubmit = createEventDispatcher<{ submit: SplitSubmitEvent }>();
   const dispatchPrevious = createEventDispatcher<{ previous: undefined }>();
 
+  const eventDate = new Date($course.date);
+  date = formatDateForDateInput(eventDate);
+  handleDateChange();
+
   async function handleDateChange() {
+    eventsAreLoading = true;
+    events = [];
+    eventId = null;
+    classes = [];
+    classInfo = null;
     const response = await fetch(`${url}?date=${date}`);
+    eventsAreLoading = false;
+
     const text = await response.text();
 
     const xmlDoc = parser.parseFromString(text.toString(), "application/xml");
@@ -53,7 +69,12 @@
   }
 
   async function handleEventChange() {
+    classesAreLoading = true;
+    classes = [];
+    classInfo = null;
     const response = await fetch(`${url}?id=${eventId}`);
+    classesAreLoading = false;
+
     const text = await response.text();
 
     const xmlDoc = parser.parseFromString(text.toString(), "application/xml");
@@ -80,6 +101,8 @@
   }
 
   async function handleSubmit() {
+    if (date === null || eventId === null || classInfo === null) return;
+
     const response = await fetch(
       `${url}?id=${eventId}&classid=${classInfo.id}`
     );
@@ -97,36 +120,47 @@
 </script>
 
 <form on:submit|preventDefault={handleSubmit} transition:fade>
-  <label for=""
+  <label for="dateInput"
     >Date
 
-    <input type="date" bind:value={date} on:change={handleDateChange} />
+    <input
+      id="dateInput"
+      name="dateInput"
+      type="date"
+      bind:value={date}
+      on:change={handleDateChange}
+    />
   </label>
 
-  <label for=""
+  <label for="eventSelect" aria-busy={eventsAreLoading}
     >Event
 
-    <select bind:value={eventId} on:change={handleEventChange}>
+    <select
+      id="eventSelect"
+      name="eventSelect"
+      bind:value={eventId}
+      on:change={handleEventChange}
+    >
       {#each events as e}
         <option value={e.id}>{e.name}</option>
       {/each}
     </select>
   </label>
 
-  <label for=""
+  <label for="classSelect" aria-busy={classesAreLoading}
     >Class
 
-    <select bind:value={classInfo}>
+    <select id="classSelect" name="classSelect" bind:value={classInfo}>
       {#each classes as cl}
         <option value={cl}>{cl.name}</option>
       {/each}
     </select>
   </label>
 
-  <label for="time-zone"
+  <label for="timeZoneInput"
     >Time zone
 
-    <select bind:value={timeZone} name="time-zone" id="time-zone"
+    <select bind:value={timeZone} name="timeZoneInput" id="timeZoneInput"
       >timeZone
       {#each timeZones as timeZone}
         <option value={timeZone}>{timeZone}</option>
@@ -134,13 +168,13 @@
     </select>
   </label>
 
-  <label for="time-offset"
+  <label for="timeOffsetInput"
     >Time offset (seconds)
 
     <input
       bind:value={timeOffset}
       type="number"
-      name="time-offset"
+      name="timeOffsetInput"
       id="time-offset"
     />
   </label>

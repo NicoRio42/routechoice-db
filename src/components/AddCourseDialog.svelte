@@ -11,22 +11,18 @@
   import type { CourseDataWithoutRunners } from "../../shared/o-utils/models/course-data";
   import clickOutside from "../../shared/use/clickOutside";
   import { v4 as uuidv4 } from "uuid";
+  import { formatDateForDateInput } from "../../shared/utils/date";
 
   export let isAddCourseDialogOpen;
   let name = "";
   let liveProviderURL = "";
+
   const today = new Date();
-
-  let date =
-    today.getFullYear().toString() +
-    "-" +
-    (today.getMonth() + 1).toString().padStart(2, "0") +
-    "-" +
-    today.getDate().toString().padStart(2, "0");
-
+  let date = formatDateForDateInput(today);
   let loading = false;
 
   const db = getFirestore();
+
   const allowedOrigins = [
     "https://events.loggator.com",
     "https://live.tractrac.com",
