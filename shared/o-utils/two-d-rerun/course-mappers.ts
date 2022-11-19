@@ -124,22 +124,9 @@ export function parseTwoDRerunCourseAndRoutechoicesExport(
     });
   }
 
-  const routechoices: Routechoice[] = twoDRerunExport.tags.map((tag, index) => {
-    return {
-      id: index,
-      name: tag.name,
-      color: tag.color,
-      length: tag.length,
-      track: tag.points.map((point) => {
-        const [lat, lon] = point.split(",").map((c) => parseFloat(c));
-
-        if (isNaN(lat) || isNaN(lon))
-          throw new Error("Problem with course coordinates.");
-
-        return [lat, lon];
-      }),
-    };
-  });
+  const routechoices: Routechoice[] = twoDRerunExport.tags.map(
+    map2DRerunTagToRoutechoice
+  );
 
   routechoices.forEach((rc) => {
     const legIndex = findRoutechoiceLegIndex(rc, legs);
@@ -147,4 +134,21 @@ export function parseTwoDRerunCourseAndRoutechoicesExport(
   });
 
   return [controls, legs];
+}
+
+export function map2DRerunTagToRoutechoice(tag: Tag, id: number): Routechoice {
+  return {
+    id,
+    name: tag.name,
+    color: tag.color,
+    length: tag.length,
+    track: tag.points.map((point) => {
+      const [lat, lon] = point.split(",").map((c) => parseFloat(c));
+
+      if (isNaN(lat) || isNaN(lon))
+        throw new Error("Problem with course coordinates.");
+
+      return [lat, lon];
+    }),
+  };
 }

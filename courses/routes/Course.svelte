@@ -7,23 +7,18 @@
     getFirestore,
     orderBy,
     query,
-    type DocumentReference,
   } from "firebase/firestore/lite";
   import { courseValidator } from "../../shared/models/course";
   import NavBar from "../../shared/NavBar.svelte";
   import { getMapCalibrationFromCalString } from "../../shared/o-utils/map/coords-converter";
   import { rerun2DEventDataSchema } from "../../shared/o-utils/models/2d-rerun/get-2d-rerun-data-response";
-  import type CourseData from "../../shared/o-utils/models/course-data";
-  import {
-    courseDataWithoutRunnersValidator,
-    type CourseDataWithoutRunnersWithSerializedNestedArrays,
-  } from "../../shared/o-utils/models/course-data";
+  import { courseDataWithoutRunnersValidator } from "../../shared/o-utils/models/course-data";
   import { parseNestedArraysInLegs } from "../../shared/o-utils/models/leg";
   import type Runner from "../../shared/o-utils/models/runner";
   import { runnerValidator } from "../../shared/o-utils/models/runner";
   import mapCourseAndRoutechoicesTo2DRerun from "../../shared/o-utils/two-d-rerun/course-mappers";
   import ActionButtons from "../components/ActionButtons.svelte";
-  import NavbarButtons from "../components/NavbarButtons.svelte";
+  import NavbarButtons from "../components/NavbarButtons/NavbarButtons.svelte";
   import SideBar from "../components/SideBar.svelte";
   import ZoomButtons from "../components/ZoomButtons.svelte";
   import course from "../stores/course";

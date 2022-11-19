@@ -1,24 +1,25 @@
 <script lang="ts">
-  import Upload from "../../shared/icons/Upload.svelte";
-  import courseData from "../stores/course-data";
+  import Upload from "../../../shared/icons/Upload.svelte";
+  import courseData from "../../stores/course-data";
+  import AddRoutechoiceButton from "./AddRoutechoiceButton.svelte";
 
   let isLoadSplitsDialogOpen = false;
   let isUploadCourseRoutechoicesDialogOpen = false;
   let twoDRerunPanel: HTMLElement;
 
   let lazySplitTimesDialog: Promise<
-    typeof import("./LoadSplitTimes/LoadSplitTimesDialog.svelte")
+    typeof import("../LoadSplitTimes/LoadSplitTimesDialog.svelte")
   >;
 
   let lazyCourseRoutechoicesDialog: Promise<
-    typeof import("./UploadCourseRoutechoicesDialog/UploadCourseRoutechoicesDialog.svelte")
+    typeof import("../UploadCourseRoutechoicesDialog/UploadCourseRoutechoicesDialog.svelte")
   >;
 
   let uploadsDropdown: HTMLDetailsElement;
 
   function handleLoadCourseRoutechoicesClick() {
     lazyCourseRoutechoicesDialog = import(
-      "./UploadCourseRoutechoicesDialog/UploadCourseRoutechoicesDialog.svelte"
+      "../UploadCourseRoutechoicesDialog/UploadCourseRoutechoicesDialog.svelte"
     );
 
     isUploadCourseRoutechoicesDialogOpen = true;
@@ -35,7 +36,7 @@
     }
 
     lazySplitTimesDialog = import(
-      "./LoadSplitTimes/LoadSplitTimesDialog.svelte"
+      "../LoadSplitTimes/LoadSplitTimesDialog.svelte"
     );
     isLoadSplitsDialogOpen = true;
 
@@ -92,6 +93,10 @@
   <button class="toggle-2d-rerun-button outline" on:click={toggle2DRerunPanel}
     >Toggle 2D Rerun panel</button
   >
+</li>
+
+<li class="menu-list-item large-devices">
+  <AddRoutechoiceButton />
 </li>
 
 <style>

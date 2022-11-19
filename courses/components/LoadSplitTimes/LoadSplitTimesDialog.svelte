@@ -57,7 +57,9 @@
   const saveSplitTimes = async (event: CustomEvent<{ runners: Runner[] }>) => {
     let { runners } = event.detail;
     runners = detectRunnersRoutechoices($courseData.legs, runners);
-    runners.forEach((runner) => (runner.track = null)); // So the runner track is not persisted to Firebase
+
+    // So the runner track is not persisted to Firebase
+    runners.forEach((runner) => (runner.track = null));
 
     // TODO reimplement statistics
 
