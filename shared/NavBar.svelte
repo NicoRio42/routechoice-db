@@ -18,6 +18,10 @@
   <ul>
     {#if $userStore !== null}
       <li>
+        <a href="/#/users">Users</a>
+      </li>
+
+      <li>
         <a href="/#/help">Help</a>
       </li>
     {/if}

@@ -25,7 +25,7 @@
     "vitest": "^0.23.4"
   },
   "dependencies": {
-    "firebase": "^9.6.8",
+    "firebase": "^9.14.0",
     "mathjs": "^11.3.0",
     "svelte-spa-router": "^3.2.0",
     "uuid": "^9.0.0",

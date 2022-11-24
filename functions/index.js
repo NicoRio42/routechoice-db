@@ -1,7 +1,39 @@
 import functions from "firebase-functions";
+import admin from "firebase-admin";
 import fetch from "node-fetch";
 
+admin.initializeApp();
 const regionalFunctions = functions.region("europe-west1");
+
+export const createUserWithRole = regionalFunctions.https.onCall(
+  async (data, context) => {
+    if (context.auth.token.admin !== true) {
+      return {
+        error:
+          "Request not authorized. User must be a admin to create a new user.",
+      };
+    }
+
+    const { displayName, email, password, isAdmin } = data;
+
+    try {
+      const userRecord = await admin
+        .auth()
+        .createUser({ displayName, email, password });
+
+      if (isAdmin)
+        await admin.auth().setCustomUserClaims(userRecord.uid, { admin: true });
+
+      return {
+        result: `User ${displayName} created.`,
+      };
+    } catch (error) {
+      return {
+        error: "An error occured while creating the user.",
+      };
+    }
+  }
+);
 
 export const getGPSSeurantaInit = regionalFunctions.https.onRequest(
   async (req, res) => {

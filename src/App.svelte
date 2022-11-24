@@ -1,36 +1,27 @@
-<script>
-  import { getAuth, onAuthStateChanged } from "firebase/auth";
+<script lang="ts">
   import Router, { replace } from "svelte-spa-router";
   import wrap from "svelte-spa-router/wrap";
   import NavBar from "../shared/NavBar.svelte";
+  import userStore from "../shared/stores/user-store";
   import CoursesOverview from "./routes/CoursesOverview.svelte";
   import Help from "./routes/Help.svelte";
   import Login from "./routes/Login.svelte";
-
-  const auth = getAuth();
+  import UsersOverview from "./routes/UsersOverview.svelte";
 
   const routes = {
     "/": wrap({
       component: CoursesOverview,
-      conditions: async () => {
-        const onAuthStateChangedPromise = new Promise((resolve, reject) => {
-          onAuthStateChanged(
-            auth,
-            (user) => {
-              resolve(user);
-            },
-            (err) => {
-              reject(err);
-            }
-          );
-        });
-
-        const user = await onAuthStateChangedPromise;
-        return user !== null;
-      },
+      conditions: () => $userStore !== null,
+    }),
+    "/users": wrap({
+      component: UsersOverview,
+      conditions: () => $userStore !== null,
+    }),
+    "/help": wrap({
+      component: Help,
+      conditions: () => $userStore !== null,
     }),
     "/login": Login,
-    "/help": Help,
   };
 
   function conditionsFailed() {

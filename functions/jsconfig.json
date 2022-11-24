@@ -1,6 +1,7 @@
 {
   "compilerOptions": {
     "importsNotUsedAsValues": "remove",
-    "checkJs": true
+    "checkJs": true,
+    "resolveJsonModule": true
   }
 }

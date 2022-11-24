@@ -7,8 +7,8 @@ import firebaseConfig from "../firebase-env/dev";
 import userStore from "../shared/stores/user-store";
 
 const fireBaseApp = initializeApp(firebaseConfig);
-const functions = getFunctions(fireBaseApp);
-const db = getFirestore(fireBaseApp);
+getFunctions(fireBaseApp);
+getFirestore(fireBaseApp);
 const auth = getAuth(fireBaseApp);
 
 onAuthStateChanged(auth, (user) => {
