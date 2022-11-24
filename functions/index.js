@@ -29,7 +29,54 @@ export const createUserWithRole = regionalFunctions.https.onCall(
       };
     } catch (error) {
       return {
-        error: "An error occured while creating the user.",
+        error: `An error occured while creating the user: ${error}`,
+      };
+    }
+  }
+);
+
+export const getUserList = regionalFunctions.https.onCall(
+  async (data, context) => {
+    if (context.auth.token.admin !== true) {
+      return {
+        error: "Request not authorized. User must be a admin to get all users.",
+      };
+    }
+
+    try {
+      const userList = await admin.auth().listUsers();
+
+      return userList.users.map((user) => ({
+        id: user.uid,
+        displayName: user.displayName,
+        email: user.email,
+        isAdmin: user.customClaims?.admin,
+      }));
+    } catch (error) {
+      return {
+        error: `An error occured while retreaving users: ${error}`,
+      };
+    }
+  }
+);
+
+export const deleteUser = regionalFunctions.https.onCall(
+  async (data, context) => {
+    if (context.auth.token.admin !== true) {
+      return {
+        error: "Request not authorized. User must be a admin to delete users.",
+      };
+    }
+
+    try {
+      await admin.auth().deleteUser(data);
+
+      return {
+        result: `User with id ${data} deleted.`,
+      };
+    } catch (error) {
+      return {
+        error: `An error occured while retreaving users: ${error}`,
       };
     }
   }
