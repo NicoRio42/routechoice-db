@@ -1,8 +1,12 @@
 <script lang="ts">
+  import type { User } from "firebase/auth";
   import Router, { replace } from "svelte-spa-router";
   import wrap from "svelte-spa-router/wrap";
   import NavBar from "../shared/NavBar.svelte";
-  import userStore from "../shared/stores/user-store";
+  import {
+    createUserLoggedInPromise,
+    isAdmin,
+  } from "../shared/stores/user-store";
   import CoursesOverview from "./routes/CoursesOverview.svelte";
   import Help from "./routes/Help.svelte";
   import Login from "./routes/Login.svelte";
@@ -11,15 +15,15 @@
   const routes = {
     "/": wrap({
       component: CoursesOverview,
-      conditions: () => $userStore !== null,
+      conditions: () => createUserLoggedInPromise(),
     }),
     "/users": wrap({
       component: UsersOverview,
-      conditions: () => $userStore !== null,
+      conditions: () => createUserLoggedInPromise(isAdmin),
     }),
     "/help": wrap({
       component: Help,
-      conditions: () => $userStore !== null,
+      conditions: () => createUserLoggedInPromise(isAdmin),
     }),
     "/login": Login,
   };

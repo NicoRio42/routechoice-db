@@ -1,4 +1,4 @@
-<script>
+<script lang="ts">
   import { getAuth, signInWithEmailAndPassword } from "firebase/auth";
   import { push } from "svelte-spa-router";
   import { fade } from "svelte/transition";
@@ -6,8 +6,8 @@
 
   const auth = getAuth();
 
-  let email;
-  let password;
+  let email = "";
+  let password = "";
   let loading = false;
   let showErrorMessage = false;
 
@@ -17,7 +17,7 @@
 
     signInWithEmailAndPassword(auth, email, password)
       .then((userCredential) => {
-        $userStore = userCredential;
+        $userStore = userCredential.user;
         push("/");
       })
       .catch((error) => {
