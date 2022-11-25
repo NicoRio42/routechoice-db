@@ -49,7 +49,7 @@
     flex-grow: 1;
     display: flex;
     flex-direction: column;
-    padding: 4.375rem 1rem 1rem;
+    padding: 4.375rem 0 1rem;
   }
 
   .resize-side {

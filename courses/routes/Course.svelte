@@ -8,6 +8,7 @@
     orderBy,
     query,
   } from "firebase/firestore/lite";
+  import { isUserAdminStore } from "../../shared/stores/user-store";
   import { courseValidator } from "../../shared/models/course";
   import NavBar from "../../shared/NavBar.svelte";
   import { getMapCalibrationFromCalString } from "../../shared/o-utils/map/coords-converter";
@@ -138,7 +139,9 @@
 
 <div class="navbar-wrapper">
   <NavBar>
-    <NavbarButtons />
+    {#if $isUserAdminStore}
+      <NavbarButtons />
+    {/if}
   </NavBar>
 </div>
 

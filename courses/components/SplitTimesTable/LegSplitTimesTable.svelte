@@ -1,8 +1,10 @@
 <script lang="ts">
   import type Runner from "shared/o-utils/models/runner";
+  import type Routechoice from "../../../shared/o-utils/models/routechoice";
   import courseData from "../../stores/course-data";
   import selectedLeg from "../../stores/selected-leg";
   import RunnerTrackToggle from "../RunnerTrackToggle.svelte";
+  import RoutechoiceTableCell from "./RoutecoiceTableCell.svelte";
 
   import {
     fullNameToShortName,
@@ -11,6 +13,7 @@
   } from "./utils";
 
   let sortedRunnersWithOneLeg: Runner[] = [];
+  let legRoutechoices: Routechoice[] = [];
 
   $: {
     if ($selectedLeg !== null) {
@@ -41,6 +44,8 @@
           return 0;
         }
       );
+
+      legRoutechoices = $courseData.legs[$selectedLeg - 1].routechoices;
     }
   }
 </script>
@@ -91,13 +96,7 @@
         {/if}
       </td>
 
-      <td class="right">
-        {#if runner.legs[0]?.detectedRouteChoice}
-          <strong style:color={`#${runner.legs[0]?.detectedRouteChoice.color}`}
-            >{runner.legs[0]?.detectedRouteChoice.name}</strong
-          >
-        {/if}
-      </td>
+      <RoutechoiceTableCell routechoices={legRoutechoices} {runner} />
 
       <td
         ><RunnerTrackToggle

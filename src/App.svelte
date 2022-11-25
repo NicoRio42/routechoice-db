@@ -1,6 +1,8 @@
 <script lang="ts">
-  import type { User } from "firebase/auth";
-  import Router, { replace } from "svelte-spa-router";
+  import Router, {
+    replace,
+    type ConditionsFailedEvent,
+  } from "svelte-spa-router";
   import wrap from "svelte-spa-router/wrap";
   import NavBar from "../shared/NavBar.svelte";
   import {
@@ -28,8 +30,8 @@
     "/login": Login,
   };
 
-  function conditionsFailed() {
-    replace("/login");
+  function conditionsFailed(event: ConditionsFailedEvent) {
+    replace(`/login?redirectUrl=${event.detail.location}`);
   }
 </script>
 

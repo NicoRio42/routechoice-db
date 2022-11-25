@@ -1,9 +1,15 @@
 <script>
   import Logo from "./icons/Logo.svelte";
-  import userStore from "./stores/user-store";
+  import userStore, { isUserAdminStore } from "./stores/user-store";
   import { getAuth, signOut } from "firebase/auth";
+  import { location, push } from "svelte-spa-router";
 
   const auth = getAuth();
+
+  async function handleLogout() {
+    await signOut(auth);
+    // window.location.href = `/#/login?redirectUrl=${$location}`;
+  }
 </script>
 
 <nav class="container-fluid">
@@ -16,7 +22,7 @@
   </ul>
 
   <ul>
-    {#if $userStore !== null}
+    {#if $isUserAdminStore}
       <li>
         <a href="/#/users">Users</a>
       </li>
@@ -30,10 +36,8 @@
       {#if $userStore === null}
         <a href="/#/login">Login</a>
       {:else}
-        <button
-          class="logoutButton"
-          type="button"
-          on:click={() => signOut(auth)}>Logout</button
+        <button class="logoutButton" type="button" on:click={handleLogout}
+          >Logout</button
         >
       {/if}
     </li>

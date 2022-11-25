@@ -1,7 +1,7 @@
-<script>
-  export let isFirstValueSelected;
-  export let firstLabel;
-  export let secondLabel;
+<script lang="ts">
+  export let isFirstValueSelected: boolean;
+  export let firstLabel: string;
+  export let secondLabel: string;
 </script>
 
 <div class="toggle-container">
@@ -20,6 +20,8 @@
 <style>
   .toggle-container {
     display: flex;
+    padding-right: 1rem;
+    padding-left: 1rem;
   }
 
   button {

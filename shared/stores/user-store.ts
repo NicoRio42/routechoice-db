@@ -1,9 +1,18 @@
 import type { User } from "firebase/auth";
-import { writable } from "svelte/store";
+import { derived, writable } from "svelte/store";
 
-const userStore = writable<User | null | undefined>();
+export const userStore = writable<User | null | undefined>();
 
-export async function isAdmin(user: User): Promise<boolean> {
+export const isUserAdminStore = derived<typeof userStore, boolean>(
+  userStore,
+  ($userStore, set) => {
+    isAdmin($userStore).then((isAdminBoolean) => set(isAdminBoolean));
+  },
+  false
+);
+
+export async function isAdmin(user: User | null | undefined): Promise<boolean> {
+  if (user === null || user === undefined) return false;
   const token = await user.getIdTokenResult();
   return token.claims?.admin;
 }

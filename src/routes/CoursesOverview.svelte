@@ -16,7 +16,7 @@
   import Trash from "../../shared/icons/Trash.svelte";
   import type { Course } from "../../shared/models/course";
   import { courseValidator } from "../../shared/models/course";
-  import userStore from "../../shared/stores/user-store";
+  import userStore, { isUserAdminStore } from "../../shared/stores/user-store";
   import AddCourseDialog from "../components/AddCourseDialog.svelte";
 
   let isAddCourseDialogOpen = false;
@@ -74,18 +74,23 @@
 <main class="container" in:fade={{ duration: 500 }}>
   <h1>Courses</h1>
 
-  <button
-    on:click={() => (isAddCourseDialogOpen = true)}
-    class="add-course-button secondary"
-    type="button">Add new course</button
-  >
+  {#if $isUserAdminStore}
+    <button
+      on:click={() => (isAddCourseDialogOpen = true)}
+      class="add-course-button secondary"
+      type="button">Add new course</button
+    >
+  {/if}
 
   <table>
     <thead>
       <tr>
         <th>Name</th>
         <th>Date</th>
-        <th />
+
+        {#if $isUserAdminStore}
+          <th />
+        {/if}
       </tr>
     </thead>
 
@@ -100,13 +105,15 @@
 
           <td>{new Date(course.date).toLocaleDateString()}</td>
 
-          <td class="action-row">
-            <button
-              on:click={() => deleteCourse(course)}
-              class="delete-button"
-              type="button"><Trash /></button
-            >
-          </td>
+          {#if $isUserAdminStore}
+            <td class="action-row">
+              <button
+                on:click={() => deleteCourse(course)}
+                class="delete-button"
+                type="button"><Trash /></button
+              >
+            </td>
+          {/if}
         </tr>
       {/each}
     </tbody>

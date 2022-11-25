@@ -48,7 +48,6 @@
       return;
     }
 
-    loading = true;
     const timeStamp = new Date(date).getTime();
 
     const id = uuidv4();
@@ -64,8 +63,6 @@
       statistics: null,
     };
 
-    await setDoc(doc(db, "coursesData", id), courseData);
-
     const courseWithoutID = {
       name,
       liveProviderURL: liveProviderURL,
@@ -74,9 +71,17 @@
       data: id,
     };
 
-    await addDoc(collection(db, "courses"), courseWithoutID);
+    loading = true;
 
-    loading = false;
+    try {
+      await setDoc(doc(db, "coursesData", id), courseData);
+      await addDoc(collection(db, "courses"), courseWithoutID);
+    } catch (error) {
+      alert("An error occured while creating the course.");
+      console.error(error);
+    } finally {
+      loading = false;
+    }
 
     dispatch("onAddCourse");
     closeDialog();

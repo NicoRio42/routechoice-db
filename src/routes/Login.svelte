@@ -1,10 +1,16 @@
 <script lang="ts">
   import { getAuth, signInWithEmailAndPassword } from "firebase/auth";
-  import { push } from "svelte-spa-router";
+  import { push, querystring } from "svelte-spa-router";
   import { fade } from "svelte/transition";
   import userStore from "../../shared/stores/user-store";
 
   const auth = getAuth();
+  let redirectUrl: string | null = null;
+
+  if ($querystring) {
+    const searchParams = new URLSearchParams($querystring);
+    redirectUrl = searchParams.get("redirectUrl");
+  }
 
   let email = "";
   let password = "";
@@ -18,7 +24,7 @@
     signInWithEmailAndPassword(auth, email, password)
       .then((userCredential) => {
         $userStore = userCredential.user;
-        push("/");
+        push(redirectUrl === null ? "/" : redirectUrl);
       })
       .catch((error) => {
         console.error(`${error.code} ${error.message}`);
