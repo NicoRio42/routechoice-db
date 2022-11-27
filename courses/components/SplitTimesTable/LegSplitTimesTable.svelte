@@ -69,28 +69,28 @@
       </td>
 
       <td class:mistake={runner.legs[0]?.isMistake}>
-        <div
-          class="tooltip-container {rankToCSSClass(runner.legs[0]?.rankSplit)}"
-          data-tooltip={`+ ${secondsToPrettyTime(
-            runner.legs[0]?.timeBehindSplit
-          )}`}
-        >
-          {`${secondsToPrettyTime(runner.legs[0]?.time)} (${
-            runner.legs[0]?.rankSplit
-          })`}
-        </div>
-
-        {#if runner.legs[0]?.timeOverall !== null}
+        {#if runner.legs[0] !== null}
           <div
-            class="tooltip-container {rankToCSSClass(
-              runner.legs[0]?.rankOverall
-            )}"
+            class="tooltip-container {rankToCSSClass(runner.legs[0].rankSplit)}"
             data-tooltip={`+ ${secondsToPrettyTime(
-              runner.legs[0]?.timeBehindOverall
+              runner.legs[0].timeBehindSplit
             )}`}
           >
-            {`${secondsToPrettyTime(runner.legs[0]?.timeOverall)} (${
-              runner.legs[0]?.rankOverall
+            {`${secondsToPrettyTime(runner.legs[0].time)} (${
+              runner.legs[0].rankSplit
+            })`}
+          </div>
+
+          <div
+            class="tooltip-container {rankToCSSClass(
+              runner.legs[0].rankOverall
+            )}"
+            data-tooltip={`+ ${secondsToPrettyTime(
+              runner.legs[0].timeBehindOverall
+            )}`}
+          >
+            {`${secondsToPrettyTime(runner.legs[0].timeOverall)} (${
+              runner.legs[0].rankOverall
             })`}
           </div>
         {/if}
