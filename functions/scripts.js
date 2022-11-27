@@ -1,6 +1,26 @@
 import admin from "firebase-admin";
 
-import serviceAccount from "./routechoice-db-dev-firebase-adminsdk.json" assert { type: "json" };
+import serviceAccountDev from "./routechoice-db-dev-firebase-adminsdk.json" assert { type: "json" };
+import serviceAccountProd from "./routechoice-db-firebase-adminsdk.json" assert { type: "json" };
+
+const env = process.argv[2];
+const email = process.argv[3];
+
+let serviceAccount;
+
+switch (env) {
+  case "prod": {
+    serviceAccount = serviceAccountProd;
+    break;
+  }
+  case "dev": {
+    serviceAccount = serviceAccountDev;
+    break;
+  }
+  default: {
+    throw new Error("Wrong env argument");
+  }
+}
 
 admin.initializeApp({
   credential: admin.credential.cert({
@@ -22,4 +42,4 @@ async function grantAdminRole(email) {
   }
 }
 
-grantAdminRole("nicolas.rio42@gmail.com");
+grantAdminRole(email);
