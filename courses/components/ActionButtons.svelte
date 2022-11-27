@@ -79,7 +79,7 @@
 <style>
   .control-bar {
     position: fixed;
-    bottom: 0;
+    bottom: var(--form-element-spacing-vertical);
     left: 50%;
     transform: translate(-50%);
     display: flex;
@@ -91,6 +91,7 @@
     background-color: white;
     width: 5rem;
     border-radius: 0.5rem;
+    margin-bottom: 0;
   }
 
   button {
@@ -100,5 +101,6 @@
     display: flex;
     justify-content: center;
     align-items: center;
+    margin-bottom: 0;
   }
 </style>
