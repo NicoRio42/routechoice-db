@@ -24,20 +24,26 @@ export function attribute2DRerunTrackToMatchedRunner(
   });
 }
 
+export interface RunnerForMatching {
+  name: string;
+  foreignKey: unknown;
+}
+
 export function matchRunnersByName(
   runners: Runner[],
-  twoDRerunRoutes: TwoDRerunRoute[]
+  foreignKey: string,
+  runnersForMatching: RunnerForMatching[]
 ): Runner[] {
   const clonedRunners = structuredClone(runners);
 
-  const standardized2DRerunRoutesNames: {
+  const standardizedRunnersForMatching: {
     name: string[];
-    indexnumber: number;
-  }[] = twoDRerunRoutes.map((route) => ({
-    name: replaceAll(route.runnername, /\s\s+/g, " ")
+    foreignKey: unknown;
+  }[] = runnersForMatching.map((r) => ({
+    ...r,
+    name: replaceAll(r.name, /\s\s+/g, " ")
       .split(" ")
       .map(trimToLowerCaseRemoveAccents),
-    indexnumber: route.indexnumber,
   }));
 
   clonedRunners.forEach((runner) => {
@@ -45,20 +51,23 @@ export function matchRunnersByName(
       .flatMap((name) => replaceAll(name, /\s\s+/g, " ").split(" "))
       .map(trimToLowerCaseRemoveAccents);
 
-    for (const route of standardized2DRerunRoutesNames) {
-      if (route.name.length !== standardizedRunnerName.length) continue;
+    for (const runnerForMatching of standardizedRunnersForMatching) {
+      if (runnerForMatching.name.length !== standardizedRunnerName.length)
+        continue;
 
       // Full match
       if (
-        route.name.every((namePart) =>
+        runnerForMatching.name.every((namePart) =>
           standardizedRunnerName.includes(namePart)
         )
       ) {
-        runner.foreignKeys.twoDRerunRouteIndexNumber = route.indexnumber;
+        runner.foreignKeys[foreignKey] = runnerForMatching.foreignKey;
         break;
       }
 
-      const routeNumberOfInitiuals = getNumberOfInitiuals(route.name);
+      const routeNumberOfInitiuals = getNumberOfInitiuals(
+        runnerForMatching.name
+      );
       const runnerNumberOfInitiuals = getNumberOfInitiuals(
         standardizedRunnerName
       );
@@ -82,44 +91,48 @@ export function matchRunnersByName(
         const allNamesExceptInitialMatch = standardizedRunnerName.every(
           (name, index) => {
             if (index === initialIndex) return true;
-            const i = route.name.findIndex((n) => n === name);
+            const i = runnerForMatching.name.findIndex((n) => n === name);
             if (i !== -1) matchIndexes.push(i);
             return i !== -1;
           }
         );
 
-        const initialMatch = route.name.every(
+        const initialMatch = runnerForMatching.name.every(
           (name, index) =>
             matchIndexes.includes(index) ||
             name.startsWith(standardizedRunnerName[initialIndex])
         );
 
         if (allNamesExceptInitialMatch && initialMatch) {
-          runner.foreignKeys.twoDRerunRouteIndexNumber = route.indexnumber;
+          runner.foreignKeys[foreignKey] = runnerForMatching.foreignKey;
           break;
         }
       }
 
       if (routeNumberOfInitiuals === 1) {
-        const initialIndex = route.name.findIndex((name) => name.length === 1);
+        const initialIndex = runnerForMatching.name.findIndex(
+          (name) => name.length === 1
+        );
 
         const matchIndexes: number[] = [];
 
-        const allNamesExceptInitialMatch = route.name.every((name, index) => {
-          if (index === initialIndex) return true;
-          const i = standardizedRunnerName.findIndex((n) => n === name);
-          if (i !== -1) matchIndexes.push(i);
-          return i !== -1;
-        });
+        const allNamesExceptInitialMatch = runnerForMatching.name.every(
+          (name, index) => {
+            if (index === initialIndex) return true;
+            const i = standardizedRunnerName.findIndex((n) => n === name);
+            if (i !== -1) matchIndexes.push(i);
+            return i !== -1;
+          }
+        );
 
         const initialMatch = standardizedRunnerName.every(
           (name, index) =>
             matchIndexes.includes(index) ||
-            name.startsWith(route.name[initialIndex])
+            name.startsWith(runnerForMatching.name[initialIndex])
         );
 
         if (allNamesExceptInitialMatch && initialMatch) {
-          runner.foreignKeys.twoDRerunRouteIndexNumber = route.indexnumber;
+          runner.foreignKeys[foreignKey] = runnerForMatching.foreignKey;
         }
       }
     }

@@ -9,6 +9,7 @@
   import {
     attribute2DRerunTrackToMatchedRunner,
     matchRunnersByName,
+    type RunnerForMatching,
   } from "../../../shared/o-utils/two-d-rerun/runners-matcher";
   import clickOutside from "../../../shared/use/clickOutside";
   import course from "../../stores/course";
@@ -18,41 +19,82 @@
   import LoadSplitTimesFromWinsplitForm from "./LoadSplitTimesFromWinsplitForm.svelte";
   import type { SplitSubmitEvent } from "./models/split-submit-event";
   import RunnerMatcher from "./RunnerMatcher.svelte";
+  import type User from "../../../shared/models/user";
+  import { getFunctions, httpsCallable } from "firebase/functions";
+  import { getAuth } from "firebase/auth";
 
   export let isDialogOpen = false;
 
   const db = getFirestore();
+  const auth = getAuth();
+  const functions = getFunctions(undefined, "europe-west1");
+  const getUserList = httpsCallable(functions, "getUserList");
   // @ts-ignore
   const mapViewer: Mapviewer = mapviewer;
 
   let step = 1;
   let automaticallyAttributedRunners: Runner[];
+  let usersForMatching: RunnerForMatching[] = [];
 
-  const parseIOFXML = (event: CustomEvent<SplitSubmitEvent>) => {
+  async function parseIOFXML(event: CustomEvent<SplitSubmitEvent>) {
     const { xmlDoc, className, timeZone, timeOffset } = event.detail;
 
-    try {
-      const rawRunners = parseIOFXML3SplitTimesFile(
-        xmlDoc,
-        className,
-        timeZone,
-        timeOffset
-      );
+    // try {
+    const rawRunners = parseIOFXML3SplitTimesFile(
+      xmlDoc,
+      className,
+      timeZone,
+      timeOffset
+    );
 
-      const matchedRunners = matchRunnersByName(rawRunners, mapViewer.routes);
+    const authorization = "Bearer " + (await auth.currentUser?.getIdToken());
 
-      automaticallyAttributedRunners = attribute2DRerunTrackToMatchedRunner(
-        matchedRunners,
-        mapViewer.routes
-      );
-    } catch (error) {
-      alert("An error occured while parsing the split times.");
-      console.error(error);
-      return;
-    }
+    const usersResponse = await fetch(
+      "https://europe-west1-routechoice-db-dev.cloudfunctions.net/getUserListOnRequest",
+      {
+        headers: {
+          authorization,
+        },
+      }
+    );
+    const users = usersResponse.json();
+    console.log(users);
+    // const usersResponse = await getUserList();
+    // const users = usersResponse.data as User[];
+
+    // usersForMatching = users.map((u) => ({
+    //   name: u.displayName,
+    //   foreignKey: u.id,
+    // }));
+
+    // const matchedRunnersWithUsers = matchRunnersByName(
+    //   rawRunners,
+    //   "userId",
+    //   usersForMatching
+    // );
+
+    const routesForMatching: RunnerForMatching[] = mapViewer.routes.map(
+      (r) => ({ name: r.runnername, foreignKey: r.indexnumber })
+    );
+
+    const matchedRunners = matchRunnersByName(
+      rawRunners,
+      "twoDRerunRouteIndexNumber",
+      routesForMatching
+    );
+
+    automaticallyAttributedRunners = attribute2DRerunTrackToMatchedRunner(
+      matchedRunners,
+      mapViewer.routes
+    );
+    // } catch (error) {
+    //   alert("An error occured while parsing the split times.");
+    //   console.error(error);
+    //   return;
+    // }
 
     step = 4;
-  };
+  }
 
   const saveSplitTimes = async (event: CustomEvent<{ runners: Runner[] }>) => {
     let { runners } = event.detail;
@@ -121,6 +163,7 @@
     {#if step === 4}
       <RunnerMatcher
         runners={automaticallyAttributedRunners}
+        users={usersForMatching}
         on:previous={() => (step = 1)}
         on:submit={saveSplitTimes}
       />

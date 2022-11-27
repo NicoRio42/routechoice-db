@@ -2,8 +2,10 @@
   import { fade } from "svelte/transition";
   import { createEventDispatcher } from "svelte";
   import type Runner from "../../../shared/o-utils/models/runner";
+  import type { RunnerForMatching } from "../../../shared/o-utils/two-d-rerun/runners-matcher";
 
   export let runners: Runner[] = [];
+  export let users: RunnerForMatching[] = [];
 
   const dispatchSubmit = createEventDispatcher<{
     submit: { runners: Runner[] };
@@ -24,6 +26,7 @@
       <tr>
         <th>Split times</th>
         <th>GPS track</th>
+        <th>User</th>
       </tr>
     </thead>
 
@@ -38,6 +41,16 @@
 
               {#each mapViewer.routes as route}
                 <option value={route.indexnumber}>{route.runnername}</option>
+              {/each}
+            </select>
+          </td>
+
+          <td>
+            <select bind:value={runner.foreignKeys.userId}>
+              <option />
+
+              {#each users as user}
+                <option value={user.foreignKey}>{user.name}</option>
               {/each}
             </select>
           </td>

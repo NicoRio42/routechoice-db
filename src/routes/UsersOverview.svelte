@@ -4,16 +4,10 @@
   import { fade } from "svelte/transition";
   import CreateUserDialog from "../components/CreateUserDialog.svelte";
   import { getFunctions, httpsCallable } from "firebase/functions";
+  import type User from "../../shared/models/user";
 
   let isDialogOpen = false;
   let users: User[] = [];
-
-  interface User {
-    id: string;
-    displayName: string;
-    email: string;
-    isAdmin: boolean;
-  }
 
   const functions = getFunctions(undefined, "europe-west1");
   const getUserList = httpsCallable(functions, "getUserList");
