@@ -2,7 +2,9 @@
   import courseData from "../../stores/course-data";
   import selectedLeg from "../../stores/selected-leg";
   import { doc, getFirestore, updateDoc } from "firebase/firestore/lite";
-  import { isUserAdminStore } from "../../../shared/stores/user-store";
+  import userStore, {
+    isUserAdminStore,
+  } from "../../../shared/stores/user-store";
   import type Routechoice from "../../../shared/o-utils/models/routechoice";
   import type Runner from "../../../shared/o-utils/models/runner";
 
@@ -80,7 +82,7 @@
 
 <td aria-busy={loading} class="right">
   {#if runner.legs !== null && runner.legs[0] !== null}
-    {#if $isUserAdminStore}
+    {#if $isUserAdminStore || runner.foreignKeys.userId === $userStore?.uid}
       <select
         style:color={selectedRoutechoiceColor}
         value={selectedRoutechoice}

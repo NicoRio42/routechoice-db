@@ -63,12 +63,17 @@ export const getUserList = regionalFunctions.https.onCall(
 export const getUserListOnRequest = regionalFunctions.https.onRequest(
   async (req, res) => {
     res.set("Access-Control-Allow-Origin", "*");
+    res.set("Access-Control-Allow-Credentials", "true");
+    res.set("Access-Control-Allow-Headers", "authorization");
+
+    if (req.method === "OPTIONS") {
+      res.status(204).send("");
+      return;
+    }
+
     const authorizationHeader = req.get("authorization");
 
     if (!authorizationHeader || !authorizationHeader.startsWith("Bearer ")) {
-      functions.logger.error(
-        "11111111111111111111111111" + authorizationHeader
-      );
       res.status(403).send("Unauthorized");
       return;
     }
@@ -79,7 +84,6 @@ export const getUserListOnRequest = regionalFunctions.https.onRequest(
       const decodedIdToken = await admin.auth().verifyIdToken(idToken);
 
       if (!decodedIdToken.admin) {
-        functions.logger.error("2222222222222222222222222222");
         res.status(403).send("Unauthorized");
       }
       const userList = await admin.auth().listUsers();
@@ -93,7 +97,6 @@ export const getUserListOnRequest = regionalFunctions.https.onRequest(
 
       res.json(userListForResponse);
     } catch (error) {
-      functions.logger.error("2222222222222222222222222222");
       res.status(403).send("Unauthorized");
     }
   }

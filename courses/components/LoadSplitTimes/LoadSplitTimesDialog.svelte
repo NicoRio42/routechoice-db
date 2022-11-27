@@ -39,59 +39,57 @@
   async function parseIOFXML(event: CustomEvent<SplitSubmitEvent>) {
     const { xmlDoc, className, timeZone, timeOffset } = event.detail;
 
-    // try {
-    const rawRunners = parseIOFXML3SplitTimesFile(
-      xmlDoc,
-      className,
-      timeZone,
-      timeOffset
-    );
+    try {
+      const rawRunners = parseIOFXML3SplitTimesFile(
+        xmlDoc,
+        className,
+        timeZone,
+        timeOffset
+      );
 
-    const authorization = "Bearer " + (await auth.currentUser?.getIdToken());
+      const authorization = "Bearer " + (await auth.currentUser?.getIdToken());
 
-    const usersResponse = await fetch(
-      "https://europe-west1-routechoice-db-dev.cloudfunctions.net/getUserListOnRequest",
-      {
-        headers: {
-          authorization,
-        },
-      }
-    );
-    const users = usersResponse.json();
-    console.log(users);
-    // const usersResponse = await getUserList();
-    // const users = usersResponse.data as User[];
+      const usersResponse = await fetch(
+        "https://europe-west1-routechoice-db-dev.cloudfunctions.net/getUserListOnRequest",
+        {
+          headers: {
+            authorization,
+          },
+        }
+      );
 
-    // usersForMatching = users.map((u) => ({
-    //   name: u.displayName,
-    //   foreignKey: u.id,
-    // }));
+      const users = (await usersResponse.json()) as unknown as User[];
 
-    // const matchedRunnersWithUsers = matchRunnersByName(
-    //   rawRunners,
-    //   "userId",
-    //   usersForMatching
-    // );
+      usersForMatching = users.map((u) => ({
+        name: u.displayName ?? u.email.split("@")[0].replace(".", " ") ?? "",
+        foreignKey: u.id,
+      }));
 
-    const routesForMatching: RunnerForMatching[] = mapViewer.routes.map(
-      (r) => ({ name: r.runnername, foreignKey: r.indexnumber })
-    );
+      const matchedRunnersWithUsers = matchRunnersByName(
+        rawRunners,
+        "userId",
+        usersForMatching
+      );
 
-    const matchedRunners = matchRunnersByName(
-      rawRunners,
-      "twoDRerunRouteIndexNumber",
-      routesForMatching
-    );
+      const routesForMatching: RunnerForMatching[] = mapViewer.routes.map(
+        (r) => ({ name: r.runnername, foreignKey: r.indexnumber })
+      );
 
-    automaticallyAttributedRunners = attribute2DRerunTrackToMatchedRunner(
-      matchedRunners,
-      mapViewer.routes
-    );
-    // } catch (error) {
-    //   alert("An error occured while parsing the split times.");
-    //   console.error(error);
-    //   return;
-    // }
+      const matchedRunners = matchRunnersByName(
+        matchedRunnersWithUsers,
+        "twoDRerunRouteIndexNumber",
+        routesForMatching
+      );
+
+      automaticallyAttributedRunners = attribute2DRerunTrackToMatchedRunner(
+        matchedRunners,
+        mapViewer.routes
+      );
+    } catch (error) {
+      alert("An error occured while parsing the split times.");
+      console.error(error);
+      return;
+    }
 
     step = 4;
   }
