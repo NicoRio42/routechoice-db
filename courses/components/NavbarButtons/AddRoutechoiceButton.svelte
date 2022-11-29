@@ -10,6 +10,7 @@
   import { attribute2DRerunTrackToMatchedRunner } from "../../../shared/o-utils/two-d-rerun/runners-matcher";
   import { detectRunnersRoutechoices } from "../../../shared/o-utils/routechoice-detector/routechoice-detector";
   import { updateRunnersInFirestore } from "../../../shared/db/runners";
+  import { createRoutechoiceStatistics } from "../../../shared/o-utils/statistics/routechoices-statistics";
 
   const db = getFirestore();
 
@@ -57,7 +58,7 @@
       legs[legIndex].routechoices.push(rc);
     });
 
-    $courseData.legs = legs;
+    $courseData.legs = createRoutechoiceStatistics($courseData.runners, legs);
 
     await updateDoc(doc(db, "coursesData", $course.data), {
       legs: serializeNestedArraysInLegs($courseData.legs),

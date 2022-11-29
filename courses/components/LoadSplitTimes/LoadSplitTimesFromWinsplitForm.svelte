@@ -11,6 +11,8 @@
     name: string;
   }
 
+  export let loading = false;
+
   const url =
     "https://europe-west1-routechoice-db-dev.cloudfunctions.net/getWinsplitData";
   const parser = new DOMParser();
@@ -186,7 +188,9 @@
       on:click={() => dispatchPrevious("previous")}>Cancel</button
     >
 
-    <button type="submit">Load splits</button>
+    <button type="submit" disabled={loading} aria-busy={loading}
+      >Load splits</button
+    >
   </footer>
 </form>
 

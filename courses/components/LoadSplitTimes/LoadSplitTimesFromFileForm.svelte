@@ -4,6 +4,8 @@
   import { fade } from "svelte/transition";
   import type { SplitSubmitEvent } from "./models/split-submit-event";
 
+  export let loading = false;
+
   let reader: FileReader;
   let parser: DOMParser;
 
@@ -121,7 +123,9 @@
       on:click={() => dispatchPrevious("previous")}>Cancel</button
     >
 
-    <button type="submit">Load splits</button>
+    <button type="submit" disabled={loading} aria-busy={loading}
+      >Load splits</button
+    >
   </footer>
 </form>
 

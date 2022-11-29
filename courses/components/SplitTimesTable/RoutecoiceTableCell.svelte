@@ -1,12 +1,14 @@
 <script lang="ts">
-  import courseData from "../../stores/course-data";
-  import selectedLeg from "../../stores/selected-leg";
   import { doc, getFirestore, updateDoc } from "firebase/firestore/lite";
+  import { serializeNestedArraysInLegs } from "../../../shared/o-utils/models/leg";
+  import type Routechoice from "../../../shared/o-utils/models/routechoice";
+  import type Runner from "../../../shared/o-utils/models/runner";
+  import { createRoutechoiceStatisticsForOneLeg } from "../../../shared/o-utils/statistics/routechoices-statistics";
   import userStore, {
     isUserAdminStore,
   } from "../../../shared/stores/user-store";
-  import type Routechoice from "../../../shared/o-utils/models/routechoice";
-  import type Runner from "../../../shared/o-utils/models/runner";
+  import courseData from "../../stores/course-data";
+  import selectedLeg from "../../stores/selected-leg";
 
   export let routechoices: Routechoice[] = [];
   export let runner: Runner;
@@ -59,10 +61,18 @@
     }
 
     const routechoiceToAttribute = structuredClone(routechoice);
+    delete routechoiceToAttribute.statistics;
     routechoiceToAttribute.track = [];
     const legToUpdate = completeRunner.legs[$selectedLeg - 1];
     if (legToUpdate === null) return;
     legToUpdate.manualRouteChoice = routechoiceToAttribute;
+
+    // Update legs routechoices stats
+    $courseData.legs[$selectedLeg - 1] = createRoutechoiceStatisticsForOneLeg(
+      $courseData.legs[$selectedLeg - 1],
+      $selectedLeg,
+      $courseData.runners
+    );
 
     loading = true;
 
@@ -71,6 +81,10 @@
         doc(db, "coursesData", $courseData.id, "runners", runner.id),
         { legs: completeRunner.legs }
       );
+
+      await updateDoc(doc(db, "coursesData", $courseData.id), {
+        legs: serializeNestedArraysInLegs($courseData.legs),
+      });
     } catch (error) {
       alert("An error occured while manually updating the routechoice.");
       console.error(error);

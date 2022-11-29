@@ -96,14 +96,20 @@
         {/if}
       </td>
 
-      <RoutechoiceTableCell routechoices={legRoutechoices} {runner} />
+      {#if legRoutechoices.length > 0}
+        <RoutechoiceTableCell routechoices={legRoutechoices} {runner} />
+      {:else}
+        <td />
+      {/if}
 
-      <td
-        ><RunnerTrackToggle
-          twoDRerunRouteIndexNumber={runner.foreignKeys
-            .twoDRerunRouteIndexNumber}
-        /></td
-      >
+      {#if runner.foreignKeys.twoDRerunRouteIndexNumber}
+        <td
+          ><RunnerTrackToggle
+            twoDRerunRouteIndexNumber={runner.foreignKeys
+              .twoDRerunRouteIndexNumber}
+          /></td
+        >
+      {/if}
     </tr>
   {/each}
   <tbody />

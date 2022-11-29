@@ -1,5 +1,5 @@
 <script lang="ts">
-  import { getFirestore } from "firebase/firestore/lite";
+  import { doc, getFirestore, updateDoc } from "firebase/firestore/lite";
   import { fade } from "svelte/transition";
   import { updateRunnersInFirestore } from "../../../shared/db/runners";
   import type { Mapviewer } from "../../../shared/o-utils/models/2d-rerun/mapviewer";
@@ -22,6 +22,8 @@
   import type User from "../../../shared/models/user";
   import { getFunctions, httpsCallable } from "firebase/functions";
   import { getAuth } from "firebase/auth";
+  import { createRoutechoiceStatistics } from "../../../shared/o-utils/statistics/routechoices-statistics";
+  import { serializeNestedArraysInLegs } from "../../../shared/o-utils/models/leg";
 
   export let isDialogOpen = false;
 
@@ -35,9 +37,11 @@
   let step = 1;
   let automaticallyAttributedRunners: Runner[];
   let usersForMatching: RunnerForMatching[] = [];
+  let loading = false;
 
   async function parseIOFXML(event: CustomEvent<SplitSubmitEvent>) {
     const { xmlDoc, className, timeZone, timeOffset } = event.detail;
+    loading = true;
 
     try {
       const rawRunners = parseIOFXML3SplitTimesFile(
@@ -89,22 +93,28 @@
       alert("An error occured while parsing the split times.");
       console.error(error);
       return;
+    } finally {
+      loading = false;
     }
 
     step = 4;
   }
 
-  const saveSplitTimes = async (event: CustomEvent<{ runners: Runner[] }>) => {
+  async function saveSplitTimes(event: CustomEvent<{ runners: Runner[] }>) {
     let { runners } = event.detail;
     runners = detectRunnersRoutechoices($courseData.legs, runners);
 
     // So the runner track is not persisted to Firebase
     runners.forEach((runner) => (runner.track = null));
 
-    // TODO reimplement statistics
+    $courseData.legs = createRoutechoiceStatistics(runners, $courseData.legs);
 
     try {
       updateRunnersInFirestore(db, $courseData.runners, runners, $course.data);
+
+      await updateDoc(doc(db, "coursesData", $course.data), {
+        legs: serializeNestedArraysInLegs($courseData.legs),
+      });
     } catch (error) {
       alert("An error occured while updating the new runners to the database.");
       console.error(error);
@@ -113,7 +123,7 @@
     loadRunnersSplitsTo2dRerun(runners);
     $courseData.runners = runners;
     isDialogOpen = false;
-  };
+  }
 </script>
 
 <dialog open>
@@ -148,6 +158,7 @@
       <LoadSplitTimesFromWinsplitForm
         on:previous={() => (step = 1)}
         on:submit={parseIOFXML}
+        {loading}
       />
     {/if}
 
@@ -155,6 +166,7 @@
       <LoadSplitTimesFromFileForm
         on:previous={() => (step = 1)}
         on:submit={parseIOFXML}
+        {loading}
       />
     {/if}
 

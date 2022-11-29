@@ -1,6 +1,6 @@
-<script>
+<script lang="ts">
   import LegSplitTimesTable from "./SplitTimesTable/LegSplitTimesTable.svelte";
-  import Statistics from "./Statistics.svelte";
+  import LegStatistics from "./LegStatistics/LegStatistics.svelte";
   import Toggle from "./Toggle.svelte";
   import toggleSideBar from "../stores/toggle-sidebar";
 
@@ -17,7 +17,7 @@
 
     {#if !isInSplitMode}
       <section class="routechoices-graph">
-        <Statistics />
+        <LegStatistics />
       </section>
     {/if}
 
@@ -28,8 +28,6 @@
       <LegSplitTimesTable />
     </section>
   </div>
-
-  <div class="resize-side" />
 </aside>
 
 <style>
@@ -52,12 +50,6 @@
     padding: 4.375rem 0 1rem;
   }
 
-  .resize-side {
-    width: 0.125rem;
-    border-right: 1px solid lightgray;
-    cursor: e-resize;
-  }
-
   .toggle-sidebar {
     display: flex;
   }
@@ -70,6 +62,7 @@
 
   .routechoices-graph {
     overflow-y: auto;
+    padding-left: 0.5rem;
     margin-bottom: 0;
   }
 
@@ -83,10 +76,6 @@
     }
 
     .toggle-sidebar {
-      display: none;
-    }
-
-    .resize-side {
       display: none;
     }
   }

@@ -91,7 +91,7 @@
 
 <li class="menu-list-item large-devices">
   <button class="toggle-2d-rerun-button outline" on:click={toggle2DRerunPanel}
-    >Toggle 2D Rerun panel</button
+    >2D Rerun</button
   >
 </li>
 

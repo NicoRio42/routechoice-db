@@ -1,5 +1,7 @@
-<script>
-  export let data;
+<script lang="ts">
+  import type { GraphItem } from "./models/graph-item";
+
+  export let data: GraphItem[];
   export let suffix = "";
 
   let max = 0;
@@ -10,12 +12,6 @@
 {#each data as item}
   <p class="graph-item">
     {item.label}<span class="bar-group">
-      <!-- <span
-        style:opacity="50%"
-        style:background-color={item.color}
-        style:width={`${(item.secondValue * 100) / max}%`}
-        class="bar"
-      /> -->
       <span
         style:background-color={`#${item.color}`}
         style:width={`${(item.value * 100) / max}%`}
