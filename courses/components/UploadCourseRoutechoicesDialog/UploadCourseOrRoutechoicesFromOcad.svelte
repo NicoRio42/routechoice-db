@@ -27,6 +27,7 @@
   let classIndex: number | null = null;
   let isCourseFileInvalid = false;
   let isRoutechoicesFileInvalid = false;
+  let loading = false;
 
   const dispatch = createEventDispatcher();
 
@@ -105,11 +106,12 @@
 
     if (classIndex === null) {
       alert("You have to choose a class.");
+      return;
     }
 
     const [controls, legsWithoutRoutechoices] = parseIOFXML3CourseOCADExport(
       courseXmlDoc,
-      0
+      classIndex
     );
 
     $courseData.course = controls;
@@ -125,10 +127,19 @@
       $courseData.legs = legs;
     }
 
-    await updateDoc(doc(db, "coursesData", $course.data), {
-      legs: serializeNestedArraysInLegs($courseData.legs),
-      course: $courseData.course,
-    });
+    loading = true;
+
+    try {
+      await updateDoc(doc(db, "coursesData", $course.data), {
+        legs: serializeNestedArraysInLegs($courseData.legs),
+        course: $courseData.course,
+      });
+    } catch (error) {
+      alert("An error occured while saving the course.");
+      console.error(error);
+    } finally {
+      loading = false;
+    }
 
     if ($courseData.map === null)
       throw new Error("No map callibration, event migth not have started yet.");
@@ -201,7 +212,7 @@
       >Cancel</button
     >
 
-    <button type="submit">Upload</button>
+    <button aria-busy={loading} disabled={loading} type="submit">Upload</button>
   </footer>
 </form>
 

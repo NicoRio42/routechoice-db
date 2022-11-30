@@ -4,7 +4,9 @@
   import AddRoutechoiceButton from "./AddRoutechoiceButton.svelte";
 
   let isLoadSplitsDialogOpen = false;
+  let loadingCourseRoutechoicesDialog = false;
   let isUploadCourseRoutechoicesDialogOpen = false;
+  let loadingSplitTimesDialog = false;
   let twoDRerunPanel: HTMLElement;
 
   let lazySplitTimesDialog: Promise<
@@ -18,29 +20,30 @@
   let uploadsDropdown: HTMLDetailsElement;
 
   function handleLoadCourseRoutechoicesClick() {
+    loadingCourseRoutechoicesDialog = true;
     lazyCourseRoutechoicesDialog = import(
       "../UploadCourseRoutechoicesDialog/UploadCourseRoutechoicesDialog.svelte"
     );
 
     isUploadCourseRoutechoicesDialogOpen = true;
 
-    lazyCourseRoutechoicesDialog.then(() =>
-      uploadsDropdown.removeAttribute("open")
-    );
+    lazyCourseRoutechoicesDialog
+      .then(() => uploadsDropdown.removeAttribute("open"))
+      .finally(() => {
+        loadingCourseRoutechoicesDialog = false;
+      });
   }
 
   function handleLoadSplitsClick() {
-    if (!$courseData?.legs.length === undefined) {
-      alert("You sould import a course first.");
-      return;
-    }
-
+    loadingSplitTimesDialog = true;
     lazySplitTimesDialog = import(
       "../LoadSplitTimes/LoadSplitTimesDialog.svelte"
     );
     isLoadSplitsDialogOpen = true;
 
-    lazySplitTimesDialog.then(() => uploadsDropdown.removeAttribute("open"));
+    lazySplitTimesDialog
+      .then(() => uploadsDropdown.removeAttribute("open"))
+      .finally(() => (loadingSplitTimesDialog = false));
   }
 
   function toggle2DRerunPanel() {
@@ -77,13 +80,23 @@
     </summary>
     <ul>
       <li class="option-item">
-        <button on:click={handleLoadCourseRoutechoicesClick}
+        <button
+          on:click={handleLoadCourseRoutechoicesClick}
+          aria-busy={loadingCourseRoutechoicesDialog}
+          disabled={loadingCourseRoutechoicesDialog}
           >Course and routechoices</button
         >
       </li>
 
       <li class="option-item">
-        <button on:click={handleLoadSplitsClick}>Load split times</button>
+        <button
+          on:click={handleLoadSplitsClick}
+          aria-busy={loadingSplitTimesDialog}
+          disabled={$courseData.legs.length === 0 || loadingSplitTimesDialog}
+          data-tooltip={$courseData.legs.length === 0
+            ? "You sould import a course first."
+            : null}>Load split times</button
+        >
       </li>
     </ul>
   </details>
