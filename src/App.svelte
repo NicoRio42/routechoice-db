@@ -9,6 +9,7 @@
     createUserLoggedInPromise,
     isAdmin,
   } from "../shared/stores/user-store";
+  import ChangePassword from "./routes/ChangePassword.svelte";
   import CoursesOverview from "./routes/CoursesOverview.svelte";
   import Help from "./routes/Help.svelte";
   import Login from "./routes/Login.svelte";
@@ -28,6 +29,10 @@
       conditions: () => createUserLoggedInPromise(isAdmin),
     }),
     "/login": Login,
+    "/change-password": wrap({
+      component: ChangePassword,
+      conditions: () => createUserLoggedInPromise(isAdmin),
+    }),
   };
 
   function conditionsFailed(event: ConditionsFailedEvent) {

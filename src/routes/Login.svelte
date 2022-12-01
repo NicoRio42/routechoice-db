@@ -1,8 +1,9 @@
 <script lang="ts">
   import { getAuth, signInWithEmailAndPassword } from "firebase/auth";
+  import CredentialsManagementLayout from "../layouts/CredentialsManagementLayout.svelte";
   import { push, querystring } from "svelte-spa-router";
-  import { fade } from "svelte/transition";
   import userStore from "../../shared/stores/user-store";
+  import PasswordInput from "../components/PasswordInput.svelte";
 
   const auth = getAuth();
   let redirectUrl: string | null = null;
@@ -34,69 +35,34 @@
   };
 </script>
 
-<svelte:head>
-  <title>Routechoice DB login</title>
-</svelte:head>
+<CredentialsManagementLayout pageTitle="Routechoice DB | Login" title="Login">
+  <form on:submit|preventDefault={handleSubmit}>
+    <label for="email"
+      >Email
 
-<main class="container" in:fade={{ duration: 500 }}>
-  <article>
-    <h1>Login</h1>
+      <input bind:value={email} id="email" type="email" name="email" required />
+    </label>
 
-    <form on:submit|preventDefault={handleSubmit}>
-      <label for="email"
-        >Email
-        <input
-          bind:value={email}
-          id="email"
-          type="email"
-          name="email"
-          required
-        />
-      </label>
+    <label for="password"
+      >Password
 
-      <label for="password"
-        >Password
-        <input
-          bind:value={password}
-          type="password"
-          id="password"
-          name="password"
-          required
-        />
-      </label>
+      <PasswordInput bind:value={password} id="password" name="password" />
+    </label>
 
-      <button aria-busy={loading} type="submit" on:click={handleSubmit}
-        >Login</button
-      >
+    <button
+      aria-busy={loading}
+      disabled={loading}
+      type="submit"
+      on:click={handleSubmit}>Login</button
+    >
 
-      {#if showErrorMessage}
-        <p class="error-message">Wrong email or password</p>
-      {/if}
-    </form>
-  </article>
-</main>
+    {#if showErrorMessage}
+      <p class="error-message">Wrong email or password</p>
+    {/if}
+  </form>
+</CredentialsManagementLayout>
 
 <style>
-  main {
-    padding-bottom: 0;
-  }
-
-  article {
-    margin: 0 auto;
-    padding: 1rem;
-    width: 20rem;
-  }
-
-  h1 {
-    margin-bottom: 1rem;
-  }
-
-  @media screen and (max-width: 500px) {
-    article {
-      width: 100%;
-    }
-  }
-
   .error-message {
     color: red;
     font-size: smaller;

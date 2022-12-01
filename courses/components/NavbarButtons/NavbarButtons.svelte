@@ -111,32 +111,6 @@
 </li>
 
 <style>
-  .menu-list-item {
-    margin-left: 2rem;
-    padding: 0;
-  }
-
-  summary {
-    display: flex;
-    align-items: center;
-  }
-
-  .option-item button {
-    border: none;
-    background-color: transparent;
-    color: var(--dropdown-color);
-    text-align: left;
-    padding: 0;
-  }
-
-  .option-item button:focus {
-    box-shadow: none;
-  }
-
-  .option-item:hover {
-    background-color: lightgray;
-  }
-
   .toggle-2d-rerun-button {
     height: auto;
     padding: var(--nav-link-spacing-vertical) var(--nav-link-spacing-horizontal);

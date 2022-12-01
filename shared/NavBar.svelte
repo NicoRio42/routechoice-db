@@ -14,7 +14,7 @@
 
 <nav class="container-fluid">
   <ul>
-    <li class="logo-item">
+    <li class="logo-item link-list-item">
       <a class="logo-link" href="/#/"><Logo />Routechoice DB</a>
     </li>
 
@@ -23,22 +23,35 @@
 
   <ul>
     {#if $isUserAdminStore}
-      <li>
+      <li class="link-list-item">
         <a href="/#/users">Users</a>
       </li>
 
-      <li>
+      <li class="link-list-item">
         <a href="/#/help">Help</a>
       </li>
     {/if}
 
-    <li>
+    <li class="menu-list-item">
       {#if $userStore === null}
         <a href="/#/login">Login</a>
       {:else}
-        <button class="logoutButton" type="button" on:click={handleLogout}
+        <details role="list" dir="rtl">
+          <summary aria-haspopup="listbox"> {$userStore?.displayName} </summary>
+          <ul>
+            <li class="option-item">
+              <button on:click={handleLogout}>Logout</button>
+            </li>
+
+            <li class="option-item">
+              <a href="/#/change-password">Change password</a>
+            </li>
+          </ul>
+        </details>
+
+        <!-- <button class="logoutButton" type="button" on:click={handleLogout}
           >Logout</button
-        >
+        > -->
       {/if}
     </li>
   </ul>
@@ -64,7 +77,7 @@
     margin-left: calc(var(--nav-element-spacing-horizontal) * -2);
   }
 
-  nav li {
+  .link-list-item {
     padding: calc(var(--nav-element-spacing-vertical) / 2)
       var(--nav-element-spacing-horizontal);
   }
