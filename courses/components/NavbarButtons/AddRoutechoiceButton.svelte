@@ -58,11 +58,7 @@
       legs[legIndex].routechoices.push(rc);
     });
 
-    $courseData.legs = createRoutechoiceStatistics($courseData.runners, legs);
-
-    await updateDoc(doc(db, "coursesData", $course.data), {
-      legs: serializeNestedArraysInLegs($courseData.legs),
-    });
+    $courseData.legs = legs;
 
     // Re-detect routechoices
     if ($courseData.runners.length !== 0) {
@@ -72,21 +68,39 @@
           mapViewer.routes
         );
 
-      const runners = detectRunnersRoutechoices(
+      const runnersWithDetectedRoutechoices = detectRunnersRoutechoices(
         $courseData.legs,
         automaticallyAttributedRunners
       );
 
       // So the runner track is not persisted to Firebase
-      runners.forEach((runner) => (runner.track = null));
+      runnersWithDetectedRoutechoices.forEach(
+        (runner) => (runner.track = null)
+      );
+
+      // Only updated runners are pushed to Firestore
+      const updatedRunner = runnersWithDetectedRoutechoices.filter(
+        (newRunner, runnerIndex) =>
+          $courseData.runners[runnerIndex].legs.some(
+            (oldRunnerLeg, legIndex) => {
+              return (
+                newRunner.legs[legIndex]?.detectedRouteChoice?.id !==
+                oldRunnerLeg?.detectedRouteChoice?.id
+              );
+            }
+          )
+      );
 
       try {
-        updateRunnersInFirestore(
-          db,
-          $courseData.runners,
-          runners,
-          $course.data
-        );
+        // TODO batch these updates
+        updatedRunner.forEach(async (runner) => {
+          await updateDoc(
+            doc(db, "coursesData", $course.data, "runners", runner.id),
+            { legs: runner.legs }
+          );
+
+          console.log(`Runner ${runner.firstName} ${runner.lastName} updated`);
+        });
       } catch (error) {
         alert(
           "An error occured while updating the new runners to the database."
@@ -94,11 +108,24 @@
         console.error(error);
       }
 
-      $courseData.runners = runners;
+      $courseData.runners = runnersWithDetectedRoutechoices;
     }
 
-    loading = false;
-    isEditing = false;
+    $courseData.legs = createRoutechoiceStatistics(
+      $courseData.runners,
+      $courseData.legs
+    );
+
+    try {
+      await updateDoc(doc(db, "coursesData", $course.data), {
+        legs: serializeNestedArraysInLegs($courseData.legs),
+      });
+    } catch (error) {
+      alert("An error occured while updating the course.");
+    } finally {
+      loading = false;
+      isEditing = false;
+    }
   }
 </script>
 

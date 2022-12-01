@@ -93,9 +93,7 @@
           on:click={handleLoadSplitsClick}
           aria-busy={loadingSplitTimesDialog}
           disabled={$courseData.legs.length === 0 || loadingSplitTimesDialog}
-          data-tooltip={$courseData.legs.length === 0
-            ? "You sould import a course first."
-            : null}>Load split times</button
+          >Load split times</button
         >
       </li>
     </ul>

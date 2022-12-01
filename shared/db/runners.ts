@@ -22,15 +22,12 @@ export function updateRunnersInFirestore(
     );
 
     if (runnerToUpdate === undefined) {
-      runner.foreignKeys.firestoreRunnerID;
-
       await setDoc(
         doc(db, "coursesData", courseId, "runners", runner.id),
         runner
       );
 
       console.log(`New runner ${runner.firstName} ${runner.lastName} created`);
-
       return;
     }
 
@@ -48,7 +45,6 @@ export function updateRunnersInFirestore(
       if (updatedRunnersIDs.includes(r.id)) return;
 
       await deleteDoc(doc(db, "coursesData", courseId, "runners", r.id));
-
       console.log(`Runner ${runner.firstName} ${runner.lastName} deleted`);
     });
   });
