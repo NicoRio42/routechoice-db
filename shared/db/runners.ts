@@ -49,13 +49,3 @@ export function updateRunnersInFirestore(
     });
   });
 }
-
-export function deleteAllRunners(
-  db: Firestore,
-  courseId: string,
-  runners: Runner[]
-) {
-  runners.forEach(async (runner) => {
-    await deleteDoc(doc(db, "coursesData", courseId, "runners", runner.id));
-  });
-}

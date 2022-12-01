@@ -1,18 +1,15 @@
 <script lang="ts">
   import {
     collection,
-    deleteDoc,
-    doc,
     getDocs,
     getFirestore,
     orderBy,
     query,
   } from "firebase/firestore/lite";
-  import { onMount } from "svelte";
+  import { getFunctions, httpsCallable } from "firebase/functions";
   import { push } from "svelte-spa-router";
   import { flip } from "svelte/animate";
   import { fade } from "svelte/transition";
-  import { deleteAllRunners } from "../../shared/db/runners";
   import Trash from "../../shared/icons/Trash.svelte";
   import type { Course } from "../../shared/models/course";
   import { courseValidator } from "../../shared/models/course";
@@ -23,8 +20,10 @@
   let courses: Course[] = [];
 
   const db = getFirestore();
+  const functions = getFunctions(undefined, "europe-west1");
+  const deleteCourse = httpsCallable(functions, "deleteCourse");
 
-  onMount(getCourses);
+  getCourses();
 
   userStore.subscribe((user) => {
     if (user === null) {
@@ -50,16 +49,18 @@
     courses = data;
   }
 
-  async function deleteCourse(course: Course) {
+  async function handleDeleteCourse(course: Course) {
     if (!confirm("Are you sure to delete this course?")) {
       return;
     }
 
-    await deleteDoc(doc(db, "coursesData", course.data));
-    await deleteDoc(doc(db, "courses", course.id));
-    // Delete also runners
-
-    courses = courses.filter((c) => c.id !== course.id);
+    try {
+      await deleteCourse(course);
+      courses = courses.filter((c) => c.id !== course.id);
+    } catch (error) {
+      alert("An error occured while deleting the course.");
+      console.error(error);
+    }
   }
 </script>
 
@@ -108,7 +109,7 @@
           {#if $isUserAdminStore}
             <td class="action-row">
               <button
-                on:click={() => deleteCourse(course)}
+                on:click={() => handleDeleteCourse(course)}
                 class="delete-button"
                 type="button"><Trash /></button
               >
