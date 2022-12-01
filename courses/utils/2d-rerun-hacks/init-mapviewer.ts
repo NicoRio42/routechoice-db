@@ -1,3 +1,5 @@
+import { functionsBaseURL } from "../../../firebase-env/dev";
+
 function initMapviewer(urlString) {
   const url = new URL(urlString);
 
@@ -18,7 +20,7 @@ function initFromLoggatorURL(loggatorURL) {
 }
 
 export function getLoggatorDataURL(logatorUrl: string): string {
-  return `https://europe-west1-routechoice-db-dev.cloudfunctions.net/getLoggatorData?baseurl=http://www.tulospalvelu.fi/gps/&idstr=logatec${extractLoggatorIDFromLoggatorURL(
+  return `${functionsBaseURL}/getLoggatorData?baseurl=http://www.tulospalvelu.fi/gps/&idstr=logatec${extractLoggatorIDFromLoggatorURL(
     logatorUrl
   )}`;
 }
@@ -34,8 +36,8 @@ function initFromTractracURL(tractracURL) {
   mapviewer.IsLive = 1;
   mapviewer.liveprovider = "tractrac";
   mapviewer.liveid = "d432b550-b4a9-013a-1a7f-60a44ce903c3";
-  mapviewer.liveiniturl = `https://europe-west1-routechoice-db-dev.cloudfunctions.net/getTractracInfo?eventid=${eventID}&raceid=${raceID}`;
-  mapviewer.livedataurl = `https://europe-west1-routechoice-db-dev.cloudfunctions.net/getTractracData?eventid=${eventID}&raceid=${raceID}`;
+  mapviewer.liveiniturl = `${functionsBaseURL}/getTractracInfo?eventid=${eventID}&raceid=${raceID}`;
+  mapviewer.livedataurl = `${functionsBaseURL}/getTractracData?eventid=${eventID}&raceid=${raceID}`;
   mapviewer.livedelay = "60";
   mapviewer.liveupdate = 100000;
   mapviewer.liveformat = "jsonp";

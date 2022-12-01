@@ -8,7 +8,7 @@
     orderBy,
     query,
   } from "firebase/firestore/lite";
-  import { isUserAdminStore } from "../../shared/stores/user-store";
+  import { functionsBaseURL } from "../../firebase-env/dev";
   import { courseValidator } from "../../shared/models/course";
   import NavBar from "../../shared/NavBar.svelte";
   import { getMapCalibrationFromCalString } from "../../shared/o-utils/map/coords-converter";
@@ -18,6 +18,7 @@
   import type Runner from "../../shared/o-utils/models/runner";
   import { runnerValidator } from "../../shared/o-utils/models/runner";
   import mapCourseAndRoutechoicesTo2DRerun from "../../shared/o-utils/two-d-rerun/course-mappers";
+  import { isUserAdminStore } from "../../shared/stores/user-store";
   import ActionButtons from "../components/ActionButtons.svelte";
   import NavbarButtons from "../components/NavbarButtons/NavbarButtons.svelte";
   import SideBar from "../components/SideBar.svelte";
@@ -102,7 +103,7 @@
 
     // Check if loggator event has started, and if the map is available
     const loggatorEventRequest = await fetch(
-      `https://europe-west1-routechoice-db-dev.cloudfunctions.net/getLoggatorData?baseurl=http://www.tulospalvelu.fi/gps/&idstr=logatec${extractLoggatorIDFromLoggatorURL(
+      `${functionsBaseURL}/getLoggatorData?baseurl=http://www.tulospalvelu.fi/gps/&idstr=logatec${extractLoggatorIDFromLoggatorURL(
         $course.liveProviderURL
       )}`
     );

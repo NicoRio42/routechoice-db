@@ -1,11 +1,11 @@
-import App from "./App.svelte";
-import "./2d-rerun-reset.css";
 import { initializeApp } from "firebase/app";
-import { getFunctions } from "firebase/functions";
-import { getFirestore } from "firebase/firestore/lite";
 import { getAuth, onAuthStateChanged } from "firebase/auth";
+import { getFirestore } from "firebase/firestore/lite";
+import { getFunctions } from "firebase/functions";
 import firebaseConfig from "../firebase-env/dev";
 import userStore from "../shared/stores/user-store";
+import "./2d-rerun-reset.css";
+import App from "./App.svelte";
 
 const fireBaseApp = initializeApp(firebaseConfig);
 getFunctions(fireBaseApp);

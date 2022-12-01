@@ -1,11 +1,17 @@
 <script lang="ts">
+  import { getAuth } from "firebase/auth";
   import { doc, getFirestore, updateDoc } from "firebase/firestore/lite";
+  import { getFunctions, httpsCallable } from "firebase/functions";
   import { fade } from "svelte/transition";
+  import { functionsBaseURL } from "../../../firebase-env/dev";
   import { updateRunnersInFirestore } from "../../../shared/db/runners";
+  import type User from "../../../shared/models/user";
   import type { Mapviewer } from "../../../shared/o-utils/models/2d-rerun/mapviewer";
+  import { serializeNestedArraysInLegs } from "../../../shared/o-utils/models/leg";
   import type Runner from "../../../shared/o-utils/models/runner";
   import { detectRunnersRoutechoices } from "../../../shared/o-utils/routechoice-detector/routechoice-detector";
   import { parseIOFXML3SplitTimesFile } from "../../../shared/o-utils/split-times/parsers/iof-xml-3";
+  import { createRoutechoiceStatistics } from "../../../shared/o-utils/statistics/routechoices-statistics";
   import {
     attribute2DRerunTrackToMatchedRunner,
     matchRunnersByName,
@@ -19,11 +25,6 @@
   import LoadSplitTimesFromWinsplitForm from "./LoadSplitTimesFromWinsplitForm.svelte";
   import type { SplitSubmitEvent } from "./models/split-submit-event";
   import RunnerMatcher from "./RunnerMatcher.svelte";
-  import type User from "../../../shared/models/user";
-  import { getFunctions, httpsCallable } from "firebase/functions";
-  import { getAuth } from "firebase/auth";
-  import { createRoutechoiceStatistics } from "../../../shared/o-utils/statistics/routechoices-statistics";
-  import { serializeNestedArraysInLegs } from "../../../shared/o-utils/models/leg";
 
   export let isDialogOpen = false;
 
@@ -54,7 +55,7 @@
       const authorization = "Bearer " + (await auth.currentUser?.getIdToken());
 
       const usersResponse = await fetch(
-        "https://europe-west1-routechoice-db-dev.cloudfunctions.net/getUserListOnRequest",
+        `${functionsBaseURL}/getUserListOnRequest`,
         {
           headers: {
             authorization,

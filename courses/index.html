@@ -17,6 +17,11 @@
       var isinternetexplorer = 0;
       var index_file = "index.php";
       var simplified_version = 0;
+      var functionsBaseURL =
+        window.location.href.includes("localhost") ||
+        window.location.href.includes("routechoice-db-dev")
+          ? "https://europe-west1-routechoice-db-dev.cloudfunctions.net"
+          : "https://europe-west1-routechoice-db.cloudfunctions.net";
     </script>
     <link
       rel="stylesheet"

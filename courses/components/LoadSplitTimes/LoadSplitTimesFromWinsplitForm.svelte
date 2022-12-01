@@ -1,10 +1,11 @@
 <script lang="ts">
-  import { timeZones } from "../../utils/time-zones";
   import { createEventDispatcher } from "svelte";
   import { fade } from "svelte/transition";
-  import type { SplitSubmitEvent } from "./models/split-submit-event";
-  import course from "../../stores/course";
+  import { functionsBaseURL } from "../../../firebase-env/dev";
   import { formatDateForDateInput } from "../../../shared/utils/date";
+  import course from "../../stores/course";
+  import { timeZones } from "../../utils/time-zones";
+  import type { SplitSubmitEvent } from "./models/split-submit-event";
 
   interface WinsplitObject {
     id: string;
@@ -13,8 +14,8 @@
 
   export let loading = false;
 
-  const url =
-    "https://europe-west1-routechoice-db-dev.cloudfunctions.net/getWinsplitData";
+  const url = `${functionsBaseURL}/getWinsplitData`;
+
   const parser = new DOMParser();
 
   let date: string | null = null;
