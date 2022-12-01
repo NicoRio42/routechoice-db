@@ -1,7 +1,7 @@
 <script lang="ts">
   import { createEventDispatcher } from "svelte";
   import { fade } from "svelte/transition";
-  import { functionsBaseURL } from "../../../firebase-env/dev";
+  import { functionsBaseURL } from "../../../environments/.env";
   import { formatDateForDateInput } from "../../../shared/utils/date";
   import course from "../../stores/course";
   import { timeZones } from "../../utils/time-zones";

@@ -12,7 +12,11 @@
     "deploy:hosting": "npm run build && firebase deploy --only hosting",
     "deploy:firestore": "firebase deploy --only firestore:rules",
     "deploy:functions": "firebase deploy --only functions",
-    "deploy:all": "npm run deploy:firestore && npm run deploy:functions && npm run deploy:hosting"
+    "deploy:all": "npm run deploy:firestore && npm run deploy:functions && npm run deploy:hosting",
+    "deploy:dev": "firebase use dev && npm run deploy:all",
+    "deploy:prod": "firebase use prod && npm run copy-env:prod && npm run deploy:all && npm run copy-env:backup && firebase use dev",
+    "copy-env:prod": "echo backup > environments\\.env.backup.js && copy environments\\.env.js environments\\.env.backup.js && copy environments\\.env.prod.js environments\\.env.js",
+    "copy-env:backup": "copy environments\\.env.backup.js environments\\.env.js && del environments\\.env.backup.js"
   },
   "devDependencies": {
     "@sveltejs/vite-plugin-svelte": "^1.0.2",

@@ -1,4 +1,4 @@
-import { functionsBaseURL } from "../../../firebase-env/dev";
+import { functionsBaseURL } from "../../../environments/.env";
 
 function initMapviewer(urlString) {
   const url = new URL(urlString);
