@@ -2,7 +2,7 @@ import { initializeApp } from "firebase/app";
 import { getAuth, onAuthStateChanged } from "firebase/auth";
 import { getFirestore } from "firebase/firestore/lite";
 import { getFunctions } from "firebase/functions";
-import firebaseConfig from "../environments/.env";
+import firebaseConfig from "../environments/environment";
 import userStore from "../shared/stores/user-store";
 import "./2d-rerun-reset.css";
 import App from "./App.svelte";

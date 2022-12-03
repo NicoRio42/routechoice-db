@@ -8,7 +8,7 @@
     orderBy,
     query,
   } from "firebase/firestore/lite";
-  import { functionsBaseURL } from "../../environments/.env";
+  import { functionsBaseURL } from "../../environments/environment";
   import { courseValidator } from "../../shared/models/course";
   import NavBar from "../../shared/NavBar.svelte";
   import { getMapCalibrationFromCalString } from "../../shared/o-utils/map/coords-converter";

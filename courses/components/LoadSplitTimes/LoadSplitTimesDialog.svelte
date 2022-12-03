@@ -3,7 +3,7 @@
   import { doc, getFirestore, updateDoc } from "firebase/firestore/lite";
   import { getFunctions, httpsCallable } from "firebase/functions";
   import { fade } from "svelte/transition";
-  import { functionsBaseURL } from "../../../environments/.env";
+  import { functionsBaseURL } from "../../../environments/environment";
   import { updateRunnersInFirestore } from "../../../shared/db/runners";
   import type User from "../../../shared/models/user";
   import type { Mapviewer } from "../../../shared/o-utils/models/2d-rerun/mapviewer";

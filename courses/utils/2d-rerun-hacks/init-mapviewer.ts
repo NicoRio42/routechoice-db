@@ -1,4 +1,4 @@
-import { functionsBaseURL } from "../../../environments/.env";
+import { functionsBaseURL } from "../../../environments/environment";
 
 function initMapviewer(urlString) {
   const url = new URL(urlString);
