@@ -3,6 +3,7 @@
   import userStore, { isUserAdminStore } from "./stores/user-store";
   import { getAuth, signOut } from "firebase/auth";
   import { location, push } from "svelte-spa-router";
+  import Hamburger from "./icons/Hamburger.svelte";
 
   const auth = getAuth();
 
@@ -21,7 +22,7 @@
     <slot />
   </ul>
 
-  <ul>
+  <ul class="large">
     {#if $isUserAdminStore}
       <li class="link-list-item">
         <a href="/#/users">Users</a>
@@ -48,13 +49,44 @@
             </li>
           </ul>
         </details>
-
-        <!-- <button class="logoutButton" type="button" on:click={handleLogout}
-          >Logout</button
-        > -->
       {/if}
     </li>
   </ul>
+
+  <details role="list" dir="rtl" class="hamburger-menu">
+    <summary aria-haspopup="listbox"> <Hamburger /> </summary>
+    <ul>
+      {#if $userStore !== null}
+        <li class="option-item">
+          <strong>
+            {$userStore?.displayName}
+          </strong>
+        </li>
+
+        <li class="option-item">
+          <button on:click={handleLogout}>Logout</button>
+        </li>
+
+        <li class="option-item">
+          <a href="/#/change-password">Change password</a>
+        </li>
+      {:else}
+        <li>
+          <a href="/#/login">Login</a>
+        </li>
+      {/if}
+
+      {#if $isUserAdminStore}
+        <li class="option-item">
+          <a href="/#/users">Users</a>
+        </li>
+
+        <li class="option-item">
+          <a href="/#/help">Help</a>
+        </li>
+      {/if}
+    </ul>
+  </details>
 </nav>
 
 <style>
@@ -82,20 +114,37 @@
       var(--nav-element-spacing-horizontal);
   }
 
-  .logoutButton {
+  .hamburger-menu {
+    display: none;
     padding: 0;
-    background-color: transparent;
+    margin: 0;
+    text-align: left;
+  }
+
+  .hamburger-menu summary,
+  .hamburger-menu summary:active {
     border: none;
-    color: var(--primary);
+  }
+
+  .hamburger-menu summary:focus {
+    box-shadow: none;
+  }
+
+  .hamburger-menu summary::after {
+    display: none;
   }
 
   @media screen and (max-width: 500px) {
-    nav li {
-      padding-left: 0;
+    .hamburger-menu {
+      display: block;
     }
 
-    nav ul:first-of-type {
-      margin-left: calc(var(--nav-element-spacing-horizontal) * -1);
+    .large {
+      display: none;
+    }
+
+    nav {
+      padding-right: 0.5rem;
     }
   }
 </style>
