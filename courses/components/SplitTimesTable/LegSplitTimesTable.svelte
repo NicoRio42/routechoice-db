@@ -3,7 +3,7 @@
   import type Routechoice from "../../../shared/o-utils/models/routechoice";
   import courseData from "../../stores/course-data";
   import selectedLeg from "../../stores/selected-leg";
-  import RunnerTrackToggle from "../RunnerTrackToggle.svelte";
+  import RunnerTrackToggle from "./RunnerTrackToggle.svelte";
   import RoutechoiceTableCell from "./RoutecoiceTableCell.svelte";
 
   import {
@@ -14,6 +14,13 @@
 
   let sortedRunnersWithOneLeg: Runner[] = [];
   let legRoutechoices: Routechoice[] = [];
+  let iShowAllRunnersTracksChecked = false;
+  let showAllRunnersTracks = false;
+  let runnersWithShowntrackNumber = 0;
+
+  $: runnersWith2DRerunTrackNumber = $courseData.runners.filter(
+    (runner) => runner.foreignKeys.twoDRerunRouteIndexNumber !== undefined
+  ).length;
 
   $: {
     if ($selectedLeg !== null) {
@@ -48,6 +55,23 @@
       legRoutechoices = $courseData.legs[$selectedLeg - 1].routechoices;
     }
   }
+
+  function handleShowRunnerTrack(event: { detail: boolean }) {
+    event.detail
+      ? runnersWithShowntrackNumber++
+      : runnersWithShowntrackNumber--;
+
+    if (runnersWithShowntrackNumber === runnersWith2DRerunTrackNumber - 1)
+      iShowAllRunnersTracksChecked = false;
+    if (runnersWithShowntrackNumber === runnersWith2DRerunTrackNumber)
+      iShowAllRunnersTracksChecked = true;
+  }
+
+  function handleAllTrackedSelection(event: {
+    currentTarget: EventTarget & HTMLInputElement;
+  }) {
+    showAllRunnersTracks = event.currentTarget.checked;
+  }
 </script>
 
 <table>
@@ -59,10 +83,16 @@
 
       <th class="sticky-header right">RC</th>
 
-      <th />
+      <th
+        ><input
+          type="checkbox"
+          bind:checked={iShowAllRunnersTracksChecked}
+          on:input={handleAllTrackedSelection}
+        /></th
+      >
     </tr>
   </thead>
-  {#each sortedRunnersWithOneLeg as runner}
+  {#each sortedRunnersWithOneLeg as runner (runner.id)}
     <tr>
       <td data-tooltip={`${runner.firstName} ${runner.lastName}`}>
         {fullNameToShortName(runner.firstName, runner.lastName)}
@@ -105,8 +135,10 @@
       {#if runner.foreignKeys.twoDRerunRouteIndexNumber}
         <td
           ><RunnerTrackToggle
+            isRunnerTrackShown={showAllRunnersTracks}
             twoDRerunRouteIndexNumber={runner.foreignKeys
               .twoDRerunRouteIndexNumber}
+            on:showRunnerTrack={handleShowRunnerTrack}
           /></td
         >
       {/if}

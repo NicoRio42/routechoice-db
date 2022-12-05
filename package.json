@@ -9,14 +9,7 @@
     "build": "vite build",
     "preview": "vite preview",
     "check": "svelte-check --tsconfig ./tsconfig.json",
-    "deploy:hosting": "npm run build && firebase deploy --only hosting",
-    "deploy:firestore": "firebase deploy --only firestore:rules",
-    "deploy:functions": "firebase deploy --only functions",
-    "deploy:all": "npm run deploy:firestore && npm run deploy:functions && npm run deploy:hosting",
-    "deploy:dev": "firebase use dev && npm run copy-env:dev && npm run deploy:all",
-    "deploy:prod": "firebase use prod && npm run copy-env:prod && npm run deploy:all && npm run copy-env:dev && firebase use dev",
-    "copy-env:dev": "copy environments\\environment.dev.js environments\\environment.js",
-    "copy-env:prod": "copy environments\\environment.prod.js environments\\environment.js"
+    "deploy": "node deploy.js"
   },
   "devDependencies": {
     "@sveltejs/vite-plugin-svelte": "^1.0.2",
