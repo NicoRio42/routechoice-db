@@ -1,4 +1,5 @@
 node_modules/
 routechoice-db-dev-firebase-adminsdk.json
 routechoice-db-firebase-adminsdk.json
+routechoice-db-staging-firebase-adminsdk.json
 *adminsdk.json

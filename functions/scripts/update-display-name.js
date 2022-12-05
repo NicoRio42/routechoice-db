@@ -2,6 +2,7 @@ import admin from "firebase-admin";
 
 import serviceAccountDev from "./routechoice-db-dev-firebase-adminsdk.json" assert { type: "json" };
 import serviceAccountProd from "./routechoice-db-firebase-adminsdk.json" assert { type: "json" };
+import serviceAccountStaging from "./routechoice-db-staging-firebase-adminsdk.json" assert { type: "json" };
 
 const env = process.argv[2];
 const email = process.argv[3];
@@ -16,6 +17,10 @@ switch (env) {
   }
   case "dev": {
     serviceAccount = serviceAccountDev;
+    break;
+  }
+  case "staging": {
+    serviceAccount = serviceAccountStaging;
     break;
   }
   default: {

@@ -17,11 +17,21 @@
       var isinternetexplorer = 0;
       var index_file = "index.php";
       var simplified_version = 0;
-      var functionsBaseURL =
-        window.location.href.includes("localhost") ||
-        window.location.href.includes("routechoice-db-dev")
-          ? "https://europe-west1-routechoice-db-dev.cloudfunctions.net"
-          : "https://europe-west1-routechoice-db.cloudfunctions.net";
+
+      function getFunctionsBaseURL() {
+        if (
+          window.location.href.includes("localhost") ||
+          window.location.href.includes("routechoice-db-dev")
+        )
+          return "https://europe-west1-routechoice-db-dev.cloudfunctions.net";
+
+        if (window.location.href.includes("routechoice-db-staging"))
+          return "https://europe-west1-routechoice-db-staging.cloudfunctions.net";
+
+        return "https://europe-west1-routechoice-db.cloudfunctions.net";
+      }
+
+      var functionsBaseURL = getFunctionsBaseURL();
     </script>
     <link
       rel="stylesheet"
