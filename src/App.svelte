@@ -13,7 +13,7 @@
   import CoursesOverview from "./routes/CoursesOverview.svelte";
   import Help from "./routes/Help.svelte";
   import Login from "./routes/Login.svelte";
-  import UsersOverview from "./routes/UsersOverview.svelte";
+  import ResetPassword from "./routes/ResetPassword.svelte";
 
   const routes = {
     "/": wrap({
@@ -21,7 +21,7 @@
       conditions: () => createUserLoggedInPromise(),
     }),
     "/users": wrap({
-      component: UsersOverview,
+      asyncComponent: () => import("./routes/UsersOverview.svelte"),
       conditions: () => createUserLoggedInPromise(isAdmin),
     }),
     "/help": wrap({
@@ -29,10 +29,7 @@
       conditions: () => createUserLoggedInPromise(isAdmin),
     }),
     "/login": Login,
-    "/change-password": wrap({
-      component: ChangePassword,
-      conditions: () => createUserLoggedInPromise(isAdmin),
-    }),
+    "/reset-password": ResetPassword,
   };
 
   function conditionsFailed(event: ConditionsFailedEvent) {

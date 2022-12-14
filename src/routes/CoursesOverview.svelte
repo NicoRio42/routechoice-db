@@ -18,6 +18,8 @@
 
   let isAddCourseDialogOpen = false;
   let courses: Course[] = [];
+  let courseCurrentlyDeletedID: string | null = null;
+  let isCourseDeletionLoading = false;
 
   const db = getFirestore();
   const functions = getFunctions(undefined, "europe-west1");
@@ -54,12 +56,18 @@
       return;
     }
 
+    courseCurrentlyDeletedID = course.id;
+    isCourseDeletionLoading = true;
+
     try {
       await deleteCourse(course);
       courses = courses.filter((c) => c.id !== course.id);
     } catch (error) {
       alert("An error occured while deleting the course.");
       console.error(error);
+    } finally {
+      courseCurrentlyDeletedID = null;
+      isCourseDeletionLoading = false;
     }
   }
 </script>
@@ -109,6 +117,9 @@
           {#if $isUserAdminStore}
             <td class="action-row">
               <button
+                aria-busy={courseCurrentlyDeletedID === course.id &&
+                  isCourseDeletionLoading}
+                disabled={isCourseDeletionLoading}
                 on:click={() => handleDeleteCourse(course)}
                 class="delete-button"
                 type="button"><Trash /></button

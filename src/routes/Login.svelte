@@ -1,9 +1,9 @@
 <script lang="ts">
   import { getAuth, signInWithEmailAndPassword } from "firebase/auth";
-  import CredentialsManagementLayout from "../layouts/CredentialsManagementLayout.svelte";
   import { push, querystring } from "svelte-spa-router";
   import userStore from "../../shared/stores/user-store";
   import PasswordInput from "../components/PasswordInput.svelte";
+  import CredentialsManagementLayout from "../layouts/CredentialsManagementLayout.svelte";
 
   const auth = getAuth();
   let redirectUrl: string | null = null;
@@ -49,6 +49,8 @@
       <PasswordInput bind:value={password} id="password" name="password" />
     </label>
 
+    <a class="reset-password-link" href="/#/reset-password">Reset password</a>
+
     <button
       aria-busy={loading}
       disabled={loading}
@@ -66,5 +68,10 @@
   .error-message {
     color: red;
     font-size: smaller;
+  }
+
+  .reset-password-link {
+    display: block;
+    margin-bottom: 1rem;
   }
 </style>
