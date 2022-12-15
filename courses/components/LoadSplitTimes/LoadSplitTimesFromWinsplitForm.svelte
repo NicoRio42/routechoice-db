@@ -43,6 +43,17 @@
     eventId = null;
     classes = [];
     classInfo = null;
+
+    // Trying to guess the timezone
+    const dateObject = new Date(date!);
+    const timeZoneOffset = dateObject.getTimezoneOffset();
+
+    const foundTimeZone = timeZones.find(
+      (tz) => tz.timezoneOffset === timeZoneOffset
+    );
+
+    if (foundTimeZone !== undefined) timeZone = foundTimeZone;
+
     const response = await fetch(`${url}?date=${date}`);
     eventsAreLoading = false;
 
@@ -117,7 +128,7 @@
       xmlDoc,
       className: classInfo.name,
       timeOffset,
-      timeZone,
+      timeZone: timeZone.value,
     });
   }
 </script>
@@ -166,7 +177,7 @@
     <select bind:value={timeZone} name="timeZoneInput" id="timeZoneInput"
       >timeZone
       {#each timeZones as timeZone}
-        <option value={timeZone}>{timeZone}</option>
+        <option value={timeZone}>{timeZone.value}</option>
       {/each}
     </select>
   </label>

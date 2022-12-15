@@ -10,3 +10,4 @@ routechoice-db-firebase-adminsdk.json
 .firebase
 .env.dev
 .env.prod
+data

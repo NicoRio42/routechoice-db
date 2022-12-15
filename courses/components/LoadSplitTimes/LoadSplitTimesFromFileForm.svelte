@@ -16,7 +16,7 @@
   let classNames: string[] = [];
   let className: string;
   let timeOffset = 0;
-  let timeZone = timeZones[1];
+  let timeZone = timeZones[2];
 
   interface FormEventHandler<T> {
     currentTarget: T;
@@ -59,6 +59,24 @@
       );
 
       if (classNames.length > 0) className = classNames[0];
+
+      const dateTag = xmlDoc.querySelector("Date");
+
+      if (dateTag === null || dateTag.textContent === null) return;
+
+      // Trying to guess the timezone
+      try {
+        const date = new Date(dateTag.textContent);
+        const timeZoneOffset = date.getTimezoneOffset();
+
+        const foundTimeZone = timeZones.find(
+          (tz) => tz.timezoneOffset === timeZoneOffset
+        );
+
+        if (foundTimeZone !== undefined) timeZone = foundTimeZone;
+      } catch (error) {
+        console.error(error);
+      }
     };
 
     reader.readAsText(xmlFile);
@@ -74,7 +92,7 @@
       xmlDoc,
       className,
       timeOffset,
-      timeZone,
+      timeZone: timeZone.value,
     });
   }
 </script>
@@ -104,7 +122,7 @@
   <select bind:value={timeZone} name="time-zone" id="time-zone"
     >timeZone
     {#each timeZones as timeZone}
-      <option value={timeZone}>{timeZone}</option>
+      <option value={timeZone}>{timeZone.value}</option>
     {/each}
   </select>
 
