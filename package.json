@@ -1,7 +1,7 @@
 {
   "name": "svelte-app",
   "private": true,
-  "version": "0.2.0",
+  "version": "0.3.0",
   "type": "module",
   "scripts": {
     "dev": "vite --open",
@@ -9,7 +9,13 @@
     "build": "vite build",
     "preview": "vite preview",
     "check": "svelte-check --tsconfig ./tsconfig.json",
-    "deploy": "node deploy.js"
+    "deploy": "node deploy.js",
+    "deploy:dev": "node deploy.js dev",
+    "deploy:dev:hosting": "node deploy.js dev --only hosting",
+    "deploy:staging": "node deploy.js staging",
+    "deploy:staging:hosting": "node deploy.js staging --only hosting",
+    "deploy:prod": "node deploy.js prod",
+    "deploy:prod:hosting": "node deploy.js prod --only hosting"
   },
   "devDependencies": {
     "@sveltejs/vite-plugin-svelte": "^1.0.2",
