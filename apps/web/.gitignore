@@ -11,4 +11,3 @@ routechoice-db-firebase-adminsdk.json
 .env.dev
 .env.prod
 data
-*.log
