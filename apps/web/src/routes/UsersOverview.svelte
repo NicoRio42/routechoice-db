@@ -53,38 +53,40 @@
     >Create user</button
   >
 
-  <table>
-    <thead>
-      <tr>
-        <th>Name</th>
-        <th>Role</th>
-        <th>Email</th>
-        <th />
-      </tr>
-    </thead>
-
-    <tbody>
-      {#each users as user (user.id)}
-        <tr animate:flip>
-          <td>
-            {user.displayName}
-          </td>
-
-          <td>{user.isAdmin ? "Admin" : "User"}</td>
-
-          <td>{user.email}</td>
-
-          <td class="action-row">
-            <button
-              on:click={() => deleteUserById(user.id)}
-              class="delete-button"
-              type="button"><Trash /></button
-            >
-          </td>
+  <section class="table-wrapper">
+    <table>
+      <thead>
+        <tr>
+          <th>Name</th>
+          <th>Role</th>
+          <th>Email</th>
+          <th />
         </tr>
-      {/each}
-    </tbody>
-  </table>
+      </thead>
+
+      <tbody>
+        {#each users as user (user.id)}
+          <tr animate:flip>
+            <td>
+              {user.displayName}
+            </td>
+
+            <td>{user.isAdmin ? "Admin" : "User"}</td>
+
+            <td>{user.email}</td>
+
+            <td class="action-row">
+              <button
+                on:click={() => deleteUserById(user.id)}
+                class="delete-button"
+                type="button"><Trash /></button
+              >
+            </td>
+          </tr>
+        {/each}
+      </tbody>
+    </table>
+  </section>
 </main>
 
 <style>
@@ -99,5 +101,9 @@
 
   .create-user-button {
     width: fit-content;
+  }
+
+  .table-wrapper {
+    overflow-x: auto;
   }
 </style>

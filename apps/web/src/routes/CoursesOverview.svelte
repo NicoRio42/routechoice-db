@@ -7,6 +7,7 @@
     query,
   } from "firebase/firestore/lite";
   import { getFunctions, httpsCallable } from "firebase/functions";
+  import { SortDirectionEnum } from "../components/Table/sort-direction.enum";
   import { push } from "svelte-spa-router";
   import { flip } from "svelte/animate";
   import { fade } from "svelte/transition";
@@ -15,11 +16,15 @@
   import { courseValidator } from "../../shared/models/course";
   import userStore, { isUserAdminStore } from "../../shared/stores/user-store";
   import AddCourseDialog from "../components/AddCourseDialog.svelte";
+  import SorTableHead from "../components/Table/SorTableHead.svelte";
 
   let isAddCourseDialogOpen = false;
   let courses: Course[] = [];
   let courseCurrentlyDeletedID: string | null = null;
   let isCourseDeletionLoading = false;
+  let sort: { key: string; direction: SortDirectionEnum }[] = [
+    { key: "date", direction: SortDirectionEnum.DESC },
+  ];
 
   const db = getFirestore();
   const functions = getFunctions(undefined, "europe-west1");
@@ -35,7 +40,14 @@
 
   async function getCourses() {
     const coursesRef = collection(db, "courses");
-    const q = query(coursesRef, orderBy("date", "desc"));
+
+    const orderByStatements = sort.map((s) =>
+      s.direction === SortDirectionEnum.ASC
+        ? orderBy(s.key)
+        : orderBy(s.key, "desc")
+    );
+
+    const q = query(coursesRef, ...orderByStatements);
 
     const querySnapshot = await getDocs(q);
     const data: Course[] = [];
@@ -70,6 +82,17 @@
       isCourseDeletionLoading = false;
     }
   }
+
+  function handleSortChange(
+    event: CustomEvent<null | SortDirectionEnum>,
+    key: string
+  ) {
+    const direction = event.detail;
+    sort = sort.filter((s) => s.key !== key);
+    if (direction !== null) sort = [{ key, direction }].concat(sort);
+
+    getCourses();
+  }
 </script>
 
 <svelte:head>
@@ -91,45 +114,53 @@
     >
   {/if}
 
-  <table>
-    <thead>
-      <tr>
-        <th>Name</th>
-        <th>Date</th>
-
-        {#if $isUserAdminStore}
-          <th />
-        {/if}
-      </tr>
-    </thead>
-
-    <tbody>
-      {#each courses as course (course.id)}
-        <tr animate:flip>
-          <td>
-            <a class="course-link" href={`/courses/#/${course.id}`}
-              >{course.name}</a
-            >
-          </td>
-
-          <td>{new Date(course.date).toLocaleDateString()}</td>
+  <section class="table-wrapper">
+    <table>
+      <thead>
+        <tr>
+          <SorTableHead on:sortChange={(e) => handleSortChange(e, "name")}
+            >Name</SorTableHead
+          >
+          <SorTableHead
+            sortDirection={SortDirectionEnum.DESC}
+            on:sortChange={(e) => handleSortChange(e, "date")}
+            >Date</SorTableHead
+          >
 
           {#if $isUserAdminStore}
-            <td class="action-row">
-              <button
-                aria-busy={courseCurrentlyDeletedID === course.id &&
-                  isCourseDeletionLoading}
-                disabled={isCourseDeletionLoading}
-                on:click={() => handleDeleteCourse(course)}
-                class="delete-button"
-                type="button"><Trash /></button
-              >
-            </td>
+            <SorTableHead />
           {/if}
         </tr>
-      {/each}
-    </tbody>
-  </table>
+      </thead>
+
+      <tbody>
+        {#each courses as course (course.id)}
+          <tr animate:flip>
+            <td>
+              <a class="course-link" href={`/courses/#/${course.id}`}
+                >{course.name}</a
+              >
+            </td>
+
+            <td>{new Date(course.date).toLocaleDateString()}</td>
+
+            {#if $isUserAdminStore}
+              <td class="action-row">
+                <button
+                  aria-busy={courseCurrentlyDeletedID === course.id &&
+                    isCourseDeletionLoading}
+                  disabled={isCourseDeletionLoading}
+                  on:click={() => handleDeleteCourse(course)}
+                  class="delete-button"
+                  type="button"><Trash /></button
+                >
+              </td>
+            {/if}
+          </tr>
+        {/each}
+      </tbody>
+    </table>
+  </section>
 </main>
 
 <style>
@@ -152,5 +183,9 @@
     margin: 0;
     padding: 0;
     cursor: pointer;
+  }
+
+  .table-wrapper {
+    overflow-x: auto;
   }
 </style>
