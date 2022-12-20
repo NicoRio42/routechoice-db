@@ -1,9 +1,10 @@
 import { z } from "zod";
+import { tagSchema } from "./tag";
 
 export const courseWithoutIDValidator = z.object({
   name: z.string(),
   date: z.number(),
-  tags: z.array(z.string()),
+  tags: z.array(tagSchema),
   data: z.string(),
   liveProviderURL: z.string(),
 });

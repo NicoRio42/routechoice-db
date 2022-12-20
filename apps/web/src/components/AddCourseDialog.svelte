@@ -10,12 +10,14 @@
   import { fade } from "svelte/transition";
   import type { CourseDataWithoutRunners } from "../../shared/o-utils/models/course-data";
   import clickOutside from "../../shared/use/clickOutside";
-  import { v4 as uuidv4 } from "uuid";
   import { formatDateForDateInput } from "../../shared/utils/date";
+  import TagsSelect from "./TagsSelect/TagsSelect.svelte";
+  import type { Tag } from "../../shared/models/tag";
 
   export let isAddCourseDialogOpen;
   let name = "";
   let liveProviderURL = "";
+  let tags: Tag[] = [];
 
   const today = new Date();
   let date = formatDateForDateInput(today);
@@ -50,7 +52,7 @@
 
     const timeStamp = new Date(date).getTime();
 
-    const id = uuidv4();
+    const id = crypto.randomUUID();
 
     const courseData: CourseDataWithoutRunners = {
       id,
@@ -67,7 +69,7 @@
       name,
       liveProviderURL: liveProviderURL,
       date: timeStamp,
-      tags: [],
+      tags,
       data: id,
     };
 
@@ -114,6 +116,11 @@
       <label for="2d-rerun-url"
         >Loggator or Tractrac URL
         <input bind:value={liveProviderURL} type="text" id="2d-rerun-url" />
+      </label>
+
+      <label
+        >Tags
+        <TagsSelect bind:tags />
       </label>
 
       <footer>

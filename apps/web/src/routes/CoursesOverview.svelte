@@ -5,26 +5,26 @@
     getFirestore,
     orderBy,
     query,
+    where,
   } from "firebase/firestore/lite";
   import { getFunctions, httpsCallable } from "firebase/functions";
-  import { SortDirectionEnum } from "../components/Table/sort-direction.enum";
-  import { push } from "svelte-spa-router";
+  import { replace } from "svelte-spa-router";
   import { flip } from "svelte/animate";
   import { fade } from "svelte/transition";
   import Trash from "../../shared/icons/Trash.svelte";
   import type { Course } from "../../shared/models/course";
   import { courseValidator } from "../../shared/models/course";
+  import type { Tag } from "../../shared/models/tag";
   import userStore, { isUserAdminStore } from "../../shared/stores/user-store";
   import AddCourseDialog from "../components/AddCourseDialog.svelte";
-  import SorTableHead from "../components/Table/SorTableHead.svelte";
+  import TagsSelect from "../components/TagsSelect/TagsSelect.svelte";
 
   let isAddCourseDialogOpen = false;
   let courses: Course[] = [];
   let courseCurrentlyDeletedID: string | null = null;
   let isCourseDeletionLoading = false;
-  let sort: { key: string; direction: SortDirectionEnum }[] = [
-    { key: "date", direction: SortDirectionEnum.DESC },
-  ];
+
+  let tags: Tag[] = [];
 
   const db = getFirestore();
   const functions = getFunctions(undefined, "europe-west1");
@@ -34,33 +34,37 @@
 
   userStore.subscribe((user) => {
     if (user === null) {
-      push("/login");
+      replace("/login");
     }
   });
 
   async function getCourses() {
     const coursesRef = collection(db, "courses");
 
-    const orderByStatements = sort.map((s) =>
-      s.direction === SortDirectionEnum.ASC
-        ? orderBy(s.key)
-        : orderBy(s.key, "desc")
-    );
+    const queryConstraints = [];
+    if (tags.length !== 0)
+      queryConstraints.push(where("tags", "array-contains-any", tags));
 
-    const q = query(coursesRef, ...orderByStatements);
+    queryConstraints.push(orderBy("date", "desc"));
+    const q = query(coursesRef, ...queryConstraints);
 
-    const querySnapshot = await getDocs(q);
-    const data: Course[] = [];
+    try {
+      const querySnapshot = await getDocs(q);
+      const data: Course[] = [];
 
-    querySnapshot.forEach((doc) => {
-      try {
-        data.push(courseValidator.parse({ ...doc.data(), id: doc.id }));
-      } catch (error) {
-        console.error(error);
-      }
-    });
+      querySnapshot.forEach((doc) => {
+        try {
+          data.push(courseValidator.parse({ ...doc.data(), id: doc.id }));
+        } catch (error) {
+          console.error(error);
+        }
+      });
 
-    courses = data;
+      courses = data;
+    } catch (error) {
+      alert("An error occured while loading the courses.");
+      console.error(error);
+    }
   }
 
   async function handleDeleteCourse(course: Course) {
@@ -82,17 +86,6 @@
       isCourseDeletionLoading = false;
     }
   }
-
-  function handleSortChange(
-    event: CustomEvent<null | SortDirectionEnum>,
-    key: string
-  ) {
-    const direction = event.detail;
-    sort = sort.filter((s) => s.key !== key);
-    if (direction !== null) sort = [{ key, direction }].concat(sort);
-
-    getCourses();
-  }
 </script>
 
 <svelte:head>
@@ -106,29 +99,18 @@
 <main class="container" in:fade={{ duration: 500 }}>
   <h1>Courses</h1>
 
-  {#if $isUserAdminStore}
-    <button
-      on:click={() => (isAddCourseDialogOpen = true)}
-      class="add-course-button secondary"
-      type="button">Add new course</button
-    >
-  {/if}
+  <TagsSelect bind:tags on:tagsSelect={getCourses} />
 
   <section class="table-wrapper">
     <table>
       <thead>
         <tr>
-          <SorTableHead on:sortChange={(e) => handleSortChange(e, "name")}
-            >Name</SorTableHead
-          >
-          <SorTableHead
-            sortDirection={SortDirectionEnum.DESC}
-            on:sortChange={(e) => handleSortChange(e, "date")}
-            >Date</SorTableHead
-          >
+          <th>Name</th>
+          <th>Date</th>
+          <th>Tags</th>
 
           {#if $isUserAdminStore}
-            <SorTableHead />
+            <th />
           {/if}
         </tr>
       </thead>
@@ -143,6 +125,14 @@
             </td>
 
             <td>{new Date(course.date).toLocaleDateString()}</td>
+
+            <td>
+              {#each course.tags as tag}
+                <span style:background-color={tag.color} class="tag"
+                  >{tag.name}</span
+                >
+              {/each}
+            </td>
 
             {#if $isUserAdminStore}
               <td class="action-row">
@@ -161,6 +151,14 @@
       </tbody>
     </table>
   </section>
+
+  {#if $isUserAdminStore}
+    <button
+      on:click={() => (isAddCourseDialogOpen = true)}
+      class="add-course-button"
+      type="button">Add new course</button
+    >
+  {/if}
 </main>
 
 <style>
@@ -187,5 +185,13 @@
 
   .table-wrapper {
     overflow-x: auto;
+  }
+
+  .tag {
+    margin-right: 0.5rem;
+    color: white;
+    padding: 0 0.5rem;
+    white-space: nowrap;
+    border-radius: 0.25rem;
   }
 </style>
