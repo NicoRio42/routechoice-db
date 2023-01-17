@@ -28,33 +28,35 @@
   }
 </script>
 
-<details role="list" on:toggle={handleToggle}>
-  <summary aria-haspopup="listbox">Tags</summary>
+<div class="wrapper">
+  <details role="list" on:toggle={handleToggle}>
+    <summary aria-haspopup="listbox">Tags</summary>
 
-  <ul role="listbox">
-    {#each availableTags as tag}
-      <li>
-        <input type="checkbox" value={tag} bind:group={tags} />{tag.name}
-      </li>
-    {/each}
-  </ul>
-</details>
+    <ul role="listbox">
+      {#each availableTags as tag}
+        <li>
+          <input type="checkbox" value={tag} bind:group={tags} />{tag.name}
+        </li>
+      {/each}
+    </ul>
+  </details>
 
-<section>
-  {#each tags as tag}
-    <span style:background-color={tag.color}
-      >{tag.name}
+  <section>
+    {#each tags as tag}
+      <span style:background-color={tag.color}
+        >{tag.name}
 
-      <!-- <button
+        <!-- <button
         type="button"
         on:click={() =>
           (selectedTags = selectedTags.filter((t) => t.id !== tag.id))}
       >
         <Xmark />
       </button> -->
-    </span>
-  {/each}
-</section>
+      </span>
+    {/each}
+  </section>
+</div>
 
 <style>
   /* summary,
@@ -62,6 +64,18 @@
   summary + ul li {
     width: fit-content;
   } */
+  .wrapper {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 1rem;
+    align-items: baseline;
+  }
+
+  @media screen and (max-width: 750px) {
+    .wrapper {
+      grid-template-columns: 1fr;
+    }
+  }
 
   section {
     display: flex;

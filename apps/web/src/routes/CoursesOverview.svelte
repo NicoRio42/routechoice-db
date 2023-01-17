@@ -23,8 +23,10 @@
   let courses: Course[] = [];
   let courseCurrentlyDeletedID: string | null = null;
   let isCourseDeletionLoading = false;
-
+  let loading = false;
+  let shortLoading = false;
   let tags: Tag[] = [];
+  let pageNumber = 1;
 
   const db = getFirestore();
   const functions = getFunctions(undefined, "europe-west1");
@@ -48,6 +50,11 @@
     queryConstraints.push(orderBy("date", "desc"));
     const q = query(coursesRef, ...queryConstraints);
 
+    loading = true;
+    shortLoading = false;
+
+    setTimeout(() => (shortLoading = true), 250);
+
     try {
       const querySnapshot = await getDocs(q);
       const data: Course[] = [];
@@ -64,8 +71,12 @@
     } catch (error) {
       alert("An error occured while loading the courses.");
       console.error(error);
+    } finally {
+      loading = false;
     }
   }
+
+  function getNexCourses() {}
 
   async function handleDeleteCourse(course: Course) {
     if (!confirm("Are you sure to delete this course?")) {
@@ -101,7 +112,7 @@
 
   <TagsSelect bind:tags on:tagsSelect={getCourses} />
 
-  <section class="table-wrapper">
+  <div class="table-wrapper">
     <table>
       <thead>
         <tr>
@@ -150,7 +161,17 @@
         {/each}
       </tbody>
     </table>
-  </section>
+
+    {#if loading && shortLoading}
+      <div class="loading-overlay" aria-busy="true" />
+    {/if}
+  </div>
+
+  <!-- <div class="page-buttons-wrapper">
+    <button type="button" class="outline page-button">Previous</button>
+    Page {pageNumber}
+    <button type="button" class="outline page-button">Next</button>
+  </div> -->
 
   {#if $isUserAdminStore}
     <button
@@ -164,6 +185,7 @@
 <style>
   .add-course-button {
     width: fit-content;
+    margin-top: 1rem;
   }
 
   .course-link {
@@ -185,6 +207,16 @@
 
   .table-wrapper {
     overflow-x: auto;
+    position: relative;
+  }
+
+  .loading-overlay {
+    position: absolute;
+    top: 0;
+    right: 0;
+    bottom: 0;
+    left: 0;
+    background-color: #00000031;
   }
 
   .tag {
@@ -193,5 +225,19 @@
     padding: 0 0.5rem;
     white-space: nowrap;
     border-radius: 0.25rem;
+  }
+
+  .page-buttons-wrapper {
+    display: flex;
+    justify-content: center;
+    align-items: baseline;
+    gap: 1rem;
+  }
+
+  .page-button {
+    width: fit-content;
+    padding: 0.25rem;
+    border: none;
+    box-shadow: none;
   }
 </style>

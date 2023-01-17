@@ -45,7 +45,7 @@
             </li>
 
             <li class="option-item">
-              <a href="/#/change-password">Change password</a>
+              <a href="/#/reset-password">Reset password</a>
             </li>
           </ul>
         </details>
@@ -68,7 +68,7 @@
         </li>
 
         <li class="option-item">
-          <a href="/#/change-password">Change password</a>
+          <a href="/#/reset-password">Reset password</a>
         </li>
       {:else}
         <li>
