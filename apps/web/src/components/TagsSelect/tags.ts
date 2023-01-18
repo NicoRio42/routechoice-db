@@ -19,6 +19,11 @@ export const TAGS = [
     name: "GF Se",
     color: "rgba(253, 174, 97, 1)",
   },
+  {
+    id: "9922a62d-1ca0-4b56-aca7-1eab7d3c1f5b",
+    name: "GF Ju",
+    color: "rgba(94, 79, 162, 1)",
+  },
 ];
 
 const colors = [
