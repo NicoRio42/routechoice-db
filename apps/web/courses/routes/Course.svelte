@@ -111,7 +111,10 @@
     const loggatorEventJSON = await loggatorEventRequest.json();
     const loggatorEventStarted = loggatorEventJSON.routes.length > 0;
 
-    if (!loggatorEventStarted) return;
+    if (!loggatorEventStarted) {
+      alert("Event isn't started yet.");
+      return;
+    }
 
     const loggatorEvent = rerun2DEventDataSchema.parse(loggatorEventJSON);
 
