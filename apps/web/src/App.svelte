@@ -19,6 +19,11 @@
       component: CoursesOverview,
       conditions: () => createUserLoggedInPromise(),
     }),
+    "/courses/:courseId": wrap({
+      asyncComponent: () =>
+        import("./routes/CourseManager/CourseManager.svelte"),
+      conditions: () => createUserLoggedInPromise(isAdmin),
+    }),
     "/users": wrap({
       asyncComponent: () => import("./routes/UsersOverview.svelte"),
       conditions: () => createUserLoggedInPromise(isAdmin),

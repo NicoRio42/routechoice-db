@@ -8,6 +8,7 @@
     where,
   } from "firebase/firestore/lite";
   import { getFunctions, httpsCallable } from "firebase/functions";
+  import Table from "../../shared/icons/Table.svelte";
   import { replace } from "svelte-spa-router";
   import { flip } from "svelte/animate";
   import { fade } from "svelte/transition";
@@ -122,6 +123,7 @@
 
           {#if $isUserAdminStore}
             <th />
+            <th />
           {/if}
         </tr>
       </thead>
@@ -147,12 +149,18 @@
 
             {#if $isUserAdminStore}
               <td class="action-row">
+                <a class="action-icon" href={`#/courses/${course.id}`}
+                  ><Table /></a
+                >
+              </td>
+
+              <td class="action-row">
                 <button
                   aria-busy={courseCurrentlyDeletedID === course.id &&
                     isCourseDeletionLoading}
                   disabled={isCourseDeletionLoading}
                   on:click={() => handleDeleteCourse(course)}
-                  class="delete-button"
+                  class="action-icon"
                   type="button"><Trash /></button
                 >
               </td>
@@ -196,7 +204,7 @@
     text-align: right;
   }
 
-  .delete-button {
+  .action-icon {
     display: contents;
     background-color: transparent;
     color: var(--h1-color);
