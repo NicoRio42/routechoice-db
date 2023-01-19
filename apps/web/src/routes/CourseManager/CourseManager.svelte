@@ -1,6 +1,7 @@
 <script lang="ts" context="module">
-  import { doc, getDoc, getFirestore } from "firebase/firestore/lite";
-  import { courseValidator, type Course } from "../../../shared/models/course";
+  import { getFirestore } from "firebase/firestore/lite";
+  import type { Course } from "../../../shared/models/course";
+  import { getCourse } from "../../../shared/db/course";
 
   interface LoadDataArgs {
     params: Record<string, any>;
@@ -10,12 +11,7 @@
 
   export async function loadData(args: LoadDataArgs): Promise<Course> {
     const { params } = args;
-    const docSnap = await getDoc(doc(db, "courses", params.courseId));
-
-    return courseValidator.parse({
-      ...docSnap.data(),
-      id: params.courseId,
-    });
+    return getCourse(params.courseId, db);
   }
 </script>
 
@@ -30,14 +26,16 @@
   <p>Loading course...</p>
 {:then course}
   <main class="container">
-    <h1>{course.name}</h1>
+    <h1>Course manager: {course.name}</h1>
 
     <div class="wrapper">
-      <article>General informations</article>
+      <a href={`#/courses/${params.courseId}/general-informations`}>
+        <article>General informations</article>
+      </a>
 
-      <article>Course and routechoices</article>
+      <!-- <article>Course and routechoices</article>
 
-      <article>Split times</article>
+      <article>Split times</article> -->
     </div>
   </main>
 {:catch error}

@@ -5,6 +5,7 @@ import { getFirestore } from "firebase/firestore/lite";
 import { getAuth, onAuthStateChanged } from "firebase/auth";
 import firebaseConfig from "../environments/environment";
 import userStore from "../shared/stores/user-store";
+import "../shared/global.css";
 
 const fireBaseApp = initializeApp(firebaseConfig);
 getFunctions(fireBaseApp);

@@ -98,6 +98,11 @@
       isCourseDeletionLoading = false;
     }
   }
+
+  function handleTagsSelected(event: CustomEvent<Tag[]>) {
+    tags = event.detail;
+    getCourses();
+  }
 </script>
 
 <svelte:head>
@@ -111,7 +116,7 @@
 <main class="container" in:fade={{ duration: 500 }}>
   <h1>Courses</h1>
 
-  <TagsSelect bind:tags on:tagsSelect={getCourses} />
+  <TagsSelect on:tagsSelect={handleTagsSelected} />
 
   <div class="table-wrapper">
     <table>

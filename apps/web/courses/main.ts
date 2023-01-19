@@ -6,6 +6,7 @@ import firebaseConfig from "../environments/environment";
 import userStore from "../shared/stores/user-store";
 import "./2d-rerun-reset.css";
 import App from "./App.svelte";
+import "../shared/global.css";
 
 const fireBaseApp = initializeApp(firebaseConfig);
 getFunctions(fireBaseApp);

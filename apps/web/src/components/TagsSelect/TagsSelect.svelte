@@ -3,7 +3,10 @@
   import type { Tag } from "../../../shared/models/tag";
   import { TAGS } from "./tags";
 
-  export let tags: Tag[] = [];
+  export let initialTags: Tag[] = [];
+  let tags: Tag[] = TAGS.filter((tag) =>
+    initialTags.some((t) => t.id === tag.id)
+  );
 
   let previousTags: Tag[] = [];
   const dispatch = createEventDispatcher<{ tagsSelect: Tag[] }>();

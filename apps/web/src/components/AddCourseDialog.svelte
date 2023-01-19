@@ -89,6 +89,10 @@
     closeDialog();
   }
 
+  function handleTagsSelected(event: CustomEvent<Tag[]>) {
+    tags = event.detail;
+  }
+
   function closeDialog(): void {
     isAddCourseDialogOpen = false;
   }
@@ -120,7 +124,7 @@
 
       <label
         >Tags
-        <TagsSelect bind:tags />
+        <TagsSelect on:tagsSelect={handleTagsSelected} />
       </label>
 
       <footer>

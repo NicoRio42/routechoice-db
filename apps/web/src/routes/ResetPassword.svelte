@@ -57,7 +57,7 @@
       <p class="success-message">
         A email has been sent to the provided address. Please follow the link in
         the email to reset your password. If you can't find the email in your
-        inbox, please check you spam folder.
+        inbox, please check your spam folder.
       </p>
     {/if}
   </form>
