@@ -164,14 +164,16 @@ function extractLegsFromPersonResult(
 ): (RunnerLeg | null)[] {
   const legTags = Array.from(personResult.querySelectorAll("SplitTime"));
 
-  return legTags.map((splitTime, index) => {
+  const legs: (RunnerLeg | null)[] = [];
+
+  legTags.map((splitTime, index) => {
     const status = splitTime.getAttribute("status");
 
-    if (
-      status === IOFXMLSplitTimeStatusEnum.Additional.valueOf() ||
-      status === IOFXMLSplitTimeStatusEnum.Missing.valueOf()
-    ) {
-      return null;
+    if (status === IOFXMLSplitTimeStatusEnum.Additional.valueOf()) return;
+
+    if (status === IOFXMLSplitTimeStatusEnum.Missing.valueOf()) {
+      legs.push(null);
+      return;
     }
 
     if (index > 0) {
@@ -182,7 +184,8 @@ function extractLegsFromPersonResult(
           IOFXMLSplitTimeStatusEnum.Additional.valueOf() ||
         previousControlStatus === IOFXMLSplitTimeStatusEnum.Missing.valueOf()
       ) {
-        return null;
+        legs.push(null);
+        return;
       }
     }
 
@@ -204,14 +207,16 @@ function extractLegsFromPersonResult(
 
     const time = getTime(legTags, index, timeOverall);
 
-    return {
+    legs.push({
       ...EMPTY_RUNNER_LEG,
       startControlCode,
       finishControlCode,
       timeOverall,
       time,
-    };
+    });
   });
+
+  return legs;
 }
 
 function getTime(

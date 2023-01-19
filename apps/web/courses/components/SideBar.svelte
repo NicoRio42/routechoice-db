@@ -41,6 +41,7 @@
     width: 20rem;
     resize: horizontal;
     overflow-x: auto;
+    border-right: 1px solid lightgray;
   }
 
   .main-wrapper {
