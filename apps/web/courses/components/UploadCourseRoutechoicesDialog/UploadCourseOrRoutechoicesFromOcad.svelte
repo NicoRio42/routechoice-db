@@ -141,8 +141,15 @@
       loading = false;
     }
 
-    if ($courseData.map === null)
-      throw new Error("No map callibration, event migth not have started yet.");
+    if ($courseData.map === null) {
+      isDialogOpen = false;
+
+      alert(
+        "Course and routechoices uploaded, you will be able to see it when the event will be started."
+      );
+
+      return;
+    }
 
     const twoDRerunCourseAndRoutechoices = mapCourseAndRoutechoicesTo2DRerun(
       $courseData.legs,
