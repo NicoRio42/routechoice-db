@@ -11,7 +11,7 @@
   onMount(() => {
     map = getMap();
 
-    tileLayer = new TileLayer();
+    tileLayer = new TileLayer({ zIndex: 0 });
 
     const source = new OSM();
     tileLayer.setSource(source);

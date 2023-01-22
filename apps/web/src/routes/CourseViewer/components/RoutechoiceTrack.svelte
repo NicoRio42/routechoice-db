@@ -5,6 +5,7 @@
 
   export let routechoice: Routechoice;
   export let opacity: number;
+  export let width: number;
 
   function addAlpha(color: string, opacity: number) {
     // coerce values so ti is between 0 and 1.
@@ -19,4 +20,4 @@
   });
 </script>
 
-<LineString {coords} {color} />
+<LineString {coords} {color} {width} />

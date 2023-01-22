@@ -4,7 +4,7 @@
   import ActionButtons from "./components/ActionButtons.svelte";
   import OlMap from "./components/OLMap.svelte";
   import OSM from "./components/OSM.svelte";
-  import RasterImage from "./components/RasterImage.svelte";
+  import GeoreferencedImage from "./components/GeoreferencedImage/GeoreferencedImage.svelte";
   import RoutechoiceTrack from "./components/RoutechoiceTrack.svelte";
   import RunnerRoute from "./components/RunnerRoute.svelte";
   import SideBar from "./components/SideBar.svelte";
@@ -86,7 +86,7 @@
     <OSM />
 
     {#if courseData.map !== null}
-      <RasterImage
+      <GeoreferencedImage
         url={courseData.map.url}
         mapCalibration={courseData.map.calibration}
       />
@@ -107,7 +107,7 @@
         {@const routechoices = courseData.legs[legNumber - 1].routechoices}
 
         {#each routechoices as routechoice (routechoice.id)}
-          <RoutechoiceTrack {routechoice} opacity={0.7} />
+          <RoutechoiceTrack {routechoice} opacity={0.7} width={5} />
         {/each}
       {/if}
     </VectorLayer>

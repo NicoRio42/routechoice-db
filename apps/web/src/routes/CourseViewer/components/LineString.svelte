@@ -11,6 +11,8 @@
 
   export let color: string;
   export let coords: Coordinate[];
+  export let width: number;
+
   let vectorLayer: VectorLayer<VectorSource<Geometry>>, lineFeature: Feature;
 
   const getVectorLayer =
@@ -23,7 +25,7 @@
     const line = new LineString(coords);
 
     lineFeature = new Feature(line);
-    const stroke = new Stroke({ color, width: 4 });
+    const stroke = new Stroke({ color, width });
     const style = new Style({ stroke });
     lineFeature.setStyle(style);
 

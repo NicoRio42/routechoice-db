@@ -12,7 +12,7 @@
 
   onMount(() => {
     map = getMap();
-    vectorLayer = new VectorLayer();
+    vectorLayer = new VectorLayer({ zIndex: 2 });
     const vectorSource = new VectorSource();
     vectorLayer.setSource(vectorSource);
 
