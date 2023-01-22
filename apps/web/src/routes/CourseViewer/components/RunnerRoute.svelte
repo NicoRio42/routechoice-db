@@ -1,17 +1,14 @@
 <script lang="ts">
   import type { RunnerTrack } from "../../../../shared/o-utils/models/runner";
   import type Runner from "../../../../shared/o-utils/models/runner";
-  import Polyline from "./Polyline.svelte";
+  import LineString from "./LineString.svelte";
 
   export let runner: Runner;
-  export let controlNumber: number;
+  export let legNumber: number;
 
   let coords: [number, number][] = [];
 
-  $: coords = computeCoordsFromRunnerTrackAndControlNumber(
-    runner.track,
-    controlNumber
-  );
+  $: coords = computeCoordsFromRunnerTrackAndLegNumber(runner.track, legNumber);
 
   let color = pickColor();
 
@@ -19,12 +16,12 @@
     return "";
   }
 
-  function computeCoordsFromRunnerTrackAndControlNumber(
+  function computeCoordsFromRunnerTrackAndLegNumber(
     runnerTrack: RunnerTrack | null,
-    controlNumber: number
+    legNumber: number
   ) {
     return [];
   }
 </script>
 
-<Polyline {coords} {color} />
+<LineString {coords} {color} />

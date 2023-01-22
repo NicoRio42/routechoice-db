@@ -139,6 +139,9 @@
               <a class="course-link" href={`/courses/#/${course.id}`}
                 >{course.name}</a
               >
+              {#if $isUserAdminStore}
+                &nbsp;<a href={`#/courses/${course.id}`}>(beta)</a>
+              {/if}
             </td>
 
             <td>{new Date(course.date).toLocaleDateString()}</td>
@@ -153,8 +156,9 @@
 
             {#if $isUserAdminStore}
               <td class="action-row">
-                <a class="action-icon" href={`#/courses/${course.id}`}
-                  ><Table /></a
+                <a
+                  class="action-icon"
+                  href={`#/courses/${course.id}/course-manager`}><Table /></a
                 >
               </td>
 

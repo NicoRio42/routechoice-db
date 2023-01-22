@@ -1,8 +1,9 @@
 <script lang="ts">
-  import type Control from "shared/o-utils/models/control";
+  import { transform, transformExtent } from "ol/proj";
   import type CourseData from "shared/o-utils/models/course-data";
-  import ControlSelector from "./components/ControlSelector.svelte";
+  import ActionButtons from "./components/ActionButtons.svelte";
   import OlMap from "./components/OLMap.svelte";
+  import OSM from "./components/OSM.svelte";
   import RasterImage from "./components/RasterImage.svelte";
   import RoutechoiceTrack from "./components/RoutechoiceTrack.svelte";
   import RunnerRoute from "./components/RunnerRoute.svelte";
@@ -11,68 +12,118 @@
 
   export let courseData: CourseData;
 
-  let angle = 0;
+  let angle: number;
   let fitBox: [number, number, number, number];
-  let controlNumber = 1;
+  let legNumber = 1;
   let selectedRunners = courseData.runners.map((runner) => runner.id);
   let showRoutechoices = true;
   let showSideBar = true;
 
   $: {
-    const [newFitBox, newAngle] = computeFitBoxAndAngleFromControlNumber(
-      controlNumber,
-      courseData.course
+    const [newFitBox, newAngle] = computeFitBoxAndAngleFromLegNumber(
+      legNumber,
+      courseData
     );
 
     fitBox = newFitBox;
     angle = newAngle;
   }
 
-  function computeFitBoxAndAngleFromControlNumber(
-    controlNumber: number,
-    course: Control[]
+  function computeFitBoxAndAngleFromLegNumber(
+    legNumber: number,
+    courseData: CourseData
   ): [[number, number, number, number], number] {
-    // TODO
-    return [[0, 1, 0, 1], 0];
+    const leg = courseData.legs[legNumber - 1];
+    if (leg === undefined) throw new Error("Cannot find leg");
+
+    const finishControl = courseData.course.find(
+      (control) => control.code === leg.finishControlCode
+    );
+
+    if (finishControl === undefined)
+      throw new Error("Cannot find finish control");
+
+    const minLat = Math.min(leg.startLat, finishControl.lat);
+    const maxLat = Math.max(leg.startLat, finishControl.lat);
+    const minLon = Math.min(leg.startLon, finishControl.lon);
+    const maxLon = Math.max(leg.startLon, finishControl.lon);
+
+    const extend = transformExtent(
+      [minLon, minLat, maxLon, maxLat],
+      "EPSG:4326",
+      "EPSG:3857"
+    );
+
+    const startControlWebMarcator = transform(
+      [leg.startLon, leg.startLat],
+      "EPSG:4326",
+      "EPSG:3857"
+    );
+
+    const finishControlWebMercator = transform(
+      [finishControl.lon, finishControl.lat],
+      "EPSG:4326",
+      "EPSG:3857"
+    );
+
+    const newAngle = -Math.atan(
+      (finishControlWebMercator[0] - startControlWebMarcator[0]) /
+        (finishControlWebMercator[1] - startControlWebMarcator[1])
+    );
+
+    const d = Math.floor(newAngle / Math.PI);
+
+    return [extend as [number, number, number, number], newAngle - d * Math.PI];
   }
 </script>
 
-{#if showSideBar}
-  <SideBar bind:selectedRunners runners={courseData.runners} />
-{/if}
-
-<OlMap {angle} {fitBox}>
-  {#if courseData.map !== null}
-    <RasterImage
-      url={courseData.map.url}
-      mapCalibration={courseData.map.calibration}
-    />
+<div class="wrapper">
+  {#if showSideBar}
+    <SideBar bind:selectedRunners runners={courseData.runners} />
   {/if}
 
-  <VectorLayer>
-    {#each courseData.runners as runner}
-      {@const show = selectedRunners.includes(runner.id)}
+  <OlMap {angle} {fitBox} padding={100}>
+    <OSM />
 
-      {#if show}
-        <RunnerRoute {runner} {controlNumber} />
-      {/if}
-    {/each}
-  </VectorLayer>
-
-  <VectorLayer>
-    {#if showRoutechoices}
-      {@const routechoices = courseData.legs[controlNumber - 1].routechoices}
-
-      {#each routechoices as routechoice}
-        <RoutechoiceTrack {routechoice} />
-      {/each}
+    {#if courseData.map !== null}
+      <RasterImage
+        url={courseData.map.url}
+        mapCalibration={courseData.map.calibration}
+      />
     {/if}
-  </VectorLayer>
-</OlMap>
 
-<ControlSelector
-  bind:controlNumber
-  bind:showRoutechoices
-  bind:showSideBar
-  course={courseData.course}
-/>
+    <VectorLayer>
+      {#each courseData.runners as runner}
+        {@const show = selectedRunners.includes(runner.id)}
+
+        {#if show}
+          <RunnerRoute {runner} {legNumber} />
+        {/if}
+      {/each}
+    </VectorLayer>
+
+    <VectorLayer>
+      {#if showRoutechoices}
+        {@const routechoices = courseData.legs[legNumber - 1].routechoices}
+
+        {#each routechoices as routechoice (routechoice.id)}
+          <RoutechoiceTrack {routechoice} opacity={0.7} />
+        {/each}
+      {/if}
+    </VectorLayer>
+  </OlMap>
+
+  <ActionButtons
+    bind:legNumber
+    bind:showRoutechoices
+    bind:showSideBar
+    legs={courseData.legs}
+  />
+</div>
+
+<style>
+  .wrapper {
+    flex-shrink: 0;
+    flex-grow: 1;
+  }
+</style>

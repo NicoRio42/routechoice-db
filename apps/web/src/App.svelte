@@ -19,10 +19,13 @@
       component: CoursesOverview,
       conditions: () => createUserLoggedInPromise(),
     }),
-    "/courses/:courseId": wrap({
+    "/courses/:courseId/course-manager": wrap({
       asyncComponent: () =>
         import("./routes/CourseManager/CourseManager.svelte"),
       conditions: () => createUserLoggedInPromise(isAdmin),
+    }),
+    "/courses/:courseId": wrap({
+      asyncComponent: () => import("./routes/CourseViewer/page.svelte"),
     }),
     "/courses/:courseId/general-informations": wrap({
       asyncComponent: () =>
@@ -46,6 +49,16 @@
   }
 </script>
 
-<NavBar />
+<div class="wrapper">
+  <NavBar />
 
-<Router {routes} on:conditionsFailed={conditionsFailed} />
+  <Router {routes} on:conditionsFailed={conditionsFailed} />
+</div>
+
+<style>
+  .wrapper {
+    display: flex;
+    flex-direction: column;
+    height: 100%;
+  }
+</style>
