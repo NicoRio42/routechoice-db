@@ -51,6 +51,7 @@ export const getLoggatorData = regionalFunctions.https.onRequest(
 
     url.searchParams.append("baseurl", req.query.baseurl);
     url.searchParams.append("idstr", req.query.idstr);
+    url.searchParams.append("clear", "1");
 
     res.set("Access-Control-Allow-Origin", "*");
 
