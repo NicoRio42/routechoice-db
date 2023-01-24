@@ -18,6 +18,8 @@
   const coords = routechoice.track.map(([lat, lon]) => {
     return transform([lon, lat], "EPSG:4326", "EPSG:3857");
   });
+
+  const text = `${routechoice.name} ${Math.round(routechoice.length)}m`;
 </script>
 
-<LineString {coords} {color} {width} />
+<LineString {coords} {color} {width} {text} />

@@ -9,6 +9,7 @@
   import RunnerRoute from "./components/RunnerRoute.svelte";
   import SideBar from "./components/SideBar.svelte";
   import VectorLayer from "./components/VectorLayer.svelte";
+  import "./styles.css";
 
   export let courseData: CourseData;
 
@@ -66,14 +67,12 @@
       "EPSG:3857"
     );
 
-    const newAngle = -Math.atan(
-      (finishControlWebMercator[0] - startControlWebMarcator[0]) /
-        (finishControlWebMercator[1] - startControlWebMarcator[1])
-    );
+    const deltaX = finishControlWebMercator[0] - startControlWebMarcator[0];
+    const deltaY = finishControlWebMercator[1] - startControlWebMarcator[1];
 
-    const d = Math.floor(newAngle / Math.PI);
+    const newAngle = -Math.atan(deltaX / deltaY) - (deltaY > 0 ? 0 : Math.PI);
 
-    return [extend as [number, number, number, number], newAngle - d * Math.PI];
+    return [extend as [number, number, number, number], newAngle];
   }
 </script>
 
@@ -107,7 +106,7 @@
         {@const routechoices = courseData.legs[legNumber - 1].routechoices}
 
         {#each routechoices as routechoice (routechoice.id)}
-          <RoutechoiceTrack {routechoice} opacity={0.7} width={5} />
+          <RoutechoiceTrack {routechoice} opacity={0.8} width={6} />
         {/each}
       {/if}
     </VectorLayer>
