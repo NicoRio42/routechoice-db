@@ -5,7 +5,7 @@
 
   export let angle: number;
   export let fitBox: [number, number, number, number];
-  export let padding: number;
+  export let padding: [number, number, number, number];
 
   let map: Map;
   let view: View;
@@ -13,7 +13,7 @@
   $: {
     if (view !== undefined) {
       view.setRotation(angle);
-      view.fit(fitBox, { padding: [padding, padding, padding, padding] });
+      view.fit(fitBox, { padding });
     }
   }
 
@@ -27,7 +27,7 @@
       view,
     });
 
-    view.fit(fitBox, { padding: [padding, padding, padding, padding] });
+    view.fit(fitBox, { padding });
   });
 
   onDestroy(() => {

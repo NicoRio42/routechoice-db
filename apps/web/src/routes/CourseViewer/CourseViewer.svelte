@@ -10,6 +10,7 @@
   import SideBar from "./components/SideBar.svelte";
   import VectorLayer from "./components/VectorLayer.svelte";
   import "./styles.css";
+  import type { RoutechoiceChangeEventDetails } from "./components/SplitTimesTable/RoutecoiceTableCell.svelte";
 
   export let courseData: CourseData;
 
@@ -74,14 +75,70 @@
 
     return [extend as [number, number, number, number], newAngle];
   }
+
+  function handleRoutechoiceChange(
+    event: CustomEvent<RoutechoiceChangeEventDetails>
+  ) {
+    console.log("changing routechoice for runnur id " + event.detail.runnerId);
+
+    // const routechoice = routechoices.find((r) => r.id === selectedRoutechoice);
+
+    // if (routechoice === undefined) {
+    //   console.warn("Cannot find back routechoice to update.");
+    //   return;
+    // }
+
+    // const completeRunner = $courseData.runners.find((r) => r.id === runner.id);
+
+    // if (completeRunner === undefined) {
+    //   console.warn("Cannot find back runner to update.");
+    //   return;
+    // }
+
+    // const routechoiceToAttribute = structuredClone(routechoice);
+    // delete routechoiceToAttribute.statistics;
+    // routechoiceToAttribute.track = [];
+    // const legToUpdate = completeRunner.legs[$selectedLeg - 1];
+    // if (legToUpdate === null) return;
+    // legToUpdate.manualRouteChoice = routechoiceToAttribute;
+
+    // // Update legs routechoices stats
+    // $courseData.legs[$selectedLeg - 1] = createRoutechoiceStatisticsForOneLeg(
+    //   $courseData.legs[$selectedLeg - 1],
+    //   $selectedLeg,
+    //   $courseData.runners
+    // );
+
+    // loading = true;
+
+    // try {
+    //   await updateDoc(
+    //     doc(db, "coursesData", $courseData.id, "runners", runner.id),
+    //     { legs: completeRunner.legs }
+    //   );
+
+    //   await updateDoc(doc(db, "coursesData", $courseData.id), {
+    //     legs: serializeNestedArraysInLegs($courseData.legs),
+    //   });
+    // } catch (error) {
+    //   alert("An error occured while manually updating the routechoice.");
+    //   console.error(error);
+    // } finally {
+    //   loading = false;
+    // }
+  }
 </script>
 
 <div class="wrapper">
-  {#if showSideBar}
-    <SideBar bind:selectedRunners runners={courseData.runners} />
-  {/if}
+  <SideBar
+    bind:selectedRunners
+    {courseData}
+    {legNumber}
+    {showSideBar}
+    on:routechoiceChange={handleRoutechoiceChange}
+  />
 
-  <OlMap {angle} {fitBox} padding={100}>
+  <OlMap {angle} {fitBox} padding={[100, 0, 100, 0]}>
     <OSM />
 
     {#if courseData.map !== null}
@@ -122,6 +179,7 @@
 
 <style>
   .wrapper {
+    position: relative;
     flex-shrink: 0;
     flex-grow: 1;
   }

@@ -7,3 +7,9 @@
 .ol-rotate {
   top: 4em;
 }
+
+@media screen and (max-width: 768px) {
+  .ol-rotate {
+    top: 5.5em;
+  }
+}

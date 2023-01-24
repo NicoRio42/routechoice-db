@@ -1,14 +1,13 @@
 <script lang="ts">
   import ChevronLeft from "../../../../shared/icons/ChevronLeft.svelte";
   import ChevronRight from "../../../../shared/icons/ChevronRight.svelte";
-  import Eye from "../../../../shared/icons/Eye.svelte";
-  import Elipsis from "../../../../shared/icons/Elipsis.svelte";
+  import Chart from "../../../../shared/icons/Chart.svelte";
   import type Leg from "../../../../shared/o-utils/models/control";
 
   export let legNumber: number;
   export let legs: Leg[];
-  export let showRoutechoices;
-  export let showSideBar;
+  export let showRoutechoices: boolean;
+  export let showSideBar: boolean;
 
   const numberOfLegs = legs.length;
 
@@ -65,7 +64,7 @@
 
   <button on:click={handleNextControl}><ChevronRight /></button>
 
-  <!-- <button on:click={() => ($toggleSideBar = !$toggleSideBar)}><Chart /></button> -->
+  <button on:click={() => (showSideBar = !showSideBar)}><Chart /></button>
 </div>
 
 <style>
