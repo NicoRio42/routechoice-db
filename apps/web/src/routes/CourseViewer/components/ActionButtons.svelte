@@ -2,7 +2,8 @@
   import ChevronLeft from "../../../../shared/icons/ChevronLeft.svelte";
   import ChevronRight from "../../../../shared/icons/ChevronRight.svelte";
   import Chart from "../../../../shared/icons/Chart.svelte";
-  import type Leg from "../../../../shared/o-utils/models/control";
+  import type Leg from "../../../../shared/o-utils/models/leg";
+  import Eye from "../../../../shared/icons/Eye.svelte";
 
   export let legNumber: number;
   export let legs: Leg[];
@@ -48,11 +49,9 @@
     >AA</button
   > -->
 
-  <!-- <button
-    class="large"
-    on:click={toggleRoutechoices}
+  <button on:click={() => (showRoutechoices = !showRoutechoices)}
     ><Eye /></button
-  > -->
+  >
 
   <button on:click={handlePreviousControl}><ChevronLeft /></button>
 
@@ -76,6 +75,7 @@
     display: flex;
     justify-content: center;
     gap: 0.5rem;
+    z-index: 1;
   }
 
   select {

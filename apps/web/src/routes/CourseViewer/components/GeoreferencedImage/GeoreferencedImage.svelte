@@ -4,7 +4,7 @@
   import { transformExtent } from "ol/proj";
   import Static from "ol/source/ImageStatic.js";
   import type { MapCalibration } from "shared/o-utils/models/course-map";
-  import { getContext, onMount } from "svelte";
+  import { getContext, onDestroy, onMount } from "svelte";
 
   //https://codesandbox.io/s/kw9l85y5po
   export let url: string;
@@ -12,6 +12,7 @@
 
   const getMap = getContext<() => Map>("map");
   let map: Map;
+  let imageLayer: ImageLayer<Static>;
 
   onMount(() => {
     map = getMap();
@@ -97,5 +98,9 @@
         imageExtent: extent,
       })
     );
+  });
+
+  onDestroy(() => {
+    if (map !== undefined) map.removeLayer(imageLayer);
   });
 </script>
