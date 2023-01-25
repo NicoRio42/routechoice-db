@@ -1,5 +1,4 @@
 import functions from "firebase-functions";
-import fetch from "node-fetch";
 import { createURLWithRequestQueryParams } from "./utils.js";
 
 const regionalFunctions = functions.region("europe-west1");

@@ -17,3 +17,4 @@ export {
   getUserListOnRequest,
 } from "./src/user.js";
 export { getWinsplitData } from "./src/winsplit.js";
+export { getLoggatorEvent, getLoggatorEventPoints } from "./src/loggator.js";

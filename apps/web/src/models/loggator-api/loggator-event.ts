@@ -1,4 +1,4 @@
-import { LoggatorCompetitor } from "./loggator-competitor";
+import type { LoggatorCompetitor } from "./loggator-competitor";
 
 export interface LoggatorEvent {
   event: {
@@ -11,7 +11,7 @@ export interface LoggatorEvent {
     slug: string;
   };
   competitors: LoggatorCompetitor[];
-  tracks: URL;
+  tracks: string;
   settings: {
     latitude: number;
     longitude: number;
@@ -25,7 +25,7 @@ export interface LoggatorEvent {
     show_relative_time: number;
   };
   map: {
-    url: URL;
+    url: string;
     width: number;
     height: number;
     coordinates: {
@@ -34,7 +34,7 @@ export interface LoggatorEvent {
       topRight: { lat: number; lng: number };
       topLeft: { lat: number; lng: number };
     };
-    tiles: URL;
+    tiles: string;
     name: string;
   };
 }

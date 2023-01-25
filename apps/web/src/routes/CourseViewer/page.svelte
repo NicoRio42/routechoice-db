@@ -20,11 +20,25 @@
   import { extractLoggatorIDFromLoggatorURL } from "../../../courses/utils/2d-rerun-hacks/init-mapviewer";
   import { getMapCalibrationFromCalString } from "../../../shared/o-utils/map/coords-converter";
   import CourseViewer from "./CourseViewer.svelte";
+  import { getFunctions, httpsCallable } from "firebase/functions";
+  import type { LoggatorEvent } from "../../models/loggator-api/loggator-event";
+  import type { LoggatorPoints } from "src/models/loggator-api/loggator-points";
 
   export let params: { courseId: string };
 
-  const db = getFirestore();
+  const functions = getFunctions(undefined, "europe-west1");
 
+  const getLoggatorEvent = httpsCallable<
+    string,
+    { data: LoggatorEvent | { message: string; error: unknown } }
+  >(functions, "getLoggatorEvent");
+
+  const getLoggatorEventPoints = httpsCallable<
+    string,
+    { data: LoggatorPoints | { message: string; error: unknown } }
+  >(functions, "getLoggatorEventPoints");
+
+  const db = getFirestore();
   const courseDataPromise = getCourseData();
 
   async function getCourseData(): Promise<CourseData | undefined> {
@@ -91,6 +105,12 @@
       calibration: getMapCalibrationFromCalString(loggatorEvent.map.calstring),
       url: loggatorEvent.map.imagelink,
     };
+
+    // console.log(
+    //   await getLoggatorEventPoints(
+    //     extractLoggatorIDFromLoggatorURL(course.liveProviderURL)
+    //   )
+    // );
 
     return courseData;
   }

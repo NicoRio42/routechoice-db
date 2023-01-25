@@ -25,7 +25,7 @@ export function getLoggatorDataURL(logatorUrl: string): string {
   )}`;
 }
 
-export function extractLoggatorIDFromLoggatorURL(logatorUrl) {
+export function extractLoggatorIDFromLoggatorURL(logatorUrl: string) {
   const urlArray = logatorUrl.split("/");
   return urlArray[urlArray.length - 1];
 }
