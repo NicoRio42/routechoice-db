@@ -102,8 +102,17 @@
   }
 
   async function saveSplitTimes(event: CustomEvent<{ runners: Runner[] }>) {
+    loading = true;
     let { runners } = event.detail;
-    runners = detectRunnersRoutechoices($courseData.legs, runners);
+
+    try {
+      runners = detectRunnersRoutechoices($courseData.legs, runners);
+    } catch (error) {
+      console.error(error);
+      alert(`An error occured while detecting runners routechoices.\n${error}`);
+      loading = false;
+      return;
+    }
 
     // So the runner track is not persisted to Firebase
     runners.forEach((runner) => (runner.track = null));
@@ -177,6 +186,7 @@
         users={usersForMatching}
         on:previous={() => (step = 1)}
         on:submit={saveSplitTimes}
+        {loading}
       />
     {/if}
   </article>

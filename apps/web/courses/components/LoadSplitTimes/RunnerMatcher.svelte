@@ -6,6 +6,7 @@
 
   export let runners: Runner[] = [];
   export let users: RunnerForMatching[] = [];
+  export let loading = false;
 
   const dispatchSubmit = createEventDispatcher<{
     submit: { runners: Runner[] };
@@ -65,7 +66,9 @@
       class="outline"
       on:click={() => dispatchPrevious("previous")}>Cancel</button
     >
-    <button type="submit">Save split times</button>
+    <button aria-busy={loading} disabled={loading} type="submit"
+      >Save split times</button
+    >
   </footer>
 </form>
 
