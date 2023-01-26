@@ -65,10 +65,12 @@
 
       const users = (await usersResponse.json()) as unknown as User[];
 
-      usersForMatching = users.map((u) => ({
-        name: u.displayName ?? u.email.split("@")[0].replace(".", " ") ?? "",
-        foreignKey: u.id,
-      }));
+      usersForMatching = users
+        .map((u) => ({
+          name: u.displayName ?? u.email.split("@")[0].replace(".", " ") ?? "",
+          foreignKey: u.id,
+        }))
+        .sort((userA, userB) => userA.name.localeCompare(userB.name));
 
       const matchedRunnersWithUsers = matchRunnersByName(
         rawRunners,

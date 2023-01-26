@@ -3,6 +3,7 @@
   import { createEventDispatcher } from "svelte";
   import type Runner from "../../../shared/o-utils/models/runner";
   import type { RunnerForMatching } from "../../../shared/o-utils/two-d-rerun/runners-matcher";
+  import type { Mapviewer } from "../../../shared/o-utils/models/2d-rerun/mapviewer";
 
   export let runners: Runner[] = [];
   export let users: RunnerForMatching[] = [];
@@ -15,6 +16,9 @@
 
   // @ts-ignore
   const mapViewer: Mapviewer = mapviewer;
+  const routes = mapViewer.routes.sort((routeA, routeB) =>
+    routeA.runnername.localeCompare(routeB.runnername)
+  );
 
   function handleSubmit() {
     dispatchSubmit("submit", { runners });
@@ -40,7 +44,7 @@
             <select bind:value={runner.foreignKeys.twoDRerunRouteIndexNumber}>
               <option />
 
-              {#each mapViewer.routes as route}
+              {#each routes as route}
                 <option value={route.indexnumber}>{route.runnername}</option>
               {/each}
             </select>
