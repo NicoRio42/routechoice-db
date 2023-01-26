@@ -8,7 +8,7 @@ export default function parseGPXRoutechoicesOCADExport(
 ): Leg[] {
   if (legs.length === 0) return [];
 
-  const clonedLegs = structuredClone(legs);
+  const clonedLegs = structuredClone(legs) as Leg[];
 
   const rawRoutechoices: RawRoutechoice[] = Array.from(
     routechoicesXmlDoc.querySelectorAll("trk")
@@ -66,24 +66,46 @@ export default function parseGPXRoutechoicesOCADExport(
 
     let attributedLegIndex = 0;
 
-    let distance = distanceBetweenTwoGPSPoints(
+    let distanceStart = distanceBetweenTwoGPSPoints(
       [rc.rawPoints[0][0], rc.rawPoints[0][1]],
       [clonedLegs[0].startLat, clonedLegs[0].startLon]
     );
 
+    const rawPointsLength = rc.rawPoints.length;
+
+    let distanceFinish = distanceBetweenTwoGPSPoints(
+      [
+        rc.rawPoints[rawPointsLength - 1][0],
+        rc.rawPoints[rawPointsLength - 1][1],
+      ],
+      [clonedLegs[0].finishLat, clonedLegs[0].finishLon]
+    );
+
     clonedLegs.forEach((leg, i) => {
-      const newDistance = distanceBetweenTwoGPSPoints(
+      const newDistanceStart = distanceBetweenTwoGPSPoints(
         [rc.rawPoints[0][0], rc.rawPoints[0][1]],
         [leg.startLat, leg.startLon]
       );
 
-      if (newDistance < distance) {
-        distance = newDistance;
+      const newDistanceFinish = distanceBetweenTwoGPSPoints(
+        [
+          rc.rawPoints[rawPointsLength - 1][0],
+          rc.rawPoints[rawPointsLength - 1][1],
+        ],
+        [leg.finishLat, leg.finishLon]
+      );
+
+      if (
+        newDistanceStart + newDistanceFinish <
+        distanceStart + distanceFinish
+      ) {
+        distanceStart = newDistanceStart;
+        distanceFinish = newDistanceFinish;
         attributedLegIndex = i;
       }
     });
 
-    if (distance > 500)
+    if (distanceStart > 500)
       console.warn(
         "Routechoice first point is more than 500m away from any control"
       );

@@ -10,6 +10,8 @@ export const legWithoutRoutechoicesValidator = z.object({
   finishControlCode: z.string(),
   startLat: z.number(),
   startLon: z.number(),
+  finishLat: z.number(),
+  finishLon: z.number(),
 });
 
 export const legValidator = legWithoutRoutechoicesValidator.extend({
@@ -21,6 +23,8 @@ export interface LegWithoutRoutechoices {
   finishControlCode: string;
   startLat: number;
   startLon: number;
+  finishLat: number;
+  finishLon: number;
 }
 
 export default interface Leg extends LegWithoutRoutechoices {

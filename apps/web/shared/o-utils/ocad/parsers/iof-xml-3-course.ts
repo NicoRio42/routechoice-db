@@ -107,6 +107,8 @@ export default function parseIOFXML3CourseOCADExport(
       finishControlCode: control.code,
       startLat: filteredcontrols[index - 1].lat,
       startLon: filteredcontrols[index - 1].lon,
+      finishLat: filteredcontrols[index].lat,
+      finishLon: filteredcontrols[index].lon,
       routechoices: [],
     });
   });
