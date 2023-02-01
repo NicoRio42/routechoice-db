@@ -19,6 +19,8 @@ export interface RunnerTrack {
 
 export default interface Runner {
   id: string;
+  trackingDeviceId: string | null;
+  userId: string | null;
   foreignKeys: Record<string, unknown>;
   status: RunnerStatusEnum;
   firstName: string;
@@ -34,7 +36,8 @@ export default interface Runner {
 
 export const runnerValidator = z.object({
   id: z.string(),
-  foreignKeys: z.record(z.unknown()),
+  trackingDeviceId: z.string().nullable(),
+  userId: z.string().nullable(),
   status: runnerStatusEnumValidator,
   firstName: z.string(),
   lastName: z.string(),

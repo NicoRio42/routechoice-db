@@ -5,7 +5,6 @@ export const courseWithoutIDValidator = z.object({
   name: z.string(),
   date: z.number(),
   tags: z.array(tagSchema),
-  data: z.string(),
   liveProviderURL: z.string(),
 });
 

@@ -38,13 +38,20 @@
       return;
     }
 
+    let url: URL;
+    let id: string;
+
     try {
-      const url = new URL(liveProviderURL);
+      url = new URL(liveProviderURL);
 
       if (!allowedOrigins.includes(url.origin)) {
         alert("Only Loggator and Tractrac are supported currently.");
         return;
       }
+
+      const lastPathPart = url.pathname.split("/").at(-1);
+      if (lastPathPart === undefined) throw new Error("Invalid URL");
+      id = `loggator-${lastPathPart}`;
     } catch {
       alert("Wrong format for your url.");
       return;
@@ -52,15 +59,11 @@
 
     const timeStamp = new Date(date).getTime();
 
-    const id = crypto.randomUUID();
-
     const courseData: CourseDataWithoutRunners = {
       id,
       course: [],
       legs: [],
       map: null,
-      name,
-      date: timeStamp,
       timeOffset: 0,
       statistics: null,
     };
@@ -70,14 +73,13 @@
       liveProviderURL: liveProviderURL,
       date: timeStamp,
       tags,
-      data: id,
     };
 
     loading = true;
 
     try {
       await setDoc(doc(db, "coursesData", id), courseData);
-      await addDoc(collection(db, "courses"), courseWithoutID);
+      await setDoc(doc(db, "courses", id), courseWithoutID);
     } catch (error) {
       alert("An error occured while creating the course.");
       console.error(error);

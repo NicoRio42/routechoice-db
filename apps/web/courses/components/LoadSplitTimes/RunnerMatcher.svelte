@@ -12,6 +12,7 @@
   const dispatchSubmit = createEventDispatcher<{
     submit: { runners: Runner[] };
   }>();
+
   const dispatchPrevious = createEventDispatcher<{ previous: undefined }>();
 
   // @ts-ignore

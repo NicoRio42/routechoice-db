@@ -26,6 +26,7 @@ export interface TwoDRerunRoute {
   splits: { index: number | null }[];
   zerotime: number;
   manualsplits: number;
+  unit: string;
 }
 
 interface Loadseu {
