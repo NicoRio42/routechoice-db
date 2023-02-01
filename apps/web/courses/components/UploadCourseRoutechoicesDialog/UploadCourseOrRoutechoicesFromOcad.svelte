@@ -1,18 +1,11 @@
 <script lang="ts">
-  import {
-    doc,
-    DocumentReference,
-    getFirestore,
-    updateDoc,
-  } from "firebase/firestore/lite";
-  import type { CourseDataWithoutRunnersWithSerializedNestedArrays } from "shared/o-utils/models/course-data";
-  import { serializeNestedArraysInLegs } from "../../../shared/o-utils/models/leg";
+  import { doc, getFirestore, updateDoc } from "firebase/firestore/lite";
   import { createEventDispatcher } from "svelte";
   import { fade } from "svelte/transition";
+  import { serializeNestedArraysInLegs } from "../../../shared/o-utils/models/leg";
   import parseIOFXML3CourseOCADExport from "../../../shared/o-utils/ocad/parsers/iof-xml-3-course";
   import parseGPXRoutechoicesOCADExport from "../../../shared/o-utils/ocad/parsers/routechoices-gpx";
   import mapCourseAndRoutechoicesTo2DRerun from "../../../shared/o-utils/two-d-rerun/course-mappers";
-  import course from "../../stores/course";
   import courseData from "../../stores/course-data";
   import selectedLeg from "../../stores/selected-leg";
   import buildCourseAndRoutechoices from "../../utils/2d-rerun-hacks/build-course-and-routechoices";
@@ -130,7 +123,7 @@
     loading = true;
 
     try {
-      await updateDoc(doc(db, "coursesData", $course.data), {
+      await updateDoc(doc(db, "coursesData", $courseData.id), {
         legs: serializeNestedArraysInLegs($courseData.legs),
         course: $courseData.course,
       });

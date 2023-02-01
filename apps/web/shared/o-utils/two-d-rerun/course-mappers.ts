@@ -120,6 +120,8 @@ export function parseTwoDRerunCourseAndRoutechoicesExport(
       finishControlCode: controls[i].code,
       startLat: controls[i - 1].lat,
       startLon: controls[i - 1].lon,
+      finishLat: controls[i].lat,
+      finishLon: controls[i].lon,
       routechoices: [],
     });
   }

@@ -1,16 +1,14 @@
 <script lang="ts">
-  import { parseTwoDRerunCourseAndRoutechoicesExport } from "../../../shared/o-utils/two-d-rerun/course-mappers";
   import { fade } from "svelte/transition";
+  import { parseTwoDRerunCourseAndRoutechoicesExport } from "../../../shared/o-utils/two-d-rerun/course-mappers";
   import clickOutside from "../../../shared/use/clickOutside";
-
+  import { doc, getFirestore, updateDoc } from "firebase/firestore/lite";
+  import { CoordinatesConverter } from "../../../shared/o-utils/map/coords-converter";
+  import { serializeNestedArraysInLegs } from "../../../shared/o-utils/models/leg";
   import courseData from "../../stores/course-data";
-  import course from "../../stores/course";
   import selectedLeg from "../../stores/selected-leg";
   import buildCourseAndRoutechoices from "../../utils/2d-rerun-hacks/build-course-and-routechoices";
   import UploadCourseOrRoutechoicesFromOcad from "./UploadCourseOrRoutechoicesFromOcad.svelte";
-  import { CoordinatesConverter } from "../../../shared/o-utils/map/coords-converter";
-  import { doc, getFirestore, updateDoc } from "firebase/firestore/lite";
-  import { serializeNestedArraysInLegs } from "../../../shared/o-utils/models/leg";
 
   const db = getFirestore();
 
@@ -53,7 +51,7 @@
       $courseData.legs = legs;
       $courseData.course = controls;
 
-      await updateDoc(doc(db, "coursesData", $course.data), {
+      await updateDoc(doc(db, "coursesData", $courseData.id), {
         legs: serializeNestedArraysInLegs($courseData.legs),
         course: $courseData.course,
       });

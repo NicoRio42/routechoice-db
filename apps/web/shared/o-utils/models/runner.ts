@@ -21,7 +21,6 @@ export default interface Runner {
   id: string;
   trackingDeviceId: string | null;
   userId: string | null;
-  foreignKeys: Record<string, unknown>;
   status: RunnerStatusEnum;
   firstName: string;
   lastName: string;

@@ -5,9 +5,9 @@ export function attribute2DRerunTrackToMatchedRunner(
   runners: Runner[],
   twoDRerunRoutes: TwoDRerunRoute[]
 ): Runner[] {
-  return structuredClone(runners).map((runner) => {
+  return (structuredClone(runners) as Runner[]).map((runner) => {
     const route = twoDRerunRoutes.find(
-      (r) => r.indexnumber === runner.foreignKeys.twoDRerunRouteIndexNumber
+      (r) => r.unit === runner.trackingDeviceId
     );
 
     return {
@@ -26,19 +26,19 @@ export function attribute2DRerunTrackToMatchedRunner(
 
 export interface RunnerForMatching {
   name: string;
-  foreignKey: unknown;
+  key: string;
 }
 
 export function matchRunnersByName(
   runners: Runner[],
-  foreignKey: string,
+  key: "userId" | "trackingDeviceId",
   runnersForMatching: RunnerForMatching[]
 ): Runner[] {
-  const clonedRunners = structuredClone(runners);
+  const clonedRunners = structuredClone(runners) as Runner[];
 
   const standardizedRunnersForMatching: {
     name: string[];
-    foreignKey: unknown;
+    key: string;
   }[] = runnersForMatching.map((r) => ({
     ...r,
     name: replaceAll(r.name, /\s\s+/g, " ")
@@ -61,7 +61,7 @@ export function matchRunnersByName(
           standardizedRunnerName.includes(namePart)
         )
       ) {
-        runner.foreignKeys[foreignKey] = runnerForMatching.foreignKey;
+        runner[key] = runnerForMatching.key;
         break;
       }
 
@@ -104,7 +104,7 @@ export function matchRunnersByName(
         );
 
         if (allNamesExceptInitialMatch && initialMatch) {
-          runner.foreignKeys[foreignKey] = runnerForMatching.foreignKey;
+          runner[key] = runnerForMatching.key;
           break;
         }
       }
@@ -132,7 +132,7 @@ export function matchRunnersByName(
         );
 
         if (allNamesExceptInitialMatch && initialMatch) {
-          runner.foreignKeys[foreignKey] = runnerForMatching.foreignKey;
+          runner[key] = runnerForMatching.key;
         }
       }
     }

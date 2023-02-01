@@ -51,7 +51,7 @@
 
       const lastPathPart = url.pathname.split("/").at(-1);
       if (lastPathPart === undefined) throw new Error("Invalid URL");
-      id = `loggator-${lastPathPart}`;
+      id = `loggator-${lastPathPart}-${crypto.randomUUID()}`;
     } catch {
       alert("Wrong format for your url.");
       return;

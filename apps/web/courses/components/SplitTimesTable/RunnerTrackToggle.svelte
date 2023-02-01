@@ -3,7 +3,7 @@
   import { createEventDispatcher } from "svelte";
 
   export let isRunnerTrackShown = false;
-  export let twoDRerunRouteIndexNumber: unknown;
+  export let unitId: string;
 
   const dispatch = createEventDispatcher();
 
@@ -17,7 +17,7 @@
   function onCheck(): void {
     // @ts-ignore
     const route = (mapviewer as Mapviewer)?.routes?.find(
-      (r) => r.indexnumber === (twoDRerunRouteIndexNumber as number)
+      (r) => r.unit === unitId
     );
 
     if (route === undefined) return;

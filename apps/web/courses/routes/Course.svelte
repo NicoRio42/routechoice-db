@@ -69,7 +69,9 @@
         id: params.courseID,
       });
 
-      const courseDataRef = await getDoc(doc(db, "coursesData", $course.data));
+      const courseDataRef = await getDoc(
+        doc(db, "coursesData", params.courseID)
+      );
       const legs = courseDataRef.data()?.legs;
 
       if (legs === undefined) return;
@@ -79,7 +81,13 @@
         legs: parseNestedArraysInLegs(legs),
       });
 
-      const runnersRef = collection(db, "coursesData", $course.data, "runners");
+      const runnersRef = collection(
+        db,
+        "coursesData",
+        params.courseID,
+        "runners"
+      );
+
       const q = query(runnersRef, orderBy("rank", "desc"));
 
       const querySnapshot = await getDocs(q);
@@ -134,11 +142,12 @@
     );
 
     buildCourseAndRoutechoices(twoDRerunCourseAndRoutechoices);
+    console.log($courseData);
   }
 </script>
 
 <svelte:head>
-  <title>{$courseData?.name ?? "Routechoice DB course"}</title>
+  <title>{$course?.name ?? "Routechoice DB course"}</title>
 </svelte:head>
 
 <div class="navbar-wrapper">

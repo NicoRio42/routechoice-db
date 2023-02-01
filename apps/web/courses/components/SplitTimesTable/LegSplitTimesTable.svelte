@@ -19,17 +19,17 @@
   let runnersWithShowntrackNumber = 0;
 
   $: runnersWith2DRerunTrackNumber = $courseData.runners.filter(
-    (runner) => runner.foreignKeys.twoDRerunRouteIndexNumber !== undefined
+    (runner) => runner.trackingDeviceId !== null
   ).length;
 
   $: {
     if ($selectedLeg !== null) {
-      const clonedRunnerWithOneLeg = structuredClone($courseData.runners).map(
-        (runner) => ({
-          ...runner,
-          legs: runner.legs.filter((l, i) => i + 1 === $selectedLeg),
-        })
-      );
+      const clonedRunnerWithOneLeg = (
+        structuredClone($courseData.runners) as Runner[]
+      ).map((runner) => ({
+        ...runner,
+        legs: runner.legs.filter((l, i) => i + 1 === $selectedLeg),
+      }));
 
       sortedRunnersWithOneLeg = clonedRunnerWithOneLeg.sort(
         (runner1, runner2) => {
@@ -132,12 +132,13 @@
         <td />
       {/if}
 
-      {#if runner.foreignKeys.twoDRerunRouteIndexNumber}
+      {#if runner.trackingDeviceId !== null}
+        {@const unitId = `Log${runner.trackingDeviceId.split("-")[1]}`}
+
         <td
           ><RunnerTrackToggle
             isRunnerTrackShown={showAllRunnersTracks}
-            twoDRerunRouteIndexNumber={runner.foreignKeys
-              .twoDRerunRouteIndexNumber}
+            {unitId}
             on:showRunnerTrack={handleShowRunnerTrack}
           /></td
         >

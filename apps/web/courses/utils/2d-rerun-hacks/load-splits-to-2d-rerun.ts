@@ -6,7 +6,7 @@ export function loadRunnersSplitsTo2dRerun(runners: Runner[]) {
   (mapviewer as Mapviewer).routes.forEach((route) => {
     const runner = runners.find(
       (runner) =>
-        runner.foreignKeys.twoDRerunRouteIndexNumber === route.indexnumber
+        runner.trackingDeviceId?.split("-")[1] === route.unit.replace("Log", "")
     );
 
     if (runner === undefined || runner.legs.length === 0) return;

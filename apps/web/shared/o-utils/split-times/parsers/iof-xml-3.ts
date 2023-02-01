@@ -84,11 +84,10 @@ function getRunners(
 
       legs.push(computeLastLeg(time, legs));
 
-      const foreignKeys: Record<string, unknown> = {};
-
       return {
         id,
-        foreignKeys,
+        userId: null,
+        trackingDeviceId: null,
         status,
         firstName: firstName ?? "",
         lastName: lastName ?? "",

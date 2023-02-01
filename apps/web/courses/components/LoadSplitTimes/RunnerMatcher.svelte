@@ -42,21 +42,23 @@
           <td>{`${runner.firstName} ${runner.lastName}`}</td>
 
           <td>
-            <select bind:value={runner.foreignKeys.twoDRerunRouteIndexNumber}>
-              <option />
+            <select bind:value={runner.trackingDeviceId}>
+              <option value={null} />
 
               {#each routes as route}
-                <option value={route.indexnumber}>{route.runnername}</option>
+                {@const key = `loggator-${route.unit.replace("Log", "")}`}
+
+                <option value={key}>{route.runnername}</option>
               {/each}
             </select>
           </td>
 
           <td>
-            <select bind:value={runner.foreignKeys.userId}>
-              <option />
+            <select bind:value={runner.userId}>
+              <option value={null} />
 
               {#each users as user}
-                <option value={user.foreignKey}>{user.name}</option>
+                <option value={user.key}>{user.name}</option>
               {/each}
             </select>
           </td>

@@ -68,7 +68,7 @@
       usersForMatching = users
         .map((u) => ({
           name: u.displayName ?? u.email.split("@")[0].replace(".", " ") ?? "",
-          foreignKey: u.id,
+          key: u.id,
         }))
         .sort((userA, userB) => userA.name.localeCompare(userB.name));
 
@@ -79,12 +79,15 @@
       );
 
       const routesForMatching: RunnerForMatching[] = mapViewer.routes.map(
-        (r) => ({ name: r.runnername, foreignKey: r.indexnumber })
+        (r) => ({
+          name: r.runnername,
+          key: `loggator-${r.unit.replace("Log", "")}`,
+        })
       );
 
       const matchedRunners = matchRunnersByName(
         matchedRunnersWithUsers,
-        "twoDRerunRouteIndexNumber",
+        "trackingDeviceId",
         routesForMatching
       );
 
@@ -122,9 +125,14 @@
     $courseData.legs = createRoutechoiceStatistics(runners, $courseData.legs);
 
     try {
-      updateRunnersInFirestore(db, $courseData.runners, runners, $course.data);
+      updateRunnersInFirestore(
+        db,
+        $courseData.runners,
+        runners,
+        $courseData.id
+      );
 
-      await updateDoc(doc(db, "coursesData", $course.data), {
+      await updateDoc(doc(db, "coursesData", $courseData.id), {
         legs: serializeNestedArraysInLegs($courseData.legs),
       });
     } catch (error) {
