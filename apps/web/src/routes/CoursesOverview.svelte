@@ -8,10 +8,9 @@
     where,
   } from "firebase/firestore/lite";
   import { getFunctions, httpsCallable } from "firebase/functions";
-  import Table from "../../shared/icons/Table.svelte";
   import { replace } from "svelte-spa-router";
-  import { flip } from "svelte/animate";
   import { fade } from "svelte/transition";
+  import Table from "../../shared/icons/Table.svelte";
   import Trash from "../../shared/icons/Trash.svelte";
   import type { Course } from "../../shared/models/course";
   import { courseValidator } from "../../shared/models/course";
@@ -135,7 +134,7 @@
 
       <tbody>
         {#each courses as course (course.id)}
-          <tr animate:flip>
+          <tr>
             <td>
               <a class="course-link" href={`/courses/#/${course.id}`}
                 >{course.name}</a
