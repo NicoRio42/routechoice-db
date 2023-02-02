@@ -1,4 +1,5 @@
 <script lang="ts">
+  import type Leg from "../../../shared/o-utils/models/leg";
   import type CourseData from "../../../shared/o-utils/models/course-data";
   import { changeRunnerRoutechoice } from "../../db/routechoice";
   import ActionButtons from "./components/ActionButtons.svelte";
@@ -18,7 +19,7 @@
   let angle: number;
   let fitBox: [number, number, number, number];
   let legNumber = 1;
-  let selectedRunners = courseData.runners.map((runner) => runner.id);
+  let selectedRunners: string[] = [];
   let showRoutechoices = true;
   let showSideBar = true;
 
@@ -64,10 +65,10 @@
     {/if}
 
     <VectorLayer>
-      {#each courseData.runners as runner}
+      {#each courseData.runners as runner (runner.id)}
         {@const show = selectedRunners.includes(runner.id)}
 
-        {#if show}
+        {#if show && runner.track !== null}
           <RunnerRoute {runner} {legNumber} />
         {/if}
       {/each}

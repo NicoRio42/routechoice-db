@@ -1,9 +1,8 @@
 <script lang="ts">
-  import { createEventDispatcher } from "svelte";
-  import Toggle from "./Toggle.svelte";
+  import type CourseData from "../../../../shared/o-utils/models/course-data";
   import LegStatistics from "./LegStatistics/LegStatistics.svelte";
   import LegSplitTimesTable from "./SplitTimesTable/LegSplitTimesTable.svelte";
-  import type CourseData from "../../../../shared/o-utils/models/course-data";
+  import Toggle from "./Toggle.svelte";
 
   export let selectedRunners: string[];
   export let courseData: CourseData;
@@ -34,7 +33,7 @@
       <LegSplitTimesTable
         {courseData}
         {legNumber}
-        {selectedRunners}
+        bind:selectedRunners
         on:routechoiceChange
       />
     </section>

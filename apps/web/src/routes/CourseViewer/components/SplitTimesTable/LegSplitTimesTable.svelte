@@ -1,9 +1,8 @@
 <script lang="ts">
   import type Runner from "shared/o-utils/models/runner";
-  import type Routechoice from "../../../../../shared/o-utils/models/routechoice";
-  import RunnerTrackToggle from "./RunnerTrackToggle.svelte";
-  import RoutechoiceTableCell from "./RoutecoiceTableCell.svelte";
   import type CourseData from "../../../../../shared/o-utils/models/course-data";
+  import type Routechoice from "../../../../../shared/o-utils/models/routechoice";
+  import RoutechoiceTableCell from "./RoutecoiceTableCell.svelte";
 
   import {
     fullNameToShortName,
@@ -124,15 +123,13 @@
         <td />
       {/if}
 
-      {#if runner.foreignKeys.twoDRerunRouteIndexNumber}
+      {#if runner.track !== null}
         <td>
-          <input type="checkbox" name="" id="" />
-          <!-- <RunnerTrackToggle
-            isRunnerTrackShown={showAllRunnersTracks}
-            twoDRerunRouteIndexNumber={runner.foreignKeys
-              .twoDRerunRouteIndexNumber}
-            on:showRunnerTrack={handleShowRunnerTrack}
-          /> -->
+          <input
+            type="checkbox"
+            value={runner.id}
+            bind:group={selectedRunners}
+          />
         </td>
       {/if}
     </tr>

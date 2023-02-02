@@ -23,6 +23,7 @@
   import { getFunctions, httpsCallable } from "firebase/functions";
   import type { LoggatorEvent } from "../../models/loggator-api/loggator-event";
   import type { LoggatorPoints } from "src/models/loggator-api/loggator-points";
+  import { buildRunnersTracksFromLoggatorPoints } from "../../../shared/o-utils/loggator/points";
 
   export let params: { courseId: string };
 
@@ -35,8 +36,14 @@
 
   const getLoggatorEventPoints = httpsCallable<
     string,
-    { data: LoggatorPoints | { message: string; error: unknown } }
+    LoggatorPoints | { message: string; error: unknown }
   >(functions, "getLoggatorEventPoints");
+
+  function isLoggatorPoints(
+    data: LoggatorPoints | { message: string; error: unknown }
+  ): data is LoggatorPoints {
+    return "data" in data;
+  }
 
   const db = getFirestore();
   const courseDataPromise = getCourseData();
@@ -45,30 +52,56 @@
     let course: Course;
     let courseData: CourseData;
     try {
-      const docSnap = await getDoc(doc(db, "courses", params.courseId));
+      const loggatorEventID = params.courseId.split("-")[1];
+
+      if (loggatorEventID === undefined)
+        throw new Error("Wrong format for course id");
+
+      const runnersRef = collection(
+        db,
+        "coursesData",
+        params.courseId,
+        "runners"
+      );
+
+      const runnersQuery = query(runnersRef, orderBy("rank", "desc"));
+
+      const [
+        courseDocument,
+        courseDataDocument,
+        runnersCollection,
+        loggatorEvent,
+        loggatorPointsResponse,
+      ] = await Promise.all([
+        getDoc(doc(db, "courses", params.courseId)),
+        getDoc(doc(db, "coursesData", params.courseId)),
+        getDocs(runnersQuery),
+        getLoggatorEvent(loggatorEventID),
+        getLoggatorEventPoints(loggatorEventID),
+      ]);
+
+      if (!isLoggatorPoints(loggatorPointsResponse.data))
+        throw new Error("Could not get loggator points");
+
+      const loggatorPoints = loggatorPointsResponse.data.data;
 
       course = courseValidator.parse({
-        ...docSnap.data(),
+        ...courseDocument.data(),
         id: params.courseId,
       });
 
-      const courseDataRef = await getDoc(doc(db, "coursesData", course.data));
-      const legs = courseDataRef.data()?.legs;
+      const legs = courseDataDocument.data()?.legs;
 
       if (legs === undefined) return;
 
       const courseDataWithoutRunners = courseDataWithoutRunnersValidator.parse({
-        ...courseDataRef.data(),
+        ...courseDataDocument.data(),
         legs: parseNestedArraysInLegs(legs),
       });
 
-      const runnersRef = collection(db, "coursesData", course.data, "runners");
-      const q = query(runnersRef, orderBy("rank", "desc"));
-
-      const querySnapshot = await getDocs(q);
       const runners: Runner[] = [];
 
-      querySnapshot.forEach((doc) => {
+      runnersCollection.forEach((doc) => {
         try {
           runners.push(runnerValidator.parse({ ...doc.data(), id: doc.id }));
         } catch (error) {
@@ -76,7 +109,12 @@
         }
       });
 
-      courseData = { ...courseDataWithoutRunners, runners };
+      const runnersWithTracks = buildRunnersTracksFromLoggatorPoints(
+        runners,
+        loggatorPoints
+      );
+
+      courseData = { ...courseDataWithoutRunners, runners: runnersWithTracks };
     } catch (error) {
       console.error(error);
       alert(`An error occured while loading the course.`);

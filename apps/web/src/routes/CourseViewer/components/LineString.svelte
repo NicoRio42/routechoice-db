@@ -17,6 +17,9 @@
   export let text: string;
 
   let vectorLayer: VectorLayer<VectorSource<Geometry>>, lineFeature: Feature;
+  let line: LineString;
+
+  $: if (line !== undefined) line.setCoordinates(coords);
 
   const getVectorLayer =
     getContext<() => VectorLayer<VectorSource<Geometry>>>("vectorLayer");
@@ -25,8 +28,9 @@
     vectorLayer = getVectorLayer();
     const vectorSource = vectorLayer.getSource();
 
-    const line = new LineString(coords);
+    line = new LineString(coords);
     const font = "bold 1.25rem/1 Arial";
+
     const textStyle = new Text({
       font,
       text,
