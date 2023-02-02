@@ -60,7 +60,7 @@ export function detectRunnersRoutechoices(
 function checkIfRunnerTrackConsistentWithSplitTimes(runner: Runner): void {
   if (runner.track === null) throw new Error("Runner doesn't have a track.");
   const length = runner.track.times.length;
-  const lastTrackTime = runner.track.times[length];
+  const lastTrackTime = runner.track.times[length - 1];
   if (lastTrackTime === undefined) throw new Error("2DRerun track's is empty.");
 
   const lastCompleteLeg = structuredClone(runner.legs)

@@ -142,7 +142,6 @@
     );
 
     buildCourseAndRoutechoices(twoDRerunCourseAndRoutechoices);
-    console.log($courseData);
   }
 </script>
 

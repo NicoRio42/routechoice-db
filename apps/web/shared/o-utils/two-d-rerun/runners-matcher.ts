@@ -7,7 +7,7 @@ export function attribute2DRerunTrackToMatchedRunner(
 ): Runner[] {
   return (structuredClone(runners) as Runner[]).map((runner) => {
     const route = twoDRerunRoutes.find(
-      (r) => r.unit === runner.trackingDeviceId
+      (r) => r.unit === `Log${runner.trackingDeviceId?.split("-")[1]}`
     );
 
     return {

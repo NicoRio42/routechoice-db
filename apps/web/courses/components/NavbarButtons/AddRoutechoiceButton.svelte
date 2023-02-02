@@ -1,16 +1,14 @@
 <script lang="ts">
-  import courseData from "../../stores/course-data";
-  import type { Mapviewer } from "../../../shared/o-utils/models/2d-rerun/mapviewer";
-  import { selectHack } from "../../utils/2d-rerun-hacks/select-hack";
-  import { map2DRerunTagToRoutechoice } from "../../../shared/o-utils/two-d-rerun/course-mappers";
-  import { findRoutechoiceLegIndex } from "../../../shared/o-utils/utils/routechoice-leg-attributer";
-  import { serializeNestedArraysInLegs } from "../../../shared/o-utils/models/leg";
   import { doc, getFirestore, updateDoc } from "firebase/firestore/lite";
-  import course from "../../stores/course";
-  import { attribute2DRerunTrackToMatchedRunner } from "../../../shared/o-utils/two-d-rerun/runners-matcher";
+  import type { Mapviewer } from "../../../shared/o-utils/models/2d-rerun/mapviewer";
+  import { serializeNestedArraysInLegs } from "../../../shared/o-utils/models/leg";
   import { detectRunnersRoutechoices } from "../../../shared/o-utils/routechoice-detector/routechoice-detector";
-  import { updateRunnersInFirestore } from "../../../shared/db/runners";
   import { createRoutechoiceStatistics } from "../../../shared/o-utils/statistics/routechoices-statistics";
+  import { map2DRerunTagToRoutechoice } from "../../../shared/o-utils/two-d-rerun/course-mappers";
+  import { attribute2DRerunTrackToMatchedRunner } from "../../../shared/o-utils/two-d-rerun/runners-matcher";
+  import { findRoutechoiceLegIndex } from "../../../shared/o-utils/utils/routechoice-leg-attributer";
+  import courseData from "../../stores/course-data";
+  import { selectHack } from "../../utils/2d-rerun-hacks/select-hack";
 
   const db = getFirestore();
 
@@ -95,7 +93,7 @@
         // TODO batch these updates
         updatedRunner.forEach(async (runner) => {
           await updateDoc(
-            doc(db, "coursesData", $course.data, "runners", runner.id),
+            doc(db, "coursesData", $courseData.id, "runners", runner.id),
             { legs: runner.legs }
           );
 
@@ -117,7 +115,7 @@
     );
 
     try {
-      await updateDoc(doc(db, "coursesData", $course.data), {
+      await updateDoc(doc(db, "coursesData", $courseData.id), {
         legs: serializeNestedArraysInLegs($courseData.legs),
       });
     } catch (error) {

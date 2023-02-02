@@ -18,7 +18,6 @@
     type RunnerForMatching,
   } from "../../../shared/o-utils/two-d-rerun/runners-matcher";
   import clickOutside from "../../../shared/use/clickOutside";
-  import course from "../../stores/course";
   import courseData from "../../stores/course-data";
   import { loadRunnersSplitsTo2dRerun } from "../../utils/2d-rerun-hacks/load-splits-to-2d-rerun";
   import LoadSplitTimesFromFileForm from "./LoadSplitTimesFromFileForm.svelte";
@@ -36,7 +35,7 @@
   const mapViewer: Mapviewer = mapviewer;
 
   let step = 1;
-  let automaticallyAttributedRunners: Runner[];
+  let matchedRunners: Runner[];
   let usersForMatching: RunnerForMatching[] = [];
   let loading = false;
 
@@ -85,15 +84,10 @@
         })
       );
 
-      const matchedRunners = matchRunnersByName(
+      matchedRunners = matchRunnersByName(
         matchedRunnersWithUsers,
         "trackingDeviceId",
         routesForMatching
-      );
-
-      automaticallyAttributedRunners = attribute2DRerunTrackToMatchedRunner(
-        matchedRunners,
-        mapViewer.routes
       );
     } catch (error) {
       alert("An error occured while parsing the split times.");
@@ -110,8 +104,16 @@
     loading = true;
     let { runners } = event.detail;
 
+    const attributedRunnersWithTracks = attribute2DRerunTrackToMatchedRunner(
+      runners,
+      mapViewer.routes
+    );
+
     try {
-      runners = detectRunnersRoutechoices($courseData.legs, runners);
+      runners = detectRunnersRoutechoices(
+        $courseData.legs,
+        attributedRunnersWithTracks
+      );
     } catch (error) {
       console.error(error);
       alert(`An error occured while detecting runners routechoices.\n${error}`);
@@ -192,7 +194,7 @@
 
     {#if step === 4}
       <RunnerMatcher
-        runners={automaticallyAttributedRunners}
+        runners={matchedRunners}
         users={usersForMatching}
         on:previous={() => (step = 1)}
         on:submit={saveSplitTimes}
