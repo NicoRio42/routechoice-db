@@ -14,7 +14,7 @@
   export let color: string;
   export let coords: Coordinate[];
   export let width: number;
-  export let text: string;
+  export let text: string | undefined = undefined;
 
   let vectorLayer: VectorLayer<VectorSource<Geometry>>, lineFeature: Feature;
   let line: LineString;

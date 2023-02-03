@@ -1,8 +1,8 @@
 <script lang="ts">
-  import type Leg from "../../../shared/o-utils/models/leg";
   import type CourseData from "../../../shared/o-utils/models/course-data";
   import { changeRunnerRoutechoice } from "../../db/routechoice";
   import ActionButtons from "./components/ActionButtons.svelte";
+  import AutoAnalysis from "./components/AutoAnalysis.svelte";
   import GeoreferencedImage from "./components/GeoreferencedImage/GeoreferencedImage.svelte";
   import OlMap from "./components/OLMap.svelte";
   import OSM from "./components/OSM.svelte";
@@ -22,6 +22,7 @@
   let selectedRunners: string[] = [];
   let showRoutechoices = true;
   let showSideBar = true;
+  let isAutoAnalysisMode = false;
 
   $: {
     const [newFitBox, newAngle] = computeFitBoxAndAngleFromLegNumber(
@@ -35,7 +36,7 @@
 
   function handleRoutechoiceChange(
     event: CustomEvent<RoutechoiceChangeEventDetails>
-  ) {
+  ): void {
     courseData = changeRunnerRoutechoice(
       courseData,
       event.detail.routechoiceID,
@@ -65,21 +66,27 @@
     {/if}
 
     <VectorLayer>
-      {#each courseData.runners as runner (runner.id)}
-        {@const show = selectedRunners.includes(runner.id)}
-
-        {#if show && runner.track !== null}
-          <RunnerRoute {runner} {legNumber} />
-        {/if}
-      {/each}
-    </VectorLayer>
-
-    <VectorLayer>
       {#if showRoutechoices}
         {@const routechoices = courseData.legs[legNumber - 1].routechoices}
 
         {#each routechoices as routechoice (routechoice.id)}
           <RoutechoiceTrack {routechoice} opacity={0.8} width={6} />
+        {/each}
+      {/if}
+
+      {#if isAutoAnalysisMode}
+        <AutoAnalysis
+          {selectedRunners}
+          {legNumber}
+          runners={courseData.runners}
+        />
+      {:else}
+        {#each courseData.runners as runner (runner.id)}
+          {@const show = selectedRunners.includes(runner.id)}
+
+          {#if show && runner.track !== null}
+            <RunnerRoute {runner} {legNumber} />
+          {/if}
         {/each}
       {/if}
     </VectorLayer>
@@ -90,6 +97,7 @@
     bind:showRoutechoices
     bind:showSideBar
     legs={courseData.legs}
+    bind:isAutoAnalysisMode
   />
 </div>
 

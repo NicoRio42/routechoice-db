@@ -48,7 +48,6 @@
   function isLoggatorEvent(
     data: LoggatorEvent | { message: string; error: unknown }
   ): data is LoggatorEvent {
-    console.log(data);
     return !("error" in data);
   }
 

@@ -1,16 +1,19 @@
 <script lang="ts">
+  import Chart from "../../../../shared/icons/Chart.svelte";
   import ChevronLeft from "../../../../shared/icons/ChevronLeft.svelte";
   import ChevronRight from "../../../../shared/icons/ChevronRight.svelte";
-  import Chart from "../../../../shared/icons/Chart.svelte";
-  import type Leg from "../../../../shared/o-utils/models/leg";
+  import Elipsis from "../../../../shared/icons/Elipsis.svelte";
   import Eye from "../../../../shared/icons/Eye.svelte";
+  import type Leg from "../../../../shared/o-utils/models/leg";
 
   export let legNumber: number;
   export let legs: Leg[];
   export let showRoutechoices: boolean;
   export let showSideBar: boolean;
+  export let isAutoAnalysisMode: boolean;
 
   const numberOfLegs = legs.length;
+  let showMapButtons = false;
 
   const handlePreviousControl = () => {
     legNumber = legNumber !== 1 ? legNumber - 1 : legNumber;
@@ -22,34 +25,32 @@
 </script>
 
 <div class="control-bar">
-  <!-- <button
+  <button
     class="map-buttons-toggler mobile"
     on:click={() => (showMapButtons = !showMapButtons)}
-    
     ><Elipsis />
   </button>
 
   <button
     class="map-button mobile"
-    on:click={displayAutoAnalysis}
+    on:click={() => (isAutoAnalysisMode = !isAutoAnalysisMode)}
     style:transform={showMapButtons ? "translateY(-230%)" : "translateY(0)"}
     >AA</button
   >
 
   <button
     class="map-button mobile"
-    on:click={toggleRoutechoices}
+    on:click={() => (showRoutechoices = !showRoutechoices)}
     style:transform={showMapButtons ? "translateY(-115%)" : "translateY(0)"}
     ><Eye /></button
-  > -->
+  >
 
-  <!-- <button
+  <button
     class="large"
-    on:click={displayAutoAnalysis}
-    >AA</button
-  > -->
+    on:click={() => (isAutoAnalysisMode = !isAutoAnalysisMode)}>AA</button
+  >
 
-  <button on:click={() => (showRoutechoices = !showRoutechoices)}
+  <button class="large" on:click={() => (showRoutechoices = !showRoutechoices)}
     ><Eye /></button
   >
 
