@@ -1,8 +1,10 @@
+import type { LoggatorEvent } from "../../../src/models/loggator-api/loggator-event";
 import type Runner from "../models/runner";
 
-export function buildRunnersTracksFromLoggatorPoints(
+export function buildRunnersTracksFromLoggatorData(
   inputRunners: Runner[],
-  points: string
+  points: string,
+  loggatorEvent: LoggatorEvent
 ): Runner[] {
   const runners = structuredClone(inputRunners) as Runner[];
   const pointsMap: Record<
@@ -36,7 +38,17 @@ export function buildRunnersTracksFromLoggatorPoints(
     const runnerPoints = pointsMap[loggatorDeviceId];
     if (runnerPoints === undefined) return;
 
-    runner.track = { lats: [], lons: [], times: [] };
+    const runnerInfos = loggatorEvent.competitors.find(
+      (competitor) =>
+        `loggator-${competitor.device_id}` === runner.trackingDeviceId
+    );
+
+    runner.track = {
+      lats: [],
+      lons: [],
+      times: [],
+      color: runnerInfos?.marker_color ?? "",
+    };
 
     for (const point of runnerPoints) {
       runner.track.lats.push(point.lat);

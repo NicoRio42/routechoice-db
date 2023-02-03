@@ -9,12 +9,14 @@ export const runnerTrackValidator = z.object({
   lats: z.array(z.number()),
   lons: z.array(z.number()),
   times: z.array(z.number()),
+  color: z.string(),
 });
 
 export interface RunnerTrack {
   lats: number[];
   lons: number[];
   times: number[];
+  color: string;
 }
 
 export default interface Runner {
@@ -31,6 +33,7 @@ export default interface Runner {
   timeBehind: number | null;
   totalTimeLost: number;
   track: RunnerTrack | null;
+  timeOffset: number;
 }
 
 export const runnerValidator = z.object({
@@ -47,4 +50,5 @@ export const runnerValidator = z.object({
   timeBehind: z.nullable(z.number()),
   totalTimeLost: z.number(),
   track: z.nullable(runnerTrackValidator),
+  timeOffset: z.number(),
 });

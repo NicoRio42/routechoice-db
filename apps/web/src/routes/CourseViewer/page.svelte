@@ -23,7 +23,7 @@
   import { getFunctions, httpsCallable } from "firebase/functions";
   import type { LoggatorEvent } from "../../models/loggator-api/loggator-event";
   import type { LoggatorPoints } from "src/models/loggator-api/loggator-points";
-  import { buildRunnersTracksFromLoggatorPoints } from "../../../shared/o-utils/loggator/points";
+  import { buildRunnersTracksFromLoggatorData } from "../../../shared/o-utils/loggator/points";
 
   export let params: { courseId: string };
 
@@ -31,7 +31,7 @@
 
   const getLoggatorEvent = httpsCallable<
     string,
-    { data: LoggatorEvent | { message: string; error: unknown } }
+    LoggatorEvent | { message: string; error: unknown }
   >(functions, "getLoggatorEvent");
 
   const getLoggatorEventPoints = httpsCallable<
@@ -43,6 +43,13 @@
     data: LoggatorPoints | { message: string; error: unknown }
   ): data is LoggatorPoints {
     return "data" in data;
+  }
+
+  function isLoggatorEvent(
+    data: LoggatorEvent | { message: string; error: unknown }
+  ): data is LoggatorEvent {
+    console.log(data);
+    return !("error" in data);
   }
 
   const db = getFirestore();
@@ -70,7 +77,7 @@
         courseDocument,
         courseDataDocument,
         runnersCollection,
-        loggatorEvent,
+        loggatorEventResponse,
         loggatorPointsResponse,
       ] = await Promise.all([
         getDoc(doc(db, "courses", params.courseId)),
@@ -79,6 +86,11 @@
         getLoggatorEvent(loggatorEventID),
         getLoggatorEventPoints(loggatorEventID),
       ]);
+
+      if (!isLoggatorEvent(loggatorEventResponse.data))
+        throw new Error("Could not get loggator event");
+
+      const loggatorEvent = loggatorEventResponse.data;
 
       if (!isLoggatorPoints(loggatorPointsResponse.data))
         throw new Error("Could not get loggator points");
@@ -109,9 +121,10 @@
         }
       });
 
-      const runnersWithTracks = buildRunnersTracksFromLoggatorPoints(
+      const runnersWithTracks = buildRunnersTracksFromLoggatorData(
         runners,
-        loggatorPoints
+        loggatorPoints,
+        loggatorEvent
       );
 
       courseData = { ...courseDataWithoutRunners, runners: runnersWithTracks };

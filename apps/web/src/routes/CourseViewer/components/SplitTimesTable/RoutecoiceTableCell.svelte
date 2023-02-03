@@ -58,16 +58,16 @@
 
 <td class="right">
   {#if runner.legs !== null && runner.legs[0] !== null}
-    {#if $isUserAdminStore || runner.foreignKeys.userId === $userStore?.uid}
+    {#if $isUserAdminStore || runner.userId === $userStore?.uid}
       <select
-        style:color={selectedRoutechoiceColor}
+        style:color={`#${selectedRoutechoiceColor}`}
         value={selectedRoutechoice}
         on:change={handleChange}
       >
         <option value={null} />
 
         {#each routechoices as routechoice}
-          <option style:color={routechoice.color} value={routechoice.id}
+          <option style:color={`#${routechoice.color}`} value={routechoice.id}
             >{routechoice.name}</option
           >
         {/each}

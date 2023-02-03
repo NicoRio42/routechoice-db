@@ -3,7 +3,6 @@
   import type CourseData from "../../../../../shared/o-utils/models/course-data";
   import type Routechoice from "../../../../../shared/o-utils/models/routechoice";
   import RoutechoiceTableCell from "./RoutecoiceTableCell.svelte";
-
   import {
     fullNameToShortName,
     rankToCSSClass,
@@ -50,14 +49,33 @@
     legRoutechoices = courseData.legs[legNumber - 1].routechoices;
   }
 
-  function handleShowRunnerTrack(event: { detail: boolean }) {
-    // TODO
-  }
-
   function handleAllTrackedSelection(event: {
     currentTarget: EventTarget & HTMLInputElement;
-  }) {
-    // TODO
+  }): void {
+    if (event.currentTarget.checked) {
+      selectedRunners = courseData.runners
+        .filter((r) => r.track !== null)
+        .map((r) => r.id);
+      return;
+    }
+
+    selectedRunners = [];
+  }
+
+  function handleShowTrackCheckboxChange(
+    event: Event & { currentTarget: EventTarget & HTMLInputElement },
+    runnerId: string
+  ): void {
+    if (event.currentTarget.checked) {
+      if (!selectedRunners.includes(runnerId))
+        selectedRunners = [...selectedRunners, runnerId];
+    } else {
+      selectedRunners = selectedRunners.filter((id) => id !== runnerId);
+    }
+
+    iShowAllRunnersTracksChecked = courseData.runners
+      .filter((r) => r.track !== null)
+      .every((r) => selectedRunners.includes(r.id));
   }
 </script>
 
@@ -70,7 +88,7 @@
 
       <th class="sticky-header right">RC</th>
 
-      <th
+      <th class="sticky-header right"
         ><input
           type="checkbox"
           bind:checked={iShowAllRunnersTracksChecked}
@@ -79,6 +97,7 @@
       >
     </tr>
   </thead>
+
   {#each sortedRunnersWithOneLeg as runner (runner.id)}
     <tr>
       <td data-tooltip={`${runner.firstName} ${runner.lastName}`}>
@@ -128,7 +147,8 @@
           <input
             type="checkbox"
             value={runner.id}
-            bind:group={selectedRunners}
+            checked={selectedRunners.includes(runner.id)}
+            on:change={(e) => handleShowTrackCheckboxChange(e, runner.id)}
           />
         </td>
       {/if}

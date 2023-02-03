@@ -52,4 +52,9 @@
   }
 </script>
 
-<LineString {coords} {color} width={5} text={runner.lastName} />
+<LineString
+  {coords}
+  color={`#${runner.track?.color}`}
+  width={5}
+  text={runner.lastName}
+/>

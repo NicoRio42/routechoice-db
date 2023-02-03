@@ -98,6 +98,7 @@ function getRunners(
         timeBehind: null,
         totalTimeLost: 0,
         track: null,
+        timeOffset: 0,
       };
     }
   );
