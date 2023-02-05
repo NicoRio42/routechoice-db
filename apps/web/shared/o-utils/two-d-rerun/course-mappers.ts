@@ -126,8 +126,8 @@ export function parseTwoDRerunCourseAndRoutechoicesExport(
     });
   }
 
-  const routechoices: Routechoice[] = twoDRerunExport.tags.map(
-    map2DRerunTagToRoutechoice
+  const routechoices: Routechoice[] = twoDRerunExport.tags.map((tag) =>
+    map2DRerunTagToRoutechoice(tag, crypto.randomUUID())
   );
 
   routechoices.forEach((rc) => {
@@ -138,11 +138,11 @@ export function parseTwoDRerunCourseAndRoutechoicesExport(
   return [controls, legs];
 }
 
-export function map2DRerunTagToRoutechoice(tag: Tag, id: number): Routechoice {
+export function map2DRerunTagToRoutechoice(tag: Tag, id: string): Routechoice {
   return {
     id,
     name: tag.name,
-    color: tag.color,
+    color: `#${tag.color}`,
     length: tag.length,
     track: tag.points.map((point) => {
       const [lat, lon] = point.split(",").map((c) => parseFloat(c));

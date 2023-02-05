@@ -9,7 +9,7 @@ export const runnerTrackValidator = z.object({
   lats: z.array(z.number()),
   lons: z.array(z.number()),
   times: z.array(z.number()),
-  color: z.string(),
+  color: z.string().startsWith("#"),
 });
 
 export interface RunnerTrack {
@@ -37,7 +37,7 @@ export default interface Runner {
 }
 
 export const runnerValidator = z.object({
-  id: z.string(),
+  id: z.string().uuid(),
   trackingDeviceId: z.string().nullable(),
   userId: z.string().nullable(),
   status: runnerStatusEnumValidator,

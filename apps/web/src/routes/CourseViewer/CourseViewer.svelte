@@ -2,6 +2,7 @@
   import type { LineString } from "ol/geom";
   import type { DrawEvent } from "ol/interaction/Draw";
   import type Routechoice from "shared/o-utils/models/routechoice";
+  import { detectRunnersRoutechoices } from "../../../shared/o-utils/routechoice-detector/routechoice-detector";
   import type CourseData from "../../../shared/o-utils/models/course-data";
   import { changeRunnerRoutechoice } from "../../db/routechoice";
   import ActionButtons from "./components/ActionButtons.svelte";
@@ -21,8 +22,11 @@
   import VectorLayer from "./components/VectorLayer.svelte";
   import "./styles.css";
   import { computeFitBoxAndAngleFromLegNumber } from "./utils";
+  import { doc, getFirestore, writeBatch } from "firebase/firestore/lite";
 
   export let courseData: CourseData;
+
+  const db = getFirestore();
 
   let angle: number;
   let fitBox: [number, number, number, number];
@@ -31,7 +35,7 @@
   let showRoutechoices = true;
   let showSideBar = true;
   let isAutoAnalysisMode = false;
-  let isDrawMode = true;
+  let isDrawMode = false;
 
   $: {
     const [newFitBox, newAngle] = computeFitBoxAndAngleFromLegNumber(
@@ -42,6 +46,8 @@
     fitBox = newFitBox;
     angle = newAngle;
   }
+
+  $: legRoutechoices = courseData.legs[legNumber - 1].routechoices;
 
   function handleRoutechoiceChange(
     event: CustomEvent<RoutechoiceChangeEventDetails>
@@ -64,7 +70,7 @@
         );
 
       const newRoutechoice: Routechoice = {
-        id: Math.floor(Math.random() * 10e10),
+        id: crypto.randomUUID(),
         color,
         name,
         length,
@@ -75,6 +81,55 @@
         ...courseData.legs[legNumber - 1].routechoices,
         newRoutechoice,
       ];
+
+      if (courseData.runners.length !== 0) {
+        const runnersWithDetectedRoutechoices = detectRunnersRoutechoices(
+          courseData.legs,
+          courseData.runners
+        );
+
+        // So the runner track is not persisted to Firebase
+        runnersWithDetectedRoutechoices.forEach(
+          (runner) => (runner.track = null)
+        );
+
+        // Only updated runners are pushed to Firestore
+        const updatedRunner = runnersWithDetectedRoutechoices.filter(
+          (newRunner, runnerIndex) =>
+            courseData.runners[runnerIndex].legs.some(
+              (oldRunnerLeg, legIndex) => {
+                return (
+                  newRunner.legs[legIndex]?.detectedRouteChoice?.id !==
+                  oldRunnerLeg?.detectedRouteChoice?.id
+                );
+              }
+            )
+        );
+
+        try {
+          const batch = writeBatch(db);
+
+          updatedRunner.forEach(async (runner) => {
+            batch.update(
+              doc(db, "coursesData", courseData.id, "runners", runner.id),
+              { legs: runner.legs }
+            );
+
+            console.log(
+              `Runner ${runner.firstName} ${runner.lastName} updated`
+            );
+          });
+
+          batch.commit();
+        } catch (error) {
+          alert(
+            "An error occured while updating the new runners to the database."
+          );
+          console.error(error);
+        }
+
+        courseData.runners = runnersWithDetectedRoutechoices;
+      }
     } catch (e) {
       return;
     }
@@ -82,7 +137,7 @@
 </script>
 
 <div class="wrapper">
-  <AddRoutechoiceDialog />
+  <AddRoutechoiceDialog {legRoutechoices} />
 
   <SideBar
     bind:selectedRunners
@@ -92,8 +147,19 @@
     on:routechoiceChange={handleRoutechoiceChange}
   />
 
-  <OlMap {angle} {fitBox} padding={[100, 0, 100, 0]}>
+  <OlMap {isDrawMode} {angle} {fitBox} padding={[100, 0, 100, 0]}>
     <OSM />
+
+    <label for="draw-switch" class="draw-switch-label">
+      <p>Draw routechoices</p>
+
+      <input
+        type="checkbox"
+        bind:checked={isDrawMode}
+        role="switch"
+        class="draw-switch"
+      />
+    </label>
 
     {#if courseData.map !== null}
       <GeoreferencedImage
@@ -104,9 +170,7 @@
 
     <VectorLayer>
       {#if showRoutechoices}
-        {@const routechoices = courseData.legs[legNumber - 1].routechoices}
-
-        {#each routechoices as routechoice (routechoice.id)}
+        {#each legRoutechoices as routechoice (routechoice.id)}
           <RoutechoiceTrack {routechoice} opacity={0.8} width={6} />
         {/each}
       {/if}
@@ -147,5 +211,10 @@
     position: relative;
     flex-shrink: 0;
     flex-grow: 1;
+  }
+  .draw-switch {
+    position: absolute;
+    top: 6rem;
+    right: 0;
   }
 </style>

@@ -1,6 +1,6 @@
 <script context="module" lang="ts">
   export interface RoutechoiceChangeEventDetails {
-    routechoiceID: number;
+    routechoiceID: string;
     runnerId: string;
   }
 </script>
@@ -41,16 +41,10 @@
       return;
     }
 
-    const newSelectedRoutechoiceId = parseInt(event.currentTarget.value, 10);
-
-    selectedRoutechoice = isNaN(newSelectedRoutechoiceId)
-      ? null
-      : newSelectedRoutechoiceId;
-
-    if (isNaN(newSelectedRoutechoiceId)) return;
+    selectedRoutechoice = event.currentTarget.value ?? null;
 
     dispatch("routechoiceChange", {
-      routechoiceID: newSelectedRoutechoiceId,
+      routechoiceID: selectedRoutechoice,
       runnerId: runner.id,
     });
   }
@@ -60,14 +54,14 @@
   {#if runner.legs !== null && runner.legs[0] !== null}
     {#if $isUserAdminStore || runner.userId === $userStore?.uid}
       <select
-        style:color={`#${selectedRoutechoiceColor}`}
+        style:color={selectedRoutechoiceColor}
         value={selectedRoutechoice}
         on:change={handleChange}
       >
         <option value={null} />
 
         {#each routechoices as routechoice}
-          <option style:color={`#${routechoice.color}`} value={routechoice.id}
+          <option style:color={routechoice.color} value={routechoice.id}
             >{routechoice.name}</option
           >
         {/each}

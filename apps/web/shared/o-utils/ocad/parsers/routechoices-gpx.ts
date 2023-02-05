@@ -101,7 +101,7 @@ export default function parseGPXRoutechoicesOCADExport(
       );
 
     clonedLegs[attributedLegIndex].routechoices.push({
-      id: rcIndex,
+      id: crypto.randomUUID(),
       name: "",
       color: "",
       length,

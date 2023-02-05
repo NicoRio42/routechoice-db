@@ -2,7 +2,7 @@ import type CourseData from "shared/o-utils/models/course-data";
 
 export function changeRunnerRoutechoice(
   courseData: CourseData,
-  newRoutechoiceID: number,
+  newRoutechoiceID: string,
   runnerID: string,
   legNumber: number
 ): CourseData {

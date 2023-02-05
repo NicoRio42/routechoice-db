@@ -1,6 +1,7 @@
 <script lang="ts" context="module">
   import { writable } from "svelte/store";
   import { fade } from "svelte/transition";
+  import type Routechoice from "shared/o-utils/models/routechoice";
 
   const showDialog = writable(false);
   let submit: Function;
@@ -17,8 +18,35 @@
 </script>
 
 <script lang="ts">
+  import {
+    names,
+    routesColors,
+  } from "../../../../shared/o-utils/ocad/utils/routechoices-names-colors";
+
+  export let legRoutechoices: Routechoice[];
+
   let name: string;
   let color: string;
+  let allowedNames: string[];
+
+  $: {
+    allowedNames = names.filter(
+      (name) =>
+        !legRoutechoices.some(
+          (routechoice) => routechoice.name.toLowerCase() === name.toLowerCase()
+        )
+    );
+
+    name = allowedNames[0];
+
+    color = routesColors.filter(
+      (color) =>
+        !legRoutechoices.some(
+          (routechoice) =>
+            routechoice.color.toLowerCase() === color.toLowerCase()
+        )
+    )[0];
+  }
 
   function handleCancel() {
     cancel();
@@ -38,7 +66,11 @@
         <label for="name">
           Name
 
-          <input bind:value={name} type="text" name="name" autofocus required />
+          <select bind:value={name} name="name" required>
+            {#each allowedNames as value}
+              <option {value}>{value}</option>
+            {/each}
+          </select>
         </label>
 
         <label for="color">
@@ -58,3 +90,14 @@
     </article>
   </dialog>
 {/if}
+
+<style>
+  footer {
+    display: flex;
+    gap: 1rem;
+  }
+
+  footer button {
+    width: fit-content;
+  }
+</style>

@@ -8,9 +8,9 @@ export const routeChoicesStatisticValidator = z.object({
 });
 
 export const routechoiceWithoutTrackValidator = z.object({
-  id: z.number(),
+  id: z.string().uuid(),
   name: z.string(),
-  color: z.string(),
+  color: z.string().startsWith("#"),
   length: z.number(),
   statistics: routeChoicesStatisticValidator.optional(),
 });
@@ -27,7 +27,7 @@ export interface RouteChoicesStatistic {
 }
 
 export interface RoutechoiceWithoutTrack {
-  id: number;
+  id: string;
   name: string;
   color: string;
   length: number;

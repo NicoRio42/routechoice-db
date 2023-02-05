@@ -46,7 +46,7 @@
     });
 
     const newRoutechoices = newTags.map((t) =>
-      map2DRerunTagToRoutechoice(t, Math.floor(Math.random() * 10e10))
+      map2DRerunTagToRoutechoice(t, crypto.randomUUID())
     );
 
     const legs = structuredClone($courseData.legs);

@@ -7,13 +7,9 @@
   export let legNumber: number;
 
   let coords: number[][] = [];
+  const color = runner.track!.color;
 
   $: coords = cropTrackFromLegNumber(runner, legNumber);
 </script>
 
-<LineString
-  {coords}
-  color={`#${runner.track?.color}`}
-  width={5}
-  text={runner.lastName}
-/>
+<LineString {coords} {color} width={5} text={runner.lastName} />

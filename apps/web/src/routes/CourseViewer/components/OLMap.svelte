@@ -6,6 +6,7 @@
   export let angle: number;
   export let fitBox: [number, number, number, number];
   export let padding: [number, number, number, number];
+  export let isDrawMode: boolean;
 
   let map: Map;
   let view: View;
@@ -35,7 +36,11 @@
   });
 </script>
 
-<div id="mapviewer" class="map" />
+<div
+  id="mapviewer"
+  class="map"
+  style:cursor={isDrawMode ? "crosshair" : "auto"}
+/>
 
 {#if map}
   <slot />

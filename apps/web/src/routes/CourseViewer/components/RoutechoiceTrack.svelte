@@ -13,7 +13,7 @@
     return color + _opacity.toString(16).toUpperCase();
   }
 
-  const color = `#${addAlpha(routechoice.color, opacity)}`;
+  const color = addAlpha(routechoice.color, opacity);
 
   const coords = routechoice.track.map(([lat, lon]) => {
     return transform([lon, lat], "EPSG:4326", "EPSG:3857");

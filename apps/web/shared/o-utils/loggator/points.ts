@@ -47,7 +47,7 @@ export function buildRunnersTracksFromLoggatorData(
       lats: [],
       lons: [],
       times: [],
-      color: runnerInfos?.marker_color ?? "",
+      color: `#${runnerInfos?.marker_color}` ?? "",
     };
 
     for (const point of runnerPoints) {
