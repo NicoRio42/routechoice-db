@@ -1,5 +1,5 @@
-import { MapCalibration } from "../models/course-map";
-import { Map } from "../models/loggator-api/logator-event";
+import type { MapCalibration } from "../models/course-map";
+import type { Map } from "../models/loggator-api/logator-event";
 
 export default function getMapCallibrationFromLoggatorEventMap(
   loggatorEventMap: Map

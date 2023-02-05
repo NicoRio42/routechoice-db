@@ -24,6 +24,7 @@
   import type { LoggatorEvent } from "../../models/loggator-api/loggator-event";
   import type { LoggatorPoints } from "src/models/loggator-api/loggator-points";
   import { buildRunnersTracksFromLoggatorData } from "../../../shared/o-utils/loggator/points";
+  import getMapCallibrationFromLoggatorEventMap from "../../../shared/o-utils/loggator/map-calibration";
 
   export let params: { courseId: string };
 
@@ -54,9 +55,9 @@
   const db = getFirestore();
   const courseDataPromise = getCourseData();
 
-  async function getCourseData(): Promise<CourseData | undefined> {
+  async function getCourseData(): Promise<CourseData> {
     let course: Course;
-    let courseData: CourseData;
+
     try {
       const loggatorEventID = params.courseId.split("-")[1];
 
@@ -101,13 +102,22 @@
         id: params.courseId,
       });
 
-      const legs = courseDataDocument.data()?.legs;
+      const courseData = {
+        ...courseDataWithoutRunnersValidator.parse({
+          ...courseDataDocument.data(),
+          legs: parseNestedArraysInLegs(courseDataDocument.data()?.legs),
+        }),
+        runners: [],
+      };
 
-      if (legs === undefined) return;
+      if (loggatorEvent.map.url === undefined)
+        throw new Error("Event isn't started yet");
+
+      if (courseData.legs.length === 0) return courseData;
 
       const courseDataWithoutRunners = courseDataWithoutRunnersValidator.parse({
         ...courseDataDocument.data(),
-        legs: parseNestedArraysInLegs(legs),
+        legs: parseNestedArraysInLegs(courseDataDocument.data()?.legs),
       });
 
       const runners: Runner[] = [];
@@ -126,54 +136,26 @@
         loggatorEvent
       );
 
-      courseData = { ...courseDataWithoutRunners, runners: runnersWithTracks };
+      const map = {
+        calibration: getMapCallibrationFromLoggatorEventMap(loggatorEvent.map),
+        url: loggatorEvent.map.url,
+      };
+
+      return {
+        ...courseDataWithoutRunners,
+        runners: runnersWithTracks,
+        map,
+      };
     } catch (error) {
       console.error(error);
-      alert(`An error occured while loading the course.`);
-
-      return;
     }
-
-    // Check if loggator event has started, and if the map is available
-    const loggatorEventRequest = await fetch(
-      `${functionsBaseURL}/getLoggatorData?baseurl=http://www.tulospalvelu.fi/gps/&idstr=logatec${extractLoggatorIDFromLoggatorURL(
-        course.liveProviderURL
-      )}`
-    );
-
-    const loggatorEventJSON = await loggatorEventRequest.json();
-    const loggatorEventStarted = loggatorEventJSON.routes.length > 0;
-
-    if (!loggatorEventStarted) {
-      alert("Event isn't started yet.");
-      return;
-    }
-
-    const loggatorEvent = rerun2DEventDataSchema.parse(loggatorEventJSON);
-
-    courseData.map = {
-      calibration: getMapCalibrationFromCalString(loggatorEvent.map.calstring),
-      url: loggatorEvent.map.imagelink,
-    };
-
-    // console.log(
-    //   await getLoggatorEventPoints(
-    //     extractLoggatorIDFromLoggatorURL(course.liveProviderURL)
-    //   )
-    // );
-
-    return courseData;
   }
 </script>
 
 {#await courseDataPromise}
   Loading...
 {:then courseData}
-  {#if courseData !== undefined}
-    <CourseViewer {courseData} />
-  {:else}
-    An error occured
-  {/if}
+  <CourseViewer {courseData} />
 {:catch error}
   An error occured
 {/await}

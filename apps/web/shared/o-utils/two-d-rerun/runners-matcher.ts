@@ -16,6 +16,7 @@ export function attribute2DRerunTrackToMatchedRunner(
         route === undefined
           ? null
           : {
+              color: "#",
               lats: route.latarray,
               lons: route.lngarray,
               times: route.timearray,

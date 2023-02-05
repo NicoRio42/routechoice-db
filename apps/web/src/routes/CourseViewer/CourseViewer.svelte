@@ -1,10 +1,14 @@
 <script lang="ts">
+  import { doc, getFirestore, updateDoc } from "firebase/firestore/lite";
   import type { LineString } from "ol/geom";
   import type { DrawEvent } from "ol/interaction/Draw";
+  import { serializeNestedArraysInLegs } from "../../../shared/o-utils/models/leg";
   import type Routechoice from "shared/o-utils/models/routechoice";
-  import { detectRunnersRoutechoices } from "../../../shared/o-utils/routechoice-detector/routechoice-detector";
+  import { createRoutechoiceStatistics } from "../../../shared/o-utils/statistics/routechoices-statistics";
   import type CourseData from "../../../shared/o-utils/models/course-data";
+  import { detectRunnersRoutechoices } from "../../../shared/o-utils/routechoice-detector/routechoice-detector";
   import { changeRunnerRoutechoice } from "../../db/routechoice";
+  import { updateRunnersRoutechoicesInFirestore } from "../../db/runners";
   import ActionButtons from "./components/ActionButtons.svelte";
   import AddRoutechoiceDialog, {
     getNewRoutechoiceNameAndColor,
@@ -22,7 +26,6 @@
   import VectorLayer from "./components/VectorLayer.svelte";
   import "./styles.css";
   import { computeFitBoxAndAngleFromLegNumber } from "./utils";
-  import { doc, getFirestore, writeBatch } from "firebase/firestore/lite";
 
   export let courseData: CourseData;
 
@@ -49,14 +52,15 @@
 
   $: legRoutechoices = courseData.legs[legNumber - 1].routechoices;
 
-  function handleRoutechoiceChange(
+  async function handleRoutechoiceChange(
     event: CustomEvent<RoutechoiceChangeEventDetails>
-  ): void {
-    courseData = changeRunnerRoutechoice(
+  ): Promise<void> {
+    courseData = await changeRunnerRoutechoice(
       courseData,
       event.detail.routechoiceID,
       event.detail.runnerId,
-      legNumber
+      legNumber,
+      db
     );
   }
 
@@ -82,53 +86,40 @@
         newRoutechoice,
       ];
 
+      courseData.legs = createRoutechoiceStatistics(
+        courseData.runners,
+        courseData.legs
+      );
+
+      try {
+        await updateDoc(doc(db, "coursesData", courseData.id), {
+          legs: serializeNestedArraysInLegs(courseData.legs),
+        });
+      } catch (error) {
+        alert("An error occured while updating the course.");
+      }
+
       if (courseData.runners.length !== 0) {
         const runnersWithDetectedRoutechoices = detectRunnersRoutechoices(
           courseData.legs,
           courseData.runners
         );
 
-        // So the runner track is not persisted to Firebase
-        runnersWithDetectedRoutechoices.forEach(
-          (runner) => (runner.track = null)
-        );
-
-        // Only updated runners are pushed to Firestore
-        const updatedRunner = runnersWithDetectedRoutechoices.filter(
-          (newRunner, runnerIndex) =>
-            courseData.runners[runnerIndex].legs.some(
-              (oldRunnerLeg, legIndex) => {
-                return (
-                  newRunner.legs[legIndex]?.detectedRouteChoice?.id !==
-                  oldRunnerLeg?.detectedRouteChoice?.id
-                );
-              }
-            )
-        );
-
         try {
-          const batch = writeBatch(db);
+          updateRunnersRoutechoicesInFirestore(
+            courseData.runners,
+            runnersWithDetectedRoutechoices,
+            db,
+            courseData.id
+          );
 
-          updatedRunner.forEach(async (runner) => {
-            batch.update(
-              doc(db, "coursesData", courseData.id, "runners", runner.id),
-              { legs: runner.legs }
-            );
-
-            console.log(
-              `Runner ${runner.firstName} ${runner.lastName} updated`
-            );
-          });
-
-          batch.commit();
+          courseData.runners = runnersWithDetectedRoutechoices;
         } catch (error) {
           alert(
             "An error occured while updating the new runners to the database."
           );
           console.error(error);
         }
-
-        courseData.runners = runnersWithDetectedRoutechoices;
       }
     } catch (e) {
       return;
@@ -149,6 +140,10 @@
 
   <OlMap {isDrawMode} {angle} {fitBox} padding={[100, 0, 100, 0]}>
     <OSM />
+
+    {#if isDrawMode}
+      <Draw type={"LineString"} on:drawEnd={handleDrawEnd} />
+    {/if}
 
     <label for="draw-switch" class="draw-switch-label">
       <p>Draw routechoices</p>
@@ -189,10 +184,6 @@
             <RunnerRoute {runner} {legNumber} />
           {/if}
         {/each}
-      {/if}
-
-      {#if isDrawMode}
-        <Draw type={"LineString"} on:drawEnd={handleDrawEnd} />
       {/if}
     </VectorLayer>
   </OlMap>

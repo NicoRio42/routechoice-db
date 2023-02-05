@@ -15,7 +15,7 @@ export function createRoutechoiceStatisticsForOneLeg(
   legNumber: number,
   runners: Runner[]
 ): Leg {
-  const leg = structuredClone(inputLeg);
+  const leg = structuredClone(inputLeg) as Leg;
 
   // Statistics reinit
   leg.routechoices.forEach((rc) => delete rc.statistics);

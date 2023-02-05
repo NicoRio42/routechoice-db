@@ -38,11 +38,7 @@
       return;
     }
 
-    const newSelectedRoutechoiceId = parseInt(event.currentTarget.value, 10);
-
-    selectedRoutechoice = isNaN(newSelectedRoutechoiceId)
-      ? null
-      : newSelectedRoutechoiceId;
+    selectedRoutechoice = event.currentTarget.value ?? null;
 
     if ($selectedLeg === null) return;
 
