@@ -1,8 +1,15 @@
 <script lang="ts">
+  import type { LineString } from "ol/geom";
+  import type { DrawEvent } from "ol/interaction/Draw";
+  import type Routechoice from "shared/o-utils/models/routechoice";
   import type CourseData from "../../../shared/o-utils/models/course-data";
   import { changeRunnerRoutechoice } from "../../db/routechoice";
   import ActionButtons from "./components/ActionButtons.svelte";
+  import AddRoutechoiceDialog, {
+    getNewRoutechoiceNameAndColor,
+  } from "./components/AddRoutechoiceDialog.svelte";
   import AutoAnalysis from "./components/AutoAnalysis.svelte";
+  import Draw from "./components/Draw.svelte";
   import GeoreferencedImage from "./components/GeoreferencedImage/GeoreferencedImage.svelte";
   import OlMap from "./components/OLMap.svelte";
   import OSM from "./components/OSM.svelte";
@@ -10,6 +17,7 @@
   import RunnerRoute from "./components/RunnerRoute.svelte";
   import SideBar from "./components/SideBar.svelte";
   import type { RoutechoiceChangeEventDetails } from "./components/SplitTimesTable/RoutecoiceTableCell.svelte";
+  import { getStandardCordsAndLengthFromLineStringFlatCordinates } from "./components/utils";
   import VectorLayer from "./components/VectorLayer.svelte";
   import "./styles.css";
   import { computeFitBoxAndAngleFromLegNumber } from "./utils";
@@ -23,6 +31,7 @@
   let showRoutechoices = true;
   let showSideBar = true;
   let isAutoAnalysisMode = false;
+  let isDrawMode = true;
 
   $: {
     const [newFitBox, newAngle] = computeFitBoxAndAngleFromLegNumber(
@@ -44,9 +53,37 @@
       legNumber
     );
   }
+
+  async function handleDrawEnd(e: CustomEvent<DrawEvent>): Promise<void> {
+    try {
+      const [name, color] = await getNewRoutechoiceNameAndColor();
+
+      const [track, length] =
+        getStandardCordsAndLengthFromLineStringFlatCordinates(
+          (e.detail.feature.getGeometry() as LineString).getFlatCoordinates()
+        );
+
+      const newRoutechoice: Routechoice = {
+        id: Math.floor(Math.random() * 10e10),
+        color,
+        name,
+        length,
+        track,
+      };
+
+      courseData.legs[legNumber - 1].routechoices = [
+        ...courseData.legs[legNumber - 1].routechoices,
+        newRoutechoice,
+      ];
+    } catch (e) {
+      return;
+    }
+  }
 </script>
 
 <div class="wrapper">
+  <AddRoutechoiceDialog />
+
   <SideBar
     bind:selectedRunners
     {courseData}
@@ -88,6 +125,10 @@
             <RunnerRoute {runner} {legNumber} />
           {/if}
         {/each}
+      {/if}
+
+      {#if isDrawMode}
+        <Draw type={"LineString"} on:drawEnd={handleDrawEnd} />
       {/if}
     </VectorLayer>
   </OlMap>

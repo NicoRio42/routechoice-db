@@ -45,3 +45,19 @@ export function distanceBetweenTwoGPSPoints(
 
   return c * 6_371_000;
 }
+
+export function getLineStringLength(coords: [number, number][]): number {
+  return coords.reduce((previous, current, index) => {
+    if (index === coords.length - 1) {
+      return previous;
+    }
+
+    return (
+      previous +
+      distanceBetweenTwoGPSPoints(
+        [current[0], current[1]],
+        [coords[index + 1][0], coords[index + 1][1]]
+      )
+    );
+  }, 0);
+}

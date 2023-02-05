@@ -1,5 +1,6 @@
 import { transform } from "ol/proj";
 import type Runner from "../../../../shared/o-utils/models/runner";
+import { getLineStringLength } from "../../../../shared/o-utils/utils/distance-helpers";
 
 export function cropTrackFromLegNumber(
   runner: Runner,
@@ -31,4 +32,25 @@ export function cropTrackFromLegNumber(
   }
 
   return cutCoords;
+}
+
+export function getStandardCordsAndLengthFromLineStringFlatCordinates(
+  flatCoordinates: number[]
+): [[number, number][], number] {
+  const coords: [number, number][] = [];
+  const limit = flatCoordinates.length;
+
+  for (let i = 0; i < limit; i += 2) {
+    const point = transform(
+      [flatCoordinates[i], flatCoordinates[i + 1]],
+      "EPSG:3857",
+      "EPSG:4326"
+    );
+
+    coords.push([point[1], point[0]]);
+  }
+
+  const length = getLineStringLength(coords);
+
+  return [coords, length];
 }

@@ -1,5 +1,8 @@
 import type Leg from "../../models/leg";
-import { distanceBetweenTwoGPSPoints } from "../../utils/distance-helpers";
+import {
+  distanceBetweenTwoGPSPoints,
+  getLineStringLength,
+} from "../../utils/distance-helpers";
 import { names, routesColors } from "../utils/routechoices-names-colors";
 
 export default function parseGPXRoutechoicesOCADExport(
@@ -50,20 +53,7 @@ export default function parseGPXRoutechoicesOCADExport(
   });
 
   filteredRawRoutechoices.forEach((rc, rcIndex) => {
-    const length = rc.rawPoints.reduce((previous, current, index) => {
-      if (index === rc.rawPoints.length - 1) {
-        return previous;
-      }
-
-      return (
-        previous +
-        distanceBetweenTwoGPSPoints(
-          [current[0], current[1]],
-          [rc.rawPoints[index + 1][0], rc.rawPoints[index + 1][1]]
-        )
-      );
-    }, 0);
-
+    const length = getLineStringLength(rc.rawPoints);
     let attributedLegIndex = 0;
 
     let distanceStart = distanceBetweenTwoGPSPoints(
