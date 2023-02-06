@@ -1,30 +1,47 @@
 import type { MapCalibration } from "../models/course-map";
 import type { Map } from "../models/loggator-api/logator-event";
 
-export default function getMapCallibrationFromLoggatorEventMap(
+export default async function getMapCallibrationFromLoggatorEventMap(
   loggatorEventMap: Map
-): MapCalibration {
-  return [
-    {
-      gps: {
-        lat: loggatorEventMap.coordinates.topLeft.lat,
-        lon: loggatorEventMap.coordinates.topLeft.lng,
+): Promise<MapCalibration> {
+  let resolve: Function;
+  let reject: Function;
+
+  const promise = new Promise<MapCalibration>((res, rej) => {
+    resolve = res;
+    reject = rej;
+  });
+
+  const image = new Image();
+
+  image.onload = () => {
+    resolve([
+      {
+        gps: {
+          lat: loggatorEventMap.coordinates.topLeft.lat,
+          lon: loggatorEventMap.coordinates.topLeft.lng,
+        },
+        point: { x: 1, y: 1 },
       },
-      point: { x: 1, y: 1 },
-    },
-    {
-      gps: {
-        lat: loggatorEventMap.coordinates.bottomLeft.lat,
-        lon: loggatorEventMap.coordinates.bottomLeft.lng,
+      {
+        gps: {
+          lat: loggatorEventMap.coordinates.bottomLeft.lat,
+          lon: loggatorEventMap.coordinates.bottomLeft.lng,
+        },
+        point: { x: 1, y: image.naturalHeight },
       },
-      point: { x: 1, y: loggatorEventMap.height },
-    },
-    {
-      gps: {
-        lat: loggatorEventMap.coordinates.topRight.lat,
-        lon: loggatorEventMap.coordinates.topRight.lng,
+      {
+        gps: {
+          lat: loggatorEventMap.coordinates.topRight.lat,
+          lon: loggatorEventMap.coordinates.topRight.lng,
+        },
+        point: { x: image.naturalWidth, y: 1 },
       },
-      point: { x: loggatorEventMap.width, y: 1 },
-    },
-  ];
+    ]);
+  };
+
+  image.onerror = () => reject("Failed to load map image");
+  image.src = loggatorEventMap.url;
+
+  return promise;
 }

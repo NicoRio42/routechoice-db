@@ -3,7 +3,7 @@ import type { Coordinate } from "ol/coordinate";
 export function transformProjection(
   point: number[],
   matrixParams: MatrixParams
-) {
+): [number, number] {
   const x =
     matrixParams.A * point[0] + matrixParams.B * point[1] + matrixParams.C;
   const y =

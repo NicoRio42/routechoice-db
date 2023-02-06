@@ -137,7 +137,9 @@
       );
 
       const map = {
-        calibration: getMapCallibrationFromLoggatorEventMap(loggatorEvent.map),
+        calibration: await getMapCallibrationFromLoggatorEventMap(
+          loggatorEvent.map
+        ),
         url: loggatorEvent.map.url,
       };
 
