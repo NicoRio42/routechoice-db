@@ -16,7 +16,14 @@
 <nav class="container-fluid">
   <ul>
     <li class="logo-item link-list-item">
-      <a class="logo-link" href="/#/"><Logo />Routechoice DB</a>
+      <a class="logo-link" href="/#/"
+        ><Logo
+          --bg-color="var(--primary)"
+          --width="3rem"
+          --height="3rem"
+          --logo-color="white"
+        />Routechoice DB</a
+      >
     </li>
 
     <slot />

@@ -8,23 +8,20 @@
     orderBy,
     query,
   } from "firebase/firestore/lite";
+  import { getFunctions, httpsCallable } from "firebase/functions";
+  import Logo from "../../../shared/icons/Logo.svelte";
+  import type { LoggatorPoints } from "src/models/loggator-api/loggator-points";
+  import type { Course } from "../../../shared/models/course";
+  import { courseValidator } from "../../../shared/models/course";
+  import getMapCallibrationFromLoggatorEventMap from "../../../shared/o-utils/loggator/map-calibration";
+  import { buildRunnersTracksFromLoggatorData } from "../../../shared/o-utils/loggator/points";
+  import type CourseData from "../../../shared/o-utils/models/course-data";
   import { courseDataWithoutRunnersValidator } from "../../../shared/o-utils/models/course-data";
   import { parseNestedArraysInLegs } from "../../../shared/o-utils/models/leg";
-  import { courseValidator } from "../../../shared/models/course";
   import type Runner from "../../../shared/o-utils/models/runner";
   import { runnerValidator } from "../../../shared/o-utils/models/runner";
-  import { functionsBaseURL } from "../../../environments/environment";
-  import { rerun2DEventDataSchema } from "../../../shared/o-utils/models/2d-rerun/get-2d-rerun-data-response";
-  import type CourseData from "../../../shared/o-utils/models/course-data";
-  import type { Course } from "../../../shared/models/course";
-  import { extractLoggatorIDFromLoggatorURL } from "../../../courses/utils/2d-rerun-hacks/init-mapviewer";
-  import { getMapCalibrationFromCalString } from "../../../shared/o-utils/map/coords-converter";
-  import CourseViewer from "./CourseViewer.svelte";
-  import { getFunctions, httpsCallable } from "firebase/functions";
   import type { LoggatorEvent } from "../../models/loggator-api/loggator-event";
-  import type { LoggatorPoints } from "src/models/loggator-api/loggator-points";
-  import { buildRunnersTracksFromLoggatorData } from "../../../shared/o-utils/loggator/points";
-  import getMapCallibrationFromLoggatorEventMap from "../../../shared/o-utils/loggator/map-calibration";
+  import CourseViewer from "./CourseViewer.svelte";
 
   export let params: { courseId: string };
 
@@ -155,9 +152,34 @@
 </script>
 
 {#await courseDataPromise}
-  Loading...
+  <div class="loading-wrapper">
+    <Logo
+      --bg-color="white"
+      --width="10rem"
+      --height="10rem"
+      --logo-color="var(--primary)"
+    />
+
+    <p aria-busy="true">Loading</p>
+  </div>
 {:then courseData}
   <CourseViewer {courseData} />
 {:catch error}
   An error occured
 {/await}
+
+<style>
+  .loading-wrapper {
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    align-items: center;
+    width: 100%;
+    height: 100%;
+  }
+
+  .loading-wrapper p {
+    color: var(--primary);
+    font-weight: 500;
+  }
+</style>

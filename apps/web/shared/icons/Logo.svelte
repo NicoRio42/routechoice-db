@@ -15,10 +15,10 @@
 
 <style>
   svg {
-    height: 3rem;
-    width: 3rem;
+    height: var(--height);
+    width: var(--width);
     padding: 0.5rem;
-    background-color: var(--primary);
-    color: white;
+    background-color: var(--bg-color);
+    color: var(--logo-color);
   }
 </style>

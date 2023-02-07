@@ -145,16 +145,12 @@
       <Draw type={"LineString"} on:drawEnd={handleDrawEnd} />
     {/if}
 
-    <label for="draw-switch" class="draw-switch-label">
-      <p>Draw routechoices</p>
-
       <input
         type="checkbox"
         bind:checked={isDrawMode}
         role="switch"
         class="draw-switch"
       />
-    </label>
 
     {#if courseData.map !== null}
       <GeoreferencedImage

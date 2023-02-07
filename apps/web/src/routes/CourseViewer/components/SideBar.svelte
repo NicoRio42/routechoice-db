@@ -48,7 +48,7 @@
     bottom: 0;
     left: 0;
     background-color: white;
-    width: 20rem;
+    width: 21rem;
     resize: horizontal;
     overflow-x: auto;
     border-right: 1px solid lightgray;
