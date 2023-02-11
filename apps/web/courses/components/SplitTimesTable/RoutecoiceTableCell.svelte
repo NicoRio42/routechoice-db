@@ -96,7 +96,7 @@
 
 <td aria-busy={loading} class="right">
   {#if runner.legs !== null && runner.legs[0] !== null}
-    {#if $isUserAdminStore || runner.foreignKeys.userId === $userStore?.uid}
+    {#if $isUserAdminStore || runner.userId === $userStore?.uid}
       <select
         style:color={selectedRoutechoiceColor}
         value={selectedRoutechoice}
