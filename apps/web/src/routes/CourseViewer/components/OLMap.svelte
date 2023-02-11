@@ -2,6 +2,7 @@
   import { Map, View } from "ol";
   import "ol/ol.css";
   import { onDestroy, onMount, setContext } from "svelte";
+  import DoubleClickZoom from "ol/interaction/DoubleClickZoom.js";
 
   export let angle: number;
   export let fitBox: [number, number, number, number];
@@ -21,12 +22,14 @@
   setContext("map", () => map);
 
   onMount(() => {
-    view = new View();
+    view = new View({ constrainRotation: false });
 
     map = new Map({
       target: "mapviewer",
       view,
     });
+
+    map.addInteraction(new DoubleClickZoom());
 
     view.fit(fitBox, { padding });
   });

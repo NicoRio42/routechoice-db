@@ -1,12 +1,20 @@
 <script lang="ts">
-  import { doc, getFirestore, updateDoc } from "firebase/firestore/lite";
+  import {
+    doc,
+    getFirestore,
+    updateDoc,
+    writeBatch,
+  } from "firebase/firestore/lite";
   import type { LineString } from "ol/geom";
   import type { DrawEvent } from "ol/interaction/Draw";
   import { serializeNestedArraysInLegs } from "../../../shared/o-utils/models/leg";
   import type Routechoice from "shared/o-utils/models/routechoice";
   import { createRoutechoiceStatistics } from "../../../shared/o-utils/statistics/routechoices-statistics";
   import type CourseData from "../../../shared/o-utils/models/course-data";
-  import { detectRunnersRoutechoices } from "../../../shared/o-utils/routechoice-detector/routechoice-detector";
+  import {
+    detectRunnersRoutechoices,
+    detectSingleRunnerRoutechoices,
+  } from "../../../shared/o-utils/routechoice-detector/routechoice-detector";
   import { changeRunnerRoutechoice } from "../../db/routechoice";
   import { updateRunnersRoutechoicesInFirestore } from "../../db/runners";
   import ActionButtons from "./components/ActionButtons.svelte";
@@ -26,6 +34,9 @@
   import VectorLayer from "./components/VectorLayer.svelte";
   import "./styles.css";
   import { computeFitBoxAndAngleFromLegNumber } from "./utils";
+  import RunnerOffsetEditor, {
+    getNewRunnerOffset,
+  } from "./components/RunnerOffsetEditor.svelte";
 
   export let courseData: CourseData;
 
@@ -125,10 +136,66 @@
       return;
     }
   }
+
+  async function handleRunnerTimeOffsetChange(
+    event: CustomEvent<string>
+  ): Promise<void> {
+    const runnerId = event.detail;
+    const previouslySelectedRunners = [...selectedRunners];
+    selectedRunners = [runnerId];
+    let newOffset: number, applyToAllRunners: boolean;
+
+    try {
+      [newOffset, applyToAllRunners] = await getNewRunnerOffset(runnerId);
+    } catch (e) {
+      return;
+    } finally {
+      selectedRunners = [...previouslySelectedRunners];
+    }
+
+    if (applyToAllRunners) {
+      courseData.runners.forEach((runner) => (runner.timeOffset = newOffset));
+
+      courseData.runners = detectRunnersRoutechoices(
+        courseData.legs,
+        courseData.runners
+      );
+
+      const batch = writeBatch(db);
+
+      courseData.runners.forEach((runner) =>
+        batch.update(
+          doc(db, "coursesData", courseData.id, "runners", runner.id),
+          {
+            timeOffset: newOffset,
+            legs: runner.legs,
+          }
+        )
+      );
+
+      batch.commit();
+      return;
+    }
+
+    courseData.runners = courseData.runners.map((runner) =>
+      runner.id === runnerId
+        ? detectSingleRunnerRoutechoices(courseData.legs, {
+            ...runner,
+            timeOffset: newOffset,
+          })
+        : runner
+    );
+
+    updateDoc(doc(db, "coursesData", courseData.id, "runners", runnerId), {
+      timeOffset: newOffset,
+    });
+  }
 </script>
 
 <div class="wrapper">
   <AddRoutechoiceDialog {legRoutechoices} />
+
+  <RunnerOffsetEditor bind:courseData />
 
   <SideBar
     bind:selectedRunners
@@ -136,6 +203,7 @@
     {legNumber}
     {showSideBar}
     on:routechoiceChange={handleRoutechoiceChange}
+    on:changeRunnerTimeOffset={handleRunnerTimeOffsetChange}
   />
 
   <OlMap {isDrawMode} {angle} {fitBox} padding={[100, 0, 100, 0]}>
@@ -145,12 +213,12 @@
       <Draw type={"LineString"} on:drawEnd={handleDrawEnd} />
     {/if}
 
-      <input
-        type="checkbox"
-        bind:checked={isDrawMode}
-        role="switch"
-        class="draw-switch"
-      />
+    <input
+      type="checkbox"
+      bind:checked={isDrawMode}
+      role="switch"
+      class="draw-switch"
+    />
 
     {#if courseData.map !== null}
       <GeoreferencedImage
@@ -199,9 +267,16 @@
     flex-shrink: 0;
     flex-grow: 1;
   }
+
   .draw-switch {
     position: absolute;
     top: 6rem;
     right: 0;
+  }
+
+  @media screen and (max-width: 768px) {
+    .draw-switch {
+      display: none;
+    }
   }
 </style>

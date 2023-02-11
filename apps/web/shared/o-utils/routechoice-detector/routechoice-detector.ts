@@ -9,52 +9,54 @@ export function detectRunnersRoutechoices(
   course: Leg[],
   runners: Runner[]
 ): Runner[] {
-  const clonedRunners = structuredClone(runners) as Runner[];
+  return runners.map((runner) =>
+    detectSingleRunnerRoutechoices(course, runner)
+  );
+}
 
-  return clonedRunners.map((runner) => {
-    if (runner.track === null) return runner;
+export function detectSingleRunnerRoutechoices(
+  course: Leg[],
+  inputRunner: Runner
+): Runner {
+  if (inputRunner.track === null) return inputRunner;
+  checkIfRunnerTrackConsistentWithSplitTimes(inputRunner);
+  const runner = structuredClone(inputRunner) as Runner;
 
-    checkIfRunnerTrackConsistentWithSplitTimes(runner);
+  return {
+    ...runner,
+    legs: runner.legs.map((leg, index) => {
+      if (leg === null) {
+        return leg;
+      }
 
-    return {
-      ...runner,
-      legs: runner.legs.map((leg, index) => {
-        if (leg === null) {
-          return leg;
-        }
+      const startTime =
+        index === 0
+          ? runner.startTime
+          : runner.startTime + leg.timeOverall - leg.time;
 
-        const startTime =
-          index === 0
-            ? runner.startTime
-            : runner.startTime + leg.timeOverall - leg.time;
+      const finishTime = runner.startTime + leg.timeOverall;
 
-        const finishTime = runner.startTime + leg.timeOverall;
+      const runnerLegTrack = prepareRunnerTrackForDetection(
+        runner.track as RunnerTrack, // Typescript doesn't mind about my early return
+        startTime,
+        finishTime
+      );
 
-        const runnerLegTrack = prepareRunnerTrackForDetection(
-          runner.track as RunnerTrack, // Typescript doesn't mind about my early return
-          startTime,
-          finishTime
-        );
+      let detectedRouteChoice: Routechoice | null = null;
 
-        let detectedRouteChoice: Routechoice | null = null;
+      if (course[index].routechoices.length !== 0) {
+        const d = detectRoutechoice(runnerLegTrack, course[index].routechoices);
 
-        if (course[index].routechoices.length !== 0) {
-          const d = detectRoutechoice(
-            runnerLegTrack,
-            course[index].routechoices
-          );
+        // Because of Firebase nested arrays problème
+        detectedRouteChoice = d === null ? null : { ...d, track: [] };
+      }
 
-          // Because of Firebase nested arrays problème
-          detectedRouteChoice = d === null ? null : { ...d, track: [] };
-        }
-
-        return {
-          ...leg,
-          detectedRouteChoice,
-        };
-      }),
-    };
-  });
+      return {
+        ...leg,
+        detectedRouteChoice,
+      };
+    }),
+  };
 }
 
 function checkIfRunnerTrackConsistentWithSplitTimes(runner: Runner): void {

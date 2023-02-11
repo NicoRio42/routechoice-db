@@ -12,10 +12,14 @@ export function cropTrackFromLegNumber(
   const finishTime = runner.startTime + runnerLeg.timeOverall;
 
   const runnerrack = runner.track!;
-  let startIndex = runnerrack.times.findIndex((time) => time >= startTime);
+  let startIndex = runnerrack.times.findIndex(
+    (time) => time >= startTime + runner.timeOffset
+  );
   if (startIndex === -1) startIndex = 0;
 
-  let finishIndex = runnerrack.times.findIndex((time) => time >= finishTime);
+  let finishIndex = runnerrack.times.findIndex(
+    (time) => time >= finishTime + runner.timeOffset
+  );
 
   if (finishIndex === -1) finishIndex = runnerrack.times.length - 1;
 

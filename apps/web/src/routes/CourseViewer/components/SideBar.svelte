@@ -35,6 +35,7 @@
         {legNumber}
         bind:selectedRunners
         on:routechoiceChange
+        on:changeRunnerTimeOffset
       />
     </section>
   </div>
@@ -48,7 +49,7 @@
     bottom: 0;
     left: 0;
     background-color: white;
-    width: 21rem;
+    width: 23rem;
     resize: horizontal;
     overflow-x: auto;
     border-right: 1px solid lightgray;

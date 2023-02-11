@@ -6,7 +6,10 @@ function buildCourseAndRoutechoices(
 ): void {
   const data = { ...courseAndRoutechoicesData };
 
-  mapviewer.tags = data.tags;
+  mapviewer.tags = data.tags.map((tag) => ({
+    ...tag,
+    color: tag.color.slice(1),
+  }));
   mapviewer.coursecoords = data.coursecoords;
   mapviewer.otechinfo = data.otechinfo;
   mapviewer.request_redraw();

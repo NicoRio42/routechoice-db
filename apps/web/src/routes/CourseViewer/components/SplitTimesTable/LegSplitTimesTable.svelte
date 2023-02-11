@@ -1,5 +1,6 @@
 <script lang="ts">
-  import type Runner from "shared/o-utils/models/runner";
+  import Pen from "../../../../../shared/icons/Pen.svelte";
+  import type Runner from "../../../../../shared/o-utils/models/runner";
   import type CourseData from "../../../../../shared/o-utils/models/course-data";
   import type Routechoice from "../../../../../shared/o-utils/models/routechoice";
   import RoutechoiceTableCell from "./RoutecoiceTableCell.svelte";
@@ -8,10 +9,14 @@
     rankToCSSClass,
     secondsToPrettyTime,
   } from "./utils";
+  import { isUserAdminStore } from "../../../../../shared/stores/user-store";
+  import { createEventDispatcher } from "svelte";
 
   export let selectedRunners: string[];
   export let courseData: CourseData;
   export let legNumber: number;
+
+  const dispatch = createEventDispatcher<{ changeRunnerTimeOffset: string }>();
 
   let sortedRunnersWithOneLeg: Runner[] = [];
   let legRoutechoices: Routechoice[] = [];
@@ -95,6 +100,8 @@
           on:input={handleAllTrackedSelection}
         /></th
       >
+
+      <th />
     </tr>
   </thead>
 
@@ -150,6 +157,16 @@
             checked={selectedRunners.includes(runner.id)}
             on:change={(e) => handleShowTrackCheckboxChange(e, runner.id)}
           />
+        </td>
+      {/if}
+
+      {#if runner.track !== null && $isUserAdminStore}
+        <td class="pen-td">
+          <button
+            on:click={() => dispatch("changeRunnerTimeOffset", runner.id)}
+            type="button"
+            class="pen-button"><Pen --width="1rem" --height="1rem" /></button
+          >
         </td>
       {/if}
     </tr>
@@ -222,5 +239,18 @@
 
   .right {
     text-align: end;
+  }
+
+  .pen-td {
+    padding: 0;
+  }
+
+  .pen-button {
+    margin: 0;
+    padding: 0;
+    color: var(--h1-color);
+    background-color: transparent;
+    border: none;
+    box-shadow: none;
   }
 </style>

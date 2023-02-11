@@ -12,7 +12,6 @@
   export let mapCalibration: MapCalibration;
 
   const coordinatesConverter = new CoordinatesConverter(mapCalibration);
-  console.log(mapCalibration);
 
   const getMap = getContext<() => Map>("map");
   let map: Map;
