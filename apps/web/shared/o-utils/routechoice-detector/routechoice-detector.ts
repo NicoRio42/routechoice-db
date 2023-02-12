@@ -39,7 +39,8 @@ export function detectSingleRunnerRoutechoices(
       const runnerLegTrack = prepareRunnerTrackForDetection(
         runner.track as RunnerTrack, // Typescript doesn't mind about my early return
         startTime,
-        finishTime
+        finishTime,
+        runner.timeOffset
       );
 
       let detectedRouteChoice: Routechoice | null = null;
@@ -178,10 +179,16 @@ const detectRoutechoice = (
 const prepareRunnerTrackForDetection = (
   runnerTrack: RunnerTrack,
   startTime: number,
-  finishTime: number
+  finishTime: number,
+  timeOffset: number
 ): [number, number][] => {
-  let startIndex = runnerTrack.times.findIndex((time) => time >= startTime);
-  let finishIndex = runnerTrack.times.findIndex((time) => time >= finishTime);
+  let startIndex = runnerTrack.times.findIndex(
+    (time) => time >= startTime + timeOffset
+  );
+
+  let finishIndex = runnerTrack.times.findIndex(
+    (time) => time >= finishTime + timeOffset
+  );
 
   if (startIndex === -1 && finishIndex === -1) return [];
   if (startIndex === -1) startIndex = 0;

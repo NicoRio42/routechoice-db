@@ -177,17 +177,19 @@
       return;
     }
 
+    const runner = courseData.runners.find((runner) => runner.id === runnerId)!;
+    const runnerWithNewOssetAndDetectedRoutechoice =
+      detectSingleRunnerRoutechoices(courseData.legs, {
+        ...runner,
+        timeOffset: newOffset,
+      });
+
     courseData.runners = courseData.runners.map((runner) =>
-      runner.id === runnerId
-        ? detectSingleRunnerRoutechoices(courseData.legs, {
-            ...runner,
-            timeOffset: newOffset,
-          })
-        : runner
+      runner.id === runnerId ? runnerWithNewOssetAndDetectedRoutechoice : runner
     );
 
     updateDoc(doc(db, "coursesData", courseData.id, "runners", runnerId), {
-      timeOffset: newOffset,
+      ...runnerWithNewOssetAndDetectedRoutechoice,
     });
   }
 </script>
@@ -207,7 +209,7 @@
   />
 
   <OlMap {isDrawMode} {angle} {fitBox} padding={[100, 0, 100, 0]}>
-    <OSM />
+    <!-- <OSM /> -->
 
     {#if isDrawMode}
       <Draw type={"LineString"} on:drawEnd={handleDrawEnd} />
