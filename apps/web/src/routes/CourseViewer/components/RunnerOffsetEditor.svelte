@@ -65,47 +65,75 @@
 
 {#if $showDialog}
   <form on:submit|preventDefault={handleSubmit}>
-    <button type="button" on:click={() => offset--}>-</button>
+    <div class="wrapper">
+      <button type="button" on:click={() => offset--} class="counter-button"
+        >-</button
+      >
 
-    <input type="number" bind:value={offset} />
+      <input type="number" bind:value={offset} />
 
-    <button type="button" on:click={() => offset++}>+</button>
+      <button type="button" on:click={() => offset++} class="counter-button"
+        >+</button
+      >
+    </div>
 
-    <label for="every-runners"
-      >Apply to all runners
+    <div class="wrapper">
+      <label class="all-runners" for="all-runners"
+        >Apply to all runners
 
-      <input
-        type="checkbox"
-        name="every-runners"
-        bind:checked={applyToAllRunners}
-      />
-    </label>
+        <input
+          type="checkbox"
+          name="all-runners"
+          bind:checked={applyToAllRunners}
+        />
+      </label>
 
-    <button type="submit">Change offset</button>
+      <button type="button" class="outline cancel" on:click={handleCancel}
+        >Cancel</button
+      >
 
-    <button type="button" class="outline" on:click={handleCancel}>Cancel</button
-    >
+      <button type="submit" class="submit">Change offset</button>
+    </div>
   </form>
 {/if}
 
 <style>
   form {
     position: absolute;
-    bottom: 2.5rem;
+    bottom: 3.5rem;
     left: 50%;
     transform: translateX(-50%);
     z-index: 2;
-    display: flex;
-    gap: 1rem;
     background-color: rgba(255, 255, 255, 0.733);
     padding: 0.5rem 1rem;
+    display: flex;
+    flex-direction: column;
   }
 
-  form button,
-  form input,
-  form label {
+  .cancel,
+  .submit {
+    padding: 0.5rem 1rem;
     margin: 0;
-    padding: 0;
+    white-space: nowrap;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+  }
+
+  .counter-button {
+    border-radius: 1.5rem;
+    width: 3rem;
+    height: 3rem;
+  }
+
+  .wrapper {
+    display: flex;
+    gap: 1rem;
+    align-items: center;
+  }
+
+  .all-runners {
+    font-size: 0.75rem;
     white-space: nowrap;
   }
 </style>

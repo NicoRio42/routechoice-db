@@ -1,3 +1,72 @@
+<div class="wrapper">
+  <AddRoutechoiceDialog {legRoutechoices} />
+
+  <RunnerOffsetEditor bind:courseData />
+
+  <SideBar
+    bind:selectedRunners
+    {courseData}
+    {legNumber}
+    {showSideBar}
+    on:routechoiceChange={handleRoutechoiceChange}
+    on:changeRunnerTimeOffset={handleRunnerTimeOffsetChange}
+  />
+
+  <OlMap {isDrawMode} {angle} {fitBox} padding={[100, 0, 100, 0]}>
+    <!-- <OSM /> -->
+
+    {#if isDrawMode}
+      <Draw type={"LineString"} on:drawEnd={handleDrawEnd} />
+    {/if}
+
+    <input
+      type="checkbox"
+      bind:checked={isDrawMode}
+      role="switch"
+      class="draw-switch"
+    />
+
+    {#if courseData.map !== null}
+      <GeoreferencedImage
+        url={courseData.map.url}
+        mapCalibration={courseData.map.calibration}
+      />
+    {/if}
+
+    <VectorLayer>
+      {#if showRoutechoices}
+        {#each legRoutechoices as routechoice (routechoice.id)}
+          <RoutechoiceTrack {routechoice} opacity={0.8} width={6} />
+        {/each}
+      {/if}
+
+      {#if isAutoAnalysisMode}
+        <AutoAnalysis
+          {selectedRunners}
+          {legNumber}
+          runners={courseData.runners}
+        />
+      {:else}
+        {#each courseData.runners as runner (runner.id)}
+          {@const show = selectedRunners.includes(runner.id)}
+
+          {#if show && runner.track !== null}
+            <RunnerRoute {runner} {legNumber} />
+          {/if}
+        {/each}
+      {/if}
+    </VectorLayer>
+  </OlMap>
+
+  <ActionButtons
+    bind:legNumber
+    bind:showRoutechoices
+    bind:showSideBar
+    legs={courseData.legs}
+    bind:isAutoAnalysisMode
+  />
+</div>
+
 <script lang="ts">
   import {
     doc,
@@ -193,75 +262,6 @@
     });
   }
 </script>
-
-<div class="wrapper">
-  <AddRoutechoiceDialog {legRoutechoices} />
-
-  <RunnerOffsetEditor bind:courseData />
-
-  <SideBar
-    bind:selectedRunners
-    {courseData}
-    {legNumber}
-    {showSideBar}
-    on:routechoiceChange={handleRoutechoiceChange}
-    on:changeRunnerTimeOffset={handleRunnerTimeOffsetChange}
-  />
-
-  <OlMap {isDrawMode} {angle} {fitBox} padding={[100, 0, 100, 0]}>
-    <!-- <OSM /> -->
-
-    {#if isDrawMode}
-      <Draw type={"LineString"} on:drawEnd={handleDrawEnd} />
-    {/if}
-
-    <input
-      type="checkbox"
-      bind:checked={isDrawMode}
-      role="switch"
-      class="draw-switch"
-    />
-
-    {#if courseData.map !== null}
-      <GeoreferencedImage
-        url={courseData.map.url}
-        mapCalibration={courseData.map.calibration}
-      />
-    {/if}
-
-    <VectorLayer>
-      {#if showRoutechoices}
-        {#each legRoutechoices as routechoice (routechoice.id)}
-          <RoutechoiceTrack {routechoice} opacity={0.8} width={6} />
-        {/each}
-      {/if}
-
-      {#if isAutoAnalysisMode}
-        <AutoAnalysis
-          {selectedRunners}
-          {legNumber}
-          runners={courseData.runners}
-        />
-      {:else}
-        {#each courseData.runners as runner (runner.id)}
-          {@const show = selectedRunners.includes(runner.id)}
-
-          {#if show && runner.track !== null}
-            <RunnerRoute {runner} {legNumber} />
-          {/if}
-        {/each}
-      {/if}
-    </VectorLayer>
-  </OlMap>
-
-  <ActionButtons
-    bind:legNumber
-    bind:showRoutechoices
-    bind:showSideBar
-    legs={courseData.legs}
-    bind:isAutoAnalysisMode
-  />
-</div>
 
 <style>
   .wrapper {
