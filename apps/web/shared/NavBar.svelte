@@ -2,7 +2,6 @@
   import Logo from "./icons/Logo.svelte";
   import userStore, { isUserAdminStore } from "./stores/user-store";
   import { getAuth, signOut } from "firebase/auth";
-  import { location, push } from "svelte-spa-router";
   import Hamburger from "./icons/Hamburger.svelte";
 
   const auth = getAuth();
