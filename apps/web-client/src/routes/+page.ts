@@ -1,15 +1,21 @@
 import { courseValidator, type Course } from '$lib/models/course';
 import { collection, getDocs, getFirestore, orderBy, query, where } from 'firebase/firestore/lite';
 import type { PageLoad } from './$types';
-import { error } from '@sveltejs/kit';
+import { error, redirect } from '@sveltejs/kit';
 import firebaseConfig from '../environments/environment';
 import { initializeApp } from 'firebase/app';
+import { createUserLoggedInPromise } from '$lib/stores/user.store';
+import type { Tag } from '$lib/models/tag';
+import { TAGS } from '$lib/components/TagsSelect/tags';
 
-const fireBaseApp = initializeApp(firebaseConfig);
+initializeApp(firebaseConfig);
 const db = getFirestore();
 
 export const load = (async ({ url, depends }) => {
 	depends('courses');
+
+	const isLoggedIn = await createUserLoggedInPromise();
+	if (!isLoggedIn) throw redirect(307, '/login');
 
 	const tags = getTagsFromSearchParams(url);
 	const coursesRef = collection(db, 'courses');
@@ -33,16 +39,18 @@ export const load = (async ({ url, depends }) => {
 			}
 		});
 
-		return { courses };
+		return { courses, tags };
 	} catch (e) {
 		const errorText =
 			typeof e === 'object' ? JSON.stringify(e) : typeof e === 'string' ? e : 'An error occured';
-		throw error(500);
+
+		throw error(500, errorText);
 	}
 }) satisfies PageLoad;
 
-function getTagsFromSearchParams(url: URL): string[] {
+function getTagsFromSearchParams(url: URL): Tag[] {
 	const tagsString = url.searchParams.get('tags');
-	if (tagsString === null) return [];
-	return tagsString.split(',');
+	if (tagsString === null || tagsString === '') return [];
+	const tagsIds = tagsString.split(',');
+	return TAGS.filter((tag) => tagsIds.includes(tag.id));
 }

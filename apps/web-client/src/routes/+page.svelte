@@ -6,10 +6,8 @@
 	import TagsSelect from '$lib/components/TagsSelect/TagsSelect.svelte';
 	import type { Course } from '$lib/models/course';
 	import type { Tag } from '$lib/models/tag';
-	import userStore, { isUserAdminStore } from '$lib/stores/user.store';
+	import { isUserAdminStore } from '$lib/stores/user.store';
 	import { getFunctions, httpsCallable } from 'firebase/functions';
-	import { onDestroy, onMount } from 'svelte';
-	import type { Unsubscriber } from 'svelte/store';
 	import { fade } from 'svelte/transition';
 
 	export let data;
@@ -17,19 +15,10 @@
 	let isAddCourseDialogOpen = false;
 	let courseCurrentlyDeletedID: string | null = null;
 	let isCourseDeletionLoading = false;
-	let tags: Tag[] = [];
+	let tags: Tag[] = data.tags;
 
 	const functions = getFunctions(undefined, 'europe-west1');
 	const deleteCourse = httpsCallable(functions, 'deleteCourse');
-	let unsub: Unsubscriber;
-
-	onMount(() => {
-		unsub = userStore.subscribe((user) => {
-			if (user === null) {
-				goto('/login');
-			}
-		});
-	});
 
 	async function handleDeleteCourse(course: Course) {
 		if (!confirm('Are you sure to delete this course?')) {
@@ -53,12 +42,10 @@
 
 	function handleTagsSelected(event: CustomEvent<Tag[]>) {
 		tags = event.detail;
-		goto(`${location.pathname}?tags=${tags.map((t) => t.id).join(',')}`);
+		let url = location.pathname;
+		if (tags.length !== 0) url += `?tags=${tags.map((t) => t.id).join(',')}`;
+		goto(url);
 	}
-
-	onDestroy(() => {
-		if (unsub !== undefined) unsub();
-	});
 </script>
 
 <svelte:head>
