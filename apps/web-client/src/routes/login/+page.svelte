@@ -50,7 +50,7 @@
 			<PasswordInput bind:value={password} id="password" name="password" />
 		</label>
 
-		<a class="reset-password-link" href="/#/reset-password">Reset password</a>
+		<a class="reset-password-link" href="/reset-password">Reset password</a>
 
 		<button aria-busy={loading} disabled={loading} type="submit" on:click={handleSubmit}
 			>Login</button
