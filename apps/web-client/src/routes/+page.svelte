@@ -7,7 +7,6 @@
 	import type { Course } from '$lib/models/course';
 	import type { Tag } from '$lib/models/tag';
 	import userStore, { isUserAdminStore } from '$lib/stores/user.store';
-	import { getFirestore } from 'firebase/firestore/lite';
 	import { getFunctions, httpsCallable } from 'firebase/functions';
 	import { onDestroy, onMount } from 'svelte';
 	import type { Unsubscriber } from 'svelte/store';
@@ -18,12 +17,8 @@
 	let isAddCourseDialogOpen = false;
 	let courseCurrentlyDeletedID: string | null = null;
 	let isCourseDeletionLoading = false;
-	let loading = false;
-	let shortLoading = false;
 	let tags: Tag[] = [];
-	let pageNumber = 1;
 
-	const db = getFirestore();
 	const functions = getFunctions(undefined, 'europe-west1');
 	const deleteCourse = httpsCallable(functions, 'deleteCourse');
 	let unsub: Unsubscriber;
@@ -131,17 +126,7 @@
 				{/each}
 			</tbody>
 		</table>
-
-		{#if loading && shortLoading}
-			<div class="loading-overlay" aria-busy="true" />
-		{/if}
 	</div>
-
-	<!-- <div class="page-buttons-wrapper">
-      <button type="button" class="outline page-button">Previous</button>
-      Page {pageNumber}
-      <button type="button" class="outline page-button">Next</button>
-    </div> -->
 
 	{#if $isUserAdminStore}
 		<button on:click={() => (isAddCourseDialogOpen = true)} class="add-course-button" type="button"
@@ -178,34 +163,11 @@
 		position: relative;
 	}
 
-	.loading-overlay {
-		position: absolute;
-		top: 0;
-		right: 0;
-		bottom: 0;
-		left: 0;
-		background-color: #00000031;
-	}
-
 	.tag {
 		margin-right: 0.5rem;
 		color: white;
 		padding: 0 0.5rem;
 		white-space: nowrap;
 		border-radius: 0.25rem;
-	}
-
-	.page-buttons-wrapper {
-		display: flex;
-		justify-content: center;
-		align-items: baseline;
-		gap: 1rem;
-	}
-
-	.page-button {
-		width: fit-content;
-		padding: 0.25rem;
-		border: none;
-		box-shadow: none;
 	}
 </style>
