@@ -4,8 +4,10 @@
 	import { getFirestore } from 'firebase/firestore/lite';
 	import { getFunctions } from 'firebase/functions';
 	import firebaseConfig from '../environments/environment';
-	import './global.css';
 	import NavBar from './NavBar.svelte';
+
+	import './pico.min.css';
+	import './global.css';
 
 	const fireBaseApp = initializeApp(firebaseConfig);
 	getFunctions(fireBaseApp);
@@ -31,7 +33,7 @@
 	}
 
 	progress {
-		position: absolute;
+		position: fixed;
 		height: 0.25rem;
 		border-radius: 0;
 	}

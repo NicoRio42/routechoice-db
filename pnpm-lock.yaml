@@ -63,6 +63,8 @@ importers:
       eslint-config-prettier: ^8.5.0
       eslint-plugin-svelte3: ^4.0.0
       firebase: ^9.14.0
+      mathjs: ^11.3.0
+      ol: ^7.2.2
       prettier: ^2.8.0
       prettier-plugin-svelte: ^2.8.1
       svelte: ^3.54.0
@@ -74,6 +76,8 @@ importers:
       zod: ^3.19.1
     dependencies:
       firebase: 9.15.0
+      mathjs: 11.5.0
+      ol: 7.2.2
       zod: 3.20.2
     devDependencies:
       '@playwright/test': 1.31.2

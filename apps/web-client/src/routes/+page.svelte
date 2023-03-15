@@ -80,10 +80,7 @@
 				{#each data.courses as course (course.id)}
 					<tr>
 						<td>
-							<a class="course-link" href={`/courses/#/${course.id}`}>{course.name}</a>
-							{#if $isUserAdminStore}
-								&nbsp;<a href={`#/courses/${course.id}`}>(beta)</a>
-							{/if}
+							<a class="course-link" href={`/courses/${course.id}`}>{course.name}</a>
 						</td>
 
 						<td>{new Date(course.date).toLocaleDateString()}</td>
