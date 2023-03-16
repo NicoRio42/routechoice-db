@@ -8,14 +8,14 @@
 
 	async function handleLogout() {
 		await signOut(auth);
-		// window.location.href = `/#/login?redirectUrl=${$location}`;
+		// window.location.href = `/login?redirectUrl=${$location}`;
 	}
 </script>
 
 <nav class="container-fluid">
 	<ul>
 		<li class="logo-item link-list-item">
-			<a class="logo-link" href="/#/"
+			<a class="logo-link" href="/"
 				><Logo
 					--bg-color="var(--primary)"
 					--width="3rem"
@@ -31,11 +31,11 @@
 	<ul class="large">
 		{#if $isUserAdminStore}
 			<li class="link-list-item">
-				<a href="/#/users">Users</a>
+				<a href="/users">Users</a>
 			</li>
 
 			<li class="link-list-item">
-				<a href="/#/help">Help</a>
+				<a href="/help">Help</a>
 			</li>
 		{/if}
 
@@ -51,7 +51,7 @@
 						</li>
 
 						<li class="option-item">
-							<a href="/#/reset-password">Reset password</a>
+							<a href="/reset-password">Reset password</a>
 						</li>
 					</ul>
 				</details>
@@ -74,21 +74,21 @@
 				</li>
 
 				<li class="option-item">
-					<a href="/#/reset-password">Reset password</a>
+					<a href="/reset-password">Reset password</a>
 				</li>
 			{:else}
 				<li>
-					<a href="/#/login">Login</a>
+					<a href="/login">Login</a>
 				</li>
 			{/if}
 
 			{#if $isUserAdminStore}
 				<li class="option-item">
-					<a href="/#/users">Users</a>
+					<a href="/users">Users</a>
 				</li>
 
 				<li class="option-item">
-					<a href="/#/help">Help</a>
+					<a href="/help">Help</a>
 				</li>
 			{/if}
 		</ul>

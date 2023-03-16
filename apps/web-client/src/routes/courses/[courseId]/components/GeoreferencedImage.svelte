@@ -6,8 +6,9 @@
 	import { getContext, onDestroy, onMount } from 'svelte';
 	import { CoordinatesConverter } from '$lib/o-utils/map/coords-converter';
 	import type { MapCalibration } from '$lib/o-utils/models/course-map';
+	import type ImageWrapper from 'ol/Image';
+	import { imageReference } from '$lib/o-utils/loggator/map-calibration';
 
-	//https://codesandbox.io/s/kw9l85y5po
 	export let url: string;
 	export let mapCalibration: MapCalibration;
 
@@ -46,14 +47,26 @@
 
 		const imageLayer = new ImageLayer({ zIndex: 1 });
 
-		imageLayer.setSource(
-			new Static({
-				url,
-				projection: imageProjection,
-				imageExtent
-			})
-		);
+		const staticImage = new Static({
+			url,
+			projection: imageProjection,
+			imageExtent,
+			imageLoadFunction: (img: ImageWrapper, src: string) => {
+				if (imageReference.length === 0) {
+					console.log('Image reference not found');
+					(img.getImage() as HTMLImageElement).src = src;
+					return;
+				}
 
+				img.setImage(imageReference[0]);
+			}
+		});
+
+		staticImage.addEventListener('imageloadend', (e) => {
+			console.log(staticImage.getImageExtent());
+		});
+
+		imageLayer.setSource(staticImage);
 		map.addLayer(imageLayer);
 	});
 
