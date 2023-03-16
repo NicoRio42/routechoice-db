@@ -1,6 +1,6 @@
 <script lang="ts">
 	import Logo from '$lib/components/icons/Logo.svelte';
-	import { courseValidator } from '$lib/models/course';
+	import { courseValidator, type Course } from '$lib/models/course';
 	import { buildRunnersTracksFromLoggatorData } from '$lib/o-utils/loggator/points';
 	import type CourseData from '$lib/o-utils/models/course-data';
 	import { courseDataWithoutRunnersValidator } from '$lib/o-utils/models/course-data';
@@ -12,13 +12,31 @@
 
 	export let data;
 	let courseData: CourseData | null = null;
+	let course: Course;
+
+	let areRunnersLoading = true;
+	let isCourseDataLoading = true;
+	let isMapLoading = true;
+	let areTracksLoading = true;
 
 	const allPromises = Promise.all([
 		data.promises.coursePRomise,
-		data.promises.courseDataPromise,
-		data.promises.runnersPromise,
-		data.promises.loggatorEventMapCallibrationPromise,
-		data.promises.loggatorPointsPromise
+		data.promises.courseDataPromise.then((d) => {
+			isCourseDataLoading = false;
+			return d;
+		}),
+		data.promises.runnersPromise.then((d) => {
+			areRunnersLoading = false;
+			return d;
+		}),
+		data.promises.loggatorEventMapCallibrationPromise.then((d) => {
+			isMapLoading = false;
+			return d;
+		}),
+		data.promises.loggatorPointsPromise.then((d) => {
+			areTracksLoading = false;
+			return d;
+		})
 	]);
 
 	function isLoggatorPoints(
@@ -41,7 +59,7 @@
 
 		const loggatorPoints = loggatorPointsResponse.data.data;
 
-		const course = courseValidator.parse({
+		course = courseValidator.parse({
 			...courseDocument.data(),
 			id: courseDocument.id
 		});
@@ -97,11 +115,22 @@
 	getCourseData();
 </script>
 
+<svelte:head>
+	{#if course !== undefined}
+		<title>Routechoice DB | {course.name}</title>
+	{:else}
+		<title>Routechoice DB</title>
+	{/if}
+</svelte:head>
+
 {#await allPromises}
 	<div class="loading-wrapper">
 		<Logo --bg-color="white" --width="10rem" --height="10rem" --logo-color="var(--primary)" />
 
-		<p aria-busy="true">Loading</p>
+		<p aria-busy={areRunnersLoading}>Split times</p>
+		<p aria-busy={isCourseDataLoading}>Course and routechoices</p>
+		<p aria-busy={isMapLoading}>Map</p>
+		<p aria-busy={areTracksLoading}>Tracks</p>
 	</div>
 {:then}
 	{#if courseData !== null}
@@ -124,5 +153,9 @@
 	.loading-wrapper p {
 		color: var(--primary);
 		font-weight: 500;
+	}
+
+	p {
+		margin: 0;
 	}
 </style>

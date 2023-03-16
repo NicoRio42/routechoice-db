@@ -15,6 +15,8 @@ export default async function getMapCallibrationFromLoggatorEventMap(
 	});
 
 	const image = new Image();
+	// We cache the image element so openlayers can reuse it when loading the map
+	// (it prevents the image from being fetched twice)
 	imageReference.push(image);
 
 	image.onload = () => {
