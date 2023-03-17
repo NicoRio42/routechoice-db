@@ -1,4 +1,5 @@
 <script>
+	import { createPortal } from '$lib/actions/portal';
 	import Hamburger from '$lib/components/icons/Hamburger.svelte';
 	import Logo from '$lib/components/icons/Logo.svelte';
 	import { isUserAdminStore, userStore } from '$lib/stores/user.store';
@@ -13,7 +14,7 @@
 </script>
 
 <nav class="container-fluid">
-	<ul>
+	<ul use:createPortal={'navbarButtons'}>
 		<li class="logo-item link-list-item">
 			<a class="logo-link" href="/"
 				><Logo
@@ -24,8 +25,6 @@
 				/>Routechoice DB</a
 			>
 		</li>
-
-		<slot />
 	</ul>
 
 	<ul class="large">
@@ -109,6 +108,7 @@
 		font-size: 1.25rem;
 		background-color: white;
 		color: var(--primary);
+		white-space: nowrap;
 	}
 
 	nav ul:first-of-type {

@@ -7,7 +7,7 @@
 	import { CoordinatesConverter } from '$lib/o-utils/map/coords-converter';
 	import type { MapCalibration } from '$lib/o-utils/models/course-map';
 	import type ImageWrapper from 'ol/Image';
-	import { imageReference } from '$lib/o-utils/loggator/map-calibration';
+	import { cachedImageElements } from '$lib/o-utils/loggator/map-calibration';
 
 	export let url: string;
 	export let mapCalibration: MapCalibration;
@@ -52,18 +52,14 @@
 			projection: imageProjection,
 			imageExtent,
 			imageLoadFunction: (img: ImageWrapper, src: string) => {
-				if (imageReference.length === 0) {
-					console.log('Image reference not found');
+				const imageElemnt = cachedImageElements[url];
+				if (imageElemnt === undefined) {
 					(img.getImage() as HTMLImageElement).src = src;
 					return;
 				}
 
-				img.setImage(imageReference[0]);
+				img.setImage(imageElemnt);
 			}
-		});
-
-		staticImage.addEventListener('imageloadend', (e) => {
-			console.log(staticImage.getImageExtent());
 		});
 
 		imageLayer.setSource(staticImage);

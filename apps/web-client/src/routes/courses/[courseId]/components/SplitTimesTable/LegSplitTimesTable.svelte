@@ -91,8 +91,6 @@
 					on:input={handleAllTrackedSelection}
 				/></th
 			>
-
-			<th />
 		</tr>
 	</thead>
 
@@ -137,7 +135,7 @@
 				</td>
 			{/if}
 
-			{#if runner.track !== null && $isUserAdminStore}
+			{#if runner.track !== null && $isUserAdminStore && false}
 				<td class="pen-td">
 					<button
 						on:click={() => dispatch('changeRunnerTimeOffset', runner.id)}

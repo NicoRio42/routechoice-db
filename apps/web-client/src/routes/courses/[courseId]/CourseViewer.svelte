@@ -1,4 +1,5 @@
 <script lang="ts">
+	import { portal } from '$lib/actions/portal';
 	import { changeRunnerRoutechoice } from '$lib/db/routechoice';
 	import { updateRunnersRoutechoicesInFirestore } from '$lib/db/runners';
 	import type CourseData from '$lib/o-utils/models/course-data';
@@ -27,6 +28,7 @@
 	import type { RoutechoiceChangeEventDetails } from './components/SplitTimesTable/RoutecoiceTableCell.svelte';
 	import { getStandardCordsAndLengthFromLineStringFlatCordinates } from './components/utils';
 	import VectorLayer from './components/VectorLayer.svelte';
+	import { ModesEnum } from './models/modes.enum';
 	import './styles.css';
 	import { computeFitBoxAndAngleFromLegNumber } from './utils';
 
@@ -41,7 +43,7 @@
 	let showRoutechoices = true;
 	let showSideBar = true;
 	let isAutoAnalysisMode = false;
-	let isDrawMode = false;
+	let mode: ModesEnum = ModesEnum.ANALYSIS;
 
 	$: {
 		const [newFitBox, newAngle] = computeFitBoxAndAngleFromLegNumber(legNumber, courseData);
@@ -171,6 +173,13 @@
 	}
 </script>
 
+<li use:portal={'navbarButtons'} class="mode-select-wrapper">
+	<select name="mode" id="mode-select" bind:value={mode} class="mode-select">
+		<option value={ModesEnum.ANALYSIS}>Analysis</option>
+		<option value={ModesEnum.DRAW}>Draw routechoices</option>
+	</select>
+</li>
+
 <div class="wrapper">
 	<AddRoutechoiceDialog {legRoutechoices} />
 
@@ -185,12 +194,10 @@
 		on:changeRunnerTimeOffset={handleRunnerTimeOffsetChange}
 	/>
 
-	<OlMap {isDrawMode} {angle} {fitBox} padding={[100, 0, 100, 0]}>
-		{#if isDrawMode}
+	<OlMap {mode} {angle} {fitBox} padding={[100, 0, 100, 0]}>
+		{#if mode === ModesEnum.DRAW}
 			<Draw type={'LineString'} on:drawEnd={handleDrawEnd} />
 		{/if}
-
-		<input type="checkbox" bind:checked={isDrawMode} role="switch" class="draw-switch" />
 
 		{#if courseData.map !== null}
 			<GeoreferencedImage url={courseData.map.url} mapCalibration={courseData.map.calibration} />
@@ -233,15 +240,23 @@
 		flex-grow: 1;
 	}
 
-	.draw-switch {
-		position: absolute;
-		top: 6rem;
-		right: 0;
+	.mode-select-wrapper {
+		padding: 0;
+		margin-left: 1rem;
+	}
+
+	.mode-select {
+		padding-top: 0.5rem;
+		padding-bottom: 0.5rem;
 	}
 
 	@media screen and (max-width: 768px) {
-		.draw-switch {
-			display: none;
+		.mode-select-wrapper {
+			margin-left: 0.5rem;
+		}
+
+		.mode-select {
+			font-size: 0.75rem;
 		}
 	}
 </style>

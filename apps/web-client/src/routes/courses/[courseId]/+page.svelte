@@ -12,7 +12,7 @@
 
 	export let data;
 	let courseData: CourseData | null = null;
-	let course: Course;
+	let name = '';
 
 	let areRunnersLoading = true;
 	let isCourseDataLoading = true;
@@ -20,7 +20,10 @@
 	let areTracksLoading = true;
 
 	const allPromises = Promise.all([
-		data.promises.coursePRomise,
+		data.promises.coursePRomise.then((d) => {
+			if (d.data() !== undefined) name = d.data()?.name as string;
+			return d;
+		}),
 		data.promises.courseDataPromise.then((d) => {
 			isCourseDataLoading = false;
 			return d;
@@ -58,11 +61,6 @@
 			throw new Error('Could not get loggator points');
 
 		const loggatorPoints = loggatorPointsResponse.data.data;
-
-		course = courseValidator.parse({
-			...courseDocument.data(),
-			id: courseDocument.id
-		});
 
 		const courseDataObject = {
 			...courseDataWithoutRunnersValidator.parse({
@@ -116,8 +114,8 @@
 </script>
 
 <svelte:head>
-	{#if course !== undefined}
-		<title>Routechoice DB | {course.name}</title>
+	{#if name !== ''}
+		<title>Routechoice DB | {name}</title>
 	{:else}
 		<title>Routechoice DB</title>
 	{/if}
@@ -125,6 +123,7 @@
 
 {#await allPromises}
 	<div class="loading-wrapper">
+		<h1>{name}</h1>
 		<Logo --bg-color="white" --width="10rem" --height="10rem" --logo-color="var(--primary)" />
 
 		<p aria-busy={areRunnersLoading}>Split times</p>
@@ -136,7 +135,7 @@
 	{#if courseData !== null}
 		<CourseViewer {courseData} />
 	{/if}
-{:catch error}
+{:catch}
 	An error occured
 {/await}
 
@@ -148,14 +147,19 @@
 		align-items: center;
 		width: 100%;
 		height: 100%;
+		padding: 0 1rem;
 	}
 
 	.loading-wrapper p {
 		color: var(--primary);
 		font-weight: 500;
+		margin: 0;
 	}
 
-	p {
-		margin: 0;
+	.loading-wrapper h1 {
+		color: var(--primary);
+		font-size: 1.5rem;
+		text-align: center;
+		margin-bottom: 1rem;
 	}
 </style>
