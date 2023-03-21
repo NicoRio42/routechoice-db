@@ -53,7 +53,7 @@
 			courseDocument,
 			courseDataDocument,
 			runnersCollection,
-			[loggatorEvent, callibration],
+			[loggatorEvent, calibration],
 			loggatorPointsResponse
 		] = await allPromises;
 
@@ -62,7 +62,7 @@
 
 		const loggatorPoints = loggatorPointsResponse.data.data;
 
-		const courseDataObject = {
+		const courseDataWithoutRunners = {
 			...courseDataWithoutRunnersValidator.parse({
 				...courseDataDocument.data(),
 				legs: parseNestedArraysInLegs(courseDataDocument.data()?.legs)
@@ -70,15 +70,10 @@
 			runners: []
 		};
 
-		if (courseDataObject.legs.length === 0) {
-			courseData = courseDataObject;
+		if (courseDataWithoutRunners.legs.length === 0) {
+			courseData = courseDataWithoutRunners;
 			return;
 		}
-
-		const courseDataWithoutRunners = courseDataWithoutRunnersValidator.parse({
-			...courseDataDocument.data(),
-			legs: parseNestedArraysInLegs(courseDataDocument.data()?.legs)
-		});
 
 		const runners: Runner[] = [];
 
@@ -99,7 +94,7 @@
 		if (!('url' in loggatorEvent.map)) throw new Error("Event isn't started yet");
 
 		const map = {
-			calibration: callibration,
+			calibration,
 			url: loggatorEvent.map.url
 		};
 

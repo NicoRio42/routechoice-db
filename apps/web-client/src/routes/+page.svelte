@@ -3,6 +3,7 @@
 	import AddCourseDialog from '$lib/components/AddCourseDialog.svelte';
 	import Table from '$lib/components/icons/Table.svelte';
 	import Trash from '$lib/components/icons/Trash.svelte';
+	import TagComponent from '$lib/components/TagsSelect/Tag.svelte';
 	import TagsSelect from '$lib/components/TagsSelect/TagsSelect.svelte';
 	import type { Course } from '$lib/models/course';
 	import type { Tag } from '$lib/models/tag';
@@ -87,13 +88,13 @@
 
 						<td>
 							{#each course.tags as tag}
-								<span style:background-color={tag.color} class="tag">{tag.name}</span>
+								<TagComponent {tag} />
 							{/each}
 						</td>
 
 						{#if $isUserAdminStore}
 							<td class="action-row">
-								<a class="action-icon" href={`#/courses/${course.id}/course-manager`}><Table /></a>
+								<a class="action-icon" href={`/courses/${course.id}/manager`}><Table /></a>
 							</td>
 
 							<td class="action-row">
@@ -145,13 +146,5 @@
 	.table-wrapper {
 		overflow-x: auto;
 		position: relative;
-	}
-
-	.tag {
-		margin-right: 0.5rem;
-		color: white;
-		padding: 0 0.5rem;
-		white-space: nowrap;
-		border-radius: 0.25rem;
 	}
 </style>

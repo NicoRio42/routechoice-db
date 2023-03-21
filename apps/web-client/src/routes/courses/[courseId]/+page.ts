@@ -68,7 +68,7 @@ async function getLoggatorEventAndMapCallibration(
 
 	const loggatorEvent = loggatorEventResponse.data;
 	if (!('url' in loggatorEvent.map)) throw new Error("Event isn't started yet");
-	const callibration = await getMapCallibrationFromLoggatorEventMap(loggatorEvent.map);
+	const calibration = await getMapCallibrationFromLoggatorEventMap(loggatorEvent.map);
 
-	return [loggatorEvent, callibration];
+	return [loggatorEvent, calibration];
 }

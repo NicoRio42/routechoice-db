@@ -10,6 +10,7 @@
 		detectSingleRunnerRoutechoices
 	} from '$lib/o-utils/routechoice-detector/routechoice-detector';
 	import { createRoutechoiceStatistics } from '$lib/o-utils/statistics/routechoices-statistics';
+	import { isUserAdminStore } from '$lib/stores/user.store';
 	import { doc, getFirestore, updateDoc, writeBatch } from 'firebase/firestore/lite';
 	import type { LineString } from 'ol/geom';
 	import type { DrawEvent } from 'ol/interaction/Draw';
@@ -173,12 +174,14 @@
 	}
 </script>
 
-<li use:portal={'navbarButtons'} class="mode-select-wrapper">
-	<select name="mode" id="mode-select" bind:value={mode} class="mode-select">
-		<option value={ModesEnum.ANALYSIS}>Analysis</option>
-		<option value={ModesEnum.DRAW}>Draw routechoices</option>
-	</select>
-</li>
+{#if $isUserAdminStore}
+	<li use:portal={'navbarButtons'} class="mode-select-wrapper">
+		<select name="mode" id="mode-select" bind:value={mode} class="mode-select">
+			<option value={ModesEnum.ANALYSIS}>Analysis</option>
+			<option value={ModesEnum.DRAW}>Draw routechoices</option>
+		</select>
+	</li>
+{/if}
 
 <div class="wrapper">
 	<AddRoutechoiceDialog {legRoutechoices} />
