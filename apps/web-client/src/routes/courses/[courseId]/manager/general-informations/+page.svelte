@@ -53,7 +53,7 @@
 				tags
 			});
 
-			goto(`/courses/${data.course.id}`);
+			goto('/');
 		} catch (error) {
 			console.error(error);
 			alert("An error occured while updating the course's informations.");
