@@ -9,7 +9,8 @@ import { initializeApp } from 'firebase/app';
 initializeApp(firebaseConfig);
 const db = getFirestore();
 
-export const load = async ({ params }) => {
+export const load = async ({ params, depends }) => {
+	depends('manager:course-data');
 	const isLoggedIn = await createUserLoggedInPromise();
 	if (!isLoggedIn) throw redirect(307, '/login');
 

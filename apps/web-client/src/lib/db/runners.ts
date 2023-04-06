@@ -1,38 +1,51 @@
-import { doc, writeBatch, type Firestore } from "firebase/firestore/lite";
-import type Runner from "../../shared/o-utils/models/runner";
+import type Runner from '$lib/o-utils/models/runner';
+import { doc, writeBatch, type Firestore } from 'firebase/firestore/lite';
 
 export function updateRunnersRoutechoicesInFirestore(
-  oldRunners: Runner[],
-  newRunners: Runner[],
-  db: Firestore,
-  courseId: string
+	oldRunners: Runner[],
+	newRunners: Runner[],
+	db: Firestore,
+	courseId: string
 ) {
-  // So the runner track is not persisted to Firebase
-  const runnersWithDetectedRoutechoicesWithoutTrack = newRunners.map(
-    (runner) => ({
-      ...runner,
-      track: null,
-    })
-  );
+	// So the runner track is not persisted to Firebase
+	const runnersWithDetectedRoutechoicesWithoutTrack = newRunners.map((runner) => ({
+		...runner,
+		track: null
+	}));
 
-  // Only updated runners are pushed to Firestore
-  const updatedRunner = runnersWithDetectedRoutechoicesWithoutTrack.filter(
-    (newRunner, runnerIndex) =>
-      oldRunners[runnerIndex].legs.some((oldRunnerLeg, legIndex) => {
-        return (
-          newRunner.legs[legIndex]?.detectedRouteChoice?.id !==
-          oldRunnerLeg?.detectedRouteChoice?.id
-        );
-      })
-  );
+	// Only updated runners are pushed to Firestore
+	const updatedRunner = runnersWithDetectedRoutechoicesWithoutTrack.filter(
+		(newRunner, runnerIndex) =>
+			oldRunners[runnerIndex].legs.some((oldRunnerLeg, legIndex) => {
+				return (
+					newRunner.legs[legIndex]?.detectedRouteChoice?.id !==
+					oldRunnerLeg?.detectedRouteChoice?.id
+				);
+			})
+	);
 
-  const batch = writeBatch(db);
+	const batch = writeBatch(db);
 
-  updatedRunner.forEach(async (runner) => {
-    batch.update(doc(db, "coursesData", courseId, "runners", runner.id), {
-      legs: runner.legs,
-    });
-  });
+	updatedRunner.forEach(async (runner) => {
+		batch.update(doc(db, 'coursesData', courseId, 'runners', runner.id), {
+			legs: runner.legs
+		});
+	});
 
-  batch.commit();
+	batch.commit();
+}
+
+export async function createRunners(
+	runners: Runner[],
+	courseId: string,
+	db: Firestore
+): Promise<void> {
+	const batch = writeBatch(db);
+
+	runners.forEach(async (runner) => {
+		const runnerRef = doc(db, 'courseData', courseId, 'runners', crypto.randomUUID());
+		batch.set(runnerRef, runner);
+	});
+
+	batch.commit();
 }
