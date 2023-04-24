@@ -62,6 +62,12 @@
 
 	<TagsSelect on:tagsSelect={handleTagsSelected} />
 
+	{#if $isUserAdminStore}
+		<button on:click={() => (isAddCourseDialogOpen = true)} class="add-course-button" type="button"
+			>Add new course</button
+		>
+	{/if}
+
 	<div class="table-wrapper">
 		<table>
 			<thead>
@@ -112,12 +118,6 @@
 			</tbody>
 		</table>
 	</div>
-
-	{#if $isUserAdminStore}
-		<button on:click={() => (isAddCourseDialogOpen = true)} class="add-course-button" type="button"
-			>Add new course</button
-		>
-	{/if}
 </main>
 
 <style>

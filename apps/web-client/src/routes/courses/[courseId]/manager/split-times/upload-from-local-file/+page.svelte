@@ -82,7 +82,6 @@
 	async function handleSubmit() {
 		const runners = parseIOFXML3SplitTimesFile(xmlDoc, className, timeZone.value, timeOffset);
 		await createRunners(runners, data.course.id, db);
-		invalidate('manager:course-data');
 		goto(`/courses/${data.course.id}/manager/split-times/runners-attribution`);
 	}
 </script>
@@ -129,7 +128,12 @@
 			Cancel
 		</a>
 
-		<button type="submit" disabled={loading} aria-busy={loading} class="btn">Load splits</button>
+		<button
+			type="submit"
+			disabled={xmlDoc === undefined || className === undefined}
+			aria-busy={loading}
+			class="btn">Load splits</button
+		>
 	</footer>
 </form>
 

@@ -241,6 +241,7 @@
 		position: relative;
 		flex-shrink: 0;
 		flex-grow: 1;
+		overflow: scroll;
 	}
 
 	.mode-select-wrapper {

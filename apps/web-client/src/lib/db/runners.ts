@@ -43,7 +43,8 @@ export async function createRunners(
 	const batch = writeBatch(db);
 
 	runners.forEach(async (runner) => {
-		const runnerRef = doc(db, 'courseData', courseId, 'runners', crypto.randomUUID());
+		const runnerRef = doc(db, 'coursesData', courseId, 'runners', crypto.randomUUID());
+		console.log(runner.lastName + ' created');
 		batch.set(runnerRef, runner);
 	});
 
