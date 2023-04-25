@@ -1,28 +1,19 @@
 <script lang="ts">
-	import clickOutside from '$lib/actions/clickOutside';
+	import { goto } from '$app/navigation';
+	import TagsSelect from '$lib/components/TagsSelect/TagsSelect.svelte';
 	import type { Tag } from '$lib/models/tag';
 	import type { CourseDataWithoutRunners } from '$lib/o-utils/models/course-data';
 	import { formatDateForDateInput } from '$lib/utils/date';
-	import { addDoc, collection, doc, getFirestore, setDoc } from 'firebase/firestore/lite';
-	import { createEventDispatcher } from 'svelte';
-	import { fade } from 'svelte/transition';
-	import TagsSelect from './TagsSelect/TagsSelect.svelte';
-	import { goto } from '$app/navigation';
+	import { doc, getFirestore, setDoc } from 'firebase/firestore/lite';
 
-	export let isAddCourseDialogOpen;
 	let name = '';
 	let liveProviderURL = '';
 	let tags: Tag[] = [];
-
 	const today = new Date();
 	let date = formatDateForDateInput(today);
 	let loading = false;
-
 	const db = getFirestore();
-
 	const allowedOrigins = ['https://events.loggator.com', 'https://live.tractrac.com'];
-
-	const dispatch = createEventDispatcher();
 
 	async function handleSubmit(): Promise<void> {
 		if (name === '') {
@@ -83,68 +74,56 @@
 	function handleTagsSelected(event: CustomEvent<Tag[]>) {
 		tags = event.detail;
 	}
-
-	function closeDialog(): void {
-		isAddCourseDialogOpen = false;
-	}
 </script>
 
-<dialog open transition:fade={{ duration: 250 }}>
-	<article use:clickOutside={closeDialog}>
-		<header>
-			<a aria-label="Close" class="close" on:click={closeDialog} />
+<form on:submit|preventDefault={handleSubmit}>
+	<h1>Add new course</h1>
 
-			<strong>Add course</strong>
-		</header>
+	<label>
+		Course name
 
-		<form on:submit|preventDefault={handleSubmit}>
-			<label for="name"
-				>Course name
-				<input bind:value={name} type="text" id="name" />
-			</label>
+		<input bind:value={name} type="text" />
+	</label>
 
-			<label for="date"
-				>Date
-				<input bind:value={date} type="date" id="date" />
-			</label>
+	<label>
+		Date
 
-			<label for="2d-rerun-url"
-				>Loggator or Tractrac URL
-				<input bind:value={liveProviderURL} type="text" id="2d-rerun-url" />
-			</label>
+		<input bind:value={date} type="date" />
+	</label>
 
-			<label
-				>Tags
-				<TagsSelect on:tagsSelect={handleTagsSelected} />
-			</label>
+	<label>
+		Loggator or Tractrac URL
 
-			<footer>
-				<button on:click={closeDialog} class="outline" type="button">Cancel</button>
+		<input bind:value={liveProviderURL} type="text" />
+	</label>
 
-				<button aria-busy={loading} type="submit">Add</button>
-			</footer>
-		</form>
-	</article>
-</dialog>
+	<label>
+		Tags
+
+		<TagsSelect on:tagsSelect={handleTagsSelected} />
+	</label>
+
+	<p class="buttons-wrapper">
+		<a href="/" class="outline" role="button">Cancel</a>
+
+		<button aria-busy={loading} type="submit">Add</button>
+	</p>
+</form>
 
 <style>
-	article {
-		width: 30rem;
-		padding-bottom: 0;
+	form {
+		max-width: 25rem;
+		margin: 2em auto;
 	}
 
-	footer {
+	.buttons-wrapper {
 		margin-top: 2rem;
 		display: flex;
 		gap: 1rem;
 		justify-content: center;
 	}
 
-	footer button {
+	.buttons-wrapper button {
 		width: fit-content;
-	}
-
-	.close {
-		cursor: pointer;
 	}
 </style>

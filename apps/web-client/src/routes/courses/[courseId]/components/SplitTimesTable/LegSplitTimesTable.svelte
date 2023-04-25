@@ -12,6 +12,8 @@
 	export let courseData: CourseData;
 	export let legNumber: number;
 
+	console.log(courseData.runners);
+
 	const dispatch = createEventDispatcher<{ changeRunnerTimeOffset: string }>();
 
 	let sortedRunnersWithOneLeg: Runner[] = [];

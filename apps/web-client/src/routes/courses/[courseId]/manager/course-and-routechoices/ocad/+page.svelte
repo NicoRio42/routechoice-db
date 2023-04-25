@@ -3,6 +3,7 @@
 	import parseGPXRoutechoicesOCADExport from '$lib/o-utils/ocad/parsers/routechoices-gpx';
 	import parseIOFXML3CourseOCADExport from '$lib/o-utils/ocad/parsers/iof-xml-3-course';
 	import { doc, getFirestore, updateDoc } from 'firebase/firestore/lite';
+	import { goto } from '$app/navigation';
 
 	export let data;
 
@@ -110,19 +111,12 @@
 				legs: serializeNestedArraysInLegs(data.courseData.legs),
 				course: data.courseData.course
 			});
+
+			goto(`/courses/${data.course.id}/manager/split-times`);
 		} catch (error) {
 			alert('An error occured while saving the course.');
 			console.error(error);
-		} finally {
 			loading = false;
-		}
-
-		if (data.courseData.map === null) {
-			alert(
-				'Course and routechoices uploaded, you will be able to see it when the event will be started.'
-			);
-
-			return;
 		}
 	}
 </script>
@@ -130,12 +124,11 @@
 <form on:submit|preventDefault={parseXmlFiles}>
 	<h1>Course and routechoices from OCAD</h1>
 
-	<label for="course-file-input">
+	<label>
 		Course file (IOF XML 3.0)
 
 		<input
 			on:change={loadCourseFromOCAD}
-			id="course-file-input"
 			name="course-file-input"
 			type="file"
 			accept="application/xml"
@@ -146,27 +139,21 @@
 		{/if}
 	</label>
 
-	<label for="class-select">
+	<label>
 		Class
 
-		<select
-			bind:value={classIndex}
-			name="class-select"
-			id="class-select"
-			disabled={classNames.length === 0}
-		>
+		<select bind:value={classIndex} name="class-select" disabled={classNames.length === 0}>
 			{#each classNames as clsName, index}
 				<option value={index}>{clsName}</option>
 			{/each}
 		</select>
 	</label>
 
-	<label for="routechoices-file-input">
+	<label>
 		Routechoices (GPX export)
 
 		<input
 			on:change={loadRoutechoicesFromOcad}
-			id="routechoices-file-input"
 			name="routechoices-file-input"
 			type="file"
 			accept=".gpx"
@@ -182,7 +169,7 @@
 
 <style>
 	form {
-		max-width: 20rem;
+		max-width: 25rem;
 		margin: auto;
 	}
 	.error-message {

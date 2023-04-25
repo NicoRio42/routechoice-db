@@ -43,9 +43,25 @@ export async function createRunners(
 	const batch = writeBatch(db);
 
 	runners.forEach(async (runner) => {
-		const runnerRef = doc(db, 'coursesData', courseId, 'runners', crypto.randomUUID());
+		const runnerRef = doc(db, 'coursesData', courseId, 'runners', runner.id);
 		console.log(runner.lastName + ' created');
 		batch.set(runnerRef, runner);
+	});
+
+	batch.commit();
+}
+
+export async function updateRunners(
+	runners: Runner[],
+	courseId: string,
+	db: Firestore
+): Promise<void> {
+	const batch = writeBatch(db);
+
+	runners.forEach(async (runner) => {
+		const runnerRef = doc(db, 'coursesData', courseId, 'runners', runner.id);
+		console.log(runner.lastName + ' updated');
+		batch.update(runnerRef, { ...runner, track: null });
 	});
 
 	batch.commit();

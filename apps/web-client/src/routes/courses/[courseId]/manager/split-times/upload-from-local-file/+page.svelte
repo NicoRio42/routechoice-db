@@ -1,5 +1,5 @@
 <script lang="ts">
-	import { goto, invalidate } from '$app/navigation';
+	import { goto, invalidateAll } from '$app/navigation';
 	import { createRunners } from '$lib/db/runners.js';
 	import { parseIOFXML3SplitTimesFile } from '$lib/o-utils/split-times/parsers/iof-xml-3';
 	import { timeZones } from '$lib/utils/time-zones';
@@ -82,6 +82,8 @@
 	async function handleSubmit() {
 		const runners = parseIOFXML3SplitTimesFile(xmlDoc, className, timeZone.value, timeOffset);
 		await createRunners(runners, data.course.id, db);
+		// TODO invalidate instead
+		data.courseData.runners = runners;
 		goto(`/courses/${data.course.id}/manager/split-times/runners-attribution`);
 	}
 </script>

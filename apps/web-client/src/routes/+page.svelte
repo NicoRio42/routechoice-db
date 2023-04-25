@@ -1,6 +1,5 @@
 <script lang="ts">
 	import { goto, invalidate } from '$app/navigation';
-	import AddCourseDialog from '$lib/components/AddCourseDialog.svelte';
 	import Table from '$lib/components/icons/Table.svelte';
 	import Trash from '$lib/components/icons/Trash.svelte';
 	import TagComponent from '$lib/components/TagsSelect/Tag.svelte';
@@ -13,7 +12,6 @@
 
 	export let data;
 
-	let isAddCourseDialogOpen = false;
 	let courseCurrentlyDeletedID: string | null = null;
 	let isCourseDeletionLoading = false;
 	let tags: Tag[] = data.tags;
@@ -53,19 +51,13 @@
 	<title>Routechoice DB</title>
 </svelte:head>
 
-{#if isAddCourseDialogOpen}
-	<AddCourseDialog bind:isAddCourseDialogOpen on:onAddCourse={() => invalidate('courses')} />
-{/if}
-
 <main class="container" in:fade={{ duration: 500 }}>
 	<h1>Courses</h1>
 
 	<TagsSelect on:tagsSelect={handleTagsSelected} />
 
 	{#if $isUserAdminStore}
-		<button on:click={() => (isAddCourseDialogOpen = true)} class="add-course-button" type="button"
-			>Add new course</button
-		>
+		<a href="add-course" class="add-course-button" role="button"> Add new course </a>
 	{/if}
 
 	<div class="table-wrapper">
