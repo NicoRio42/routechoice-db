@@ -1,7 +1,5 @@
 <script lang="ts">
 	export let data;
-
-	console.log(data.courseData.runners);
 </script>
 
 <h1>Split times</h1>
@@ -12,26 +10,20 @@
 </p>
 
 <div class="options-wrapper">
-	<article class="upload-option">
-		<a href={`/courses/${data.course.id}/manager/split-times/upload-from-local-file`}>
-			Upload from local IOF XML file
-		</a>
-	</article>
+	<a href={`/courses/${data.course.id}/manager/split-times/upload-from-local-file`}>
+		<article class="upload-option">Upload from local IOF XML file</article>
+	</a>
 
-	<article class="upload-option">
-		<a href={`/courses/${data.course.id}/manager/split-times/upload-from-winsplit`}>
-			Upload from Winsplit online
-		</a>
-	</article>
+	<a href={`/courses/${data.course.id}/manager/split-times/upload-from-winsplit`}>
+		<article class="upload-option">Upload from Winsplit online</article>
+	</a>
 
-	<article class="upload-option">
-		<a
-			href={`/courses/${data.course.id}/manager/split-times/runners-attribution`}
-			class:disabled={data.courseData.runners.length === 0}
-		>
-			Attributes runners to tracks and users
-		</a>
-	</article>
+	<a
+		href={`/courses/${data.course.id}/manager/split-times/runners-attribution`}
+		class:disabled={data.courseData.runners.length === 0}
+	>
+		<article class="upload-option">Attributes runners to tracks and users</article>
+	</a>
 </div>
 
 <style>

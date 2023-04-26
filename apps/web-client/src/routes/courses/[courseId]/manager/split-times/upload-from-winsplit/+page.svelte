@@ -117,7 +117,8 @@
 
 		const runners = parseIOFXML3SplitTimesFile(xmlDoc, classInfo.name, timeZone.value, timeOffset);
 		await createRunners(runners, data.course.id, db);
-		invalidate('manager:course-data');
+		// TODO Properly invalidate runners
+		data.courseData.runners = runners;
 		goto(`/courses/${data.course.id}/manager/split-times/runners-attribution`);
 	}
 </script>

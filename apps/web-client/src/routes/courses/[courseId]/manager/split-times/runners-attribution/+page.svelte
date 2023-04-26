@@ -13,10 +13,13 @@
 	import { detectRunnersRoutechoices } from '$lib/o-utils/routechoice-detector/routechoice-detector.js';
 	import { matchRunnersByName } from '$lib/o-utils/two-d-rerun/runners-matcher.js';
 	import { initializeApp } from 'firebase/app';
-	import { getFirestore } from 'firebase/firestore/lite';
+	import { doc, getFirestore, updateDoc } from 'firebase/firestore/lite';
 	import { getFunctions, httpsCallable } from 'firebase/functions';
 	import firebaseConfig from '../../../../../../environments/environment.js';
 	import { goto } from '$app/navigation';
+	import { isNotErrorResponse } from '$lib/utils/functions.js';
+	import { createRoutechoiceStatistics } from '$lib/o-utils/statistics/routechoices-statistics.js';
+	import { serializeNestedArraysInLegs } from '$lib/o-utils/models/leg.js';
 
 	export let data;
 
@@ -43,10 +46,20 @@
 	let users: User[] = [];
 	const loggatorEventID = $page.params.courseId.split('-')[1];
 	let loggatorEvent: LoggatorEvent;
+	let loadingData = true;
 	let loading = false;
 
 	// TODO: Do this in the load function (problem with token transmission to function)
-	if (browser) init();
+	if (browser) {
+		try {
+			init();
+		} catch (e) {
+			alert('An error occured while loading data.');
+			console.error(e);
+		} finally {
+			loadingData = false;
+		}
+	}
 
 	async function init() {
 		const getUsersData = (await getUserList()).data;
@@ -79,12 +92,6 @@
 		);
 	}
 
-	function isNotErrorResponse<T extends Object>(
-		data: T | { message: string; error: unknown }
-	): data is T {
-		return !('error' in data);
-	}
-
 	async function handleSubmit() {
 		loading = true;
 		const getLoggatorPointsData = (await getLoggatorEventPoints(loggatorEventID)).data;
@@ -109,6 +116,16 @@
 
 		try {
 			await updateRunners(runnersWithRoutechoices, data.course.id, db);
+
+			const legsWithStatistics = createRoutechoiceStatistics(
+				runnersWithRoutechoices,
+				data.courseData.legs
+			);
+
+			await updateDoc(doc(db, 'coursesData', data.course.id), {
+				legs: serializeNestedArraysInLegs(legsWithStatistics)
+			});
+
 			goto(`/courses/${data.course.id}`);
 		} catch (e) {
 			alert('An error occured while saving runners routechoices.');
@@ -128,54 +145,62 @@
 	<a href={`/courses/${data.course.id}/manager/split-times`}>Split times</a>
 </p>
 
-<form on:submit|preventDefault={handleSubmit} class="container">
-	<table>
-		<thead>
-			<tr>
-				<th>Split times</th>
-				<th>GPS track</th>
-				<th>User</th>
-			</tr>
-		</thead>
-
-		<tbody>
-			{#each runners as runner (runner.id)}
+{#if loadingData}
+	<p aria-busy={true} class="spinner">Loading</p>
+{:else}
+	<form on:submit|preventDefault={handleSubmit} class="container">
+		<table>
+			<thead>
 				<tr>
-					<td>{`${runner.firstName} ${runner.lastName}`}</td>
-
-					<td>
-						<select bind:value={runner.trackingDeviceId}>
-							<option value={null} />
-
-							{#each competitors as route (route.device_id)}
-								<option value={`loggator-${route.device_id}`}>{route.name}</option>
-							{/each}
-						</select>
-					</td>
-
-					<td>
-						<select bind:value={runner.userId}>
-							<option value={null} />
-
-							{#each users as user (user.id)}
-								<option value={user.id}>{user.displayName}</option>
-							{/each}
-						</select>
-					</td>
+					<th>Split times</th>
+					<th>GPS track</th>
+					<th>User</th>
 				</tr>
-			{/each}
-		</tbody>
-	</table>
+			</thead>
 
-	<footer class="footer">
-		<button type="button" class="outline">Cancel</button>
-		<button aria-busy={loading} type="submit">Save split times</button>
-	</footer>
-</form>
+			<tbody>
+				{#each runners as runner (runner.id)}
+					<tr>
+						<td>{`${runner.firstName} ${runner.lastName}`}</td>
+
+						<td>
+							<select bind:value={runner.trackingDeviceId}>
+								<option value={null} />
+
+								{#each competitors as route (route.device_id)}
+									<option value={`loggator-${route.device_id}`}>{route.name}</option>
+								{/each}
+							</select>
+						</td>
+
+						<td>
+							<select bind:value={runner.userId}>
+								<option value={null} />
+
+								{#each users as user (user.id)}
+									<option value={user.id}>{user.displayName}</option>
+								{/each}
+							</select>
+						</td>
+					</tr>
+				{/each}
+			</tbody>
+		</table>
+
+		<footer class="footer">
+			<button type="button" class="outline">Cancel</button>
+			<button aria-busy={loading} type="submit">Save split times</button>
+		</footer>
+	</form>
+{/if}
 
 <style>
 	h1 {
 		margin: 2rem auto 1rem;
+	}
+
+	.spinner {
+		text-align: center;
 	}
 
 	.footer {

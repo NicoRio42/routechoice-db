@@ -1,14 +1,25 @@
 <script lang="ts">
 	import { goto } from '$app/navigation';
 	import { CoordinatesConverter } from '$lib/o-utils/map/coords-converter';
+	import type { MapCalibration } from '$lib/o-utils/models/course-map.js';
 	import { serializeNestedArraysInLegs } from '$lib/o-utils/models/leg';
+	import type { LoggatorEvent } from '$lib/o-utils/models/loggator-api/logator-event.js';
 	import { parseTwoDRerunCourseAndRoutechoicesExport } from '$lib/o-utils/two-d-rerun/course-mappers';
+	import { getLoggatorEventAndMapCallibration } from '$lib/utils/functions.js';
 	import { doc, getFirestore, updateDoc } from 'firebase/firestore/lite';
+	import { getFunctions, httpsCallable } from 'firebase/functions';
 
 	export let data;
 
 	const db = getFirestore();
+	const functions = getFunctions(undefined, 'europe-west1');
 	let loadCourseAndRoutechoicesFromJsonInput: HTMLInputElement;
+	let loading = false;
+
+	const getLoggatorEvent = httpsCallable<
+		string,
+		LoggatorEvent | { message: string; error: unknown }
+	>(functions, 'getLoggatorEvent');
 
 	interface FormEventHandler<T> {
 		currentTarget: T;
@@ -23,11 +34,22 @@
 			if (typeof d !== 'string') return;
 
 			const twoDRerunCourseAndRoutechoices = JSON.parse(d);
+			const loggatorEventID = data.course.id.split('-')[1];
+			const loggatorEventPromise = getLoggatorEvent(loggatorEventID);
 
-			if (data.courseData.map === null)
-				throw new Error('No map callibration, event migth not have started yet.');
+			let mapCallibration: MapCalibration;
+			loading = true;
 
-			const coordinatesConverter = new CoordinatesConverter(data.courseData.map.calibration);
+			try {
+				mapCallibration = (await getLoggatorEventAndMapCallibration(loggatorEventPromise))[1];
+			} catch (e) {
+				console.error(e);
+				alert(e);
+				loading = false;
+				return;
+			}
+
+			const coordinatesConverter = new CoordinatesConverter(mapCallibration);
 
 			const [controls, legs] = parseTwoDRerunCourseAndRoutechoicesExport(
 				twoDRerunCourseAndRoutechoices,
@@ -37,12 +59,19 @@
 			data.courseData.legs = legs;
 			data.courseData.course = controls;
 
-			await updateDoc(doc(db, 'coursesData', data.courseData.id), {
-				legs: serializeNestedArraysInLegs(data.courseData.legs),
-				course: data.courseData.course
-			});
+			try {
+				await updateDoc(doc(db, 'coursesData', data.courseData.id), {
+					legs: serializeNestedArraysInLegs(data.courseData.legs),
+					course: data.courseData.course
+				});
 
-			goto(`/courses/${data.course.id}/manager/split-times`);
+				goto(`/courses/${data.course.id}/manager/split-times`);
+			} catch (e) {
+				console.error(e);
+				alert('An error occured while saving the course.');
+				loading = false;
+				return;
+			}
 		};
 
 		if (event.currentTarget.files === null) return;
@@ -62,6 +91,7 @@
 		class="upload-option"
 		on:keydown
 		on:click={() => loadCourseAndRoutechoicesFromJsonInput.click()}
+		aria-busy={loading}
 	>
 		<input
 			bind:this={loadCourseAndRoutechoicesFromJsonInput}
@@ -73,11 +103,9 @@
 		Upload from 2DRerun export
 	</article>
 
-	<article class="upload-option">
-		<a href={`/courses/${data.course.id}/manager/course-and-routechoices/ocad`}
-			>Upload from OCAD exports</a
-		>
-	</article>
+	<a href={`/courses/${data.course.id}/manager/course-and-routechoices/ocad`}>
+		<article class="upload-option">Upload from OCAD exports</article>
+	</a>
 
 	<article class="upload-option disabled">Draw on map (soon)</article>
 </div>

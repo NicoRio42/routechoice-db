@@ -121,7 +121,7 @@
 	}
 </script>
 
-<h1>Course and routechoices</h1>
+<h1>Course and routechoices from OCAD</h1>
 
 <p>
 	&#62;
@@ -132,8 +132,6 @@
 </p>
 
 <form on:submit|preventDefault={parseXmlFiles}>
-	<h1>Course and routechoices from OCAD</h1>
-
 	<label>
 		Course file (IOF XML 3.0)
 

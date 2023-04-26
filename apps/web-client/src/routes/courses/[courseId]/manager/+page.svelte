@@ -9,39 +9,37 @@
 	<h1>Course manager: {course.name}</h1>
 
 	<div class="wrapper">
-		<article>
-			<header>
-				<a href={`/courses/${course.id}/manager/general-informations`}> General informations </a>
-			</header>
+		<a href={`/courses/${course.id}/manager/general-informations`} class="card-link">
+			<article>
+				<header>General informations</header>
 
-			<p>{data.course.name}</p>
+				<p>{data.course.name}</p>
 
-			<p>{data.course.date}</p>
+				<p>{new Date(data.course.date).toLocaleDateString()}</p>
 
-			<p>
-				{#each data.course.tags as tag}
-					<Tag {tag} />
-				{/each}
-			</p>
-		</article>
+				<p>
+					{#each data.course.tags as tag}
+						<Tag {tag} />
+					{/each}
+				</p>
+			</article>
+		</a>
 
-		<article>
-			<header>
-				<a href={`/courses/${course.id}/manager/course-and-routechoices`}>
-					Course and routechoices
-				</a>
-			</header>
+		<a href={`/courses/${course.id}/manager/course-and-routechoices`} class="card-link">
+			<article>
+				<header>Course and routechoices</header>
 
-			<p>{data.courseData.legs.length} Controls</p>
-		</article>
+				<p>{data.courseData.legs.length} Controls</p>
+			</article>
+		</a>
 
-		<article>
-			<header>
-				<a href={`/courses/${course.id}/manager/split-times`}> Split times </a>
-			</header>
+		<a href={`/courses/${course.id}/manager/split-times`} class="card-link">
+			<article>
+				<header>Split times</header>
 
-			<p>{data.courseData.runners.length} Runners</p>
-		</article>
+				<p>{data.courseData.runners.length} Runners</p>
+			</article>
+		</a>
 	</div>
 </main>
 
@@ -59,5 +57,18 @@
 	article {
 		margin: 0;
 		cursor: pointer;
+		color: var(--h1-color);
+	}
+
+	.card-link {
+		--color: var(--h1-color);
+	}
+
+	.card-link:hover {
+		text-decoration: none;
+	}
+
+	.card-link:hover header {
+		text-decoration: underline;
 	}
 </style>
