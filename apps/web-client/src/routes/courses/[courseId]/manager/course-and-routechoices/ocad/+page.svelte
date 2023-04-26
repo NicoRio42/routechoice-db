@@ -121,6 +121,16 @@
 	}
 </script>
 
+<h1>Course and routechoices</h1>
+
+<p>
+	&#62;
+	<a href={`/courses/${data.course.id}/manager`}>{data.course.name}</a>
+
+	&#62;
+	<a href={`/courses/${data.course.id}/manager/course-and-routechoices`}>Course and routechoices</a>
+</p>
+
 <form on:submit|preventDefault={parseXmlFiles}>
 	<h1>Course and routechoices from OCAD</h1>
 
@@ -168,6 +178,10 @@
 </form>
 
 <style>
+	h1 {
+		margin: 2rem auto 1rem;
+	}
+
 	form {
 		max-width: 25rem;
 		margin: auto;

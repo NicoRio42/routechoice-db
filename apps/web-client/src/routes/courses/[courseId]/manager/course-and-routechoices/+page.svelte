@@ -50,6 +50,13 @@
 	}
 </script>
 
+<h1>Course and routechoices</h1>
+
+<p>
+	&#62;
+	<a href={`/courses/${data.course.id}/manager`}>{data.course.name}</a>
+</p>
+
 <div class="options-wrapper container">
 	<article
 		class="upload-option"
@@ -76,6 +83,10 @@
 </div>
 
 <style>
+	h1 {
+		margin: 2rem auto 1rem;
+	}
+
 	.upload-option {
 		cursor: pointer;
 		margin: 0;

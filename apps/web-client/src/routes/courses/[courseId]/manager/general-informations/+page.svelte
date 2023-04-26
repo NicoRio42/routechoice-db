@@ -63,35 +63,42 @@
 	}
 </script>
 
-<main class="container">
-	<h1>General informations: {data.course.name}</h1>
+<h1>General informations</h1>
 
-	<form on:submit|preventDefault={handleSubmit}>
-		<label for="name"
-			>Course name
-			<input bind:value={name} type="text" id="name" />
-		</label>
+<p>
+	&#62;
+	<a href={`/courses/${data.course.id}/manager`}>{data.course.name}</a>
+</p>
 
-		<label for="date"
-			>Date
-			<input bind:value={date} type="date" id="date" />
-		</label>
+<form on:submit|preventDefault={handleSubmit}>
+	<label for="name"
+		>Course name
+		<input bind:value={name} type="text" id="name" />
+	</label>
 
-		<label
-			>Tags
-			<TagsSelect {initialTags} on:tagsSelect={handleTagsSelected} />
-		</label>
+	<label for="date"
+		>Date
+		<input bind:value={date} type="date" id="date" />
+	</label>
 
-		<button type="submit" aria-busy={loading} disabled={loading} class="submit-button">
-			Change informations
-		</button>
-	</form>
-</main>
+	<label
+		>Tags
+		<TagsSelect {initialTags} on:tagsSelect={handleTagsSelected} />
+	</label>
+
+	<button type="submit" aria-busy={loading} disabled={loading} class="submit-button">
+		Change informations
+	</button>
+</form>
 
 <style>
+	h1 {
+		margin-bottom: 1rem;
+	}
+
 	form {
-		width: 50%;
-		margin-bottom: 4rem;
+		max-width: 25rem;
+		margin: 2rem auto;
 	}
 
 	.submit-button {

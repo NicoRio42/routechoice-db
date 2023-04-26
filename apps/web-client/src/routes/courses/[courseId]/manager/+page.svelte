@@ -47,7 +47,7 @@
 
 <style>
 	.container {
-		margin-bottom: 3rem;
+		margin: 2rem auto 3rem;
 	}
 
 	.wrapper {

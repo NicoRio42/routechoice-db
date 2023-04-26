@@ -88,9 +88,17 @@
 	}
 </script>
 
-<form class="wrapper" on:submit|preventDefault={handleSubmit}>
-	<h1>Load split times from local IOF XML 3.0 file</h1>
+<h1>Load split times from local IOF XML 3.0 file</h1>
 
+<p>
+	&#62;
+	<a href={`/courses/${data.course.id}/manager`}>{data.course.name}</a>
+
+	&#62;
+	<a href={`/courses/${data.course.id}/manager/split-times`}>Split times</a>
+</p>
+
+<form class="wrapper" on:submit|preventDefault={handleSubmit}>
 	<label
 		>Load IOF XML File
 
@@ -140,9 +148,13 @@
 </form>
 
 <style>
+	h1 {
+		margin: 2rem auto 1rem;
+	}
+
 	.wrapper {
 		margin: 1rem auto;
-		max-width: 30rem;
+		max-width: 25rem;
 	}
 
 	.footer {

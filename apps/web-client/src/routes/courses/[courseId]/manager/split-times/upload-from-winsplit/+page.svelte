@@ -122,9 +122,17 @@
 	}
 </script>
 
-<form on:submit|preventDefault={handleSubmit} class="wrapper">
-	<h1>Upload split times from Winsplit online</h1>
+<h1>Upload split times from Winsplit online</h1>
 
+<p>
+	&#62;
+	<a href={`/courses/${data.course.id}/manager`}>{data.course.name}</a>
+
+	&#62;
+	<a href={`/courses/${data.course.id}/manager/split-times`}>Split times</a>
+</p>
+
+<form on:submit|preventDefault={handleSubmit} class="wrapper">
 	<label>
 		Date
 
@@ -179,6 +187,10 @@
 </form>
 
 <style>
+	h1 {
+		margin: 2rem auto 1rem;
+	}
+
 	.wrapper {
 		margin: 1rem auto;
 		max-width: 30rem;

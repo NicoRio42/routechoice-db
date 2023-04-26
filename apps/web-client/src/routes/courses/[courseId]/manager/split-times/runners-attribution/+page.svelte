@@ -118,6 +118,16 @@
 	}
 </script>
 
+<h1>Runners / GPS tracks / User correspondence</h1>
+
+<p>
+	&#62;
+	<a href={`/courses/${data.course.id}/manager`}>{data.course.name}</a>
+
+	&#62;
+	<a href={`/courses/${data.course.id}/manager/split-times`}>Split times</a>
+</p>
+
 <form on:submit|preventDefault={handleSubmit} class="container">
 	<table>
 		<thead>
@@ -164,6 +174,10 @@
 </form>
 
 <style>
+	h1 {
+		margin: 2rem auto 1rem;
+	}
+
 	.footer {
 		display: flex;
 		gap: 1rem;

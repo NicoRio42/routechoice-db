@@ -4,34 +4,41 @@
 	console.log(data.courseData.runners);
 </script>
 
-<main class="container">
-	<h1>Split times</h1>
+<h1>Split times</h1>
 
-	<div class="options-wrapper">
-		<article class="upload-option">
-			<a href={`/courses/${data.course.id}/manager/split-times/upload-from-local-file`}>
-				Upload from local IOF XML file
-			</a>
-		</article>
+<p>
+	&#62;
+	<a href={`/courses/${data.course.id}/manager`}>{data.course.name}</a>
+</p>
 
-		<article class="upload-option">
-			<a href={`/courses/${data.course.id}/manager/split-times/upload-from-winsplit`}>
-				Upload from Winsplit online
-			</a>
-		</article>
+<div class="options-wrapper">
+	<article class="upload-option">
+		<a href={`/courses/${data.course.id}/manager/split-times/upload-from-local-file`}>
+			Upload from local IOF XML file
+		</a>
+	</article>
 
-		<article class="upload-option">
-			<a
-				href={`/courses/${data.course.id}/manager/split-times/runners-attribution`}
-				class:disabled={data.courseData.runners.length === 0}
-			>
-				Attributes runners to tracks and users
-			</a>
-		</article>
-	</div>
-</main>
+	<article class="upload-option">
+		<a href={`/courses/${data.course.id}/manager/split-times/upload-from-winsplit`}>
+			Upload from Winsplit online
+		</a>
+	</article>
+
+	<article class="upload-option">
+		<a
+			href={`/courses/${data.course.id}/manager/split-times/runners-attribution`}
+			class:disabled={data.courseData.runners.length === 0}
+		>
+			Attributes runners to tracks and users
+		</a>
+	</article>
+</div>
 
 <style>
+	h1 {
+		margin: 2rem auto 1rem;
+	}
+
 	.upload-option {
 		cursor: pointer;
 		margin: 0;
