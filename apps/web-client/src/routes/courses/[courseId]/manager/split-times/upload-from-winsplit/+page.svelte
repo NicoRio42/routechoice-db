@@ -178,13 +178,7 @@
 		<input bind:value={timeOffset} type="number" name="timeOffsetInput" id="time-offset" />
 	</label>
 
-	<footer class="footer">
-		<a href={`/courses/${data.course.id}/manager/split-times`} role="button" class="outline btn">
-			Cancel
-		</a>
-
-		<button type="submit" disabled={loading} aria-busy={loading} class="btn"> Load splits </button>
-	</footer>
+	<button type="submit" disabled={loading} aria-busy={loading}> Load splits </button>
 </form>
 
 <style>
@@ -195,15 +189,5 @@
 	.wrapper {
 		margin: 1rem auto;
 		max-width: 30rem;
-	}
-
-	.footer {
-		display: flex;
-		gap: 1rem;
-		justify-content: center;
-	}
-
-	.btn {
-		width: fit-content;
 	}
 </style>

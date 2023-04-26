@@ -125,5 +125,6 @@
 
 	.buttons-wrapper button {
 		width: fit-content;
+		margin: 0;
 	}
 </style>

@@ -86,9 +86,7 @@
 		<TagsSelect {initialTags} on:tagsSelect={handleTagsSelected} />
 	</label>
 
-	<button type="submit" aria-busy={loading} disabled={loading} class="submit-button">
-		Change informations
-	</button>
+	<button type="submit" aria-busy={loading}> Change informations </button>
 </form>
 
 <style>
@@ -100,11 +98,6 @@
 		max-width: 25rem;
 		margin: 2rem auto;
 	}
-
-	.submit-button {
-		width: fit-content;
-	}
-
 	@media screen and (max-width: 500px) {
 		form {
 			width: 100%;

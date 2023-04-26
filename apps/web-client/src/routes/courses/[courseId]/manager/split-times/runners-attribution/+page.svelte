@@ -1,9 +1,11 @@
 <script lang="ts">
 	import { browser } from '$app/environment';
+	import { goto } from '$app/navigation';
 	import { page } from '$app/stores';
 	import { updateRunners } from '$lib/db/runners.js';
 	import type User from '$lib/models/user.js';
 	import { buildRunnersTracksFromLoggatorData } from '$lib/o-utils/loggator/points.js';
+	import { serializeNestedArraysInLegs } from '$lib/o-utils/models/leg.js';
 	import type {
 		Competitor,
 		LoggatorEvent
@@ -11,19 +13,14 @@
 	import type { LoggatorPoints } from '$lib/o-utils/models/loggator-api/loggator-points.js';
 	import type Runner from '$lib/o-utils/models/runner.js';
 	import { detectRunnersRoutechoices } from '$lib/o-utils/routechoice-detector/routechoice-detector.js';
+	import { createRoutechoiceStatistics } from '$lib/o-utils/statistics/routechoices-statistics.js';
 	import { matchRunnersByName } from '$lib/o-utils/two-d-rerun/runners-matcher.js';
-	import { initializeApp } from 'firebase/app';
+	import { isNotErrorResponse } from '$lib/utils/functions.js';
 	import { doc, getFirestore, updateDoc } from 'firebase/firestore/lite';
 	import { getFunctions, httpsCallable } from 'firebase/functions';
-	import firebaseConfig from '../../../../../../environments/environment.js';
-	import { goto } from '$app/navigation';
-	import { isNotErrorResponse } from '$lib/utils/functions.js';
-	import { createRoutechoiceStatistics } from '$lib/o-utils/statistics/routechoices-statistics.js';
-	import { serializeNestedArraysInLegs } from '$lib/o-utils/models/leg.js';
 
 	export let data;
 
-	initializeApp(firebaseConfig);
 	const functions = getFunctions(undefined, 'europe-west1');
 
 	const getUserList = httpsCallable<string, User[] | { message: string; error: unknown }>(
@@ -187,10 +184,7 @@
 			</tbody>
 		</table>
 
-		<footer class="footer">
-			<button type="button" class="outline">Cancel</button>
-			<button aria-busy={loading} type="submit">Save split times</button>
-		</footer>
+		<button aria-busy={loading} type="submit" class="submit">Save split times</button>
 	</form>
 {/if}
 
@@ -203,8 +197,10 @@
 		text-align: center;
 	}
 
-	.footer {
-		display: flex;
-		gap: 1rem;
+	.submit {
+		width: fit-content;
+		padding-left: 2rem;
+		padding-right: 2rem;
+		margin: auto;
 	}
 </style>
