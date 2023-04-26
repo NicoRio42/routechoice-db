@@ -57,7 +57,7 @@
 	<TagsSelect on:tagsSelect={handleTagsSelected} />
 
 	{#if $isUserAdminStore}
-		<a href="add-course" class="add-course-button" role="button"> Add new course </a>
+		<a href="courses/add" class="add-course-button" role="button"> Add new course </a>
 	{/if}
 
 	<div class="table-wrapper">
