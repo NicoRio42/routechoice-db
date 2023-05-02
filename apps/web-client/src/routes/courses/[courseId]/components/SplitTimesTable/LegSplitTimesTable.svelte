@@ -1,58 +1,26 @@
 <script lang="ts">
 	import Pen from '$lib/components/icons/Pen.svelte';
-	import type CourseData from '$lib/o-utils/models/course-data';
 	import type Routechoice from '$lib/o-utils/models/routechoice';
 	import type Runner from '$lib/o-utils/models/runner';
 	import { isUserAdminStore } from '$lib/stores/user.store';
 	import { createEventDispatcher } from 'svelte';
+	import { addAlpha } from '../utils';
 	import RoutechoiceTableCell from './RoutecoiceTableCell.svelte';
 	import { fullNameToShortName, rankToCSSClass, secondsToPrettyTime } from './utils';
 
 	export let selectedRunners: string[];
-	export let courseData: CourseData;
-	export let legNumber: number;
+	export let sortedRunnersWithOneLeg: Runner[];
+	export let legRoutechoices: Routechoice[];
 
-	const dispatch = createEventDispatcher<{ changeRunnerTimeOffset: string }>();
-
-	let sortedRunnersWithOneLeg: Runner[] = [];
-	let legRoutechoices: Routechoice[] = [];
 	let iShowAllRunnersTracksChecked = false;
 
-	$: {
-		const clonedRunnerWithOneLeg = (structuredClone(courseData.runners) as Runner[]).map(
-			(runner) => ({
-				...runner,
-				legs: runner.legs.filter((l, i) => i + 1 === legNumber)
-			})
-		);
-
-		sortedRunnersWithOneLeg = clonedRunnerWithOneLeg.sort((runner1, runner2) => {
-			const runner1Leg = runner1.legs[0];
-			const runner2Leg = runner2.legs[0];
-
-			if (runner1Leg !== null && runner2Leg !== null) {
-				return runner1Leg.time - runner2Leg.time;
-			}
-
-			if (runner1Leg === null && runner2Leg !== null) {
-				return 1;
-			}
-
-			if (runner1Leg !== null && runner2Leg === null) {
-				return -1;
-			}
-
-			return 0;
-		});
-
-		legRoutechoices = courseData.legs[legNumber - 1].routechoices;
-	}
+	const dispatch = createEventDispatcher<{ changeRunnerTimeOffset: string }>();
 
 	function handleAllTrackedSelection(event: {
 		currentTarget: EventTarget & HTMLInputElement;
 	}): void {
 		if (event.currentTarget.checked) {
-			selectedRunners = courseData.runners.filter((r) => r.track !== null).map((r) => r.id);
+			selectedRunners = sortedRunnersWithOneLeg.filter((r) => r.track !== null).map((r) => r.id);
 			return;
 		}
 
@@ -69,7 +37,7 @@
 			selectedRunners = selectedRunners.filter((id) => id !== runnerId);
 		}
 
-		iShowAllRunnersTracksChecked = courseData.runners
+		iShowAllRunnersTracksChecked = sortedRunnersWithOneLeg
 			.filter((r) => r.track !== null)
 			.every((r) => selectedRunners.includes(r.id));
 	}
@@ -131,6 +99,9 @@
 						value={runner.id}
 						checked={selectedRunners.includes(runner.id)}
 						on:change={(e) => handleShowTrackCheckboxChange(e, runner.id)}
+						style:--border-color={runner.track.color}
+						style:--primary={runner.track.color}
+						style:--form-element-focus-color={addAlpha(runner.track.color, 0.13)}
 					/>
 				</td>
 			{/if}

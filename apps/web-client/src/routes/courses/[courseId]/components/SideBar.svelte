@@ -1,7 +1,10 @@
 <script lang="ts">
 	import type CourseData from '$lib/o-utils/models/course-data';
+	import type Routechoice from '$lib/o-utils/models/routechoice';
+	import type Runner from '$lib/o-utils/models/runner';
 	import LegStatistics from './LegStatistics/LegStatistics.svelte';
 	import LegSplitTimesTable from './SplitTimesTable/LegSplitTimesTable.svelte';
+	import SummaryPanel from './SummaryPanel.svelte';
 	import Toggle from './Toggle.svelte';
 
 	export let selectedRunners: string[];
@@ -10,7 +13,41 @@
 	export let showSideBar: boolean;
 
 	let isInSplitMode = true;
+	let sortedRunnersWithOneLeg: Runner[] = [];
+	let legRoutechoices: Routechoice[] = [];
+
+	$: {
+		const clonedRunnersWithOneLeg = (structuredClone(courseData.runners) as Runner[]).map(
+			(runner) => ({
+				...runner,
+				legs: runner.legs.filter((l, i) => i + 1 === legNumber)
+			})
+		);
+
+		sortedRunnersWithOneLeg = clonedRunnersWithOneLeg.sort((runner1, runner2) => {
+			const runner1Leg = runner1.legs[0];
+			const runner2Leg = runner2.legs[0];
+
+			if (runner1Leg !== null && runner2Leg !== null) {
+				return runner1Leg.time - runner2Leg.time;
+			}
+
+			if (runner1Leg === null && runner2Leg !== null) {
+				return 1;
+			}
+
+			if (runner1Leg !== null && runner2Leg === null) {
+				return -1;
+			}
+
+			return 0;
+		});
+
+		legRoutechoices = courseData.legs[legNumber - 1].routechoices;
+	}
 </script>
+
+<SummaryPanel {legRoutechoices} {sortedRunnersWithOneLeg} />
 
 <aside class:toggle-sidebar={showSideBar}>
 	<div class="main-wrapper">
@@ -27,8 +64,8 @@
 			class="leg-split-times-table-container"
 		>
 			<LegSplitTimesTable
-				{courseData}
-				{legNumber}
+				{sortedRunnersWithOneLeg}
+				{legRoutechoices}
 				bind:selectedRunners
 				on:routechoiceChange
 				on:changeRunnerTimeOffset

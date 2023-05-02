@@ -27,8 +27,8 @@
 	import RunnerRoute from './components/RunnerRoute.svelte';
 	import SideBar from './components/SideBar.svelte';
 	import type { RoutechoiceChangeEventDetails } from './components/SplitTimesTable/RoutecoiceTableCell.svelte';
-	import { getStandardCordsAndLengthFromLineStringFlatCordinates } from './components/utils';
 	import VectorLayer from './components/VectorLayer.svelte';
+	import { getStandardCordsAndLengthFromLineStringFlatCordinates } from './components/utils';
 	import { ModesEnum } from './models/modes.enum';
 	import './styles.css';
 	import { computeFitBoxAndAngleFromLegNumber } from './utils';
