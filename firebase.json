@@ -7,7 +7,7 @@
     "source": "apps/functions"
   },
   "hosting": {
-    "public": "apps/web/dist",
+    "public": "apps/web-client/build",
     "ignore": ["firebase.json", "**/.*", "**/node_modules/**"],
     "rewrites": [
       {
