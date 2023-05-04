@@ -1,10 +1,10 @@
 <script lang="ts">
 	import { goto } from '$app/navigation';
-	import { CoordinatesConverter } from '$lib/o-utils/map/coords-converter';
-	import type { MapCalibration } from '$lib/o-utils/models/course-map.js';
-	import { serializeNestedArraysInLegs } from '$lib/o-utils/models/leg';
-	import type { LoggatorEvent } from '$lib/o-utils/models/loggator-api/logator-event.js';
-	import { parseTwoDRerunCourseAndRoutechoicesExport } from '$lib/o-utils/two-d-rerun/course-mappers';
+	import { CoordinatesConverter } from 'orienteering-js/map';
+	import type { MapCalibration } from 'orienteering-js/models';
+	import { serializeNestedArraysInLegs } from 'orienteering-js/models';
+	import type { LoggatorEvent } from 'orienteering-js/models';
+	import { parseTwoDRerunCourseAndRoutechoicesExport } from 'orienteering-js/two-d-rerun';
 	import { getLoggatorEventAndMapCallibration } from '$lib/utils/functions.js';
 	import { doc, getFirestore, updateDoc } from 'firebase/firestore/lite';
 	import { getFunctions, httpsCallable } from 'firebase/functions';

@@ -4,7 +4,7 @@
 	import ChevronRight from '$lib/components/icons/ChevronRight.svelte';
 	import Elipsis from '$lib/components/icons/Elipsis.svelte';
 	import Eye from '$lib/components/icons/Eye.svelte';
-	import type Leg from '$lib/o-utils/models/leg';
+	import type { Leg } from 'orienteering-js/models';
 
 	export let legNumber: number;
 	export let legs: Leg[];

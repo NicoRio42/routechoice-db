@@ -1,13 +1,12 @@
 <script lang="ts">
 	import Logo from '$lib/components/icons/Logo.svelte';
-	import { courseValidator, type Course } from '$lib/models/course';
-	import { buildRunnersTracksFromLoggatorData } from '$lib/o-utils/loggator/points';
-	import type CourseData from '$lib/o-utils/models/course-data';
-	import { courseDataWithoutRunnersValidator } from '$lib/o-utils/models/course-data';
-	import { parseNestedArraysInLegs } from '$lib/o-utils/models/leg';
-	import type { LoggatorPoints } from '$lib/o-utils/models/loggator-api/loggator-points';
-	import type Runner from '$lib/o-utils/models/runner';
-	import { runnerValidator } from '$lib/o-utils/models/runner';
+	import { buildRunnersTracksFromLoggatorData } from 'orienteering-js/loggator';
+	import type { CourseData, LoggatorPoints, Runner } from 'orienteering-js/models';
+	import {
+		courseDataWithoutRunnersValidator,
+		parseNestedArraysInLegs,
+		runnerValidator
+	} from 'orienteering-js/models';
 	import CourseViewer from './CourseViewer.svelte';
 
 	export let data;

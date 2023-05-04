@@ -1,13 +1,13 @@
 <script lang="ts">
 	import type { Map } from 'ol';
-	import ImageLayer from 'ol/layer/Image';
-	import { addCoordinateTransforms, Projection, transform } from 'ol/proj';
+	import ImageLayer from 'ol/layer/Image.js';
+	import { addCoordinateTransforms, Projection, transform } from 'ol/proj.js';
 	import Static from 'ol/source/ImageStatic.js';
 	import { getContext, onDestroy, onMount } from 'svelte';
-	import { CoordinatesConverter } from '$lib/o-utils/map/coords-converter';
-	import type { MapCalibration } from '$lib/o-utils/models/course-map';
-	import type ImageWrapper from 'ol/Image';
-	import { cachedImageElements } from '$lib/o-utils/loggator/map-calibration';
+	import { CoordinatesConverter } from 'orienteering-js/map';
+	import type { MapCalibration } from 'orienteering-js/models';
+	import type ImageWrapper from 'ol/Image.js';
+	import { cachedImages } from '$lib/utils/functions.js';
 
 	export let url: string;
 	export let mapCalibration: MapCalibration;
@@ -52,7 +52,7 @@
 			projection: imageProjection,
 			imageExtent,
 			imageLoadFunction: (img: ImageWrapper, src: string) => {
-				const imageElemnt = cachedImageElements[url];
+				const imageElemnt = cachedImages[url];
 				if (imageElemnt === undefined) {
 					(img.getImage() as HTMLImageElement).src = src;
 					return;

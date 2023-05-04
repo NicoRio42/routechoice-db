@@ -1,12 +1,12 @@
 <script lang="ts">
 	import Pen from '$lib/components/icons/Pen.svelte';
-	import type Routechoice from '$lib/o-utils/models/routechoice';
-	import type Runner from '$lib/o-utils/models/runner';
-	import { isUserAdminStore } from '$lib/stores/user.store';
+	import type { Routechoice } from 'orienteering-js/models';
+	import type { Runner } from 'orienteering-js/models';
+	import { isUserAdminStore } from '$lib/stores/user.store.js';
 	import { createEventDispatcher } from 'svelte';
-	import { addAlpha } from '../utils';
+	import { addAlpha } from '../utils.js';
 	import RoutechoiceTableCell from './RoutecoiceTableCell.svelte';
-	import { fullNameToShortName, rankToCSSClass, secondsToPrettyTime } from './utils';
+	import { fullNameToShortName, rankToCSSClass, secondsToPrettyTime } from './utils.js';
 
 	export let selectedRunners: string[];
 	export let sortedRunnersWithOneLeg: Runner[];

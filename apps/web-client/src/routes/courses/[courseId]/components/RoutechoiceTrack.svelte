@@ -1,8 +1,8 @@
 <script lang="ts">
-	import type Routechoice from '$lib/o-utils/models/routechoice';
+	import type { Routechoice } from 'orienteering-js/models';
 	import LineString from './LineString.svelte';
-	import { transform } from 'ol/proj';
-	import { addAlpha } from './utils';
+	import { transform } from 'ol/proj.js';
+	import { addAlpha } from './utils.js';
 
 	export let routechoice: Routechoice;
 	export let opacity: number;

@@ -4,20 +4,20 @@
 	import { page } from '$app/stores';
 	import { updateRunners } from '$lib/db/runners.js';
 	import type User from '$lib/models/user.js';
-	import { buildRunnersTracksFromLoggatorData } from '$lib/o-utils/loggator/points.js';
-	import { serializeNestedArraysInLegs } from '$lib/o-utils/models/leg.js';
-	import type {
-		Competitor,
-		LoggatorEvent
-	} from '$lib/o-utils/models/loggator-api/logator-event.js';
-	import type { LoggatorPoints } from '$lib/o-utils/models/loggator-api/loggator-points.js';
-	import type Runner from '$lib/o-utils/models/runner.js';
-	import { detectRunnersRoutechoices } from '$lib/o-utils/routechoice-detector/routechoice-detector.js';
-	import { createRoutechoiceStatistics } from '$lib/o-utils/statistics/routechoices-statistics.js';
-	import { matchRunnersByName } from '$lib/o-utils/two-d-rerun/runners-matcher.js';
 	import { isNotErrorResponse } from '$lib/utils/functions.js';
 	import { doc, getFirestore, updateDoc } from 'firebase/firestore/lite';
 	import { getFunctions, httpsCallable } from 'firebase/functions';
+	import { buildRunnersTracksFromLoggatorData } from 'orienteering-js/loggator';
+	import type {
+		LoggatorCompetitor,
+		LoggatorEvent,
+		LoggatorPoints,
+		Runner
+	} from 'orienteering-js/models';
+	import { serializeNestedArraysInLegs } from 'orienteering-js/models';
+	import { detectRunnersRoutechoices } from 'orienteering-js/routechoice-detector';
+	import { createRoutechoiceStatistics } from 'orienteering-js/statistics';
+	import { matchRunnersByName } from 'orienteering-js/two-d-rerun';
 
 	export let data;
 
@@ -39,7 +39,7 @@
 	>(functions, 'getLoggatorEventPoints');
 
 	let runners: Runner[] = [];
-	let competitors: Competitor[] = [];
+	let competitors: LoggatorCompetitor[] = [];
 	let users: User[] = [];
 	const loggatorEventID = $page.params.courseId.split('-')[1];
 	let loggatorEvent: LoggatorEvent;

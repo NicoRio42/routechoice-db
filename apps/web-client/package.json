@@ -44,6 +44,7 @@
 		"firebase-tools": "^11.29.1",
 		"mathjs": "^11.3.0",
 		"ol": "^7.2.2",
+		"orienteering-js": "^0.0.15",
 		"zod": "^3.19.1"
 	}
 }

@@ -1,6 +1,6 @@
-import { transform } from 'ol/proj';
-import type Runner from '$lib/o-utils/models/runner';
-import { getLineStringLength } from '$lib/o-utils/utils/distance-helpers';
+import { transform } from 'ol/proj.js';
+import type { Runner } from 'orienteering-js/models';
+import { getLineStringLength } from 'orienteering-js/utils';
 
 export function cropTrackFromLegNumber(runner: Runner, legNumber: number): number[][] {
 	const runnerLeg = runner.legs[legNumber - 1];

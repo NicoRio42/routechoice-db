@@ -1,19 +1,19 @@
 <script lang="ts">
-	import { portal } from '$lib/actions/portal';
-	import { changeRunnerRoutechoice } from '$lib/db/routechoice';
-	import { updateRunnersRoutechoicesInFirestore } from '$lib/db/runners';
-	import type CourseData from '$lib/o-utils/models/course-data';
-	import { serializeNestedArraysInLegs } from '$lib/o-utils/models/leg';
-	import type Routechoice from '$lib/o-utils/models/routechoice';
+	import { portal } from '$lib/actions/portal.js';
+	import { changeRunnerRoutechoice } from '$lib/db/routechoice.js';
+	import { updateRunnersRoutechoicesInFirestore } from '$lib/db/runners.js';
+	import type { CourseData } from 'orienteering-js/models';
+	import { serializeNestedArraysInLegs } from 'orienteering-js/models';
+	import type { Routechoice } from 'orienteering-js/models';
 	import {
 		detectRunnersRoutechoices,
 		detectSingleRunnerRoutechoices
-	} from '$lib/o-utils/routechoice-detector/routechoice-detector';
-	import { createRoutechoiceStatistics } from '$lib/o-utils/statistics/routechoices-statistics';
-	import { isUserAdminStore } from '$lib/stores/user.store';
+	} from 'orienteering-js/routechoice-detector';
+	import { createRoutechoiceStatistics } from 'orienteering-js/statistics';
+	import { isUserAdminStore } from '$lib/stores/user.store.js';
 	import { doc, getFirestore, updateDoc, writeBatch } from 'firebase/firestore/lite';
-	import type { LineString } from 'ol/geom';
-	import type { DrawEvent } from 'ol/interaction/Draw';
+	import type { LineString } from 'ol/geom.js';
+	import type { DrawEvent } from 'ol/interaction/Draw.js';
 	import ActionButtons from './components/ActionButtons.svelte';
 	import AddRoutechoiceDialog, {
 		getNewRoutechoiceNameAndColor
@@ -28,10 +28,10 @@
 	import SideBar from './components/SideBar.svelte';
 	import type { RoutechoiceChangeEventDetails } from './components/SplitTimesTable/RoutecoiceTableCell.svelte';
 	import VectorLayer from './components/VectorLayer.svelte';
-	import { getStandardCordsAndLengthFromLineStringFlatCordinates } from './components/utils';
-	import { ModesEnum } from './models/modes.enum';
+	import { getStandardCordsAndLengthFromLineStringFlatCordinates } from './components/utils.js';
+	import { ModesEnum } from './models/modes.enum.js';
 	import './styles.css';
-	import { computeFitBoxAndAngleFromLegNumber } from './utils';
+	import { computeFitBoxAndAngleFromLegNumber } from './utils.js';
 
 	export let courseData: CourseData;
 

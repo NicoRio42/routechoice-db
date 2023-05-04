@@ -7,9 +7,9 @@
 
 <script lang="ts">
 	import { createEventDispatcher } from 'svelte';
-	import type Routechoice from '$lib/o-utils/models/routechoice';
-	import type Runner from '$lib/o-utils/models/runner';
-	import userStore, { isUserAdminStore } from '$lib/stores/user.store';
+	import type { Routechoice } from 'orienteering-js/models';
+	import type { Runner } from 'orienteering-js/models';
+	import userStore, { isUserAdminStore } from '$lib/stores/user.store.js';
 
 	export let routechoices: Routechoice[] = [];
 	export let runner: Runner;

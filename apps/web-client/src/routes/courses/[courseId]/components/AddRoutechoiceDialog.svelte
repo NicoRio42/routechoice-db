@@ -1,7 +1,7 @@
 <script lang="ts" context="module">
 	import { writable } from 'svelte/store';
 	import { fade } from 'svelte/transition';
-	import type Routechoice from '$lib/o-utils/models/routechoice';
+	import type { Routechoice } from 'orienteering-js/models';
 
 	const showDialog = writable(false);
 	let submit: Function;
@@ -18,7 +18,7 @@
 </script>
 
 <script lang="ts">
-	import { names, routesColors } from '$lib/o-utils/ocad/utils/routechoices-names-colors';
+	import { names, routesColors } from 'orienteering-js/ocad';
 
 	export let legRoutechoices: Routechoice[];
 

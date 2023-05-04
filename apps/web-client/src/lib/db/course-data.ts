@@ -1,20 +1,18 @@
-import type CourseData from '$lib/o-utils/models/course-data';
 import {
-	courseDataValidator,
-	courseDataWithoutRunnersValidator
-} from '$lib/o-utils/models/course-data';
-import { parseNestedArraysInLegs } from '$lib/o-utils/models/leg';
-import type Runner from '$lib/o-utils/models/runner';
-import { runnerValidator } from '$lib/o-utils/models/runner';
-import {
+	Firestore,
 	collection,
 	doc,
-	Firestore,
 	getDoc,
 	getDocs,
 	orderBy,
 	query
 } from 'firebase/firestore/lite';
+import type { CourseData, Runner } from 'orienteering-js/models';
+import {
+	courseDataWithoutRunnersValidator,
+	parseNestedArraysInLegs,
+	runnerValidator
+} from 'orienteering-js/models';
 
 export async function getCourseData(courseID: string, db: Firestore): Promise<CourseData> {
 	const runnersRef = collection(db, 'coursesData', courseID, 'runners');

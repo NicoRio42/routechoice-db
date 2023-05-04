@@ -1,7 +1,7 @@
 <script lang="ts">
-	import type CourseData from '$lib/o-utils/models/course-data';
+	import type { CourseData } from 'orienteering-js/models';
 	import Graph from './Graph.svelte';
-	import type { GraphItem } from './models/graph-item';
+	import type { GraphItem } from './models/graph-item.js';
 
 	export let courseData: CourseData;
 	export let legNumber: number;

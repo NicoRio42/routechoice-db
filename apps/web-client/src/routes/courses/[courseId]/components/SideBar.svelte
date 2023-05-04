@@ -1,7 +1,7 @@
 <script lang="ts">
-	import type CourseData from '$lib/o-utils/models/course-data';
-	import type Routechoice from '$lib/o-utils/models/routechoice';
-	import type Runner from '$lib/o-utils/models/runner';
+	import type { CourseData } from 'orienteering-js/models';
+	import type { Routechoice } from 'orienteering-js/models';
+	import type { Runner } from 'orienteering-js/models';
 	import LegStatistics from './LegStatistics/LegStatistics.svelte';
 	import LegSplitTimesTable from './SplitTimesTable/LegSplitTimesTable.svelte';
 	import SummaryPanel from './SummaryPanel.svelte';

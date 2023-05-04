@@ -1,5 +1,5 @@
 <script lang="ts" context="module">
-	import type Runner from '$lib/o-utils/models/runner';
+	import type { Runner } from 'orienteering-js/models';
 	import { writable } from 'svelte/store';
 
 	const showDialog = writable(false);
@@ -21,7 +21,7 @@
 <script lang="ts">
 	// This component mutates de runner's timeOffset corresponding to the runnerId
 	// but it reinitializes it on cancellation or submition
-	import type CourseData from '$lib/o-utils/models/course-data';
+	import type { CourseData } from 'orienteering-js/models';
 
 	export let courseData: CourseData;
 	let initialOffset: number;

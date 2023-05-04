@@ -1,4 +1,4 @@
-import type Runner from '$lib/o-utils/models/runner';
+import type { Runner } from 'orienteering-js/models';
 import { doc, writeBatch, type Firestore } from 'firebase/firestore/lite';
 
 export function updateRunnersRoutechoicesInFirestore(

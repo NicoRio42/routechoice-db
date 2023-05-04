@@ -1,9 +1,9 @@
 <script lang="ts">
-	import { goto, invalidateAll } from '$app/navigation';
+	import { goto } from '$app/navigation';
 	import { createRunners } from '$lib/db/runners.js';
-	import { parseIOFXML3SplitTimesFile } from '$lib/o-utils/split-times/parsers/iof-xml-3';
-	import { timeZones } from '$lib/utils/time-zones';
+	import { timeZones } from '$lib/utils/time-zones.js';
 	import { getFirestore } from 'firebase/firestore/lite';
+	import { parseIOFXML3SplitTimesFile } from 'orienteering-js/split-times';
 
 	export let data;
 
@@ -50,11 +50,8 @@
 				return;
 			}
 
-			const classQuerySelector =
-				IOFXMLVersion === '3.0' ? 'ClassResult Class Name' : 'ClassResult ClassShortName';
-
-			classNames = Array.from(xmlDoc.querySelectorAll(classQuerySelector)).map(
-				(cl) => cl.innerHTML
+			classNames = Array.from(xmlDoc.querySelectorAll('ClassResult Class Name')).map(
+				(cl) => cl.textContent?.trim() ?? ''
 			);
 
 			if (classNames.length > 0) className = classNames[0];

@@ -1,8 +1,8 @@
-import { createRoutechoiceStatisticsForOneLeg } from '$lib/o-utils/statistics/routechoices-statistics';
-import type CourseData from '$lib/o-utils/models/course-data';
-import type Routechoice from '$lib/o-utils/models/routechoice';
+import { createRoutechoiceStatisticsForOneLeg } from 'orienteering-js/statistics';
+import type { CourseData } from 'orienteering-js/models';
+import type { Routechoice } from 'orienteering-js/models';
 import { doc, type Firestore, updateDoc } from 'firebase/firestore/lite';
-import { serializeNestedArraysInLegs } from '$lib/o-utils/models/leg';
+import { serializeNestedArraysInLegs } from 'orienteering-js/models';
 
 export async function changeRunnerRoutechoice(
 	courseData: CourseData,

@@ -1,10 +1,10 @@
 <script lang="ts">
 	import { goto } from '$app/navigation';
 	import TagsSelect from '$lib/components/TagsSelect/TagsSelect.svelte';
-	import type { Tag } from '$lib/models/tag';
-	import type { CourseDataWithoutRunners } from '$lib/o-utils/models/course-data';
-	import { formatDateForDateInput } from '$lib/utils/date';
+	import type { Tag } from '$lib/models/tag.js';
+	import { formatDateForDateInput } from '$lib/utils/date.js';
 	import { doc, getFirestore, setDoc } from 'firebase/firestore/lite';
+	import type { CourseDataWithoutRunners } from 'orienteering-js/models';
 
 	let name = '';
 	let liveProviderURL = '';

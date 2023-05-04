@@ -1,13 +1,15 @@
-import getMapCallibrationFromLoggatorEventMap from '$lib/o-utils/loggator/map-calibration';
-import type { MapCalibration } from '$lib/o-utils/models/course-map';
-import type { LoggatorEvent } from '$lib/o-utils/models/loggator-api/logator-event';
+import type { MapCalibration } from 'orienteering-js/models';
+import type { LoggatorEvent } from 'orienteering-js/models';
 import type { HttpsCallableResult } from 'firebase/functions';
+import { getMapCallibrationFromLoggatorEventMap } from 'orienteering-js/loggator';
 
 export function isNotErrorResponse<T extends Object>(
 	data: T | { message: string; error: unknown }
 ): data is T {
 	return !('error' in data);
 }
+
+export const cachedImages: Record<string, HTMLImageElement> = {};
 
 export async function getLoggatorEventAndMapCallibration(
 	loggatorEventPromise: Promise<
@@ -26,7 +28,8 @@ export async function getLoggatorEventAndMapCallibration(
 
 	const loggatorEvent = loggatorEventResponse.data;
 	if (!('url' in loggatorEvent.map)) throw new Error("Event isn't started yet");
-	const calibration = await getMapCallibrationFromLoggatorEventMap(loggatorEvent.map);
-
+	const [calibrationPromise, image] = getMapCallibrationFromLoggatorEventMap(loggatorEvent.map);
+	cachedImages[loggatorEvent.map.url] = image;
+	const calibration = await calibrationPromise;
 	return [loggatorEvent, calibration];
 }

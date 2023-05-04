@@ -1,7 +1,7 @@
 <script lang="ts">
-	import type Routechoice from '$lib/o-utils/models/routechoice';
-	import type Runner from '$lib/o-utils/models/runner';
-	import { secondsToPrettyTime } from './SplitTimesTable/utils';
+	import type { Routechoice } from 'orienteering-js/models';
+	import type { Runner } from 'orienteering-js/models';
+	import { secondsToPrettyTime } from './SplitTimesTable/utils.js';
 
 	export let sortedRunnersWithOneLeg: Runner[];
 	export let legRoutechoices: Routechoice[];

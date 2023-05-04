@@ -1,7 +1,7 @@
 <script lang="ts">
-	import type Runner from '$lib/o-utils/models/runner';
+	import type { Runner } from 'orienteering-js/models';
 	import LineString from './LineString.svelte';
-	import { cropTrackFromLegNumber } from './utils';
+	import { cropTrackFromLegNumber } from './utils.js';
 
 	export let runner: Runner;
 	export let legNumber: number;

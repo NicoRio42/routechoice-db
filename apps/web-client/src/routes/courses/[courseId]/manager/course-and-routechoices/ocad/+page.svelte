@@ -1,7 +1,7 @@
 <script lang="ts">
-	import { serializeNestedArraysInLegs } from '$lib/o-utils/models/leg';
-	import parseGPXRoutechoicesOCADExport from '$lib/o-utils/ocad/parsers/routechoices-gpx';
-	import parseIOFXML3CourseOCADExport from '$lib/o-utils/ocad/parsers/iof-xml-3-course';
+	import { serializeNestedArraysInLegs } from 'orienteering-js/models';
+	import { parseGPXRoutechoicesOCADExport } from 'orienteering-js/ocad';
+	import { parseIOFXML3CourseOCADExport } from 'orienteering-js/ocad';
 	import { doc, getFirestore, updateDoc } from 'firebase/firestore/lite';
 	import { goto } from '$app/navigation';
 

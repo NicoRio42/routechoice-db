@@ -1,7 +1,7 @@
 <script lang="ts">
 	import { goto, invalidate } from '$app/navigation';
 	import { createRunners } from '$lib/db/runners.js';
-	import { parseIOFXML3SplitTimesFile } from '$lib/o-utils/split-times/parsers/iof-xml-3.js';
+	import { parseIOFXML3SplitTimesFile } from 'orienteering-js/split-times';
 	import { formatDateForDateInput } from '$lib/utils/date.js';
 	import { timeZones } from '$lib/utils/time-zones.js';
 	import { getFirestore } from 'firebase/firestore/lite';
@@ -115,7 +115,7 @@
 
 		const xmlDoc = parser.parseFromString(text.toString(), 'application/xml');
 
-		const runners = parseIOFXML3SplitTimesFile(xmlDoc, classInfo.name, timeZone.value, timeOffset);
+		const runners = parseIOFXML3SplitTimesFile(xmlDoc, classInfo.id, timeZone.value, timeOffset);
 		await createRunners(runners, data.course.id, db);
 		// TODO Properly invalidate runners
 		data.courseData.runners = runners;

@@ -1,7 +1,4 @@
-import getMapCallibrationFromLoggatorEventMap from '$lib/o-utils/loggator/map-calibration';
-import type { MapCalibration } from '$lib/o-utils/models/course-map';
-import type { LoggatorEvent } from '$lib/o-utils/models/loggator-api/logator-event';
-import type { LoggatorPoints } from '$lib/o-utils/models/loggator-api/loggator-points';
+import { getLoggatorEventAndMapCallibration } from '$lib/utils/functions.js';
 import { error } from '@sveltejs/kit';
 import { initializeApp } from 'firebase/app';
 import {
@@ -13,9 +10,9 @@ import {
 	orderBy,
 	query
 } from 'firebase/firestore/lite';
-import { getFunctions, httpsCallable, type HttpsCallableResult } from 'firebase/functions';
-import firebaseConfig from '../../../environments/environment';
-import { getLoggatorEventAndMapCallibration } from '$lib/utils/functions';
+import { getFunctions, httpsCallable } from 'firebase/functions';
+import type { LoggatorEvent, LoggatorPoints } from 'orienteering-js/models';
+import firebaseConfig from '../../../environments/environment.js';
 
 initializeApp(firebaseConfig);
 const functions = getFunctions(undefined, 'europe-west1');
