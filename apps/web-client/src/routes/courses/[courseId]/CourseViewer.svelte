@@ -32,6 +32,9 @@
 	import { ModesEnum } from './models/modes.enum.js';
 	import './styles.css';
 	import { computeFitBoxAndAngleFromLegNumber } from './utils.js';
+	import { splittimesProviderKey } from '../../../environments/environment.js';
+	import { SPLITTIMES_BASE_URL } from '$lib/constants.js';
+	import ExternalLink from '$lib/components/icons/ExternalLink.svelte';
 
 	export let courseData: CourseData;
 
@@ -175,12 +178,25 @@
 </script>
 
 {#if $isUserAdminStore}
-	<li use:portal={'navbarButtons'} class="mode-select-wrapper">
-		<select name="mode" id="mode-select" bind:value={mode} class="mode-select">
-			<option value={ModesEnum.ANALYSIS}>Analysis</option>
-			<option value={ModesEnum.DRAW}>Draw routechoices</option>
-		</select>
-	</li>
+	<div use:portal={'navbarButtons'} style="display: contents">
+		<li class="mode-select-wrapper">
+			<select name="mode" id="mode-select" bind:value={mode} class="mode-select">
+				<option value={ModesEnum.ANALYSIS}>Analysis</option>
+				<option value={ModesEnum.DRAW}>Draw routechoices</option>
+			</select>
+		</li>
+
+		<li class="mode-select-wrapper">
+			<a
+				href={`${SPLITTIMES_BASE_URL}/${splittimesProviderKey}/${courseData.id}/classes/1`}
+				target="_blank"
+				rel="noreferrer"
+			>
+				Split times
+				<ExternalLink --width="0.75rem" --height="0.75rem" --logo-color="black" />
+			</a>
+		</li>
+	</div>
 {/if}
 
 <div class="wrapper">
