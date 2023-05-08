@@ -3,7 +3,7 @@
 	import { initializeApp } from 'firebase/app';
 	import { getFirestore } from 'firebase/firestore/lite';
 	import { getFunctions } from 'firebase/functions';
-	import firebaseConfig from '../environments/environment';
+	import firebaseConfig from '../environments/environment.js';
 	import NavBar from './NavBar.svelte';
 
 	import './pico.min.css';

@@ -18,7 +18,8 @@
 		"deploy:staging": "node deploy.js staging",
 		"deploy:staging:hosting": "node deploy.js staging --only hosting",
 		"deploy:prod": "node deploy.js prod",
-		"deploy:prod:hosting": "node deploy.js prod --only hosting"
+		"deploy:prod:hosting": "node deploy.js prod --only hosting",
+		"deploy:prod:functions": "node deploy.js prod --only functions"
 	},
 	"devDependencies": {
 		"@playwright/test": "^1.28.1",

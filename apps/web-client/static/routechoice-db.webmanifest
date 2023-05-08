@@ -1,0 +1,13 @@
+{
+	"name": "Routechoice DB",
+	"short_name": "Routechoice DB",
+	"description": "Orienteering analysis",
+	"icons": [
+		{
+			"src": "icons/app-icon.svg",
+			"sizes": "any"
+		}
+	],
+	"start_url": "/",
+	"display": "fullscreen"
+}

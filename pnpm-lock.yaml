@@ -10,6 +10,9 @@ importers:
       firebase-functions:
         specifier: ^4.1.1
         version: 4.1.1(firebase-admin@11.4.0)
+      orienteering-js:
+        specifier: ^0.0.15
+        version: 0.0.15(zod@3.21.4)
     devDependencies:
       eslint:
         specifier: ^8.9.0
@@ -5377,6 +5380,15 @@ packages:
       zod: 3.20.2
     dev: false
 
+  /orienteering-js@0.0.15(zod@3.21.4):
+    resolution: {integrity: sha512-l3wQL9CUHSSnRiptAPyKUDzmGw23cc5N8eIpRHH6j9gEU+286yZ/uw5OrRr4YyYvCN1Z1snTGy0b11uFYaJIYA==}
+    peerDependencies:
+      zod: ^3.21.4
+    dependencies:
+      mathjs: 11.8.0
+      zod: 3.21.4
+    dev: false
+
   /os-tmpdir@1.0.2:
     resolution: {integrity: sha512-D2FR03Vir7FIu45XBY20mTb+/ZSWB00sjU9jdQXt83gDrI4Ztz5Fs7/yy74g2N5SVQY4xY1qDr4rNddwYRVX0g==}
     engines: {node: '>=0.10.0'}
@@ -7489,4 +7501,8 @@ packages:
 
   /zod@3.20.2:
     resolution: {integrity: sha512-1MzNQdAvO+54H+EaK5YpyEy0T+Ejo/7YLHS93G3RnYWh5gaotGHwGeN/ZO687qEDU2y4CdStQYXVHIgrUl5UVQ==}
+    dev: false
+
+  /zod@3.21.4:
+    resolution: {integrity: sha512-m46AKbrzKVzOzs/DZgVnG5H55N1sv1M8qZU3A8RIKbs3mrACDNeIOeilDymVb2HdmP8uwshOCF4uJ8uM9rCqJw==}
     dev: false

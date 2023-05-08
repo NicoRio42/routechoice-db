@@ -2,18 +2,17 @@
 	import { portal } from '$lib/actions/portal.js';
 	import { changeRunnerRoutechoice } from '$lib/db/routechoice.js';
 	import { updateRunnersRoutechoicesInFirestore } from '$lib/db/runners.js';
-	import type { CourseData } from 'orienteering-js/models';
+	import { isUserAdminStore } from '$lib/stores/user.store.js';
+	import { doc, getFirestore, updateDoc, writeBatch } from 'firebase/firestore/lite';
+	import type { LineString } from 'ol/geom.js';
+	import type { DrawEvent } from 'ol/interaction/Draw.js';
+	import type { CourseData, Routechoice } from 'orienteering-js/models';
 	import { serializeNestedArraysInLegs } from 'orienteering-js/models';
-	import type { Routechoice } from 'orienteering-js/models';
 	import {
 		detectRunnersRoutechoices,
 		detectSingleRunnerRoutechoices
 	} from 'orienteering-js/routechoice-detector';
 	import { createRoutechoiceStatistics } from 'orienteering-js/statistics';
-	import { isUserAdminStore } from '$lib/stores/user.store.js';
-	import { doc, getFirestore, updateDoc, writeBatch } from 'firebase/firestore/lite';
-	import type { LineString } from 'ol/geom.js';
-	import type { DrawEvent } from 'ol/interaction/Draw.js';
 	import ActionButtons from './components/ActionButtons.svelte';
 	import AddRoutechoiceDialog, {
 		getNewRoutechoiceNameAndColor
@@ -32,9 +31,6 @@
 	import { ModesEnum } from './models/modes.enum.js';
 	import './styles.css';
 	import { computeFitBoxAndAngleFromLegNumber } from './utils.js';
-	import { splittimesProviderKey } from '../../../environments/environment.js';
-	import { SPLITTIMES_BASE_URL } from '$lib/constants.js';
-	import ExternalLink from '$lib/components/icons/ExternalLink.svelte';
 
 	export let courseData: CourseData;
 
@@ -184,17 +180,6 @@
 				<option value={ModesEnum.ANALYSIS}>Analysis</option>
 				<option value={ModesEnum.DRAW}>Draw routechoices</option>
 			</select>
-		</li>
-
-		<li class="mode-select-wrapper">
-			<a
-				href={`${SPLITTIMES_BASE_URL}/${splittimesProviderKey}/${courseData.id}/classes/1`}
-				target="_blank"
-				rel="noreferrer"
-			>
-				Split times
-				<ExternalLink --width="0.75rem" --height="0.75rem" --logo-color="black" />
-			</a>
 		</li>
 	</div>
 {/if}

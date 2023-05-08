@@ -1,14 +1,17 @@
 <script lang="ts">
 	import { goto, invalidate } from '$app/navigation';
+	import Settings from '$lib/components/icons/Settings.svelte';
 	import Table from '$lib/components/icons/Table.svelte';
 	import Trash from '$lib/components/icons/Trash.svelte';
 	import TagComponent from '$lib/components/TagsSelect/Tag.svelte';
 	import TagsSelect from '$lib/components/TagsSelect/TagsSelect.svelte';
+	import { SPLITTIMES_BASE_URL } from '$lib/constants.js';
 	import type { Course } from '$lib/models/course';
 	import type { Tag } from '$lib/models/tag';
 	import { isUserAdminStore } from '$lib/stores/user.store';
 	import { getFunctions, httpsCallable } from 'firebase/functions';
 	import { fade } from 'svelte/transition';
+	import { splittimesProviderKey } from '../environments/environment.js';
 
 	export let data;
 
@@ -67,6 +70,7 @@
 					<th>Name</th>
 					<th>Date</th>
 					<th>Tags</th>
+					<th />
 
 					{#if $isUserAdminStore}
 						<th />
@@ -79,7 +83,7 @@
 				{#each data.courses as course (course.id)}
 					<tr>
 						<td>
-							<a class="course-link" href={`/courses/${course.id}`}>{course.name}</a>
+							<a class="course-link" href="/courses/{course.id}">{course.name}</a>
 						</td>
 
 						<td>{new Date(course.date).toLocaleDateString()}</td>
@@ -90,9 +94,18 @@
 							{/each}
 						</td>
 
+						<td class="action-row">
+							<a
+								class="action-icon"
+								href="{SPLITTIMES_BASE_URL}/{splittimesProviderKey}/{course.id}/classes/1"
+								target="_blank"
+								rel="noreferrer"><Table /></a
+							>
+						</td>
+
 						{#if $isUserAdminStore}
 							<td class="action-row">
-								<a class="action-icon" href={`/courses/${course.id}/manager`}><Table /></a>
+								<a class="action-icon" href="/courses/{course.id}/manager"><Settings /></a>
 							</td>
 
 							<td class="action-row">

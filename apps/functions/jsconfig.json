@@ -2,6 +2,9 @@
   "compilerOptions": {
     "importsNotUsedAsValues": "remove",
     "checkJs": true,
-    "resolveJsonModule": true
+    "resolveJsonModule": true,
+    "module": "ESNext",
+    "moduleResolution": "nodenext",
+    "strict": true
   }
 }
