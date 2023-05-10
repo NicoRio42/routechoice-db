@@ -1,5 +1,6 @@
 import { transform, transformExtent } from 'ol/proj.js';
 import type { CourseData } from 'orienteering-js/models';
+import { ModesEnum } from './models/modes.enum.js';
 
 export function computeFitBoxAndAngleFromLegNumber(
 	legNumber: number,
@@ -33,4 +34,23 @@ export function computeFitBoxAndAngleFromLegNumber(
 	const newAngle = -Math.atan(deltaX / deltaY) - (deltaY > 0 ? 0 : Math.PI);
 
 	return [extend as [number, number, number, number], newAngle];
+}
+
+export function getModeFromSearchParams(searchParams: URLSearchParams): ModesEnum {
+	const modeFromParams = searchParams.get('mode');
+	if (modeFromParams === ModesEnum.DRAW) return ModesEnum.DRAW;
+
+	return ModesEnum.ANALYSIS;
+}
+
+export function addSearchParamsToURL(url: URL, name: string, value: string): string {
+	const newURL = new URL(url);
+	newURL.searchParams.set(name, value);
+	return newURL.toString();
+}
+
+export function deleteSearchParamsToURL(url: URL, name: string): string {
+	const newURL = new URL(url);
+	newURL.searchParams.delete(name);
+	return newURL.toString();
 }

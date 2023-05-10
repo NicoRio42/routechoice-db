@@ -5,11 +5,12 @@
 	import Elipsis from '$lib/components/icons/Elipsis.svelte';
 	import Eye from '$lib/components/icons/Eye.svelte';
 	import type { Leg } from 'orienteering-js/models';
+	import { addSearchParamsToURL, deleteSearchParamsToURL } from '../utils.js';
+	import { page } from '$app/stores';
 
 	export let legNumber: number;
 	export let legs: Leg[];
 	export let showRoutechoices: boolean;
-	export let showSideBar: boolean;
 	export let isAutoAnalysisMode: boolean;
 
 	const numberOfLegs = legs.length;
@@ -25,27 +26,27 @@
 </script>
 
 <div class="control-bar">
-	<button class="map-buttons-toggler mobile" on:click={() => (showMapButtons = !showMapButtons)}
+	<button class="map-buttons-toggler mobile btn" on:click={() => (showMapButtons = !showMapButtons)}
 		><Elipsis />
 	</button>
 
 	<button
-		class="map-button mobile"
+		class="map-button mobile btn"
 		on:click={() => (isAutoAnalysisMode = !isAutoAnalysisMode)}
 		style:transform={showMapButtons ? 'translateY(-230%)' : 'translateY(0)'}>AA</button
 	>
 
 	<button
-		class="map-button mobile"
+		class="map-button mobile btn"
 		on:click={() => (showRoutechoices = !showRoutechoices)}
 		style:transform={showMapButtons ? 'translateY(-115%)' : 'translateY(0)'}><Eye /></button
 	>
 
-	<button class="large" on:click={() => (isAutoAnalysisMode = !isAutoAnalysisMode)}>AA</button>
+	<button class="large btn" on:click={() => (isAutoAnalysisMode = !isAutoAnalysisMode)}>AA</button>
 
-	<button class="large" on:click={() => (showRoutechoices = !showRoutechoices)}><Eye /></button>
+	<button class="large btn" on:click={() => (showRoutechoices = !showRoutechoices)}><Eye /></button>
 
-	<button on:click={handlePreviousControl}><ChevronLeft /></button>
+	<button class="btn" on:click={handlePreviousControl}><ChevronLeft /></button>
 
 	<select bind:value={legNumber}>
 		{#each [...Array(numberOfLegs).keys()] as leg}
@@ -53,9 +54,17 @@
 		{/each}
 	</select>
 
-	<button on:click={handleNextControl}><ChevronRight /></button>
+	<button class="btn" on:click={handleNextControl}><ChevronRight /></button>
 
-	<button on:click={() => (showSideBar = !showSideBar)}><Chart /></button>
+	<a
+		role="button"
+		class="btn"
+		href={$page.url.searchParams.has('hideSideBar')
+			? deleteSearchParamsToURL($page.url, 'hideSideBar')
+			: addSearchParamsToURL($page.url, 'hideSideBar', '')}
+	>
+		<Chart />
+	</a>
 </div>
 
 <style>
@@ -77,7 +86,7 @@
 		margin-bottom: 0;
 	}
 
-	button {
+	.btn {
 		width: 3rem;
 		height: 3rem;
 		border-radius: 50%;

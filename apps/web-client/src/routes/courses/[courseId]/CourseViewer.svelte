@@ -1,8 +1,7 @@
 <script lang="ts">
-	import { portal } from '$lib/actions/portal.js';
+	import { page } from '$app/stores';
 	import { changeRunnerRoutechoice } from '$lib/db/routechoice.js';
 	import { updateRunnersRoutechoicesInFirestore } from '$lib/db/runners.js';
-	import { isUserAdminStore } from '$lib/stores/user.store.js';
 	import { doc, getFirestore, updateDoc, writeBatch } from 'firebase/firestore/lite';
 	import type { LineString } from 'ol/geom.js';
 	import type { DrawEvent } from 'ol/interaction/Draw.js';
@@ -20,6 +19,7 @@
 	import AutoAnalysis from './components/AutoAnalysis.svelte';
 	import Draw from './components/Draw.svelte';
 	import GeoreferencedImage from './components/GeoreferencedImage.svelte';
+	import ModeDropDown from './components/ModeDropDown.svelte';
 	import OlMap from './components/OLMap.svelte';
 	import RoutechoiceTrack from './components/RoutechoiceTrack.svelte';
 	import RunnerOffsetEditor, { getNewRunnerOffset } from './components/RunnerOffsetEditor.svelte';
@@ -30,7 +30,7 @@
 	import { getStandardCordsAndLengthFromLineStringFlatCordinates } from './components/utils.js';
 	import { ModesEnum } from './models/modes.enum.js';
 	import './styles.css';
-	import { computeFitBoxAndAngleFromLegNumber } from './utils.js';
+	import { computeFitBoxAndAngleFromLegNumber, getModeFromSearchParams } from './utils.js';
 
 	export let courseData: CourseData;
 
@@ -41,9 +41,10 @@
 	let legNumber = 1;
 	let selectedRunners: string[] = [];
 	let showRoutechoices = true;
-	let showSideBar = true;
 	let isAutoAnalysisMode = false;
-	let mode: ModesEnum = ModesEnum.ANALYSIS;
+
+	$: mode = getModeFromSearchParams($page.url.searchParams);
+	$: legRoutechoices = courseData.legs[legNumber - 1].routechoices;
 
 	$: {
 		const [newFitBox, newAngle] = computeFitBoxAndAngleFromLegNumber(legNumber, courseData);
@@ -51,8 +52,6 @@
 		fitBox = newFitBox;
 		angle = newAngle;
 	}
-
-	$: legRoutechoices = courseData.legs[legNumber - 1].routechoices;
 
 	async function handleRoutechoiceChange(
 		event: CustomEvent<RoutechoiceChangeEventDetails>
@@ -173,16 +172,7 @@
 	}
 </script>
 
-{#if $isUserAdminStore}
-	<div use:portal={'navbarButtons'} style="display: contents">
-		<li class="mode-select-wrapper">
-			<select name="mode" id="mode-select" bind:value={mode} class="mode-select">
-				<option value={ModesEnum.ANALYSIS}>Analysis</option>
-				<option value={ModesEnum.DRAW}>Draw routechoices</option>
-			</select>
-		</li>
-	</div>
-{/if}
+<ModeDropDown courseId={courseData.id} {mode} />
 
 <div class="wrapper">
 	<AddRoutechoiceDialog {legRoutechoices} />
@@ -193,7 +183,6 @@
 		bind:selectedRunners
 		{courseData}
 		{legNumber}
-		{showSideBar}
 		on:routechoiceChange={handleRoutechoiceChange}
 		on:changeRunnerTimeOffset={handleRunnerTimeOffsetChange}
 	/>
@@ -231,7 +220,6 @@
 	<ActionButtons
 		bind:legNumber
 		bind:showRoutechoices
-		bind:showSideBar
 		legs={courseData.legs}
 		bind:isAutoAnalysisMode
 	/>
@@ -243,25 +231,5 @@
 		flex-shrink: 0;
 		flex-grow: 1;
 		overflow: scroll;
-	}
-
-	.mode-select-wrapper {
-		padding: 0;
-		margin-left: 1rem;
-	}
-
-	.mode-select {
-		padding-top: 0.5rem;
-		padding-bottom: 0.5rem;
-	}
-
-	@media screen and (max-width: 768px) {
-		.mode-select-wrapper {
-			margin-left: 0.5rem;
-		}
-
-		.mode-select {
-			font-size: 0.75rem;
-		}
 	}
 </style>

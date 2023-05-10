@@ -6,15 +6,17 @@
 	import LegSplitTimesTable from './SplitTimesTable/LegSplitTimesTable.svelte';
 	import SummaryPanel from './SummaryPanel.svelte';
 	import Toggle from './Toggle.svelte';
+	import { page } from '$app/stores';
 
 	export let selectedRunners: string[];
 	export let courseData: CourseData;
 	export let legNumber: number;
-	export let showSideBar: boolean;
 
 	let isInSplitMode = true;
 	let sortedRunnersWithOneLeg: Runner[] = [];
 	let legRoutechoices: Routechoice[] = [];
+
+	$: hideSideBar = $page.url.searchParams.has('hideSideBar');
 
 	$: {
 		const clonedRunnersWithOneLeg = (structuredClone(courseData.runners) as Runner[]).map(
@@ -49,7 +51,7 @@
 
 <SummaryPanel {legRoutechoices} {sortedRunnersWithOneLeg} />
 
-<aside class:toggle-sidebar={showSideBar}>
+<aside class:toggle-sidebar={!hideSideBar}>
 	<div class="main-wrapper">
 		<Toggle bind:isFirstValueSelected={isInSplitMode} firstLabel={'Splits'} secondLabel={'Graph'} />
 
@@ -112,7 +114,7 @@
 		margin-bottom: 0;
 	}
 
-	@media screen and (max-width: 500px) {
+	@media screen and (max-width: 768px) {
 		aside {
 			width: 100% !important;
 			right: 0;

@@ -1,5 +1,4 @@
 <script>
-	import { createPortal } from '$lib/actions/portal';
 	import Hamburger from '$lib/components/icons/Hamburger.svelte';
 	import Logo from '$lib/components/icons/Logo.svelte';
 	import { isUserAdminStore, userStore } from '$lib/stores/user.store';
@@ -14,16 +13,12 @@
 </script>
 
 <nav class="container-fluid">
-	<ul use:createPortal={'navbarButtons'}>
+	<ul>
 		<li class="logo-item link-list-item">
 			<a class="logo-link" href="/"
-				><Logo
-					--bg-color="var(--primary)"
-					--width="3rem"
-					--height="3rem"
-					--logo-color="white"
-				/>Routechoice DB</a
-			>
+				><Logo --bg-color="var(--primary)" --width="3rem" --height="3rem" --logo-color="white" />
+				<span class="large">Routechoice DB</span>
+			</a>
 		</li>
 	</ul>
 
@@ -139,7 +134,7 @@
 		display: none;
 	}
 
-	@media screen and (max-width: 500px) {
+	@media screen and (max-width: 768px) {
 		.hamburger-menu {
 			display: block;
 		}
