@@ -12,7 +12,7 @@ import {
 } from 'firebase/firestore/lite';
 import { getFunctions, httpsCallable } from 'firebase/functions';
 import type { LoggatorEvent, LoggatorPoints } from 'orienteering-js/models';
-import firebaseConfig from '../../../environments/environment.js';
+import firebaseConfig from '../../../../environments/environment.js';
 
 initializeApp(firebaseConfig);
 const functions = getFunctions(undefined, 'europe-west1');

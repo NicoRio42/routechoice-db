@@ -1,9 +1,11 @@
 <script lang="ts">
 	import { goto } from '$app/navigation';
 	import TagsSelect from '$lib/components/TagsSelect/TagsSelect.svelte';
+	import { GPS_PROVIDERS } from '$lib/constants.js';
+	import type { Course } from '$lib/models/course.js';
 	import type { Tag } from '$lib/models/tag.js';
 	import { formatDateForDateInput } from '$lib/utils/date.js';
-	import { doc, getFirestore, setDoc } from 'firebase/firestore/lite';
+	import { doc, getFirestore, writeBatch } from 'firebase/firestore/lite';
 	import type { CourseDataWithoutRunners } from 'orienteering-js/models';
 
 	let name = '';
@@ -11,26 +13,30 @@
 	let tags: Tag[] = [];
 	const today = new Date();
 	let date = formatDateForDateInput(today);
-	let loading = false;
 	const db = getFirestore();
-	const allowedOrigins = ['https://events.loggator.com', 'https://live.tractrac.com'];
+
+	let loading = false;
+	let showRequiredNameErrorMessage: boolean | null = null;
+	let showURLErrorMessage: boolean | null = null;
 
 	async function handleSubmit(): Promise<void> {
+		showRequiredNameErrorMessage = null;
+		showURLErrorMessage = null;
+
 		if (name === '') {
-			alert('Name is required.');
+			showRequiredNameErrorMessage = true;
 			return;
 		}
 
-		let url: URL;
+		if (!isURLValid(liveProviderURL)) {
+			showURLErrorMessage = true;
+			return;
+		}
+
 		let id: string;
 
 		try {
-			url = new URL(liveProviderURL);
-
-			if (!allowedOrigins.includes(url.origin)) {
-				alert('Only Loggator and Tractrac are supported currently.');
-				return;
-			}
+			const url = new URL(liveProviderURL);
 
 			const lastPathPart = url.pathname.split('/').at(-1);
 			if (lastPathPart === undefined) throw new Error('Invalid URL');
@@ -51,7 +57,7 @@
 			statistics: null
 		};
 
-		const courseWithoutID = {
+		const courseWithoutID: Omit<Course, 'id'> = {
 			name,
 			liveProviderURL: liveProviderURL,
 			date: timeStamp,
@@ -61,13 +67,28 @@
 		loading = true;
 
 		try {
-			await setDoc(doc(db, 'coursesData', id), courseData);
-			await setDoc(doc(db, 'courses', id), courseWithoutID);
+			const batch = writeBatch(db);
+
+			batch.set(doc(db, 'coursesData', id), courseData);
+			batch.set(doc(db, 'courses', id), courseWithoutID);
+
+			await batch.commit();
+
 			goto(`/courses/${id}/manager/course-and-routechoices`);
 		} catch (error) {
 			alert('An error occured while creating the course.');
 			console.error(error);
 			loading = false;
+		}
+	}
+
+	function isURLValid(url: string): boolean {
+		try {
+			const urlObject = new URL(url);
+
+			return GPS_PROVIDERS.some((p) => p.url === urlObject.origin);
+		} catch (e) {
+			return false;
 		}
 	}
 
@@ -81,25 +102,49 @@
 
 	<label>
 		Course name
+		<input
+			bind:value={name}
+			type="text"
+			aria-invalid={showRequiredNameErrorMessage}
+			on:input={() => {
+				if (showRequiredNameErrorMessage !== null) {
+					showRequiredNameErrorMessage = name === '';
+				}
+			}}
+		/>
 
-		<input bind:value={name} type="text" />
+		{#if showRequiredNameErrorMessage}
+			<small class="error">Name is required</small>
+		{/if}
 	</label>
 
 	<label>
 		Date
-
 		<input bind:value={date} type="date" />
 	</label>
 
 	<label>
 		Loggator or Tractrac URL
+		<input
+			placeholder="Loggator, GPS seuranta or Tractrac url"
+			bind:value={liveProviderURL}
+			type="text"
+			aria-invalid={showURLErrorMessage}
+			on:input={() => {
+				if (showURLErrorMessage !== null) {
+					showURLErrorMessage = !isURLValid(liveProviderURL);
+				}
+			}}
+		/>
 
-		<input bind:value={liveProviderURL} type="text" />
+		{#if showURLErrorMessage}
+			<small class="error">Only Loggator, GPS seuranta or Tractrac urls are supported</small>
+		{/if}
 	</label>
 
+	<!-- svelte-ignore a11y-label-has-associated-control -->
 	<label>
 		Tags
-
 		<TagsSelect on:tagsSelect={handleTagsSelected} />
 	</label>
 
@@ -114,10 +159,14 @@
 	form {
 		max-width: 25rem;
 		margin: 2em auto;
+		padding: 0 0.5rem;
+	}
+
+	h1 {
+		margin-bottom: 1rem;
 	}
 
 	.buttons-wrapper {
-		margin-top: 2rem;
 		display: flex;
 		gap: 1rem;
 		justify-content: center;

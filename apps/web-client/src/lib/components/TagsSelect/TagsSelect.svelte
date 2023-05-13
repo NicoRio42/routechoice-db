@@ -1,7 +1,7 @@
 <script lang="ts">
-	import type { Tag } from '$lib/models/tag';
+	import type { Tag } from '$lib/models/tag.js';
 	import { createEventDispatcher } from 'svelte';
-	import { TAGS } from './tags';
+	import { TAGS } from './tags.js';
 
 	export let initialTags: Tag[] = [];
 	let tags: Tag[] = TAGS.filter((tag) => initialTags.some((t) => t.id === tag.id));

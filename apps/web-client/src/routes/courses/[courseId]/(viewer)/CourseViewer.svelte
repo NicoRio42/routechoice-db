@@ -226,6 +226,10 @@
 </div>
 
 <style>
+	:root {
+		--display-brand-name-small-devices: none;
+	}
+
 	.wrapper {
 		position: relative;
 		flex-shrink: 0;

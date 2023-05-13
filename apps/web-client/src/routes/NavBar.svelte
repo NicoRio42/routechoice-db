@@ -17,7 +17,7 @@
 		<li class="logo-item link-list-item">
 			<a class="logo-link" href="/"
 				><Logo --bg-color="var(--primary)" --width="3rem" --height="3rem" --logo-color="white" />
-				<span class="large">Routechoice DB</span>
+				<span class="brand-name">Routechoice DB</span>
 			</a>
 		</li>
 	</ul>
@@ -134,6 +134,10 @@
 		display: none;
 	}
 
+	:root {
+		--display-brand-name-small-devices: inline;
+	}
+
 	@media screen and (max-width: 768px) {
 		.hamburger-menu {
 			display: block;
@@ -141,6 +145,10 @@
 
 		.large {
 			display: none;
+		}
+
+		.brand-name {
+			display: var(--display-brand-name-small-devices);
 		}
 
 		nav {

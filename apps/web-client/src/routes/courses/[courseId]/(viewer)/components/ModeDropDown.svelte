@@ -2,7 +2,7 @@
 	import { page } from '$app/stores';
 	import ExternalLink from '$lib/components/icons/ExternalLink.svelte';
 	import { SPLITTIMES_BASE_URL } from '$lib/constants.js';
-	import { splittimesProviderKey } from '../../../../environments/environment.js';
+	import { splittimesProviderKey } from '../../../../../environments/environment.js';
 	import { ModesEnum } from '../models/modes.enum.js';
 	import { addSearchParamsToURL } from '../utils.js';
 
