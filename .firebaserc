@@ -1,9 +1,0 @@
-{
-  "projects": {
-    "dev": "routechoice-db-dev",
-    "prod": "routechoice-db",
-    "staging": "routechoice-db-staging"
-  },
-  "targets": {},
-  "etags": {}
-}
