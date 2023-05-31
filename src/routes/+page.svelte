@@ -1,65 +1,35 @@
 <script lang="ts">
-	import { goto, invalidate } from '$app/navigation';
 	import Settings from '$lib/components/icons/Settings.svelte';
 	import Table from '$lib/components/icons/Table.svelte';
 	import Trash from '$lib/components/icons/Trash.svelte';
 	import TagComponent from '$lib/components/TagsSelect/Tag.svelte';
-	import TagsSelect from '$lib/components/TagsSelect/TagsSelect.svelte';
 	import { SPLITTIMES_BASE_URL } from '$lib/constants.js';
-	import type { Course } from '$lib/models/course';
-	import type { Tag } from '$lib/models/tag';
-	import { isUserAdminStore } from '$lib/stores/user.store';
-	import { getFunctions, httpsCallable } from 'firebase/functions';
-	import { fade } from 'svelte/transition';
-	import { splittimesProviderKey } from '../environments/environment.js';
+	import { RolesEnum } from '$lib/models/enums/roles.enum.js';
 
 	export let data;
 
 	let courseCurrentlyDeletedID: string | null = null;
 	let isCourseDeletionLoading = false;
-	let tags: Tag[] = data.tags;
+	// let tags: Tag[] = data.tags;
 
-	const functions = getFunctions(undefined, 'europe-west1');
-	const deleteCourse = httpsCallable(functions, 'deleteCourse');
-
-	async function handleDeleteCourse(course: Course) {
-		if (!confirm('Are you sure to delete this course?')) {
-			return;
-		}
-
-		courseCurrentlyDeletedID = course.id;
-		isCourseDeletionLoading = true;
-
-		try {
-			await deleteCourse(course);
-			invalidate('courses');
-		} catch (error) {
-			alert('An error occured while deleting the course.');
-			console.error(error);
-		} finally {
-			courseCurrentlyDeletedID = null;
-			isCourseDeletionLoading = false;
-		}
-	}
-
-	function handleTagsSelected(event: CustomEvent<Tag[]>) {
-		tags = event.detail;
-		let url = location.pathname;
-		if (tags.length !== 0) url += `?tags=${tags.map((t) => t.id).join(',')}`;
-		goto(url);
-	}
+	// function handleTagsSelected(event: CustomEvent<Tag[]>) {
+	// 	tags = event.detail;
+	// 	let url = location.pathname;
+	// 	if (tags.length !== 0) url += `?tags=${tags.map((t) => t.id).join(',')}`;
+	// 	goto(url);
+	// }
 </script>
 
 <svelte:head>
 	<title>Routechoice DB</title>
 </svelte:head>
 
-<main class="container" in:fade={{ duration: 500 }}>
+<main class="container">
 	<h1>Courses</h1>
 
-	<TagsSelect on:tagsSelect={handleTagsSelected} />
+	<!-- <TagsSelect on:tagsSelect={handleTagsSelected} /> -->
 
-	{#if $isUserAdminStore}
+	{#if data.user.role === RolesEnum.Enum.admin}
 		<a href="courses/add" class="add-course-button" role="button"> Add new course </a>
 	{/if}
 
@@ -68,11 +38,12 @@
 			<thead>
 				<tr>
 					<th>Name</th>
-					<th>Date</th>
+					<th>Start time</th>
+					<th>Publish time</th>
 					<th>Tags</th>
 					<th />
 
-					{#if $isUserAdminStore}
+					{#if data.user.role === RolesEnum.Enum.admin}
 						<th />
 						<th />
 					{/if}
@@ -80,42 +51,44 @@
 			</thead>
 
 			<tbody>
-				{#each data.courses as course (course.id)}
+				{#each data.events as event (event.id)}
 					<tr>
 						<td>
-							<a class="course-link" href="/courses/{course.id}">{course.name}</a>
+							<a class="course-link" href="/events/{event.id}">{event.name}</a>
 						</td>
 
-						<td>{new Date(course.date).toLocaleDateString()}</td>
+						<td>{new Date(event.startTime).toLocaleDateString()}</td>
+
+						<td>{new Date(event.publishTime).toLocaleDateString()}</td>
 
 						<td>
-							{#each course.tags as tag}
+							<!-- {#each course.tags as tag}
 								<TagComponent {tag} />
-							{/each}
+							{/each} -->
 						</td>
 
 						<td class="action-row">
 							<a
 								class="action-icon"
-								href="{SPLITTIMES_BASE_URL}/{splittimesProviderKey}/{course.id}/classes/1"
+								href="{SPLITTIMES_BASE_URL}/routechoice-db-dev/{event.id}/classes/1"
 								target="_blank"
 								rel="noreferrer"><Table /></a
 							>
 						</td>
 
-						{#if $isUserAdminStore}
+						{#if data.user.role === RolesEnum.Enum.admin}
 							<td class="action-row">
-								<a class="action-icon" href="/courses/{course.id}/manager"><Settings /></a>
+								<a class="action-icon" href="/events/{event.id}/manager"><Settings /></a>
 							</td>
 
 							<td class="action-row">
-								<button
+								<!-- <button
 									aria-busy={courseCurrentlyDeletedID === course.id && isCourseDeletionLoading}
 									disabled={isCourseDeletionLoading}
 									on:click={() => handleDeleteCourse(course)}
 									class="action-icon"
 									type="button"><Trash /></button
-								>
+								> -->
 							</td>
 						{/if}
 					</tr>

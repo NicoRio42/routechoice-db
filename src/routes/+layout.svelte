@@ -1,41 +1,19 @@
 <script>
 	import { navigating } from '$app/stores';
-	import { initializeApp } from 'firebase/app';
-	import { getFirestore } from 'firebase/firestore/lite';
-	import { getFunctions } from 'firebase/functions';
-	import firebaseConfig from '../environments/environment.js';
-	import NavBar from './NavBar.svelte';
+	import NavBar from './_components/NavBar.svelte';
 
-	import './pico.min.css';
 	import './global.css';
 	import 'uno.css';
 
-	const fireBaseApp = initializeApp(firebaseConfig);
-	getFunctions(fireBaseApp);
-	getFirestore(fireBaseApp);
+	export let data;
 </script>
 
-<div class="wrapper">
+<div class="relative flex flex-col h-100%">
 	{#if $navigating !== null}
-		<progress />
+		<progress class="fixed h-1 border rounded-none" />
 	{/if}
 
-	<NavBar />
+	<NavBar user={data.user} />
 
 	<slot />
 </div>
-
-<style>
-	.wrapper {
-		position: relative;
-		display: flex;
-		flex-direction: column;
-		height: 100%;
-	}
-
-	progress {
-		position: fixed;
-		height: 0.25rem;
-		border-radius: 0;
-	}
-</style>

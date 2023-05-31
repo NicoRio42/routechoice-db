@@ -59,9 +59,9 @@
 			on:click={() => (showPassword = !showPassword)}
 		>
 			{#if showPassword}
-				<i class="i-tabler-eye-off w-6 h-6" />
+				<i class="i-carbon-view-off w-5 h-5" />
 			{:else}
-				<i class="i-tabler-eye w-6 h-6" />
+				<i class="i-carbon-view w-5 h-5" />
 			{/if}
 		</button>
 	</div>

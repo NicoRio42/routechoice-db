@@ -1,21 +1,17 @@
-<script>
+<script lang="ts">
 	import Hamburger from '$lib/components/icons/Hamburger.svelte';
 	import Logo from '$lib/components/icons/Logo.svelte';
-	import { isUserAdminStore, userStore } from '$lib/stores/user.store';
-	import { getAuth, signOut } from 'firebase/auth';
+	import { RolesEnum } from '$lib/models/enums/roles.enum.js';
+	import type { User } from 'lucia-auth';
+	import ThemeSwitch from './ThemeSwitch.svelte';
 
-	const auth = getAuth();
-
-	async function handleLogout() {
-		await signOut(auth);
-		// window.location.href = `/login?redirectUrl=${$location}`;
-	}
+	export let user: User | undefined;
 </script>
 
-<nav class="container-fluid">
+<nav class="container-fluid border-b-2 border-b-solid border-b-[var(--table-border-color)]">
 	<ul>
-		<li class="logo-item link-list-item">
-			<a class="logo-link" href="/"
+		<li class="link-list-item">
+			<a class="flex items-center gap-4 p-0 text-5 text-[var(--primary)] whitespace-nowrap" href="/"
 				><Logo --bg-color="var(--primary)" --width="3rem" --height="3rem" --logo-color="white" />
 				<span class="brand-name">Routechoice DB</span>
 			</a>
@@ -23,7 +19,7 @@
 	</ul>
 
 	<ul class="large">
-		{#if $isUserAdminStore}
+		{#if user?.role === RolesEnum.enum.admin}
 			<li class="link-list-item">
 				<a href="/users">Users</a>
 			</li>
@@ -34,14 +30,16 @@
 		{/if}
 
 		<li class="menu-list-item">
-			{#if $userStore === null}
+			{#if user === undefined}
 				<a href="/login">Login</a>
+
+				<a href="/signup">Sign up</a>
 			{:else}
 				<details role="list" dir="rtl">
-					<summary aria-haspopup="listbox"> {$userStore?.displayName} </summary>
+					<summary aria-haspopup="listbox"> {user.name} </summary>
 					<ul>
 						<li class="option-item">
-							<button on:click={handleLogout}>Logout</button>
+							<button on:click={console.log}>Logout</button>
 						</li>
 
 						<li class="option-item">
@@ -51,20 +49,24 @@
 				</details>
 			{/if}
 		</li>
+
+		<li class="py-0">
+			<ThemeSwitch />
+		</li>
 	</ul>
 
 	<details role="list" dir="rtl" class="hamburger-menu">
 		<summary aria-haspopup="listbox"> <Hamburger /> </summary>
 		<ul>
-			{#if $userStore !== null}
+			{#if user !== undefined}
 				<li class="option-item">
 					<strong>
-						{$userStore?.displayName}
+						{user.name}
 					</strong>
 				</li>
 
 				<li class="option-item">
-					<button on:click={handleLogout}>Logout</button>
+					<button on:click={console.log}>Logout</button>
 				</li>
 
 				<li class="option-item">
@@ -76,7 +78,7 @@
 				</li>
 			{/if}
 
-			{#if $isUserAdminStore}
+			{#if user?.role === RolesEnum.enum.admin}
 				<li class="option-item">
 					<a href="/users">Users</a>
 				</li>
@@ -90,26 +92,6 @@
 </nav>
 
 <style>
-	nav {
-		border-bottom: 1px solid lightgray;
-		background-color: white;
-	}
-
-	.logo-link {
-		display: flex;
-		align-items: center;
-		gap: 1rem;
-		padding: 0;
-		font-size: 1.25rem;
-		background-color: white;
-		color: var(--primary);
-		white-space: nowrap;
-	}
-
-	nav ul:first-of-type {
-		margin-left: calc(var(--nav-element-spacing-horizontal) * -2);
-	}
-
 	.link-list-item {
 		padding: calc(var(--nav-element-spacing-vertical) / 2) var(--nav-element-spacing-horizontal);
 	}

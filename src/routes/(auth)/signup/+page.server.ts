@@ -19,48 +19,52 @@ export const actions = {
 			return setError(form, null, 'An error occured');
 		}
 
-		const existingUser = await locals.db
-			.select()
+		console.log(form.data, locals.db);
+
+		const sql = locals.db
+			.select({ id: userDBShema.id })
 			.from(userDBShema)
-			.where(eq(userDBShema.name, form.data.name))
-			.all();
+			.where(eq(userDBShema.name, 'form.data.name'))
+			.toSQL();
 
-		console.log(`[LOGGING FROM /signup]: existingUser is`, existingUser, existingUser.length);
+		console.log(sql);
 
-		if (existingUser.length !== 0) {
-			return setError(form, 'name', 'Name allready exists');
-		}
+		// console.log(`[LOGGING FROM /signup]: existingUser is`, existingUser, existingUser.length);
 
-		const existingEmail = await locals.db
-			.select()
-			.from(userDBShema)
-			.where(eq(userDBShema.email, form.data.email))
-			.all();
+		// if (existingUser.length !== 0) {
+		// 	return setError(form, 'name', 'Name allready exists');
+		// }
 
-		if (existingEmail.length !== 0) {
-			return setError(form, 'email', 'Email allready linked to an account');
-		}
+		// const existingEmail = await locals.db
+		// 	.select()
+		// 	.from(userDBShema)
+		// 	.where(eq(userDBShema.email, form.data.email))
+		// 	.all();
 
-		const user = await locals.auth.createUser({
-			primaryKey: {
-				providerId: 'username',
-				providerUserId: form.data.name,
-				password: form.data.password
-			},
-			attributes: {
-				name: form.data.name,
-				email: form.data.email,
-				role: RolesEnum.Enum.default,
-				email_verified: 0
-			}
-		});
+		// if (existingEmail.length !== 0) {
+		// 	return setError(form, 'email', 'Email allready linked to an account');
+		// }
 
-		const session = await locals.auth.createSession(user.id);
-		locals.authRequest.setSession(session);
+		// const user = await locals.auth.createUser({
+		// 	primaryKey: {
+		// 		providerId: 'username',
+		// 		providerUserId: form.data.name,
+		// 		password: form.data.password
+		// 	},
+		// 	attributes: {
+		// 		name: form.data.name,
+		// 		email: form.data.email,
+		// 		role: RolesEnum.Enum.default,
+		// 		email_verified: 0
+		// 	}
+		// });
 
-		const token = await locals.emailVerificationToken.issue(user.id);
-		await sendEmailVerificationEmail(user.email, user.name, token.toString());
+		// const session = await locals.auth.createSession(user.id);
+		// locals.authRequest.setSession(session);
 
-		throw redirect(302, '/');
+		// const token = await locals.emailVerificationToken.issue(user.id);
+		// await sendEmailVerificationEmail(user.email, user.name, token.toString());
+
+		// throw redirect(302, '/');
 	}
 };

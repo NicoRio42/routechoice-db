@@ -129,7 +129,7 @@ export const runnerLeg = sqliteTable('runner_leg', {
 // AUTH
 
 export const user = sqliteTable('auth_user', {
-	id: integer('id').primaryKey({ autoIncrement: true }),
+	id: text('id').primaryKey(),
 	name: text('name').notNull(),
 	email: text('email').notNull(),
 	emailVerified: integer('email_verified').default(0).notNull(),
@@ -142,7 +142,7 @@ export type User = InferModel<typeof user>;
 export type InsertUser = InferModel<typeof user, 'insert'>;
 
 export const session = sqliteTable('auth_session', {
-	id: integer('id').primaryKey({ autoIncrement: true }),
+	id: text('id').primaryKey(),
 	userId: text('user_id')
 		.notNull()
 		.references(() => user.id, { onDelete: 'cascade' }),
@@ -151,7 +151,7 @@ export const session = sqliteTable('auth_session', {
 });
 
 export const key = sqliteTable('auth_key', {
-	id: integer('id').primaryKey({ autoIncrement: true }),
+	id: text('id').primaryKey(),
 	userId: text('user_id')
 		.notNull()
 		.references(() => user.id, { onDelete: 'cascade' }),

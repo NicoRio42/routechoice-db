@@ -1,8 +1,8 @@
 <script>
 	import { superForm } from 'sveltekit-superforms/client';
 	import { signUpFormSchema } from './schema';
-	import TextField from '$lib/components/TextField.svelte';
-	import PasswordField from '$lib/components/PasswordField.svelte';
+	import TextField from '$lib/components/form-fields/TextField.svelte';
+	import PasswordField from '$lib/components/form-fields/PasswordField.svelte';
 
 	export let data;
 
