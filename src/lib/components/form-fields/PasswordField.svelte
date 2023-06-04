@@ -29,7 +29,7 @@
 		{label}
 	{/if}
 
-	<div class="relative m-0" data-invalid={shouldDisplayInvalidState()}>
+	<div class="relative mt-0 mb-[--spacing]" data-invalid={shouldDisplayInvalidState()}>
 		{#if showPassword}
 			<input
 				name={String(field)}
@@ -59,9 +59,9 @@
 			on:click={() => (showPassword = !showPassword)}
 		>
 			{#if showPassword}
-				<i class="i-carbon-view-off w-5 h-5" />
+				<i class="i-tabler-eye-off w-6 h-6" />
 			{:else}
-				<i class="i-carbon-view w-5 h-5" />
+				<i class="i-tabler-eye w-6 h-6" />
 			{/if}
 		</button>
 	</div>

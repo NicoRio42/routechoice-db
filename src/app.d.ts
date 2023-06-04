@@ -18,7 +18,7 @@ declare global {
 
 		interface Platform {
 			env?: {
-				ROUTECHOICE_DB: D1Database;
+				TODO_LIST_DB: D1Database;
 			};
 		}
 	}

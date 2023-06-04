@@ -1,7 +1,4 @@
 <script lang="ts">
-	import Settings from '$lib/components/icons/Settings.svelte';
-	import Table from '$lib/components/icons/Table.svelte';
-	import Trash from '$lib/components/icons/Trash.svelte';
 	import TagComponent from '$lib/components/TagsSelect/Tag.svelte';
 	import { SPLITTIMES_BASE_URL } from '$lib/constants.js';
 	import { RolesEnum } from '$lib/models/enums/roles.enum.js';
@@ -25,15 +22,15 @@
 </svelte:head>
 
 <main class="container">
-	<h1>Courses</h1>
+	<h1 class="mt-4 mb-6">Events</h1>
 
 	<!-- <TagsSelect on:tagsSelect={handleTagsSelected} /> -->
 
 	{#if data.user.role === RolesEnum.Enum.admin}
-		<a href="courses/add" class="add-course-button" role="button"> Add new course </a>
+		<a href="events/add" role="button"> Add new event </a>
 	{/if}
 
-	<div class="table-wrapper">
+	<figure class="mt-4">
 		<table>
 			<thead>
 				<tr>
@@ -54,12 +51,12 @@
 				{#each data.events as event (event.id)}
 					<tr>
 						<td>
-							<a class="course-link" href="/events/{event.id}">{event.name}</a>
+							<a href="/events/{event.id}">{event.name}</a>
 						</td>
 
-						<td>{new Date(event.startTime).toLocaleDateString()}</td>
+						<td>{new Date(event.startTime).toLocaleString()}</td>
 
-						<td>{new Date(event.publishTime).toLocaleDateString()}</td>
+						<td>{new Date(event.publishTime).toLocaleString()}</td>
 
 						<td>
 							<!-- {#each course.tags as tag}
@@ -67,62 +64,34 @@
 							{/each} -->
 						</td>
 
-						<td class="action-row">
+						<td class="text-right">
 							<a
-								class="action-icon"
 								href="{SPLITTIMES_BASE_URL}/routechoice-db-dev/{event.id}/classes/1"
 								target="_blank"
-								rel="noreferrer"><Table /></a
+								rel="noreferrer"
 							>
+								<i class="i-carbon-table-shortcut w-5 h-5 block" />
+							</a>
 						</td>
 
 						{#if data.user.role === RolesEnum.Enum.admin}
-							<td class="action-row">
-								<a class="action-icon" href="/events/{event.id}/manager"><Settings /></a>
+							<td class="text-right">
+								<a href="/events/{event.id}/manager">
+									<i class="i-carbon-settings-adjust w-5 h-5 block" />
+								</a>
 							</td>
 
-							<td class="action-row">
-								<!-- <button
-									aria-busy={courseCurrentlyDeletedID === course.id && isCourseDeletionLoading}
-									disabled={isCourseDeletionLoading}
-									on:click={() => handleDeleteCourse(course)}
-									class="action-icon"
-									type="button"><Trash /></button
-								> -->
+							<td class="text-right">
+								<form action="/events/{event.id}/delete" method="post" class="m-0 p-0">
+									<button type="submit" class="btn-unset">
+										<i class="i-carbon-trash-can w-5 h-5 block" />
+									</button>
+								</form>
 							</td>
 						{/if}
 					</tr>
 				{/each}
 			</tbody>
 		</table>
-	</div>
+	</figure>
 </main>
-
-<style>
-	.add-course-button {
-		width: fit-content;
-		margin-top: 1rem;
-	}
-
-	.course-link {
-		margin-right: 1rem;
-	}
-
-	.action-row {
-		text-align: right;
-	}
-
-	.action-icon {
-		display: contents;
-		background-color: transparent;
-		color: var(--h1-color);
-		margin: 0;
-		padding: 0;
-		cursor: pointer;
-	}
-
-	.table-wrapper {
-		overflow-x: auto;
-		position: relative;
-	}
-</style>

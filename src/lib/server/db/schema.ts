@@ -2,6 +2,8 @@ import { sqliteTable, text, integer, customType, primaryKey, real } from 'drizzl
 import type { InferModel } from 'drizzle-orm';
 import { RolesEnum } from '../../models/enums/roles.enum.js';
 import { RunnerStatusEnum } from '../../models/enums/runner-status.enum.js';
+// import { RolesEnum } from '../../models/enums/roles.enum';
+// import { RunnerStatusEnum } from '../../models/enums/runner-status.enum';
 
 const boolean = customType<{ data: boolean }>({
 	dataType() {
@@ -16,16 +18,18 @@ const boolean = customType<{ data: boolean }>({
 });
 
 export const event = sqliteTable('event', {
-	id: integer('id').primaryKey({ autoIncrement: true }),
+	id: text('id').primaryKey(),
 	name: text('name').notNull(),
 	startTime: integer('start_time', { mode: 'timestamp' }).notNull(),
 	finishTime: integer('finish_time', { mode: 'timestamp' }).notNull(),
 	publishTime: integer('publish_time', { mode: 'timestamp' }).notNull()
 });
 
+export type Event = InferModel<typeof event>;
+
 export const liveEvent = sqliteTable('live_event', {
-	id: integer('id').primaryKey({ autoIncrement: true }),
-	fkEvent: integer('fk_event')
+	id: text('id').primaryKey(),
+	fkEvent: text('fk_event')
 		.notNull()
 		.references(() => event.id, { onDelete: 'cascade' }),
 	liveProvider: text('live_provider').notNull(),
@@ -34,46 +38,45 @@ export const liveEvent = sqliteTable('live_event', {
 });
 
 export const tag = sqliteTable('tag', {
-	id: integer('id').primaryKey({ autoIncrement: true }),
+	id: text('id').primaryKey(),
 	name: text('name').notNull(),
 	color: text('color').notNull()
 });
 
-// TODO multiple field pk
 export const assoEventTag = sqliteTable(
 	'asso_event_tag',
 	{
-		fkEvent: integer('fk_event').references(() => event.id, { onDelete: 'cascade' }),
-		fkTag: integer('fk_tag').references(() => tag.id, { onDelete: 'cascade' })
+		fkEvent: text('fk_event').references(() => event.id, { onDelete: 'cascade' }),
+		fkTag: text('fk_tag').references(() => tag.id, { onDelete: 'cascade' })
 	},
 	(table) => ({ pk: primaryKey(table.fkEvent, table.fkTag) })
 );
 
 export const leg = sqliteTable('leg', {
-	id: integer('id').primaryKey({ autoIncrement: true }),
-	fkEvent: integer('fk_event')
+	id: text('id').primaryKey(),
+	fkEvent: text('fk_event')
 		.notNull()
 		.references(() => event.id, { onDelete: 'cascade' }),
-	fkStartControlPoint: integer('fk_start_control_point')
+	fkStartControlPoint: text('fk_start_control_point')
 		.notNull()
 		.references(() => controlPoint.id, { onDelete: 'cascade' }),
-	fkFinishControlPoint: integer('fk_finish_control_point')
+	fkFinishControlPoint: text('fk_finish_control_point')
 		.notNull()
 		.references(() => controlPoint.id, { onDelete: 'cascade' })
 });
 
 export const controlPoint = sqliteTable('control_point', {
-	id: integer('id').primaryKey({ autoIncrement: true }),
+	id: text('id').primaryKey(),
 	code: text('code').notNull(),
 	longitude: real('longitude').notNull(),
 	latitude: real('latitude').notNull()
 });
 
 export const routechoice = sqliteTable('routechoice', {
-	id: integer('id').primaryKey({ autoIncrement: true }),
+	id: text('id').primaryKey(),
 	name: text('name').notNull(),
 	color: text('color').notNull(),
-	fkLeg: integer('fk_leg')
+	fkLeg: text('fk_leg')
 		.notNull()
 		.references(() => leg.id, { onDelete: 'cascade' }),
 	longitudes: text('longitudes').notNull(),
@@ -82,18 +85,18 @@ export const routechoice = sqliteTable('routechoice', {
 });
 
 export const runner = sqliteTable('runner', {
-	id: integer('id').primaryKey({ autoIncrement: true }),
-	tracking_device_id: text('id'),
-	fkEvent: integer('fk_event')
+	id: text('id').primaryKey(),
+	trackingDeviceId: text('tracking_device_id'),
+	fkEvent: text('fk_event')
 		.notNull()
 		.references(() => event.id, { onDelete: 'cascade' }),
-	fkUser: integer('fk_user').references(() => user.id, { onDelete: 'set null' }), // unique
+	fkUser: text('fk_user').references(() => user.id, { onDelete: 'set null' }), // unique
 	status: text('status', {
 		enum: [RunnerStatusEnum.Enum.ok, RunnerStatusEnum.Enum['not-ok']]
 	}).notNull(),
-	first_name: text('first_name').notNull(),
-	last_name: text('last_name').notNull(),
-	start_time: integer('start_time', { mode: 'timestamp' }).notNull(),
+	firstName: text('first_name').notNull(),
+	lastName: text('last_name').notNull(),
+	startTime: integer('start_time', { mode: 'timestamp' }).notNull(),
 	time: integer('time'),
 	rank: integer('rank'),
 	timeBehind: integer('time_behind'),
@@ -102,17 +105,17 @@ export const runner = sqliteTable('runner', {
 });
 
 export const runnerLeg = sqliteTable('runner_leg', {
-	id: integer('id').primaryKey({ autoIncrement: true }),
-	fkDetectedRoutechoice: integer('fk_detected_routechoice').references(() => routechoice.id, {
+	id: text('id').primaryKey(),
+	fkDetectedRoutechoice: text('fk_detected_routechoice').references(() => routechoice.id, {
 		onDelete: 'cascade'
 	}),
-	fkManualRoutechoice: integer('fk_manual_routechoice').references(() => routechoice.id, {
+	fkManualRoutechoice: text('fk_manual_routechoice').references(() => routechoice.id, {
 		onDelete: 'cascade'
 	}),
-	fkLeg: integer('fk_leg')
+	fkLeg: text('fk_leg')
 		.notNull()
 		.references(() => leg.id, { onDelete: 'cascade' }),
-	fkRunner: integer('fk_runner')
+	fkRunner: text('fk_runner')
 		.notNull()
 		.references(() => runner.id, { onDelete: 'cascade' }),
 	timeOverall: integer('time_overall').notNull(),

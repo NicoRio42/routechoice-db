@@ -1,4 +1,4 @@
-import { NUMBERS } from '$lib/constants.js';
+import { NUMBERS } from '$lib/constants';
 import { z } from 'zod';
 
 export const signUpFormSchema = z

@@ -1,5 +1,6 @@
 import { event } from '$lib/server/db/schema.js';
 import { redirect } from '@sveltejs/kit';
+import { desc } from 'drizzle-orm';
 
 export async function load({ url, locals }) {
 	const { user } = await locals.authRequest.validateUser();
@@ -8,7 +9,7 @@ export async function load({ url, locals }) {
 
 	const tagsIds = getTagsFromSearchParams(url);
 
-	const events = await locals.db.select().from(event).all();
+	const events = await locals.db.select().from(event).orderBy(desc(event.startTime)).all();
 
 	return { events, user };
 }

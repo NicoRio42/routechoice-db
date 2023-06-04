@@ -1,6 +1,6 @@
 <script lang="ts">
 	import { superForm } from 'sveltekit-superforms/client';
-	import { loginFormSchema } from './schema.js';
+	import { loginFormSchema } from './schema';
 	import TextField from '$lib/components/form-fields/TextField.svelte';
 	import PasswordField from '$lib/components/form-fields/PasswordField.svelte';
 
