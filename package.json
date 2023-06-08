@@ -48,7 +48,7 @@
 		"drizzle-orm": "^0.25.4",
 		"linkedom": "^0.14.26",
 		"lucia-auth": "^1.5.0",
-		"orienteering-js": "^0.0.20",
+		"orienteering-js": "^0.0.23",
 		"wrangler": "^3.0.0"
 	}
 }

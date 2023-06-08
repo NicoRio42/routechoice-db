@@ -4,9 +4,11 @@ import { eq } from 'drizzle-orm';
 
 export const actions = {
 	default: async ({ locals, params: { eventId } }) => {
-		const eventIdInt = parseInt(eventId, 10);
-		if (isNaN(eventIdInt)) throw fail(400);
-		await locals.db.delete(event).where(eq(event.id, eventIdInt)).run();
+		const { user } = await locals.authRequest.validateUser();
+		if (!user) throw redirect(302, '/login');
+		if (user.emailVerified === 0) throw redirect(302, '/email-verification');
+
+		await locals.db.delete(event).where(eq(event.id, eventId)).run();
 
 		throw redirect(302, '/');
 	}

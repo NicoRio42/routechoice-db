@@ -23,8 +23,8 @@ dependencies:
     specifier: ^1.5.0
     version: 1.5.0
   orienteering-js:
-    specifier: ^0.0.20
-    version: 0.0.20(zod@3.21.4)
+    specifier: ^0.0.23
+    version: 0.0.23(zod@3.21.4)
   wrangler:
     specifier: ^3.0.0
     version: 3.0.0
@@ -2877,8 +2877,8 @@ packages:
       word-wrap: 1.2.3
     dev: true
 
-  /orienteering-js@0.0.20(zod@3.21.4):
-    resolution: {integrity: sha512-3MEuWrQMOfigW7/ofIa2CXHOeV/0gG74OM8HIF526zN+/WsNkzv4fzNORywjR887vKIWw6ZWZ6AtukLVgW5avw==}
+  /orienteering-js@0.0.23(zod@3.21.4):
+    resolution: {integrity: sha512-S6TmwDRdntx2mJHhvq7Syp20syVopHC3TRODPnjTKRjuafY2IabEhuPeyuKgNWlkQzBrf6M3CbawaixRaXnUNQ==}
     peerDependencies:
       zod: ^3.21.4
     dependencies:

@@ -29,12 +29,16 @@
 				</li>
 			{/if}
 
-			<li class="py-0 large">
-				{#if user === undefined}
+			{#if user === undefined}
+				<li class="py-0 large">
 					<a href="/login">Login</a>
+				</li>
 
+				<li class="py-0 large">
 					<a href="/signup">Sign up</a>
-				{:else}
+				</li>
+			{:else}
+				<li class="py-0 large">
 					<details role="list" dir="rtl">
 						<summary aria-haspopup="listbox"> {user.name} </summary>
 						<ul>
@@ -47,8 +51,8 @@
 							</li>
 						</ul>
 					</details>
-				{/if}
-			</li>
+				</li>
+			{/if}
 
 			<li class="py-0">
 				<ThemeSwitch />

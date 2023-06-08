@@ -8,9 +8,11 @@ CREATE TABLE `asso_event_tag` (
 --> statement-breakpoint
 CREATE TABLE `control_point` (
 	`id` text PRIMARY KEY NOT NULL,
+	`fk_event` text NOT NULL,
 	`code` text NOT NULL,
 	`longitude` real NOT NULL,
-	`latitude` real NOT NULL
+	`latitude` real NOT NULL,
+	FOREIGN KEY (`fk_event`) REFERENCES `event`(`id`) ON DELETE cascade
 );
 --> statement-breakpoint
 CREATE TABLE `event` (

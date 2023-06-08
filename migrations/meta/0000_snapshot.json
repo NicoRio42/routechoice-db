@@ -1,7 +1,7 @@
 {
   "version": "5",
   "dialect": "sqlite",
-  "id": "82a11c55-3754-4090-add0-a06109635e63",
+  "id": "c35a22cf-1f7e-4892-bfa0-7f2ad89782ca",
   "prevId": "00000000-0000-0000-0000-000000000000",
   "tables": {
     "asso_event_tag": {
@@ -65,6 +65,12 @@
           "primaryKey": true,
           "notNull": true
         },
+        "fk_event": {
+          "name": "fk_event",
+          "type": "text",
+          "primaryKey": false,
+          "notNull": true
+        },
         "code": {
           "name": "code",
           "type": "text",
@@ -85,7 +91,20 @@
         }
       },
       "indexes": {},
-      "foreignKeys": {},
+      "foreignKeys": {
+        "control_point_fk_event_event_id_fk": {
+          "name": "control_point_fk_event_event_id_fk",
+          "tableFrom": "control_point",
+          "tableTo": "event",
+          "columnsFrom": [
+            "fk_event"
+          ],
+          "columnsTo": [
+            "id"
+          ],
+          "onDelete": "cascade"
+        }
+      },
       "compositePrimaryKeys": {}
     },
     "event": {

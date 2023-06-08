@@ -32,10 +32,6 @@ export const addEventSchema = z
 		publishTime: arg.publishTime + arg.timeZoneOffset * 60000,
 		finishTime: arg.finishTime + arg.timeZoneOffset * 60000
 	}))
-	.refine((data) => data.startTime <= data.publishTime, {
-		message: 'Publish time should be after start time',
-		path: ['publishTime']
-	})
 	.refine((data) => data.startTime <= data.finishTime, {
 		message: 'Finish time should be after start time',
 		path: ['finishTime']

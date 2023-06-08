@@ -15,6 +15,9 @@
 				Course and routechoices
 			</a>
 		</li>
-		<li>Split times</li>
+
+		<li>
+			<a href="/events/{data.event.id}/manager/split-times"> Split times </a>
+		</li>
 	</ol>
 </main>

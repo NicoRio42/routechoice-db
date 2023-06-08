@@ -1,10 +1,14 @@
 import { fail, redirect } from '@sveltejs/kit';
-import { parseIOFXML3CourseOCADExport, parseGPXRoutechoicesOCADExport } from 'orienteering-js/ocad';
 import { DOMParser } from 'linkedom';
 import { controlPoint, routechoice, leg } from '$lib/server/db/schema.js';
+import { parseIOFXML3CourseOCADExport, parseGPXRoutechoicesOCADExport } from 'orienteering-js/ocad';
 
 export const actions = {
 	default: async ({ locals, request, params: { eventId } }) => {
+		const { user } = await locals.authRequest.validateUser();
+		if (!user) throw redirect(302, '/login');
+		if (user.emailVerified === 0) throw redirect(302, '/email-verification');
+
 		const formData = await request.formData();
 
 		const courseFile = formData.get('courseFile');
@@ -18,90 +22,86 @@ export const actions = {
 		const routechoicesFile = formData.get('routechoicesFile');
 		if (!(routechoicesFile instanceof File)) return fail(400);
 
-		const eventIDInt = parseInt(eventId, 10);
-		if (isNaN(eventIDInt)) return fail(400);
+		const courseRaw = await courseFile.text();
+		const parser = new DOMParser();
+		const courseDoc = parser.parseFromString(courseRaw, 'text/xml');
 
-		try {
-			const courseRaw = await courseFile.text();
-			const parser = new DOMParser();
-			const courseDoc = parser.parseFromString(courseRaw, 'text/xml');
+		const [controls, legs] = parseIOFXML3CourseOCADExport(
+			courseDoc as any as XMLDocument,
+			classIndex
+		);
 
-			const [controls, legs] = parseIOFXML3CourseOCADExport(
-				courseDoc as any as XMLDocument,
-				classIndex
-			);
+		const legsMap: Record<string, [string, string]> = {};
 
-			const routechoicesRaw = await routechoicesFile.text();
-			const routechoicesDoc = parser.parseFromString(routechoicesRaw, 'text/xml');
+		legs.forEach((leg) => {
+			const startControl = controls.find((c) => c.code === leg.startControlCode);
+			const finishControl = controls.find((c) => c.code === leg.finishControlCode);
 
-			const legsWithRoutechoices = parseGPXRoutechoicesOCADExport(
-				routechoicesDoc as any as XMLDocument,
-				legs
-			);
+			if (startControl === undefined || finishControl === undefined)
+				throw new Error('Control point not found');
 
-			await locals.db.transaction(async (tx) => {
-				const controlPointsMap: Record<string, number> = {};
+			legsMap[leg.id] = [startControl.id, finishControl.id];
+		});
 
-				controls.forEach(async (control) => {
-					const { id } = await tx
-						.insert(controlPoint)
-						.values({
-							code: control.code,
-							latitude: control.lat,
-							longitude: control.lon
-						})
-						.returning()
-						.get();
+		const routechoicesRaw = await routechoicesFile.text();
+		const routechoicesDoc = parser.parseFromString(routechoicesRaw, 'text/xml');
 
-					console.log(id);
-					controlPointsMap[control.code] = id;
-				});
+		const legsWithRoutechoices = parseGPXRoutechoicesOCADExport(
+			routechoicesDoc as any as XMLDocument,
+			legs
+		);
 
-				legsWithRoutechoices.forEach(async (lg) => {
-					const fkStartControlPoint = controlPointsMap[lg.startControlCode];
-					const fkFinishControlPoint = controlPointsMap[lg.finishControlCode];
-
-					if (fkStartControlPoint === undefined || fkFinishControlPoint === undefined) {
-						// console.log(lg);
-						throw new Error('Control point not found');
-					}
-
-					const { id } = await tx
-						.insert(leg)
-						.values({
-							fkEvent: eventIDInt,
-							fkStartControlPoint,
-							fkFinishControlPoint
-						})
-						.returning()
-						.get();
-
-					lg.routechoices.forEach(async (rc) => {
-						const [latitudes, longitudes] = rc.track.reduce(
-							(acc, current) => {
-								return [`${acc[0]};${current[0]}`, `${acc[1]};${current[1]}`];
-							},
-							['', '']
-						);
-
-						await tx
-							.insert(routechoice)
-							.values({
-								color: rc.color,
-								latitudes,
-								longitudes,
-								length: rc.length,
-								name: rc.name,
-								fkLeg: id
-							})
-							.run();
-					});
-				});
-
-				throw redirect(302, `/events/${eventId}/manager/split-times`);
+		await locals.db.transaction(async (tx) => {
+			controls.forEach(async (control) => {
+				await tx
+					.insert(controlPoint)
+					.values({
+						id: control.id,
+						fkEvent: eventId,
+						code: control.code,
+						latitude: control.lat,
+						longitude: control.lon
+					})
+					.returning()
+					.get();
 			});
-		} catch (e) {
-			return fail(400);
-		}
+
+			legsWithRoutechoices.forEach(async (lg) => {
+				const [fkStartControlPoint, fkFinishControlPoint] = legsMap[lg.id];
+
+				if (fkStartControlPoint === undefined || fkFinishControlPoint === undefined) {
+					throw new Error('Control point not found');
+				}
+
+				await tx
+					.insert(leg)
+					.values({ id: lg.id, fkEvent: eventId, fkFinishControlPoint, fkStartControlPoint })
+					.run();
+
+				lg.routechoices.forEach(async (rc) => {
+					const [latitudes, longitudes] = rc.track.reduce(
+						(acc, current) => {
+							return [`${acc[0]};${current[0]}`, `${acc[1]};${current[1]}`];
+						},
+						['', '']
+					);
+
+					await tx
+						.insert(routechoice)
+						.values({
+							color: rc.color,
+							fkLeg: lg.id,
+							id: rc.id,
+							latitudes,
+							longitudes,
+							length: rc.length,
+							name: rc.name
+						})
+						.run();
+				});
+			});
+
+			throw redirect(302, `/events/${eventId}/manager/split-times`);
+		});
 	}
 };

@@ -67,6 +67,9 @@ export const leg = sqliteTable('leg', {
 
 export const controlPoint = sqliteTable('control_point', {
 	id: text('id').primaryKey(),
+	fkEvent: text('fk_event')
+		.notNull()
+		.references(() => event.id, { onDelete: 'cascade' }),
 	code: text('code').notNull(),
 	longitude: real('longitude').notNull(),
 	latitude: real('latitude').notNull()
