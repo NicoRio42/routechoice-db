@@ -15,7 +15,9 @@
 		</li>
 
 		<li>
-			<a href="/events/{data.event.id}/manager/split-times/local-file">Runner attribution</a>
+			<a href="/events/{data.event.id}/manager/split-times/runners-attribution"
+				>Runner attribution</a
+			>
 		</li>
 	</ul>
 </main>

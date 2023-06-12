@@ -8,6 +8,13 @@
       "when": 1686251552516,
       "tag": "0000_quiet_red_shift",
       "breakpoints": true
+    },
+    {
+      "idx": 1,
+      "version": "5",
+      "when": 1686258046650,
+      "tag": "0001_perpetual_sprite",
+      "breakpoints": true
     }
   ]
 }

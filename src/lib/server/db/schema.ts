@@ -89,11 +89,12 @@ export const routechoice = sqliteTable('routechoice', {
 
 export const runner = sqliteTable('runner', {
 	id: text('id').primaryKey(),
-	trackingDeviceId: text('tracking_device_id'),
 	fkEvent: text('fk_event')
 		.notNull()
 		.references(() => event.id, { onDelete: 'cascade' }),
 	fkUser: text('fk_user').references(() => user.id, { onDelete: 'set null' }), // unique
+	fkLiveEvent: text('fk_live_event').references(() => liveEvent.id, { onDelete: 'set null' }), // unique
+	trackingDeviceId: text('tracking_device_id'),
 	status: text('status', {
 		enum: [RunnerStatusEnum.Enum.ok, RunnerStatusEnum.Enum['not-ok']]
 	}).notNull(),

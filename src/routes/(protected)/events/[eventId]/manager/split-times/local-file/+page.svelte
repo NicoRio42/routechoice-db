@@ -81,10 +81,10 @@
 
 <p>
 	&#62;
-	<a href="/courses/{data.event.id}/manager">{data.event.name}</a>
+	<a href="/events/{data.event.id}/manager">{data.event.name}</a>
 
 	&#62;
-	<a href="/courses/{data.event.id}/manager/split-times">Split times</a>
+	<a href="/events/{data.event.id}/manager/split-times">Split times</a>
 </p>
 
 <form class="wrapper" method="post" enctype="multipart/form-data" use:enhance>
