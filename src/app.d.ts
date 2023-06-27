@@ -4,6 +4,7 @@ import type { User as UserFromDB } from '$lib/server/db/schema';
 import type { RolesEnum } from '$lib/models/enums/roles.enum.ts';
 import type { BetterSQLite3Database } from 'drizzle-orm/better-sqlite3';
 import type { DrizzleD1Database } from 'drizzle-orm/d1';
+import type * as schema from '$lib/server/db/schema.js';
 
 // for information about these interfaces
 declare global {
@@ -18,7 +19,7 @@ declare global {
 
 		interface Platform {
 			env?: {
-				TODO_LIST_DB: D1Database;
+				TODO_LIST_DB: DrizzleD1Database<typeof schema>;
 			};
 		}
 	}

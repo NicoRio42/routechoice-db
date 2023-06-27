@@ -1,3 +1,9 @@
+<script lang="ts">
+	export let data;
+
+	console.log(data);
+</script>
+
 <!-- <script lang="ts">
 	import Logo from '$lib/components/Logo.svelte';
 	import { buildRunnersTracksFromLoggatorData } from 'orienteering-js/loggator';

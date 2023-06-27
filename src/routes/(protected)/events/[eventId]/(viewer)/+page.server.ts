@@ -1,3 +1,4 @@
+import { assignRunnerTracksFromLiveEvent } from '$lib/helpers.js';
 import {
 	event as eventTable,
 	liveEvent as liveEventTable,
@@ -7,8 +8,21 @@ import {
 import { error } from '@sveltejs/kit';
 import { eq } from 'drizzle-orm';
 
-export const load = async ({ params: { eventId }, locals }) => {
-	const event = await locals.db;
+export const load = async ({ params: { eventId }, locals, fetch }) => {
+	const event = await locals.db.query.event.findFirst({
+		where: eq(eventTable.id, eventId),
+		with: {
+			liveEvents: true,
+			runners: { with: { legs: true } },
+			legs: { with: { routechoices: true } },
+			controlPoints: true
+		}
+	});
+
+	// TODO might be fixed in next version of Drizzle
+	assignRunnerTracksFromLiveEvent(event as any, fetch);
+
+	return { event };
 
 	// const rawEvent = await locals.db
 	// 	.select({

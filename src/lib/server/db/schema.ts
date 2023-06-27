@@ -1,5 +1,5 @@
 import { sqliteTable, text, integer, customType, primaryKey, real } from 'drizzle-orm/sqlite-core';
-import type { InferModel } from 'drizzle-orm';
+import { relations, type InferModel } from 'drizzle-orm';
 import { RolesEnum } from '../../models/enums/roles.enum.js';
 import { RunnerStatusEnum } from '../../models/enums/runner-status.enum.js';
 // import { RolesEnum } from '../../models/enums/roles.enum';
@@ -25,6 +25,13 @@ export const event = sqliteTable('event', {
 	publishTime: integer('publish_time', { mode: 'timestamp' }).notNull()
 });
 
+export const eventsRelations = relations(event, ({ many }) => ({
+	liveEvents: many(liveEvent),
+	runners: many(runner),
+	legs: many(leg),
+	controlPoints: many(controlPoint)
+}));
+
 export type Event = InferModel<typeof event>;
 
 export const liveEvent = sqliteTable('live_event', {
@@ -36,6 +43,15 @@ export const liveEvent = sqliteTable('live_event', {
 	url: text('url').notNull(),
 	isPrimary: boolean('is_primary').notNull()
 });
+
+export type LiveEvent = InferModel<typeof liveEvent>;
+
+export const liveEventsRelations = relations(liveEvent, ({ one }) => ({
+	event: one(event, {
+		fields: [liveEvent.fkEvent],
+		references: [event.id]
+	})
+}));
 
 export const tag = sqliteTable('tag', {
 	id: text('id').primaryKey(),
@@ -65,6 +81,14 @@ export const leg = sqliteTable('leg', {
 		.references(() => controlPoint.id, { onDelete: 'cascade' })
 });
 
+export const legsRelations = relations(leg, ({ one, many }) => ({
+	event: one(event, {
+		fields: [leg.fkEvent],
+		references: [event.id]
+	}),
+	routechoices: many(routechoice)
+}));
+
 export const controlPoint = sqliteTable('control_point', {
 	id: text('id').primaryKey(),
 	fkEvent: text('fk_event')
@@ -74,6 +98,13 @@ export const controlPoint = sqliteTable('control_point', {
 	longitude: real('longitude').notNull(),
 	latitude: real('latitude').notNull()
 });
+
+export const controlPointsRelations = relations(controlPoint, ({ one }) => ({
+	event: one(event, {
+		fields: [controlPoint.fkEvent],
+		references: [event.id]
+	})
+}));
 
 export const routechoice = sqliteTable('routechoice', {
 	id: text('id').primaryKey(),
@@ -86,6 +117,13 @@ export const routechoice = sqliteTable('routechoice', {
 	latitudes: text('latitudes').notNull(),
 	length: integer('length').notNull()
 });
+
+export const routechoicesRelations = relations(routechoice, ({ one }) => ({
+	event: one(leg, {
+		fields: [routechoice.fkLeg],
+		references: [leg.id]
+	})
+}));
 
 export const runner = sqliteTable('runner', {
 	id: text('id').primaryKey(),
@@ -107,6 +145,16 @@ export const runner = sqliteTable('runner', {
 	totalTimeLost: integer('total_time_lost').notNull().default(0),
 	timeOffset: integer('time_offset').notNull().default(0)
 });
+
+export const runnersRelations = relations(runner, ({ one, many }) => ({
+	event: one(event, {
+		fields: [runner.fkEvent],
+		references: [event.id]
+	}),
+	legs: many(runnerLeg)
+}));
+
+export type Runner = InferModel<typeof runner>;
 
 export const runnerLeg = sqliteTable('runner_leg', {
 	id: text('id').primaryKey(),
@@ -132,6 +180,13 @@ export const runnerLeg = sqliteTable('runner_leg', {
 	timeLoss: integer('time_loss').notNull(),
 	routechoiceTimeLoss: integer('routechoice_time_loss').notNull()
 });
+
+export const runnerLegsRelations = relations(runnerLeg, ({ one }) => ({
+	event: one(runner, {
+		fields: [runnerLeg.fkRunner],
+		references: [runner.id]
+	})
+}));
 
 // AUTH
 

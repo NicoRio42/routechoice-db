@@ -1,4 +1,5 @@
 import { GPS_PROVIDERS } from './constants.js';
+import type { LiveEvent, Runner } from './server/db/schema.js';
 
 export function extractLiveProviderAndEventIdFromUrl(
 	url: string
@@ -31,3 +32,12 @@ export function formatDateForDateInput(date: Date): string {
 export function formatDateTimeForDateTimeInput(date: Date): string {
 	return `${formatDateForDateInput(date)}T${date.toLocaleTimeString()}`;
 }
+
+type Event = {
+	liveEvents: LiveEvent[];
+	runners: Runner[];
+};
+
+type Fetch = typeof fetch;
+
+export function assignRunnerTracksFromLiveEvent(event: Event, fetch: Fetch) {}

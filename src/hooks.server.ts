@@ -4,16 +4,19 @@ import { idToken } from '@lucia-auth/tokens';
 import type { Handle } from '@sveltejs/kit';
 import type { Database } from 'better-sqlite3';
 import { drizzle, type BetterSQLite3Database } from 'drizzle-orm/better-sqlite3';
+import { drizzle as drizzleD1 } from 'drizzle-orm/d1';
 import lucia from 'lucia-auth';
 import { sveltekit } from 'lucia-auth/middleware';
-import { drizzle as drizzleD1 } from 'drizzle-orm/d1';
+import * as schema from '$lib/server/db/schema.js';
 
 export const handle: Handle = async ({ event, resolve }) => {
 	if (building) return await resolve(event);
 
 	const db = await getDatabaseInstance(event.platform);
+	// @ts-ignore
 	event.locals.db = getDrizzleInstance(db);
 
+	// @ts-ignore
 	const auth = getAuth(db);
 	event.locals.auth = auth;
 	event.locals.authRequest = auth.handleRequest(event);
@@ -37,9 +40,9 @@ let drizzleInstance: BetterSQLite3Database;
 
 function getDrizzleInstance(db: Database | D1Database) {
 	if (drizzleInstance !== undefined) return drizzleInstance;
-	if (isD1Database(db)) return drizzleD1(db);
+	if (isD1Database(db)) return drizzleD1(db, { schema });
 
-	return drizzle(db);
+	return drizzle(db, { schema });
 }
 
 function isD1Database(db: Database | D1Database): db is D1Database {
