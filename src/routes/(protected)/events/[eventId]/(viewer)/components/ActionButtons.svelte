@@ -69,7 +69,7 @@
 			? deleteSearchParamsToURL($page.url, 'hideSideBar')
 			: addSearchParamsToURL($page.url, 'hideSideBar', '')}
 	>
-		<i class="i-carbon-chevron-chart-column" />
+		<i class="i-carbon-chart-column" />
 	</a>
 </div>
 

@@ -73,7 +73,7 @@
 			>
 		{/if} -->
 
-		{#if runner.legs[0].manualRouteChoice !== null}
+		<!-- {#if runner.legs[0].manualRouteChoice !== null}
 			<strong style:color={runner.legs[0]?.manualRouteChoice.color}
 				>{runner.legs[0].manualRouteChoice.name}</strong
 			>
@@ -81,7 +81,7 @@
 			<strong style:color={runner.legs[0]?.detectedRouteChoice.color}
 				>{runner.legs[0].detectedRouteChoice.name}</strong
 			>
-		{/if}
+		{/if} -->
 	{/if}
 </td>
 

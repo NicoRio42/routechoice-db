@@ -82,11 +82,11 @@
 		top: 0;
 		bottom: 0;
 		left: 0;
-		background-color: white;
+		background-color: var(--background-color);
 		width: 23rem;
 		resize: horizontal;
 		overflow-x: auto;
-		border-right: 1px solid lightgray;
+		border-right: 1px solid var(--table-border-color);
 		z-index: 1;
 	}
 

@@ -151,13 +151,14 @@
 
 	<!-- <RunnerOffsetEditor bind:courseData /> -->
 
-	<!-- <SideBar
+	<SideBar
 		bind:selectedRunners
-		{event}
+		runners={data.event.runners}
+		legs={data.event.legs}
 		{legNumber}
 		on:routechoiceChange={handleRoutechoiceChange}
 		on:changeRunnerTimeOffset={handleRunnerTimeOffsetChange}
-	/> -->
+	/>
 
 	<OlMap {mode} {angle} {fitBox} padding={[100, 0, 100, 0]}>
 		<!-- {#if mode === ModesEnum.DRAW}
