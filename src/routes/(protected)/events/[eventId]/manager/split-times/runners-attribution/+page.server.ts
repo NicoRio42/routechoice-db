@@ -5,6 +5,7 @@ import { error, redirect } from '@sveltejs/kit';
 import { and, eq } from 'drizzle-orm';
 import { loggatorEventSchema } from 'orienteering-js/models';
 import { matchRunnersByName } from './helpers.js';
+import { detectRunnersRoutechoices } from 'orienteering-js/routechoice-detector';
 
 export async function load({ params: { eventId }, locals, fetch }) {
 	const liveEvent = locals.db

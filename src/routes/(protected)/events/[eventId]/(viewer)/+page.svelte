@@ -16,6 +16,7 @@
 	import type { Event } from './models/event.model.js';
 
 	export let data;
+	console.log(data);
 
 	let angle: number;
 	let fitBox: [number, number, number, number];
@@ -180,10 +181,10 @@
 			{#each data.event.runners as runner (runner.id)}
 				{@const show = selectedRunners.includes(runner.id)}
 				{@const runnerLeg = runner.legs.find(
-					(leg) => data.event.legs[legNumber - 1].id === leg.fkLeg
+					(leg) => data.event.legs[legNumber - 1].id === leg?.fkLeg
 				)}
 
-				{#if show && runner.track !== null && runnerLeg !== undefined}
+				{#if show && runner.track !== null && runnerLeg !== undefined && runnerLeg !== null}
 					<RunnerRoute
 						{runnerLeg}
 						name={runner.lastName}

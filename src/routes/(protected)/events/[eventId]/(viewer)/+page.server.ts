@@ -1,8 +1,9 @@
 import { getEventMap, getRunnersWithTracks } from '$lib/helpers.js';
-import { event as eventTable, type ControlPoint } from '$lib/server/db/schema.js';
+import { event as eventTable, type ControlPoint, type RunnerLeg } from '$lib/server/db/schema.js';
 import { error } from '@sveltejs/kit';
 import { eq } from 'drizzle-orm';
 import type { Leg } from './models/leg.model.js';
+import type { Runner } from './models/runner.model.js';
 
 export async function load({ params: { eventId }, locals, fetch }) {
 	const { user } = await locals.authRequest.validateUser();
@@ -20,10 +21,29 @@ export async function load({ params: { eventId }, locals, fetch }) {
 	if (event === undefined) throw error(404, 'Event not found');
 
 	return {
-		event: getRunnersWithTracks(event, fetch).then((e) => ({ ...e, legs: sortLegs(e.legs) })),
+		event: getRunnersWithTracks(event, fetch)
+			.then((e) => ({
+				...e,
+				legs: sortLegs(e.legs)
+			}))
+			.then((e) => ({ ...e, runners: sortRunnersLegs(e.runners as Runner[], e.legs) })),
 		eventMap: getEventMap(event.liveEvents[0], fetch),
 		user
 	};
+}
+
+function sortRunnersLegs(runners: Runner[], legs: Leg[]): Runner[] {
+	return runners.map((runner) => {
+		const runnerLegs: (RunnerLeg | null)[] = [];
+
+		legs.forEach((leg) => {
+			const runnerLeg = runner.legs.find((l) => leg.id === l?.fkLeg);
+			if (runnerLeg === undefined) runnerLegs.push(null);
+			else runnerLegs.push(runnerLeg);
+		});
+
+		return { ...runner, legs: runnerLegs };
+	});
 }
 
 function sortLegs(legs: Leg[]): Leg[] {

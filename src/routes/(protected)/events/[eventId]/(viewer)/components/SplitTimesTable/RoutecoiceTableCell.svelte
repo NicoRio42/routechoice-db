@@ -73,15 +73,19 @@
 			>
 		{/if} -->
 
-		<!-- {#if runner.legs[0].manualRouteChoice !== null}
-			<strong style:color={runner.legs[0]?.manualRouteChoice.color}
-				>{runner.legs[0].manualRouteChoice.name}</strong
-			>
-		{:else if runner.legs[0].detectedRouteChoice !== null}
-			<strong style:color={runner.legs[0]?.detectedRouteChoice.color}
-				>{runner.legs[0].detectedRouteChoice.name}</strong
-			>
-		{/if} -->
+		{@const manualRouteChoice = routechoices.find(
+			(rc) => runner.legs[0].fkManualRoutechoice === rc.id
+		)}
+
+		{@const detectedRouteChoice = routechoices.find(
+			(rc) => runner.legs[0].fkDetectedRoutechoice === rc.id
+		)}
+
+		{#if manualRouteChoice !== undefined}
+			<strong style:color={manualRouteChoice.color}>{manualRouteChoice.name}</strong>
+		{:else if detectedRouteChoice !== undefined}
+			<strong style:color={detectedRouteChoice.color}>{detectedRouteChoice.name}</strong>
+		{/if}
 	{/if}
 </td>
 

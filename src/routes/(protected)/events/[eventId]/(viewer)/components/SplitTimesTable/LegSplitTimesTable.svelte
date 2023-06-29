@@ -50,7 +50,7 @@
 
 			<th class="sticky-header right">RC</th>
 
-			<th class="sticky-header right"
+			<th class="sticky-header text-center"
 				><input
 					type="checkbox"
 					bind:checked={iShowAllRunnersTracksChecked}
@@ -95,7 +95,7 @@
 			{/if}
 
 			{#if runner.track !== null}
-				<td>
+				<td class="text-center">
 					<input
 						type="checkbox"
 						value={runner.id}
