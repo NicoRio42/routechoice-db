@@ -1,12 +1,7 @@
 <script lang="ts">
-	import Chart from '$lib/components/icons/Chart.svelte';
-	import ChevronLeft from '$lib/components/icons/ChevronLeft.svelte';
-	import ChevronRight from '$lib/components/icons/ChevronRight.svelte';
-	import Elipsis from '$lib/components/icons/Elipsis.svelte';
-	import Eye from '$lib/components/icons/Eye.svelte';
-	import type { Leg } from 'orienteering-js/models';
-	import { addSearchParamsToURL, deleteSearchParamsToURL } from '../utils.js';
 	import { page } from '$app/stores';
+	import type { Leg } from '../models/leg.model.js';
+	import { addSearchParamsToURL, deleteSearchParamsToURL } from '../utils.js';
 
 	export let legNumber: number;
 	export let legs: Leg[];
@@ -26,8 +21,11 @@
 </script>
 
 <div class="control-bar">
-	<button class="map-buttons-toggler mobile btn" on:click={() => (showMapButtons = !showMapButtons)}
-		><Elipsis />
+	<button
+		class="map-buttons-toggler mobile btn"
+		on:click={() => (showMapButtons = !showMapButtons)}
+	>
+		<i class="i-carbon-overflow-menu-horizontal" />
 	</button>
 
 	<button
@@ -39,14 +37,20 @@
 	<button
 		class="map-button mobile btn"
 		on:click={() => (showRoutechoices = !showRoutechoices)}
-		style:transform={showMapButtons ? 'translateY(-115%)' : 'translateY(0)'}><Eye /></button
+		style:transform={showMapButtons ? 'translateY(-115%)' : 'translateY(0)'}
 	>
+		<i class="i-carbon-view" />
+	</button>
 
 	<button class="large btn" on:click={() => (isAutoAnalysisMode = !isAutoAnalysisMode)}>AA</button>
 
-	<button class="large btn" on:click={() => (showRoutechoices = !showRoutechoices)}><Eye /></button>
+	<button class="large btn" on:click={() => (showRoutechoices = !showRoutechoices)}>
+		<i class="i-carbon-view" />
+	</button>
 
-	<button class="btn" on:click={handlePreviousControl}><ChevronLeft /></button>
+	<button class="btn" on:click={handlePreviousControl}>
+		<i class="i-carbon-chevron-left" />
+	</button>
 
 	<select bind:value={legNumber}>
 		{#each [...Array(numberOfLegs).keys()] as leg}
@@ -54,7 +58,9 @@
 		{/each}
 	</select>
 
-	<button class="btn" on:click={handleNextControl}><ChevronRight /></button>
+	<button class="btn" on:click={handleNextControl}>
+		<i class="i-carbon-chevron-right" />
+	</button>
 
 	<a
 		role="button"
@@ -63,7 +69,7 @@
 			? deleteSearchParamsToURL($page.url, 'hideSideBar')
 			: addSearchParamsToURL($page.url, 'hideSideBar', '')}
 	>
-		<Chart />
+		<i class="i-carbon-chevron-chart-column" />
 	</a>
 </div>
 

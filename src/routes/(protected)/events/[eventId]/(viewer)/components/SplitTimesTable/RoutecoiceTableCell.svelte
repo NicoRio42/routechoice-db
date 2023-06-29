@@ -7,9 +7,12 @@
 
 <script lang="ts">
 	import { createEventDispatcher } from 'svelte';
-	import type { Routechoice } from 'orienteering-js/models';
-	import type { Runner } from 'orienteering-js/models';
-	import userStore, { isUserAdminStore } from '$lib/stores/user.store.js';
+	import { getContext } from 'svelte';
+	import type { Writable } from 'svelte/store';
+	import type { User } from 'lucia-auth';
+	import { RolesEnum } from '$lib/models/enums/roles.enum.js';
+	import type { Runner } from '../../models/runner.model.js';
+	import type { Routechoice } from '$lib/server/db/schema.js';
 
 	export let routechoices: Routechoice[] = [];
 	export let runner: Runner;
@@ -18,35 +21,37 @@
 		routechoiceChange: RoutechoiceChangeEventDetails;
 	}>();
 
-	$: selectedRoutechoice =
-		runner.legs[0]?.manualRouteChoice?.id ?? runner.legs[0]?.detectedRouteChoice?.id ?? null;
+	// $: selectedRoutechoice =
+	// 	runner.legs[0]?.manualRouteChoice?.id ?? runner.legs[0]?.detectedRouteChoice?.id ?? null;
 
-	$: selectedRoutechoiceColor = routechoices.find((r) => r.id === selectedRoutechoice)?.color;
+	// $: selectedRoutechoiceColor = routechoices.find((r) => r.id === selectedRoutechoice)?.color;
 
-	async function handleChange(
-		event: Event & {
-			currentTarget: EventTarget & HTMLSelectElement;
-		}
-	) {
-		if (!confirm('Are you sure to manually change this runner routechoice?')) {
-			event.currentTarget.value =
-				selectedRoutechoice === null ? '' : selectedRoutechoice.toString();
+	const user = getContext<Writable<User | null>>('user');
 
-			return;
-		}
+	// async function handleChange(
+	// 	event: Event & {
+	// 		currentTarget: EventTarget & HTMLSelectElement;
+	// 	}
+	// ) {
+	// 	if (!confirm('Are you sure to manually change this runner routechoice?')) {
+	// 		event.currentTarget.value =
+	// 			selectedRoutechoice === null ? '' : selectedRoutechoice.toString();
 
-		selectedRoutechoice = event.currentTarget.value ?? null;
+	// 		return;
+	// 	}
 
-		dispatch('routechoiceChange', {
-			routechoiceID: selectedRoutechoice,
-			runnerId: runner.id
-		});
-	}
+	// 	selectedRoutechoice = event.currentTarget.value ?? null;
+
+	// 	dispatch('routechoiceChange', {
+	// 		routechoiceID: selectedRoutechoice,
+	// 		runnerId: runner.id
+	// 	});
+	// }
 </script>
 
 <td class="right">
 	{#if runner.legs !== null && runner.legs[0] !== null}
-		{#if $isUserAdminStore || runner.userId === $userStore?.uid}
+		<!-- {#if $user !== null && ($user.role === RolesEnum.Enum.admin || runner.fkUser === $user.id)}
 			<select
 				style:color={selectedRoutechoiceColor}
 				value={selectedRoutechoice}
@@ -59,6 +64,16 @@
 				{/each}
 			</select>
 		{:else if runner.legs[0].manualRouteChoice !== null}
+			<strong style:color={runner.legs[0]?.manualRouteChoice.color}
+				>{runner.legs[0].manualRouteChoice.name}</strong
+			>
+		{:else if runner.legs[0].detectedRouteChoice !== null}
+			<strong style:color={runner.legs[0]?.detectedRouteChoice.color}
+				>{runner.legs[0].detectedRouteChoice.name}</strong
+			>
+		{/if} -->
+
+		{#if runner.legs[0].manualRouteChoice !== null}
 			<strong style:color={runner.legs[0]?.manualRouteChoice.color}
 				>{runner.legs[0].manualRouteChoice.name}</strong
 			>

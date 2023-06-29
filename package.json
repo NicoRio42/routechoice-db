@@ -45,9 +45,10 @@
 		"@lucia-auth/tokens": "^1.0.1",
 		"@types/better-sqlite3": "^7.6.4",
 		"better-sqlite3": "^8.3.0",
-		"drizzle-orm": "^0.26.5",
+		"drizzle-orm": "^0.27.0",
 		"linkedom": "^0.14.26",
 		"lucia-auth": "^1.5.0",
+		"ol": "^7.4.0",
 		"orienteering-js": "^0.0.23",
 		"wrangler": "^3.0.0"
 	}

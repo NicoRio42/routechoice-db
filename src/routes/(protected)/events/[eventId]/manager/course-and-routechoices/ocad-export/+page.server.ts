@@ -79,12 +79,8 @@ export const actions = {
 					.run();
 
 				lg.routechoices.forEach(async (rc) => {
-					const [latitudes, longitudes] = rc.track.reduce(
-						(acc, current) => {
-							return [`${acc[0]};${current[0]}`, `${acc[1]};${current[1]}`];
-						},
-						['', '']
-					);
+					const latitudes = rc.track.map((pt) => pt[0]).join(';');
+					const longitudes = rc.track.map((pt) => pt[1]).join(';');
 
 					await tx
 						.insert(routechoice)

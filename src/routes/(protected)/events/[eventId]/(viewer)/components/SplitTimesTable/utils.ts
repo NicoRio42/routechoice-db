@@ -28,7 +28,9 @@ export function fullNameToShortName(firstName: string, lastName: string) {
 	return `${firstName.charAt(0)}. ${lastName}`;
 }
 
-export function rankToCSSClass(rank: number): string {
+export function rankToCSSClass(rank: number | null): string {
+	if (rank === null) return '';
+
 	if (rank === 1) {
 		return 'first';
 	} else if (rank === 2) {

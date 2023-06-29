@@ -11,7 +11,7 @@ declare global {
 	namespace App {
 		interface Locals {
 			authRequest: import('lucia-auth').AuthRequest;
-			db: BetterSQLite3Database | DrizzleD1Database;
+			db: BetterSQLite3Database<typeof schema> | DrizzleD1Database<typeof schema>;
 			auth: Lucia.Auth;
 			emailVerificationToken: import('./hooks.server').EmailVerificationToken;
 			passwordResetToken: import('./hooks.server').PasswordResetToken;
@@ -19,7 +19,7 @@ declare global {
 
 		interface Platform {
 			env?: {
-				TODO_LIST_DB: DrizzleD1Database<typeof schema>;
+				TODO_LIST_DB: D1Database;
 			};
 		}
 	}
@@ -28,7 +28,7 @@ declare global {
 /// <reference types="lucia-auth" />
 declare global {
 	namespace Lucia {
-		type Auth = import('./hooks.server').Auth;
+		type Auth = import('./hooks.server.js').Auth;
 		type UserAttributes = {
 			name: string;
 			email: string;

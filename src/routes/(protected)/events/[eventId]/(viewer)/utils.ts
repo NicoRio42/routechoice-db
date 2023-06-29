@@ -1,29 +1,40 @@
 import { transform, transformExtent } from 'ol/proj.js';
-import type { CourseData } from 'orienteering-js/models';
+import type { Event } from './models/event.model.js';
 import { ModesEnum } from './models/modes.enum.js';
 
 export function computeFitBoxAndAngleFromLegNumber(
 	legNumber: number,
-	courseData: CourseData
+	event: Event
 ): [[number, number, number, number], number] {
-	const leg = courseData.legs[legNumber - 1];
+	const leg = event.legs[legNumber - 1];
 	if (leg === undefined) throw new Error('Cannot find leg');
 
-	const finishControl = courseData.course.find((control) => control.code === leg.finishControlCode);
+	const startControl = event.controlPoints.find(
+		(control) => control.id === leg.fkStartControlPoint
+	);
+	const finishControl = event.controlPoints.find(
+		(control) => control.id === leg.fkFinishControlPoint
+	);
 
-	if (finishControl === undefined) throw new Error('Cannot find finish control');
+	if (startControl === undefined || finishControl === undefined) {
+		throw new Error('Control point not found for the given leg.');
+	}
 
-	const minLat = Math.min(leg.startLat, finishControl.lat);
-	const maxLat = Math.max(leg.startLat, finishControl.lat);
-	const minLon = Math.min(leg.startLon, finishControl.lon);
-	const maxLon = Math.max(leg.startLon, finishControl.lon);
+	const minLat = Math.min(startControl.latitude, finishControl.latitude);
+	const maxLat = Math.max(startControl.latitude, finishControl.latitude);
+	const minLon = Math.min(startControl.longitude, finishControl.longitude);
+	const maxLon = Math.max(startControl.longitude, finishControl.longitude);
 
 	const extend = transformExtent([minLon, minLat, maxLon, maxLat], 'EPSG:4326', 'EPSG:3857');
 
-	const startControlWebMarcator = transform([leg.startLon, leg.startLat], 'EPSG:4326', 'EPSG:3857');
+	const startControlWebMarcator = transform(
+		[startControl.longitude, startControl.latitude],
+		'EPSG:4326',
+		'EPSG:3857'
+	);
 
 	const finishControlWebMercator = transform(
-		[finishControl.lon, finishControl.lat],
+		[finishControl.longitude, finishControl.latitude],
 		'EPSG:4326',
 		'EPSG:3857'
 	);

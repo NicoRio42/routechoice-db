@@ -81,6 +81,8 @@ export const leg = sqliteTable('leg', {
 		.references(() => controlPoint.id, { onDelete: 'cascade' })
 });
 
+export type Leg = InferModel<typeof leg>;
+
 export const legsRelations = relations(leg, ({ one, many }) => ({
 	event: one(event, {
 		fields: [leg.fkEvent],
@@ -98,6 +100,8 @@ export const controlPoint = sqliteTable('control_point', {
 	longitude: real('longitude').notNull(),
 	latitude: real('latitude').notNull()
 });
+
+export type ControlPoint = InferModel<typeof controlPoint>;
 
 export const controlPointsRelations = relations(controlPoint, ({ one }) => ({
 	event: one(event, {
@@ -117,6 +121,8 @@ export const routechoice = sqliteTable('routechoice', {
 	latitudes: text('latitudes').notNull(),
 	length: integer('length').notNull()
 });
+
+export type Routechoice = InferModel<typeof routechoice>;
 
 export const routechoicesRelations = relations(routechoice, ({ one }) => ({
 	event: one(leg, {
@@ -180,6 +186,8 @@ export const runnerLeg = sqliteTable('runner_leg', {
 	timeLoss: integer('time_loss').notNull(),
 	routechoiceTimeLoss: integer('routechoice_time_loss').notNull()
 });
+
+export type RunnerLeg = InferModel<typeof runnerLeg>;
 
 export const runnerLegsRelations = relations(runnerLeg, ({ one }) => ({
 	event: one(runner, {

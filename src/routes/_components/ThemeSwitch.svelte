@@ -4,7 +4,7 @@
 	<button
 		class="btn-unset flex justify-center items-center dark"
 		type="button"
-		onclick="this.closest('html').dataset.theme = 'light'"
+		onclick="this.closest('html').dataset.theme = 'dark'"
 	>
 		<i class="i-carbon-moon" />
 	</button>
@@ -12,7 +12,7 @@
 	<button
 		class="btn-unset flex justify-center items-center light"
 		type="button"
-		onclick="this.closest('html').dataset.theme = 'dark'"
+		onclick="this.closest('html').dataset.theme = 'light'"
 	>
 		<i class="i-carbon-light" />
 	</button>

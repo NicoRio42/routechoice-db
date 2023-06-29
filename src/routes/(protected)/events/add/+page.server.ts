@@ -32,7 +32,7 @@ export const actions = {
 				.values({
 					id: crypto.randomUUID(),
 					fkEvent: eventId,
-					liveProvider: '',
+					liveProvider: 'loggator',
 					url: form.data.liveProviderUrl,
 					isPrimary: true
 				})

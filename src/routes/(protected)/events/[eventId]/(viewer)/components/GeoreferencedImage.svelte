@@ -5,20 +5,19 @@
 	import Static from 'ol/source/ImageStatic.js';
 	import { getContext, onDestroy, onMount } from 'svelte';
 	import { CoordinatesConverter } from 'orienteering-js/map';
-	import type { MapCalibration } from 'orienteering-js/models';
+	import type { CourseMap } from 'orienteering-js/models';
 	import type ImageWrapper from 'ol/Image.js';
-	import { cachedImages } from '$lib/utils/functions.js';
+	import { cachedImages, getMapCallibrationByFetchingMapImageIfNeeded } from '$lib/client/map.js';
 
-	export let url: string;
-	export let mapCalibration: MapCalibration;
-
-	const coordinatesConverter = new CoordinatesConverter(mapCalibration);
+	export let eventMap: CourseMap;
 
 	const getMap = getContext<() => Map>('map');
 	let map: Map;
 	let imageLayer: ImageLayer<Static>;
 
-	onMount(() => {
+	onMount(async () => {
+		const mapCalibration = await getMapCallibrationByFetchingMapImageIfNeeded(eventMap);
+		const coordinatesConverter = new CoordinatesConverter(mapCalibration);
 		map = getMap();
 
 		const imageExtent = [1, 1, mapCalibration[2].point.x, mapCalibration[1].point.y];
@@ -48,11 +47,11 @@
 		const imageLayer = new ImageLayer({ zIndex: 1 });
 
 		const staticImage = new Static({
-			url,
+			url: eventMap.url,
 			projection: imageProjection,
 			imageExtent,
 			imageLoadFunction: (img: ImageWrapper, src: string) => {
-				const imageElemnt = cachedImages[url];
+				const imageElemnt = cachedImages[eventMap.url];
 				if (imageElemnt === undefined) {
 					(img.getImage() as HTMLImageElement).src = src;
 					return;

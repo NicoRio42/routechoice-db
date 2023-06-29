@@ -1,15 +1,16 @@
 <script lang="ts">
-	import type { CourseData } from 'orienteering-js/models';
-	import type { Routechoice } from 'orienteering-js/models';
-	import type { Runner } from 'orienteering-js/models';
 	import LegStatistics from './LegStatistics/LegStatistics.svelte';
 	import LegSplitTimesTable from './SplitTimesTable/LegSplitTimesTable.svelte';
 	import SummaryPanel from './SummaryPanel.svelte';
 	import Toggle from './Toggle.svelte';
 	import { page } from '$app/stores';
+	import type { Runner } from '../models/runner.model.js';
+	import type { Routechoice } from '$lib/server/db/schema.js';
+	import type { Leg } from '../models/leg.model.js';
 
 	export let selectedRunners: string[];
-	export let courseData: CourseData;
+	export let runners: Runner[];
+	export let legs: Leg[];
 	export let legNumber: number;
 
 	let isInSplitMode = true;
@@ -19,12 +20,10 @@
 	$: hideSideBar = $page.url.searchParams.has('hideSideBar');
 
 	$: {
-		const clonedRunnersWithOneLeg = (structuredClone(courseData.runners) as Runner[]).map(
-			(runner) => ({
-				...runner,
-				legs: runner.legs.filter((l, i) => i + 1 === legNumber)
-			})
-		);
+		const clonedRunnersWithOneLeg = (structuredClone(runners) as Runner[]).map((runner) => ({
+			...runner,
+			legs: runner.legs.filter((l, i) => i + 1 === legNumber)
+		}));
 
 		sortedRunnersWithOneLeg = clonedRunnersWithOneLeg.sort((runner1, runner2) => {
 			const runner1Leg = runner1.legs[0];
@@ -45,21 +44,21 @@
 			return 0;
 		});
 
-		legRoutechoices = courseData.legs[legNumber - 1].routechoices;
+		legRoutechoices = legs[legNumber - 1].routechoices;
 	}
 </script>
 
-<SummaryPanel {legRoutechoices} {sortedRunnersWithOneLeg} />
+<!-- <SummaryPanel {legRoutechoices} {sortedRunnersWithOneLeg} /> -->
 
 <aside class:toggle-sidebar={!hideSideBar}>
 	<div class="main-wrapper">
 		<Toggle bind:isFirstValueSelected={isInSplitMode} firstLabel={'Splits'} secondLabel={'Graph'} />
 
-		{#if !isInSplitMode}
+		<!-- {#if !isInSplitMode}
 			<section class="routechoices-graph">
 				<LegStatistics {courseData} {legNumber} />
 			</section>
-		{/if}
+		{/if} -->
 
 		<section
 			style:display={isInSplitMode ? 'block' : 'none'}

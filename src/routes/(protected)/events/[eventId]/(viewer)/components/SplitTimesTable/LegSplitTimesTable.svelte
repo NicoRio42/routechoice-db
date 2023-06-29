@@ -1,12 +1,10 @@
 <script lang="ts">
-	import Pen from '$lib/components/icons/Pen.svelte';
-	import type { Routechoice } from 'orienteering-js/models';
-	import type { Runner } from 'orienteering-js/models';
-	import { isUserAdminStore } from '$lib/stores/user.store.js';
 	import { createEventDispatcher } from 'svelte';
 	import { addAlpha } from '../utils.js';
 	import RoutechoiceTableCell from './RoutecoiceTableCell.svelte';
 	import { fullNameToShortName, rankToCSSClass, secondsToPrettyTime } from './utils.js';
+	import type { Runner } from '../../models/runner.model.js';
+	import type { Routechoice } from '$lib/server/db/schema.js';
 
 	export let selectedRunners: string[];
 	export let sortedRunnersWithOneLeg: Runner[];
@@ -63,13 +61,15 @@
 	</thead>
 
 	{#each sortedRunnersWithOneLeg as runner (runner.id)}
+		{@const runnerLeg = runner.legs[0]}
+
 		<tr>
 			<td data-tooltip={`${runner.firstName} ${runner.lastName}`}>
 				{fullNameToShortName(runner.firstName, runner.lastName)}
 			</td>
 
-			<td class:mistake={runner.legs[0]?.isMistake}>
-				{#if runner.legs[0] !== null}
+			<td class:mistake={runnerLeg.timeLoss !== 0}>
+				{#if runnerLeg !== null}
 					<div
 						class="tooltip-container {rankToCSSClass(runner.legs[0].rankSplit)}"
 						data-tooltip={`+ ${secondsToPrettyTime(runner.legs[0].timeBehindSplit)}`}
@@ -78,10 +78,12 @@
 					</div>
 
 					<div
-						class="tooltip-container {rankToCSSClass(runner.legs[0].rankOverall)}"
-						data-tooltip={`+ ${secondsToPrettyTime(runner.legs[0].timeBehindOverall)}`}
+						class="tooltip-container {rankToCSSClass(runnerLeg.rankOverall)}"
+						data-tooltip={runnerLeg.timeBehindOverall !== null
+							? `+ ${secondsToPrettyTime(runnerLeg.timeBehindOverall)}`
+							: null}
 					>
-						{`${secondsToPrettyTime(runner.legs[0].timeOverall)} (${runner.legs[0].rankOverall})`}
+						{`${secondsToPrettyTime(runnerLeg.timeOverall)} (${runnerLeg.rankOverall})`}
 					</div>
 				{/if}
 			</td>
@@ -106,7 +108,7 @@
 				</td>
 			{/if}
 
-			{#if runner.track !== null && $isUserAdminStore && false}
+			<!-- {#if runner.track !== null && $isUserAdminStore && false}
 				<td class="pen-td">
 					<button
 						on:click={() => dispatch('changeRunnerTimeOffset', runner.id)}
@@ -114,7 +116,7 @@
 						class="pen-button"><Pen --width="1rem" --height="1rem" /></button
 					>
 				</td>
-			{/if}
+			{/if} -->
 		</tr>
 	{/each}
 	<tbody />
