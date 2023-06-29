@@ -1,8 +1,8 @@
 <script lang="ts">
-	import type { Routechoice } from 'orienteering-js/models';
 	import LineString from './LineString.svelte';
 	import { transform } from 'ol/proj.js';
 	import { addAlpha } from './utils.js';
+	import type { Routechoice } from '$lib/server/db/schema.js';
 
 	export let routechoice: Routechoice;
 	export let opacity: number;
@@ -10,7 +10,11 @@
 
 	const color = addAlpha(routechoice.color, opacity);
 
-	const coords = routechoice.track.map(([lat, lon]) => {
+	const latitudes = routechoice.latitudes.split(';').map(Number);
+	const longitudes = routechoice.longitudes.split(';').map(Number);
+
+	const coords = latitudes.map((lat, index) => {
+		const lon = longitudes[index];
 		return transform([lon, lat], 'EPSG:4326', 'EPSG:3857');
 	});
 

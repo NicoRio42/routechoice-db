@@ -167,14 +167,14 @@
 
 		<GeoreferencedImage eventMap={data.eventMap} />
 
-		<!-- <VectorLayer>
+		<VectorLayer>
 			{#if showRoutechoices}
 				{#each legRoutechoices as routechoice (routechoice.id)}
 					<RoutechoiceTrack {routechoice} opacity={0.8} width={6} />
 				{/each}
 			{/if}
-			
-			{#if isAutoAnalysisMode}
+
+			<!-- 	{#if isAutoAnalysisMode}
 				<AutoAnalysis {selectedRunners} {legNumber} runners={courseData.runners} />
 			{:else}
 			{/if}
@@ -184,8 +184,8 @@
 				{#if show && runner.track !== null}
 					<RunnerRoute {runner} {legNumber} />
 				{/if}
-			{/each}
-		</VectorLayer> -->
+			{/each} -->
+		</VectorLayer>
 	</OlMap>
 
 	<ActionButtons
