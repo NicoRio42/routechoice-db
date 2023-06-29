@@ -176,15 +176,23 @@
 
 			<!-- 	{#if isAutoAnalysisMode}
 				<AutoAnalysis {selectedRunners} {legNumber} runners={courseData.runners} />
-			{:else}
-			{/if}
-			{#each courseData.runners as runner (runner.id)}
+			{:else} -->
+			{#each data.event.runners as runner (runner.id)}
 				{@const show = selectedRunners.includes(runner.id)}
+				{@const runnerLeg = runner.legs.find(
+					(leg) => data.event.legs[legNumber - 1].id === leg.fkLeg
+				)}
 
-				{#if show && runner.track !== null}
-					<RunnerRoute {runner} {legNumber} />
+				{#if show && runner.track !== null && runnerLeg !== undefined}
+					<RunnerRoute
+						{runnerLeg}
+						name={runner.lastName}
+						track={runner.track}
+						startTime={runner.startTime}
+						timeOffset={runner.timeOffset}
+					/>
 				{/if}
-			{/each} -->
+			{/each}
 		</VectorLayer>
 	</OlMap>
 

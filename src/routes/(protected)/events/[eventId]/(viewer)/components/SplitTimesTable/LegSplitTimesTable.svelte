@@ -143,8 +143,12 @@
 		position: relative;
 	}
 
-	[data-tooltip] {
+	[data-tooltip]:not(td) {
 		border-bottom: none;
+	}
+
+	td[data-tooltip] {
+		border-bottom: var(--border-width) solid var(--table-border-color);
 	}
 
 	.tooltip {

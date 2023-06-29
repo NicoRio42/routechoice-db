@@ -1,25 +1,29 @@
 import { transform } from 'ol/proj.js';
-import type { Runner } from 'orienteering-js/models';
 import { getLineStringLength } from 'orienteering-js/utils';
+import type { Runner } from '../models/runner.model.js';
+import type { RunnerLeg } from '$lib/server/db/schema.js';
+import type { RunnerTrack } from 'orienteering-js/models';
 
-export function cropTrackFromLegNumber(runner: Runner, legNumber: number): number[][] {
-	const runnerLeg = runner.legs[legNumber - 1];
-	if (runnerLeg === null) return [];
-	const startTime = runner.startTime + runnerLeg.timeOverall - runnerLeg.time;
-	const finishTime = runner.startTime + runnerLeg.timeOverall;
+export function cropTrackFromLegNumber(
+	runnerLeg: RunnerLeg,
+	track: RunnerTrack,
+	startTime: Date,
+	timeOffset: number
+): number[][] {
+	const finishTime = startTime.getTime() / 1000 + runnerLeg.timeOverall;
+	const startTimeInSeconds = finishTime - runnerLeg.time;
 
-	const runnerrack = runner.track!;
-	let startIndex = runnerrack.times.findIndex((time) => time >= startTime + runner.timeOffset);
+	let startIndex = track.times.findIndex((time) => time >= startTimeInSeconds + timeOffset);
 	if (startIndex === -1) startIndex = 0;
 
-	let finishIndex = runnerrack.times.findIndex((time) => time >= finishTime + runner.timeOffset);
+	let finishIndex = track.times.findIndex((time) => time >= finishTime + timeOffset);
 
-	if (finishIndex === -1) finishIndex = runnerrack.times.length - 1;
+	if (finishIndex === -1) finishIndex = track.times.length - 1;
 
 	const cutCoords: number[][] = [];
 
 	for (let i = startIndex; i <= finishIndex; i++) {
-		cutCoords.push(transform([runnerrack.lons[i], runnerrack.lats[i]], 'EPSG:4326', 'EPSG:3857'));
+		cutCoords.push(transform([track.lons[i], track.lats[i]], 'EPSG:4326', 'EPSG:3857'));
 	}
 
 	return cutCoords;
