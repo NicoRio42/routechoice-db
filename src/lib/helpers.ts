@@ -1,14 +1,13 @@
 import { getTracksMapFromLoggatorData } from 'orienteering-js/loggator';
 import {
+	loggatorEventSchema,
+	loggatorMapSchema,
 	loggatorPointsValidator,
 	type CourseMap,
-	type RunnerTrack,
-	loggatorEventSchema,
-	type Map as LoggatorMap,
-	loggatorMapSchema
+	type RunnerTrack
 } from 'orienteering-js/models';
 import { GPS_PROVIDERS } from './constants.js';
-import type { LiveEvent, Runner } from './server/db/schema.js';
+import type { LiveEvent } from './server/db/schema.js';
 
 export function extractLiveProviderAndEventIdFromUrl(
 	url: string
@@ -42,32 +41,21 @@ export function formatDateTimeForDateTimeInput(date: Date): string {
 	return `${formatDateForDateInput(date)}T${date.toLocaleTimeString()}`;
 }
 
-type Event = {
-	liveEvents: LiveEvent[];
-	runners: Runner[];
-};
-
 type Fetch = typeof fetch;
 
-export async function getRunnersWithTracks<T>(
-	event: T & Event,
+export async function getTracksFromLiveEvents(
+	liveEvents: LiveEvent[],
 	fetch: Fetch
-): Promise<T & { runners: (Runner & { track: RunnerTrack | null })[] }> {
-	const eventWithRunnersTracks = {
-		...event,
-		runners: event.runners.map((runner) => {
-			let runnerWithTrack: typeof runner & { track: RunnerTrack | null };
-			runnerWithTrack = { ...runner, track: null };
-			return runnerWithTrack;
-		})
-	};
+): Promise<{ fkLiveEvent: string; trackingDeviceId: string; track: RunnerTrack }[]> {
+	const tracks: { fkLiveEvent: string; trackingDeviceId: string; track: RunnerTrack }[] = [];
 
-	for (const liveEvent of event.liveEvents) {
+	for (const liveEvent of liveEvents) {
 		if (liveEvent.liveProvider === 'loggator') {
 			const [provider, eventId] = extractLiveProviderAndEventIdFromUrl(liveEvent.url);
 			const gpsProvider = GPS_PROVIDERS.loggator;
 			const eventUrl = `${gpsProvider.apiBaseUrl}/events/${eventId}`;
 			const pointsUrl = `${eventUrl}/points`;
+			console.log(pointsUrl);
 			const pointsResponse = await fetch(pointsUrl);
 
 			if (!pointsResponse.ok) {
@@ -77,25 +65,18 @@ export async function getRunnersWithTracks<T>(
 			const loggatorPoints = loggatorPointsValidator.parse(await pointsResponse.json());
 
 			const tracksMap = getTracksMapFromLoggatorData(loggatorPoints);
-			eventWithRunnersTracks.runners.forEach((runner) => {
-				if (runner.fkLiveEvent !== liveEvent.id || runner.trackingDeviceId === null) {
-					return;
-				}
 
-				const track = tracksMap[runner.trackingDeviceId];
-
-				if (track === undefined) {
-					return;
-				}
-
-				runner.track = track;
-			});
+			tracks.push(
+				...Object.entries(tracksMap).map(([trackingDeviceId, track]) => ({
+					trackingDeviceId,
+					track,
+					fkLiveEvent: liveEvent.id
+				}))
+			);
 		}
-
-		// Future providers
 	}
 
-	return eventWithRunnersTracks;
+	return tracks;
 }
 
 export async function getEventMap(liveEvent: LiveEvent, fetch: Fetch): Promise<CourseMap> {

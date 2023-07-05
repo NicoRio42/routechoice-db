@@ -1,11 +1,21 @@
 import { GPS_PROVIDERS } from '$lib/constants.js';
-import { extractLiveProviderAndEventIdFromUrl } from '$lib/helpers.js';
-import { runner as runnerTable, user, liveEvent as liveEventTable } from '$lib/server/db/schema.js';
+import { extractLiveProviderAndEventIdFromUrl, getTracksFromLiveEvents } from '$lib/helpers.js';
+import {
+	runner as runnerTable,
+	user,
+	liveEvent as liveEventTable,
+	liveEvent,
+	leg as legTable,
+	controlPoint as controlPointTable
+} from '$lib/server/db/schema.js';
 import { error, redirect } from '@sveltejs/kit';
 import { and, eq } from 'drizzle-orm';
 import { loggatorEventSchema } from 'orienteering-js/models';
 import { matchRunnersByName } from './helpers.js';
-import { detectRunnersRoutechoices } from 'orienteering-js/routechoice-detector';
+import {
+	detectRunnersRoutechoices,
+	detectSingleRunnerRoutechoices
+} from 'orienteering-js/routechoice-detector';
 
 export async function load({ params: { eventId }, locals, fetch }) {
 	const liveEvent = locals.db
@@ -84,14 +94,14 @@ export async function load({ params: { eventId }, locals, fetch }) {
 }
 
 export const actions = {
-	default: async ({ params: { eventId }, request, locals }) => {
+	default: async ({ params: { eventId }, request, locals, fetch }) => {
 		const { user } = await locals.authRequest.validateUser();
 		if (!user) throw redirect(302, '/login');
 		if (user.emailVerified === 0) throw redirect(302, '/email-verification');
 
 		const formData = await request.formData();
 
-		const runners: Record<
+		const runnersFormData: Record<
 			string,
 			{ liveEvent: string | null; trackingDeviceId: string | null; userId: string | null }
 		> = {};
@@ -108,10 +118,10 @@ export const actions = {
 
 				const runnerId = key.replace('-tracking', '');
 
-				if (runners[runnerId] === undefined) {
-					runners[runnerId] = { liveEvent, trackingDeviceId, userId: null };
+				if (runnersFormData[runnerId] === undefined) {
+					runnersFormData[runnerId] = { liveEvent, trackingDeviceId, userId: null };
 				} else {
-					runners[runnerId] = { ...runners[runnerId], liveEvent, trackingDeviceId };
+					runnersFormData[runnerId] = { ...runnersFormData[runnerId], liveEvent, trackingDeviceId };
 				}
 			}
 
@@ -119,16 +129,41 @@ export const actions = {
 				const runnerId = key.replace('-user', '');
 				const userId = value !== null && value !== undefined && value !== '' ? value : null;
 
-				if (runners[runnerId] === undefined) {
-					runners[runnerId] = { liveEvent: null, trackingDeviceId: null, userId };
+				if (runnersFormData[runnerId] === undefined) {
+					runnersFormData[runnerId] = { liveEvent: null, trackingDeviceId: null, userId };
 				} else {
-					runners[runnerId] = { ...runners[runnerId], userId };
+					runnersFormData[runnerId] = { ...runnersFormData[runnerId], userId };
 				}
 			}
 		}
 
+		const liveEvents = await locals.db
+			.select()
+			.from(liveEvent)
+			.where(eq(liveEvent.fkEvent, eventId))
+			.all();
+
+		const tracks = await getTracksFromLiveEvents(liveEvents, fetch);
+
+		const runners = locals.db.query.runner.findMany({
+			where: eq(runnerTable.fkEvent, eventId),
+			with: { legs: true }
+		});
+
+		const legs = locals.db.query.leg.findMany({
+			where: eq(legTable.fkEvent, eventId),
+			with: { routechoices: true }
+		});
+
+		const controlPoints = locals.db
+			.select()
+			.from(controlPointTable)
+			.where(eq(controlPointTable.fkEvent, eventId));
+
+		detectRunnersRoutechoices;
+
 		await locals.db.transaction(async (tx) => {
-			Object.entries(runners).forEach(
+			Object.entries(runnersFormData).forEach(
 				async ([runnerId, { liveEvent, trackingDeviceId, userId }]) => {
 					await tx
 						.update(runnerTable)
