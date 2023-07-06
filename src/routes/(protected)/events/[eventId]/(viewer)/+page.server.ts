@@ -57,6 +57,7 @@ function sortRunnersLegs(runners: Runner[], legs: Leg[]): Runner[] {
 }
 
 function sortLegs(legs: Leg[]): Leg[] {
+	if (legs.length === 0) return [];
 	const sortedLegs: Leg[] = [];
 
 	const firstLeg = legs.find((leg) =>

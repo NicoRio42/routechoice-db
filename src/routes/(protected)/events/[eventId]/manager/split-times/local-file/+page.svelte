@@ -77,54 +77,48 @@
 	}
 </script>
 
-<h1>Load split times from local IOF XML 3.0 file</h1>
+<main class="container max-w-2xl">
+	<h1 class="mt-4 md:mt-15">Load split times from local IOF XML 3.0 file</h1>
 
-<p>
-	&#62;
-	<a href="/events/{data.event.id}/manager">{data.event.name}</a>
+	<p>
+		&#62;
+		<a href="/events/{data.event.id}/manager">Event manager: {data.event.name}</a>
 
-	&#62;
-	<a href="/events/{data.event.id}/manager/split-times">Split times</a>
-</p>
+		&#62;
+		<a href="/events/{data.event.id}/manager/split-times">Split times</a>
 
-<form class="wrapper" method="post" enctype="multipart/form-data" use:enhance>
-	<FileField
-		{form}
-		field="file"
-		label="Load IOF XML File"
-		on:filesChange={extractClassesAndGuessTimeZoneFromXmlFile}
-	/>
+		&#62;
+		<a href="/events/{data.event.id}/manager/split-times/local-file">From local file</a>
+	</p>
 
-	<SelectField {form} field="className" label="Class">
-		{#each classNames as className}
-			<option value={className}>{className}</option>
-		{/each}
-	</SelectField>
+	<form class="mt-15" method="post" enctype="multipart/form-data" use:enhance>
+		<FileField
+			{form}
+			field="file"
+			label="Load IOF XML File"
+			on:filesChange={extractClassesAndGuessTimeZoneFromXmlFile}
+		/>
 
-	<SelectField {form} field="timezone" label="Time zone">
-		{#each timezones as timezone}
-			<option value={timezone.offset}>{timezone.name} {timezone.offset}</option>
-		{/each}
-	</SelectField>
-
-	<button type="submit" aria-busy={$delayed}> Load splits </button>
-
-	{#if $errors._errors !== undefined && $errors._errors.length !== 0}
-		<ul class="list-none">
-			{#each $errors._errors as error}
-				<li class="error">{error}</li>
+		<SelectField {form} field="className" label="Class">
+			{#each classNames as className}
+				<option value={className}>{className}</option>
 			{/each}
-		</ul>
-	{/if}
-</form>
+		</SelectField>
 
-<style>
-	h1 {
-		margin: 2rem auto 1rem;
-	}
+		<SelectField {form} field="timezone" label="Time zone">
+			{#each timezones as timezone}
+				<option value={timezone.offset}>{timezone.name} {timezone.offset}</option>
+			{/each}
+		</SelectField>
 
-	.wrapper {
-		margin: 1rem auto;
-		max-width: 25rem;
-	}
-</style>
+		<button type="submit" aria-busy={$delayed}> Load splits </button>
+
+		{#if $errors._errors !== undefined && $errors._errors.length !== 0}
+			<ul class="list-none">
+				{#each $errors._errors as error}
+					<li class="error">{error}</li>
+				{/each}
+			</ul>
+		{/if}
+	</form>
+</main>

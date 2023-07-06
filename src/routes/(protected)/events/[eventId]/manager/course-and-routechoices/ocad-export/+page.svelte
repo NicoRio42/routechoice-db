@@ -46,10 +46,15 @@
 
 <p>
 	&#62;
-	<a href={`/courses/${data.event.id}/manager`}>{data.event.name}</a>
+	<a href={`/events/${data.event.id}/manager`}>Event manager: {data.event.name}</a>
 
 	&#62;
-	<a href={`/courses/${data.event.id}/manager/course-and-routechoices`}>Course and routechoices</a>
+	<a href={`/events/${data.event.id}/manager/course-and-routechoices`}>Course and routechoices</a>
+
+	&#62;
+	<a href={`/events/${data.event.id}/manager/course-and-routechoices/ocad-export`}>
+		From OCAD exports
+	</a>
 </p>
 
 <form method="post" enctype="multipart/form-data">

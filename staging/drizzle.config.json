@@ -1,5 +1,0 @@
-{
-	"out": "./migrations",
-	"schema": "./src/lib/server/db/schema.ts",
-	"breakpoints": true
-}

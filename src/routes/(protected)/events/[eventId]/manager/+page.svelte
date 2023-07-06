@@ -2,7 +2,7 @@
 	export let data;
 </script>
 
-<main class="container">
+<main class="container max-w-2xl">
 	<h1>Event manager: {data.event.name}</h1>
 
 	<ol>

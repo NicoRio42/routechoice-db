@@ -10,9 +10,19 @@
 <nav class="container-fluid border-b-2 border-b-solid border-b-[var(--table-border-color)]">
 	<ul class="logo-list">
 		<li class="link-list-item">
-			<a class="flex items-center gap-4 p-0 text-5 text-[var(--primary)] whitespace-nowrap" href="/"
-				><Logo --bg-color="var(--primary)" --width="3rem" --height="3rem" --logo-color="white" />
-				<span class="brand-name">Routechoice DB</span>
+			<a
+				class="flex items-center gap-2 sm:gap-4 p-0 text-5 text-[var(--primary)] whitespace-nowrap"
+				href="/"
+			>
+				<Logo --bg-color="var(--primary)" --width="3rem" --height="3rem" --logo-color="white" />
+
+				<span class="hidden sm:inline">Routechoice DB</span>
+
+				<div class="sm:hidden flex flex-col items-center leading-none">
+					<span class="text-[0.625rem]">Routechoice</span>
+
+					<span class="text-8">DB</span>
+				</div>
 			</a>
 		</li>
 	</ul>
@@ -124,10 +134,6 @@
 		display: none;
 	}
 
-	:root {
-		--display-brand-name-small-devices: inline;
-	}
-
 	@media screen and (max-width: 768px) {
 		.hamburger-menu {
 			display: block;
@@ -135,10 +141,6 @@
 
 		.large {
 			display: none;
-		}
-
-		.brand-name {
-			display: var(--display-brand-name-small-devices);
 		}
 
 		nav {
