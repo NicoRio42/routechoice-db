@@ -1,5 +1,11 @@
 import { GPS_PROVIDERS } from '$lib/constants.js';
-import { extractLiveProviderAndEventIdFromUrl, getTracksFromLiveEvents } from '$lib/helpers.js';
+import {
+	extractLiveProviderAndEventIdFromUrl,
+	getRunnersWithTracksAndSortedLegs,
+	getTracksFromLiveEvents,
+	parseRoutechoicesTracksInLegs,
+	sortLegs
+} from '$lib/helpers.js';
 import {
 	runner as runnerTable,
 	user,
@@ -12,10 +18,7 @@ import { error, redirect } from '@sveltejs/kit';
 import { and, eq } from 'drizzle-orm';
 import { loggatorEventSchema } from 'orienteering-js/models';
 import { matchRunnersByName } from './helpers.js';
-import {
-	detectRunnersRoutechoices,
-	detectSingleRunnerRoutechoices
-} from 'orienteering-js/routechoice-detector';
+import { detectRunnersRoutechoices } from '$lib/routechoice-detector.js';
 
 export async function load({ params: { eventId }, locals, fetch }) {
 	const liveEvent = locals.db
@@ -45,7 +48,7 @@ export async function load({ params: { eventId }, locals, fetch }) {
 		throw error(500);
 	}
 
-	let runners = locals.db
+	const runners = locals.db
 		.select({
 			id: runnerTable.id,
 			firstName: runnerTable.firstName,
@@ -145,22 +148,36 @@ export const actions = {
 
 		const tracks = await getTracksFromLiveEvents(liveEvents, fetch);
 
-		const runners = locals.db.query.runner.findMany({
+		const runners = await locals.db.query.runner.findMany({
 			where: eq(runnerTable.fkEvent, eventId),
 			with: { legs: true }
 		});
 
-		const legs = locals.db.query.leg.findMany({
+		const legs = await locals.db.query.leg.findMany({
 			where: eq(legTable.fkEvent, eventId),
 			with: { routechoices: true }
 		});
 
-		const controlPoints = locals.db
+		const sortedLegs = sortLegs(legs);
+		const sortedLegsWithRoutechoicesWithParsedTracks = parseRoutechoicesTracksInLegs(sortedLegs);
+
+		const runnersWithTracksAndSortedLegs = await getRunnersWithTracksAndSortedLegs(
+			sortedLegs,
+			liveEvents,
+			runners
+		);
+
+		const controlPoints = await locals.db
 			.select()
 			.from(controlPointTable)
-			.where(eq(controlPointTable.fkEvent, eventId));
+			.where(eq(controlPointTable.fkEvent, eventId))
+			.all();
 
-		detectRunnersRoutechoices;
+		detectRunnersRoutechoices(
+			sortedLegsWithRoutechoicesWithParsedTracks,
+			runnersWithTracksAndSortedLegs,
+			controlPoints
+		);
 
 		await locals.db.transaction(async (tx) => {
 			Object.entries(runnersFormData).forEach(

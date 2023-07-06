@@ -1,10 +1,10 @@
 import { transform, transformExtent } from 'ol/proj.js';
-import type { Event } from './models/event.model.js';
 import { ModesEnum } from './models/modes.enum.js';
+import type { EventWithLiveEventsRunnersLegsAndControlPoints } from '$lib/models/event.model.js';
 
 export function computeFitBoxAndAngleFromLegNumber(
 	legNumber: number,
-	event: Event
+	event: EventWithLiveEventsRunnersLegsAndControlPoints
 ): [[number, number, number, number], number] {
 	const leg = event.legs[legNumber - 1];
 	if (leg === undefined) throw new Error('Cannot find leg');

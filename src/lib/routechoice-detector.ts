@@ -1,13 +1,25 @@
-import type { Leg, Runner } from './server/db/schema.js';
+import type { RunnerTrack } from 'orienteering-js/models';
+import type { RunnerWithNullableLegsAndTrack } from './models/runner.model.js';
+import type { ControlPoint, Routechoice } from './server/db/schema.js';
+import type { LegWithRoutechoiceWithParsedTrack } from './models/leg.model.js';
+import type { RoutechoiceWithParsedTrack } from './models/routechoice.model.js';
 
-export function detectRunnersRoutechoices(course: Leg[], runners: Runner[]): Runner[] {
-	return runners.map((runner) => detectSingleRunnerRoutechoices(course, runner));
+export function detectRunnersRoutechoices(
+	legs: LegWithRoutechoiceWithParsedTrack[],
+	runners: RunnerWithNullableLegsAndTrack[],
+	controlPoints: ControlPoint[]
+): RunnerWithNullableLegsAndTrack[] {
+	return runners.map((runner) => detectSingleRunnerRoutechoices(legs, runner, controlPoints));
 }
 
-export function detectSingleRunnerRoutechoices(course: Leg[], inputRunner: Runner): Runner {
+export function detectSingleRunnerRoutechoices(
+	legs: LegWithRoutechoiceWithParsedTrack[],
+	inputRunner: RunnerWithNullableLegsAndTrack,
+	controlPoints: ControlPoint[]
+): RunnerWithNullableLegsAndTrack {
 	if (inputRunner.track === null) return inputRunner;
 	checkIfRunnerTrackConsistentWithSplitTimes(inputRunner);
-	const runner = structuredClone(inputRunner) as Runner;
+	const runner = structuredClone(inputRunner) as RunnerWithNullableLegsAndTrack;
 
 	return {
 		...runner,
@@ -17,9 +29,11 @@ export function detectSingleRunnerRoutechoices(course: Leg[], inputRunner: Runne
 			}
 
 			const startTime =
-				index === 0 ? runner.startTime : runner.startTime + leg.timeOverall - leg.time;
+				index === 0
+					? runner.startTime.getTime() / 1000
+					: runner.startTime.getTime() / 1000 + leg.timeOverall - leg.time;
 
-			const finishTime = runner.startTime + leg.timeOverall;
+			const finishTime = runner.startTime.getTime() / 1000 + leg.timeOverall;
 
 			const runnerLegTrack = prepareRunnerTrackForDetection(
 				runner.track as RunnerTrack, // Typescript doesn't mind about my early return
@@ -30,8 +44,8 @@ export function detectSingleRunnerRoutechoices(course: Leg[], inputRunner: Runne
 
 			let detectedRouteChoice: Routechoice | null = null;
 
-			if (course[index].routechoices.length !== 0) {
-				const d = detectRoutechoice(runnerLegTrack, course[index].routechoices);
+			if (legs[index].routechoices.length !== 0) {
+				const d = detectRoutechoice(runnerLegTrack, legs[index].routechoices);
 
 				// Because of Firebase nested arrays problème
 				detectedRouteChoice = d === null ? null : { ...d, track: [] };
@@ -116,8 +130,8 @@ const distanceGPXToPolyline = (
 
 const detectRoutechoice = (
 	runnerLegTrack: [number, number][],
-	routechoices: Routechoice[]
-): Routechoice | null => {
+	routechoices: RoutechoiceWithParsedTrack[]
+): string | null => {
 	if (runnerLegTrack.length === 0) return null;
 
 	// Initiallisation with first routechoice
@@ -125,7 +139,7 @@ const detectRoutechoice = (
 	let distance = distanceGPXToPolyline(runnerLegTrack, routechoices[0].track);
 
 	for (let i = 1; i < routechoices.length; i++) {
-		let d = distanceGPXToPolyline(runnerLegTrack, routechoices[i].track);
+		const d = distanceGPXToPolyline(runnerLegTrack, routechoices[i].track);
 
 		if (d < distance) {
 			distance = d;
@@ -133,7 +147,7 @@ const detectRoutechoice = (
 		}
 	}
 
-	return detectedRoutechoice;
+	return detectedRoutechoice.id;
 };
 
 const prepareRunnerTrackForDetection = (

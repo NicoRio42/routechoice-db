@@ -7,7 +7,13 @@ import {
 	type RunnerTrack
 } from 'orienteering-js/models';
 import { GPS_PROVIDERS } from './constants.js';
-import type { LiveEvent } from './server/db/schema.js';
+import type { LiveEvent, Routechoice, RunnerLeg } from './server/db/schema.js';
+import type { LegWithRoutechoiceWithParsedTrack, LegWithRoutechoices } from './models/leg.model.js';
+import type {
+	RunnerWithNullableLegs,
+	RunnerWithNullableLegsAndTrack
+} from './models/runner.model.js';
+import type { RoutechoiceWithParsedTrack } from './models/routechoice.model.js';
 
 export function extractLiveProviderAndEventIdFromUrl(
 	url: string
@@ -123,4 +129,101 @@ export async function getEventMap(liveEvent: LiveEvent, fetch: Fetch): Promise<C
 	}
 
 	throw new Error('Only Loggator is available in routechoice DB for the moment');
+}
+
+export function sortRunnersLegs(
+	runners: RunnerWithNullableLegsAndTrack[],
+	legs: LegWithRoutechoices[]
+): RunnerWithNullableLegsAndTrack[] {
+	return runners.map((runner) => {
+		const runnerLegs: (RunnerLeg | null)[] = [];
+
+		legs.forEach((leg) => {
+			const runnerLeg = runner.legs.find((l) => leg.id === l?.fkLeg);
+			if (runnerLeg === undefined) runnerLegs.push(null);
+			else runnerLegs.push(runnerLeg);
+		});
+
+		return { ...runner, legs: runnerLegs };
+	});
+}
+
+export function sortLegs(legs: LegWithRoutechoices[]): LegWithRoutechoices[] {
+	if (legs.length === 0) return [];
+	const sortedLegs: LegWithRoutechoices[] = [];
+
+	const firstLeg = legs.find((leg) =>
+		legs.every((otherLeg) => otherLeg.fkFinishControlPoint !== leg.fkStartControlPoint)
+	);
+
+	if (firstLeg === undefined) {
+		throw new Error('Circular course');
+	}
+
+	sortedLegs.push(firstLeg);
+
+	while (sortedLegs.length !== legs.length) {
+		const nextLeg = legs.find(
+			(leg) => leg.fkStartControlPoint === sortedLegs[sortedLegs.length - 1].fkFinishControlPoint
+		);
+
+		if (nextLeg === undefined) {
+			throw new Error('There is holes in the course.');
+		}
+
+		sortedLegs.push(nextLeg);
+	}
+
+	return sortedLegs;
+}
+
+export function parseRoutechoicesTracksInLegs(
+	legs: LegWithRoutechoices[]
+): LegWithRoutechoiceWithParsedTrack[] {
+	return legs.map((leg) => ({
+		...leg,
+		routechoices: leg.routechoices.map((routechoice) => ({
+			id: routechoice.id,
+			name: routechoice.name,
+			color: routechoice.color,
+			length: routechoice.length,
+			track: parseRoutechoiceTrack(routechoice)
+		}))
+	}));
+}
+
+function parseRoutechoiceTrack(routechoice: Routechoice): [number, number][] {
+	const latitudes = routechoice.latitudes.split(';').map(parseFloatOrThrow);
+	const longitudes = routechoice.longitudes.split(';').map(parseFloatOrThrow);
+
+	if (latitudes.length !== longitudes.length) {
+		throw new Error("Routechoice's longitudes and latitudes arrays are not the same size");
+	}
+
+	return latitudes.map((lat, index) => [lat, longitudes[index]]);
+}
+
+function parseFloatOrThrow(str: string): number {
+	const num = parseFloat(str);
+	if (isNaN(num)) throw new Error('The string is not a number');
+	return num;
+}
+
+export async function getRunnersWithTracksAndSortedLegs(
+	sortedLegs: LegWithRoutechoices[],
+	liveEvents: LiveEvent[],
+	runners: RunnerWithNullableLegs[]
+) {
+	return getTracksFromLiveEvents(liveEvents, fetch)
+		.then((tracks) =>
+			runners.map((runner) => {
+				const track = tracks.find(
+					(t) =>
+						t.trackingDeviceId === runner.trackingDeviceId && t.fkLiveEvent === runner.fkLiveEvent
+				);
+
+				return { ...runner, track: track === undefined ? null : track.track };
+			})
+		)
+		.then((runners) => sortRunnersLegs(runners, sortedLegs));
 }
