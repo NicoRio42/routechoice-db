@@ -180,7 +180,13 @@ export function sortLegs(legs: LegWithRoutechoices[]): LegWithRoutechoices[] {
 export function parseRoutechoicesTracksInLegs(
 	legs: LegWithRoutechoices[]
 ): LegWithRoutechoiceWithParsedTrack[] {
-	return legs.map((leg) => ({
+	return legs.map(parseRoutechoicesTracksInASingleLeg);
+}
+
+export function parseRoutechoicesTracksInASingleLeg(
+	leg: LegWithRoutechoices
+): LegWithRoutechoiceWithParsedTrack {
+	return {
 		...leg,
 		routechoices: leg.routechoices.map((routechoice) => ({
 			id: routechoice.id,
@@ -189,7 +195,7 @@ export function parseRoutechoicesTracksInLegs(
 			length: routechoice.length,
 			track: parseRoutechoiceTrack(routechoice)
 		}))
-	}));
+	};
 }
 
 function parseRoutechoiceTrack(routechoice: Routechoice): [number, number][] {

@@ -10,6 +10,57 @@ export function detectRunnersRoutechoices(
 	return runners.map((runner) => detectSingleRunnerRoutechoices(legs, runner));
 }
 
+export function detectRunnersRoutechoicesForASingleLeg(
+	leg: LegWithRoutechoiceWithParsedTrack,
+	runners: RunnerWithNullableLegsAndTrack[],
+	legIndex: number
+): RunnerWithNullableLegsAndTrack[] {
+	return runners.map((runner) =>
+		detectSingleRunnerRoutechoicesForASingleLeg(leg, runner, legIndex)
+	);
+}
+
+export function detectSingleRunnerRoutechoicesForASingleLeg(
+	leg: LegWithRoutechoiceWithParsedTrack,
+	inputRunner: RunnerWithNullableLegsAndTrack,
+	legIndex: number
+): RunnerWithNullableLegsAndTrack {
+	if (inputRunner.track === null) return inputRunner;
+	checkIfRunnerTrackConsistentWithSplitTimes(inputRunner);
+	const runner = structuredClone(inputRunner) as RunnerWithNullableLegsAndTrack;
+
+	return {
+		...runner,
+		legs: runner.legs.map((runnerLeg, index) => {
+			if (runnerLeg === null || index !== legIndex) {
+				return runnerLeg;
+			}
+
+			const startTime =
+				index === 0
+					? runner.startTime.getTime() / 1000
+					: runner.startTime.getTime() / 1000 + runnerLeg.timeOverall - runnerLeg.time;
+
+			const finishTime = runner.startTime.getTime() / 1000 + runnerLeg.timeOverall;
+
+			const runnerLegTrack = prepareRunnerTrackForDetection(
+				runner.track as RunnerTrack, // Typescript doesn't mind about my early return
+				startTime,
+				finishTime,
+				runner.timeOffset
+			);
+
+			const fkDetectedRoutechoice =
+				leg.routechoices.length === 0 ? null : detectRoutechoice(runnerLegTrack, leg.routechoices);
+
+			return {
+				...runnerLeg,
+				fkDetectedRoutechoice
+			};
+		})
+	};
+}
+
 export function detectSingleRunnerRoutechoices(
 	legs: LegWithRoutechoiceWithParsedTrack[],
 	inputRunner: RunnerWithNullableLegsAndTrack

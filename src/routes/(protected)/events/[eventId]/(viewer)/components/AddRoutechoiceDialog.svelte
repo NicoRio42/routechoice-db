@@ -10,8 +10,6 @@
 	export let leg: LegWithRoutechoices;
 	export let currentDrawnRoutechoice: LineString;
 
-	$: console.log(leg);
-
 	const event = getContext<Writable<EventWithLiveEventsRunnersLegsAndControlPoints>>('event');
 
 	let name: string;
