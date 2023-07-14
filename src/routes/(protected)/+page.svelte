@@ -21,7 +21,7 @@
 	<title>Routechoice DB</title>
 </svelte:head>
 
-<main class="container">
+<main class="container flex-shrink-0 flex-grow-1">
 	<h1 class="mt-4 mb-6">Events</h1>
 
 	<!-- <TagsSelect on:tagsSelect={handleTagsSelected} /> -->
