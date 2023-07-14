@@ -3,7 +3,7 @@
 	import 'ol/ol.css';
 	import { onDestroy, onMount, setContext } from 'svelte';
 	import DoubleClickZoom from 'ol/interaction/DoubleClickZoom.js';
-	import { ModesEnum } from '../models/modes.enum';
+	import { ModesEnum } from '../models/modes.enum.js';
 
 	export let angle: number;
 	export let fitBox: [number, number, number, number];

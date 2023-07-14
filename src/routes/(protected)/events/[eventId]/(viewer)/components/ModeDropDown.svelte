@@ -1,8 +1,6 @@
 <script lang="ts">
 	import { page } from '$app/stores';
-	import ExternalLink from '$lib/components/icons/ExternalLink.svelte';
 	import { SPLITTIMES_BASE_URL } from '$lib/constants.js';
-	import { splittimesProviderKey } from '../../../../../environments/environment.js';
 	import { ModesEnum } from '../models/modes.enum.js';
 	import { addSearchParamsToURL } from '../utils.js';
 
@@ -27,7 +25,7 @@
 
 		<li><a href={addSearchParamsToURL($page.url, 'mode', ModesEnum.DRAW)}>Draw routechoices</a></li>
 
-		<li>
+		<!-- <li>
 			<a
 				href="{SPLITTIMES_BASE_URL}/{splittimesProviderKey}/{courseId}/classes/1"
 				target="_blank"
@@ -36,7 +34,7 @@
 				Split times
 				<ExternalLink --width="0.75rem" --height="0.75rem" />
 			</a>
-		</li>
+		</li> -->
 	</ul>
 </details>
 

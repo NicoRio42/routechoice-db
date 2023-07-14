@@ -1,35 +1,29 @@
-<script lang="ts" context="module">
-	import { writable } from 'svelte/store';
-	import { fade } from 'svelte/transition';
-	import type { Routechoice } from 'orienteering-js/models';
-
-	const showDialog = writable(false);
-	let submit: Function;
-	let cancel: Function;
-
-	export function getNewRoutechoiceNameAndColor(): Promise<[string, string]> {
-		showDialog.set(true);
-
-		return new Promise<[string, string]>((resolve, reject) => {
-			submit = resolve;
-			cancel = reject;
-		});
-	}
-</script>
-
 <script lang="ts">
+	import type { EventWithLiveEventsRunnersLegsAndControlPoints } from '$lib/models/event.model.js';
+	import type { LegWithRoutechoices } from '$lib/models/leg.model.js';
+	import type { LineString } from 'ol/geom.js';
 	import { names, routesColors } from 'orienteering-js/ocad';
+	import { createEventDispatcher, getContext } from 'svelte';
+	import type { Writable } from 'svelte/store';
+	import { fade } from 'svelte/transition';
 
-	export let legRoutechoices: Routechoice[];
+	export let leg: LegWithRoutechoices;
+	export let currentDrawnRoutechoice: LineString;
+
+	$: console.log(leg);
+
+	const event = getContext<Writable<EventWithLiveEventsRunnersLegsAndControlPoints>>('event');
 
 	let name: string;
 	let color: string;
 	let allowedNames: string[];
 
+	const dispatchCancel = createEventDispatcher<{ cancel: void }>();
+
 	$: {
 		allowedNames = names.filter(
 			(name) =>
-				!legRoutechoices.some(
+				!leg.routechoices.some(
 					(routechoice) => routechoice.name.toLowerCase() === name.toLowerCase()
 				)
 		);
@@ -38,52 +32,48 @@
 
 		color = routesColors.filter(
 			(color) =>
-				!legRoutechoices.some(
+				!leg.routechoices.some(
 					(routechoice) => routechoice.color.toLowerCase() === color.toLowerCase()
 				)
 		)[0];
 	}
-
-	function handleCancel() {
-		cancel();
-		$showDialog = false;
-	}
-
-	function handleSubmit() {
-		submit([name, color]);
-		$showDialog = false;
-	}
 </script>
 
-{#if $showDialog}
-	<dialog open transition:fade>
-		<article>
-			<form on:submit|preventDefault={handleSubmit}>
-				<label for="name">
-					Name
+<dialog open transition:fade>
+	<article>
+		<form method="post" action="/events/{$event.id}/legs/{leg.id}/routechoices?/add">
+			<label for="name">
+				Name
 
-					<select bind:value={name} name="name" required>
-						{#each allowedNames as value}
-							<option {value}>{value}</option>
-						{/each}
-					</select>
-				</label>
+				<select bind:value={name} name="name" required>
+					{#each allowedNames as value}
+						<option {value}>{value}</option>
+					{/each}
+				</select>
+			</label>
 
-				<label for="color">
-					Color
+			<label for="color">
+				Color
 
-					<input bind:value={color} type="color" name="color" required />
-				</label>
+				<input bind:value={color} type="color" name="color" required />
+			</label>
 
-				<footer>
-					<button type="button" class="outline" on:click={handleCancel}>Cancel</button>
+			<input
+				type="hidden"
+				name="track"
+				value={JSON.stringify(currentDrawnRoutechoice.getCoordinates())}
+			/>
 
-					<button type="submit">Add Routechoice</button>
-				</footer>
-			</form>
-		</article>
-	</dialog>
-{/if}
+			<footer>
+				<button type="button" class="outline" on:click={() => dispatchCancel('cancel')}
+					>Cancel</button
+				>
+
+				<button type="submit">Add Routechoice</button>
+			</footer>
+		</form>
+	</article>
+</dialog>
 
 <style>
 	footer {

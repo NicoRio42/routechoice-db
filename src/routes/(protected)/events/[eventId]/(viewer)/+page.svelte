@@ -13,6 +13,12 @@
 	import VectorLayer from './components/VectorLayer.svelte';
 	import './styles.css';
 	import { computeFitBoxAndAngleFromLegNumber, getModeFromSearchParams } from './utils.js';
+	import ModeDropDown from './components/ModeDropDown.svelte';
+	import { ModesEnum } from './models/modes.enum.js';
+	import Draw from './components/Draw.svelte';
+	import AddRoutechoiceDialog from './components/AddRoutechoiceDialog.svelte';
+	import type { LineString } from 'ol/geom.js';
+	import type { DrawEvent } from 'ol/interaction/Draw.js';
 
 	export let data;
 
@@ -22,6 +28,8 @@
 	let selectedRunners: string[] = [];
 	let showRoutechoices = true;
 	let isAutoAnalysisMode = false;
+	let currentDrawnRoutechoice: null | LineString = null;
+	let showAddRoutechoiceDialog = false;
 
 	$: mode = getModeFromSearchParams($page.url.searchParams);
 	$: legRoutechoices = data.event.legs[legNumber - 1].routechoices;
@@ -44,54 +52,10 @@
 	$: event.set(data.event);
 	setContext('event', event);
 
-	// async function handleDrawEnd(e: CustomEvent<DrawEvent>): Promise<void> {
-	// try {
-	// 	const [name, color] = await getNewRoutechoiceNameAndColor();
-	// 	const [track, length] = getStandardCordsAndLengthFromLineStringFlatCordinates(
-	// 		(e.detail.feature.getGeometry() as LineString).getFlatCoordinates()
-	// 	);
-	// 	const newRoutechoice: Routechoice = {
-	// 		id: crypto.randomUUID(),
-	// 		color,
-	// 		name,
-	// 		length,
-	// 		track
-	// 	};
-	// 	courseData.legs[legNumber - 1].routechoices = [
-	// 		...courseData.legs[legNumber - 1].routechoices,
-	// 		newRoutechoice
-	// 	];
-	// 	courseData.legs = createRoutechoiceStatistics(courseData.runners, courseData.legs);
-	// 	try {
-	// 		await updateDoc(doc(db, 'coursesData', courseData.id), {
-	// 			legs: serializeNestedArraysInLegs(courseData.legs)
-	// 		});
-	// 	} catch (error) {
-	// 		alert('An error occured while updating the course.');
-	// 	}
-	// 	if (courseData.runners.length !== 0) {
-	// 		const runnersWithDetectedRoutechoices = detectRunnersRoutechoices(
-	// 			courseData.legs,
-	// 			courseData.runners
-	// 		);
-	// 		try {
-	// 			updateRunnersRoutechoicesInFirestore(
-	// 				courseData.runners,
-	// 				runnersWithDetectedRoutechoices,
-	// 				db,
-	// 				courseData.id
-	// 			);
-	// 			courseData.runners = runnersWithDetectedRoutechoices;
-	// 		} catch (error) {
-	// 			alert('An error occured while updating the new runners to the database.');
-	// 			console.error(error);
-	// 		}
-	// 	}
-	// } catch (e) {
-	//		console.error(e)
-	// 	return;
-	// }
-	// }
+	async function handleDrawEnd(e: CustomEvent<DrawEvent>): Promise<void> {
+		currentDrawnRoutechoice = e.detail.feature.getGeometry() as LineString;
+		showAddRoutechoiceDialog = true;
+	}
 
 	async function handleRunnerTimeOffsetChange(event: CustomEvent<string>): Promise<void> {
 		// const runnerId = event.detail;
@@ -135,10 +99,19 @@
 	}
 </script>
 
-<!-- <ModeDropDown courseId={data.event.id} {mode} /> -->
+<ModeDropDown courseId={data.event.id} {mode} />
 
 <div class="wrapper">
-	<!-- <AddRoutechoiceDialog {legRoutechoices} /> -->
+	{#if showAddRoutechoiceDialog && currentDrawnRoutechoice !== null}
+		<AddRoutechoiceDialog
+			leg={data.event.legs[legNumber - 1]}
+			{currentDrawnRoutechoice}
+			on:cancel={() => {
+				showAddRoutechoiceDialog = false;
+				currentDrawnRoutechoice = null;
+			}}
+		/>
+	{/if}
 
 	<!-- <RunnerOffsetEditor bind:courseData /> -->
 
@@ -151,9 +124,9 @@
 	/>
 
 	<OlMap {mode} {angle} {fitBox} padding={[100, 0, 100, 0]}>
-		<!-- {#if mode === ModesEnum.DRAW}
+		{#if mode === ModesEnum.DRAW}
 			<Draw type={'LineString'} on:drawEnd={handleDrawEnd} />
-		{/if} -->
+		{/if}
 
 		<GeoreferencedImage eventMap={data.eventMap} />
 
