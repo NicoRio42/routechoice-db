@@ -54,6 +54,15 @@ export function getModeFromSearchParams(searchParams: URLSearchParams): ModesEnu
 	return ModesEnum.ANALYSIS;
 }
 
+export function getLegNumberFromSearchParams(searchParams: URLSearchParams): number {
+	const legNumberFromParams = searchParams.get('legNumber');
+	if (legNumberFromParams === null) return 1;
+	const parsedLegNumber = parseInt(legNumberFromParams, 10);
+	if (isNaN(parsedLegNumber)) return 1;
+
+	return parsedLegNumber;
+}
+
 export function addSearchParamsToURL(url: URL, name: string, value: string): string {
 	const newURL = new URL(url);
 	newURL.searchParams.set(name, value);

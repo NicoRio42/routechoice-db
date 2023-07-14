@@ -12,7 +12,11 @@
 	import SideBar from './components/SideBar.svelte';
 	import VectorLayer from './components/VectorLayer.svelte';
 	import './styles.css';
-	import { computeFitBoxAndAngleFromLegNumber, getModeFromSearchParams } from './utils.js';
+	import {
+		computeFitBoxAndAngleFromLegNumber,
+		getLegNumberFromSearchParams,
+		getModeFromSearchParams
+	} from './utils.js';
 	import ModeDropDown from './components/ModeDropDown.svelte';
 	import { ModesEnum } from './models/modes.enum.js';
 	import Draw from './components/Draw.svelte';
@@ -24,7 +28,6 @@
 
 	let angle: number;
 	let fitBox: [number, number, number, number];
-	let legNumber = 1;
 	let selectedRunners: string[] = [];
 	let showRoutechoices = true;
 	let isAutoAnalysisMode = false;
@@ -32,6 +35,7 @@
 	let showAddRoutechoiceDialog = false;
 
 	$: mode = getModeFromSearchParams($page.url.searchParams);
+	$: legNumber = getLegNumberFromSearchParams($page.url.searchParams);
 	$: legRoutechoices = data.event.legs[legNumber - 1].routechoices;
 
 	$: {

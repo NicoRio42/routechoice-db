@@ -11,13 +11,13 @@
 	const numberOfLegs = legs.length;
 	let showMapButtons = false;
 
-	const handlePreviousControl = () => {
-		legNumber = legNumber !== 1 ? legNumber - 1 : legNumber;
-	};
+	function getPreviousLegNumber() {
+		return legNumber !== 1 ? legNumber - 1 : legNumber;
+	}
 
-	const handleNextControl = () => {
-		legNumber = legNumber !== numberOfLegs ? legNumber + 1 : legNumber;
-	};
+	function getNextLegNumber() {
+		return legNumber !== numberOfLegs ? legNumber + 1 : legNumber;
+	}
 </script>
 
 <div class="control-bar">
@@ -48,9 +48,13 @@
 		<i class="i-carbon-view" />
 	</button>
 
-	<button class="btn" on:click={handlePreviousControl}>
+	<a
+		role="button"
+		class="btn"
+		href={addSearchParamsToURL($page.url, 'legNumber', getPreviousLegNumber().toString())}
+	>
 		<i class="i-carbon-chevron-left" />
-	</button>
+	</a>
 
 	<select bind:value={legNumber}>
 		{#each [...Array(numberOfLegs).keys()] as leg}
@@ -58,9 +62,13 @@
 		{/each}
 	</select>
 
-	<button class="btn" on:click={handleNextControl}>
+	<a
+		role="button"
+		class="btn"
+		href={addSearchParamsToURL($page.url, 'legNumber', getNextLegNumber().toString())}
+	>
 		<i class="i-carbon-chevron-right" />
-	</button>
+	</a>
 
 	<a
 		role="button"
