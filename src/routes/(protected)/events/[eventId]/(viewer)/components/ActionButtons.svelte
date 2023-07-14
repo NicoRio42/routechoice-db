@@ -1,6 +1,6 @@
 <script lang="ts">
 	import { page } from '$app/stores';
-	import type { Leg } from '../models/leg.model.js';
+	import type { Leg } from '$lib/server/db/schema.js';
 	import { addSearchParamsToURL, deleteSearchParamsToURL } from '../utils.js';
 
 	export let legNumber: number;
@@ -21,7 +21,7 @@
 </script>
 
 <div class="control-bar">
-	<button
+	<!-- <button
 		class="map-buttons-toggler mobile btn"
 		on:click={() => (showMapButtons = !showMapButtons)}
 	>
@@ -42,9 +42,9 @@
 		<i class="i-carbon-view" />
 	</button>
 
-	<button class="large btn" on:click={() => (isAutoAnalysisMode = !isAutoAnalysisMode)}>AA</button>
+	<button class="large btn" on:click={() => (isAutoAnalysisMode = !isAutoAnalysisMode)}>AA</button> -->
 
-	<button class="large btn" on:click={() => (showRoutechoices = !showRoutechoices)}>
+	<button class="btn" on:click={() => (showRoutechoices = !showRoutechoices)}>
 		<i class="i-carbon-view" />
 	</button>
 
@@ -125,7 +125,8 @@
 
 	@media screen and (min-width: 500px) {
 		.control-bar {
-			transform: translate(calc(-50% - 1.75rem));
+			/* transform: translate(calc(-50% - 1.75rem)); */
+			transform: translate(-50%);
 		}
 
 		.map-buttons-toggler {

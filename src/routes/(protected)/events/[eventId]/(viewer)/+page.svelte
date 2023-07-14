@@ -1,22 +1,20 @@
 <script lang="ts">
 	import { page } from '$app/stores';
-	import { writable } from 'svelte/store';
+	import type { EventWithLiveEventsRunnersLegsAndControlPoints as Event } from '$lib/models/event.model.js';
+	import type { User } from 'lucia-auth';
 	import { setContext } from 'svelte';
+	import { writable } from 'svelte/store';
 	import ActionButtons from './components/ActionButtons.svelte';
 	import GeoreferencedImage from './components/GeoreferencedImage.svelte';
 	import OlMap from './components/OLMap.svelte';
 	import RoutechoiceTrack from './components/RoutechoiceTrack.svelte';
 	import RunnerRoute from './components/RunnerRoute.svelte';
 	import SideBar from './components/SideBar.svelte';
-	import type { RoutechoiceChangeEventDetails } from './components/SplitTimesTable/RoutecoiceTableCell.svelte';
 	import VectorLayer from './components/VectorLayer.svelte';
 	import './styles.css';
 	import { computeFitBoxAndAngleFromLegNumber, getModeFromSearchParams } from './utils.js';
-	import type { User } from 'lucia-auth';
-	import type { Event } from './models/event.model.js';
 
 	export let data;
-	console.log(data);
 
 	let angle: number;
 	let fitBox: [number, number, number, number];
@@ -42,17 +40,9 @@
 	$: user.set(data.user);
 	setContext('user', user);
 
-	async function handleRoutechoiceChange(
-		event: CustomEvent<RoutechoiceChangeEventDetails>
-	): Promise<void> {
-		// courseData = await changeRunnerRoutechoice(
-		// 	courseData,
-		// 	event.detail.routechoiceID,
-		// 	event.detail.runnerId,
-		// 	legNumber,
-		// 	db
-		// );
-	}
+	const event = writable<Event>();
+	$: event.set(data.event);
+	setContext('event', event);
 
 	// async function handleDrawEnd(e: CustomEvent<DrawEvent>): Promise<void> {
 	// try {
@@ -157,7 +147,6 @@
 		runners={data.event.runners}
 		legs={data.event.legs}
 		{legNumber}
-		on:routechoiceChange={handleRoutechoiceChange}
 		on:changeRunnerTimeOffset={handleRunnerTimeOffsetChange}
 	/>
 

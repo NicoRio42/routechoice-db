@@ -89,7 +89,7 @@
 			</td>
 
 			{#if legRoutechoices.length > 0}
-				<RoutechoiceTableCell routechoices={legRoutechoices} {runner} on:routechoiceChange />
+				<RoutechoiceTableCell routechoices={legRoutechoices} {runner} />
 			{:else}
 				<td />
 			{/if}
