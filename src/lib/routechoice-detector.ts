@@ -1,21 +1,18 @@
 import type { RunnerTrack } from 'orienteering-js/models';
-import type { RunnerWithNullableLegsAndTrack } from './models/runner.model.js';
-import type { ControlPoint, Routechoice } from './server/db/schema.js';
 import type { LegWithRoutechoiceWithParsedTrack } from './models/leg.model.js';
 import type { RoutechoiceWithParsedTrack } from './models/routechoice.model.js';
+import type { RunnerWithNullableLegsAndTrack } from './models/runner.model.js';
 
 export function detectRunnersRoutechoices(
 	legs: LegWithRoutechoiceWithParsedTrack[],
-	runners: RunnerWithNullableLegsAndTrack[],
-	controlPoints: ControlPoint[]
+	runners: RunnerWithNullableLegsAndTrack[]
 ): RunnerWithNullableLegsAndTrack[] {
-	return runners.map((runner) => detectSingleRunnerRoutechoices(legs, runner, controlPoints));
+	return runners.map((runner) => detectSingleRunnerRoutechoices(legs, runner));
 }
 
 export function detectSingleRunnerRoutechoices(
 	legs: LegWithRoutechoiceWithParsedTrack[],
-	inputRunner: RunnerWithNullableLegsAndTrack,
-	controlPoints: ControlPoint[]
+	inputRunner: RunnerWithNullableLegsAndTrack
 ): RunnerWithNullableLegsAndTrack {
 	if (inputRunner.track === null) return inputRunner;
 	checkIfRunnerTrackConsistentWithSplitTimes(inputRunner);
@@ -42,32 +39,31 @@ export function detectSingleRunnerRoutechoices(
 				runner.timeOffset
 			);
 
-			let detectedRouteChoice: Routechoice | null = null;
-
-			if (legs[index].routechoices.length !== 0) {
-				const d = detectRoutechoice(runnerLegTrack, legs[index].routechoices);
-
-				// Because of Firebase nested arrays problème
-				detectedRouteChoice = d === null ? null : { ...d, track: [] };
-			}
+			const fkDetectedRoutechoice =
+				legs[index].routechoices.length === 0
+					? null
+					: detectRoutechoice(runnerLegTrack, legs[index].routechoices);
 
 			return {
 				...leg,
-				detectedRouteChoice
+				fkDetectedRoutechoice
 			};
 		})
 	};
 }
 
-function checkIfRunnerTrackConsistentWithSplitTimes(runner: Runner): void {
+function checkIfRunnerTrackConsistentWithSplitTimes(runner: RunnerWithNullableLegsAndTrack): void {
 	if (runner.track === null) throw new Error("Runner doesn't have a track.");
 	const length = runner.track.times.length;
 	const lastTrackTime = runner.track.times[length - 1];
 	if (lastTrackTime === undefined) throw new Error("2DRerun track's is empty.");
 
-	const lastCompleteLeg = structuredClone(runner.legs).reverse().find(isNotNullRunnerLeg);
+	const lastCompleteLeg = structuredClone(runner.legs)
+		.reverse()
+		.find((l) => l !== null);
 
-	if (lastCompleteLeg === undefined) throw new Error('Runner have no valid legs.');
+	if (lastCompleteLeg === undefined || lastCompleteLeg === null)
+		throw new Error('Runner have no valid legs.');
 
 	if (runner.track.lats.length !== runner.track.lons.length)
 		throw new Error("Lats and lons don't have the same length");
@@ -80,7 +76,7 @@ const distancePointToSegment = (
 	extremity1: [number, number],
 	extremity2: [number, number]
 ): number => {
-	let r =
+	const r =
 		dotProduct(
 			[extremity2[0] - extremity1[0], extremity2[1] - extremity1[1]],
 			[point[0] - extremity1[0], point[1] - extremity1[1]]

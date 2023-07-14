@@ -2,23 +2,22 @@ import { GPS_PROVIDERS } from '$lib/constants.js';
 import {
 	extractLiveProviderAndEventIdFromUrl,
 	getRunnersWithTracksAndSortedLegs,
-	getTracksFromLiveEvents,
 	parseRoutechoicesTracksInLegs,
 	sortLegs
 } from '$lib/helpers.js';
+import { detectRunnersRoutechoices } from '$lib/routechoice-detector.js';
 import {
-	runner as runnerTable,
-	user,
-	liveEvent as liveEventTable,
-	liveEvent,
 	leg as legTable,
-	controlPoint as controlPointTable
+	liveEvent,
+	liveEvent as liveEventTable,
+	runnerLeg as runnerLegTable,
+	runner as runnerTable,
+	user
 } from '$lib/server/db/schema.js';
 import { error, redirect } from '@sveltejs/kit';
 import { and, eq } from 'drizzle-orm';
 import { loggatorEventSchema } from 'orienteering-js/models';
 import { matchRunnersByName } from './helpers.js';
-import { detectRunnersRoutechoices } from '$lib/routechoice-detector.js';
 
 export async function load({ params: { eventId }, locals, fetch }) {
 	const liveEvent = locals.db
@@ -39,7 +38,8 @@ export async function load({ params: { eventId }, locals, fetch }) {
 	const loggatorEventUrl = `${gpsProvider.apiBaseUrl}/events/${liveEventId}`;
 
 	try {
-		const response = await fetch(loggatorEventUrl);
+		// const response = await fetch(loggatorEventUrl);
+		const response = await fetch('http://localhost:5173/20220622meylan.json');
 
 		const loggatorEvent = loggatorEventSchema.parse(await response.json());
 		competitors = loggatorEvent.competitors.map((c) => ({ deviceId: c.device_id, name: c.name }));
@@ -140,18 +140,29 @@ export const actions = {
 			}
 		}
 
+		const runners = await locals.db.query.runner.findMany({
+			where: eq(runnerTable.fkEvent, eventId),
+			with: { legs: true }
+		});
+
+		const runnersWithLiveEventAndtrackingDeviceId = runners.map((runner) => {
+			const runnerFormData = runnersFormData[runner.id];
+			if (runnerFormData === undefined) return runner;
+			const { liveEvent, trackingDeviceId, userId } = runnerFormData;
+
+			return {
+				...runner,
+				fkLiveEvent: liveEvent,
+				trackingDeviceId,
+				fkUser: userId
+			};
+		});
+
 		const liveEvents = await locals.db
 			.select()
 			.from(liveEvent)
 			.where(eq(liveEvent.fkEvent, eventId))
 			.all();
-
-		const tracks = await getTracksFromLiveEvents(liveEvents, fetch);
-
-		const runners = await locals.db.query.runner.findMany({
-			where: eq(runnerTable.fkEvent, eventId),
-			with: { legs: true }
-		});
 
 		const legs = await locals.db.query.leg.findMany({
 			where: eq(legTable.fkEvent, eventId),
@@ -164,35 +175,35 @@ export const actions = {
 		const runnersWithTracksAndSortedLegs = await getRunnersWithTracksAndSortedLegs(
 			sortedLegs,
 			liveEvents,
-			runners
+			runnersWithLiveEventAndtrackingDeviceId
 		);
 
-		const controlPoints = await locals.db
-			.select()
-			.from(controlPointTable)
-			.where(eq(controlPointTable.fkEvent, eventId))
-			.all();
-
-		detectRunnersRoutechoices(
+		const runnersWithDetectedRoutechoices = detectRunnersRoutechoices(
 			sortedLegsWithRoutechoicesWithParsedTracks,
-			runnersWithTracksAndSortedLegs,
-			controlPoints
+			runnersWithTracksAndSortedLegs
 		);
 
 		await locals.db.transaction(async (tx) => {
-			Object.entries(runnersFormData).forEach(
-				async ([runnerId, { liveEvent, trackingDeviceId, userId }]) => {
+			for (const runner of runnersWithDetectedRoutechoices) {
+				await tx
+					.update(runnerTable)
+					.set({
+						fkLiveEvent: runner.fkLiveEvent,
+						trackingDeviceId: runner.trackingDeviceId,
+						fkUser: runner.fkUser
+					})
+					.where(eq(runnerTable.id, runner.id))
+					.run();
+
+				for (const runnerLeg of runner.legs) {
+					if (runnerLeg === null || !runnerLeg.fkDetectedRoutechoice) continue;
 					await tx
-						.update(runnerTable)
-						.set({
-							fkLiveEvent: liveEvent,
-							trackingDeviceId,
-							fkUser: userId
-						})
-						.where(eq(runnerTable.id, runnerId))
+						.update(runnerLegTable)
+						.set({ fkDetectedRoutechoice: runnerLeg.fkDetectedRoutechoice })
+						.where(eq(runnerLegTable.id, runnerLeg.id))
 						.run();
 				}
-			);
+			}
 
 			throw redirect(302, `/events/${eventId}`);
 		});
