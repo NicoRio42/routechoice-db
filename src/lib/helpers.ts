@@ -7,13 +7,17 @@ import {
 	type RunnerTrack
 } from 'orienteering-js/models';
 import { GPS_PROVIDERS } from './constants.js';
-import type { LiveEvent, Routechoice, RunnerLeg } from './server/db/schema.js';
 import type { LegWithRoutechoiceWithParsedTrack, LegWithRoutechoices } from './models/leg.model.js';
 import type {
 	RunnerWithNullableLegs,
 	RunnerWithNullableLegsAndTrack
 } from './models/runner.model.js';
-import type { RoutechoiceWithParsedTrack } from './models/routechoice.model.js';
+import type {
+	LiveEvent,
+	Routechoice,
+	RoutechoiceStatistics,
+	RunnerLeg
+} from './server/db/schema.js';
 
 export function extractLiveProviderAndEventIdFromUrl(
 	url: string
@@ -232,4 +236,58 @@ export async function getRunnersWithTracksAndSortedLegs(
 			})
 		)
 		.then((runners) => sortRunnersLegs(runners, sortedLegs));
+}
+
+/**
+ * Create routechoices statistics, only for one leg when legIndex is defined
+ * @param runners
+ * @param legIndex
+ */
+export function createRoutechoiceStatistics(
+	runners: RunnerWithNullableLegs[],
+	legIndex?: number
+): Omit<RoutechoiceStatistics, 'id'>[] {
+	const routechoicesStatistics: Omit<RoutechoiceStatistics, 'id'>[] = [];
+
+	const createOrUpdateRoutechoiceStatisticsFromRunnerLeg = (runnerLeg: RunnerLeg) => {
+		const routechoiceId = runnerLeg.fkManualRoutechoice ?? runnerLeg.fkDetectedRoutechoice ?? null;
+		if (routechoiceId === null) return;
+
+		const statistics = routechoicesStatistics.find(
+			(stats) => stats.fkRoutechoice === routechoiceId
+		);
+
+		if (statistics === undefined) {
+			routechoicesStatistics.push({
+				fkRoutechoice: routechoiceId,
+				bestTime: runnerLeg.time,
+				numberOfRunners: 1
+			});
+
+			return;
+		}
+
+		statistics.numberOfRunners++;
+
+		if (statistics.bestTime > runnerLeg.time) {
+			statistics.bestTime = runnerLeg.time;
+		}
+	};
+
+	// I know, flatMap and filter, but Typescript doesn't infer types from filter
+	for (const runner of runners) {
+		if (legIndex !== undefined) {
+			const runnerLeg = runner.legs[legIndex];
+			if (runnerLeg === null || runnerLeg === undefined) continue;
+			createOrUpdateRoutechoiceStatisticsFromRunnerLeg(runnerLeg);
+			continue;
+		}
+
+		for (const runnerLeg of runner.legs) {
+			if (runnerLeg === null) continue;
+			createOrUpdateRoutechoiceStatisticsFromRunnerLeg(runnerLeg);
+		}
+	}
+
+	return routechoicesStatistics;
 }

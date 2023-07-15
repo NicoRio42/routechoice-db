@@ -163,12 +163,7 @@
 		</VectorLayer>
 	</OlMap>
 
-	<ActionButtons
-		bind:legNumber
-		bind:showRoutechoices
-		legs={data.event.legs}
-		bind:isAutoAnalysisMode
-	/>
+	<ActionButtons {legNumber} bind:showRoutechoices legs={data.event.legs} bind:isAutoAnalysisMode />
 </div>
 
 <style>

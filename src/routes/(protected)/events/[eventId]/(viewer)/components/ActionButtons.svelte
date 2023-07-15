@@ -52,20 +52,28 @@
 		role="button"
 		class="btn"
 		href={addSearchParamsToURL($page.url, 'legNumber', getPreviousLegNumber().toString())}
+		data-sveltekit-replacestate
 	>
 		<i class="i-carbon-chevron-left" />
 	</a>
 
-	<select bind:value={legNumber}>
-		{#each [...Array(numberOfLegs).keys()] as leg}
-			<option value={leg + 1}>{leg + 1}</option>
-		{/each}
-	</select>
+	<form class="m0" data-sveltekit-replacestate>
+		<select
+			name="legNumber"
+			bind:value={legNumber}
+			on:change={(e) => e.currentTarget.form?.submit()}
+		>
+			{#each [...Array(numberOfLegs).keys()] as leg}
+				<option value={leg + 1}>{leg + 1}</option>
+			{/each}
+		</select>
+	</form>
 
 	<a
 		role="button"
 		class="btn"
 		href={addSearchParamsToURL($page.url, 'legNumber', getNextLegNumber().toString())}
+		data-sveltekit-replacestate
 	>
 		<i class="i-carbon-chevron-right" />
 	</a>

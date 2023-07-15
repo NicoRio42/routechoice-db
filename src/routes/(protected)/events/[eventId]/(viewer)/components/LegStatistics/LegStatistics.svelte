@@ -1,32 +1,29 @@
 <script lang="ts">
-	import type { CourseData } from 'orienteering-js/models';
 	import Graph from './Graph.svelte';
 	import type { GraphItem } from './models/graph-item.js';
+	import type { RoutechoiceWithStatistics } from '$lib/models/routechoice.model.js';
 
-	export let courseData: CourseData;
-	export let legNumber: number;
+	export let legRoutechoices: RoutechoiceWithStatistics[];
 
 	let fasestTimeGraphData: GraphItem[] = [];
 	let runnerNumberGraphData: GraphItem[] = [];
 
 	$: {
-		const leg = courseData.legs[legNumber - 1];
-
-		fasestTimeGraphData = leg.routechoices
+		fasestTimeGraphData = legRoutechoices
 			.map((rc) => ({
 				label: rc.name,
-				value: rc.statistics?.fastestTime ?? -1,
+				value: rc.statistics.bestTime,
 				color: rc.color
 			}))
-			.filter((rc) => rc.value !== -1);
+			.filter((rc) => rc.value !== 0);
 
-		runnerNumberGraphData = leg.routechoices
+		runnerNumberGraphData = legRoutechoices
 			.map((rc) => ({
 				label: rc.name,
-				value: rc.statistics?.numberOfRunners ?? -1,
+				value: rc.statistics.numberOfRunners,
 				color: rc.color
 			}))
-			.filter((rc) => rc.value !== -1);
+			.filter((rc) => rc.value !== 0);
 	}
 </script>
 

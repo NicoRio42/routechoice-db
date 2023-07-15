@@ -1,5 +1,5 @@
 <script lang="ts">
-	import type { GraphItem } from './models/graph-item';
+	import type { GraphItem } from './models/graph-item.js';
 
 	export let data: GraphItem[];
 	export let suffix = '';

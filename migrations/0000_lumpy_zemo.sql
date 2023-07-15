@@ -2,8 +2,8 @@ CREATE TABLE `asso_event_tag` (
 	`fk_event` text,
 	`fk_tag` text,
 	PRIMARY KEY(`fk_event`, `fk_tag`),
-	FOREIGN KEY (`fk_event`) REFERENCES `event`(`id`) ON DELETE cascade,
-	FOREIGN KEY (`fk_tag`) REFERENCES `tag`(`id`) ON DELETE cascade
+	FOREIGN KEY (`fk_event`) REFERENCES `event`(`id`) ON UPDATE no action ON DELETE cascade,
+	FOREIGN KEY (`fk_tag`) REFERENCES `tag`(`id`) ON UPDATE no action ON DELETE cascade
 );
 --> statement-breakpoint
 CREATE TABLE `control_point` (
@@ -12,7 +12,7 @@ CREATE TABLE `control_point` (
 	`code` text NOT NULL,
 	`longitude` real NOT NULL,
 	`latitude` real NOT NULL,
-	FOREIGN KEY (`fk_event`) REFERENCES `event`(`id`) ON DELETE cascade
+	FOREIGN KEY (`fk_event`) REFERENCES `event`(`id`) ON UPDATE no action ON DELETE cascade
 );
 --> statement-breakpoint
 CREATE TABLE `event` (
@@ -29,7 +29,7 @@ CREATE TABLE `auth_key` (
 	`primary_key` integer NOT NULL,
 	`hashed_password` text,
 	`expires` integer,
-	FOREIGN KEY (`user_id`) REFERENCES `auth_user`(`id`) ON DELETE cascade
+	FOREIGN KEY (`user_id`) REFERENCES `auth_user`(`id`) ON UPDATE no action ON DELETE cascade
 );
 --> statement-breakpoint
 CREATE TABLE `leg` (
@@ -37,9 +37,9 @@ CREATE TABLE `leg` (
 	`fk_event` text NOT NULL,
 	`fk_start_control_point` text NOT NULL,
 	`fk_finish_control_point` text NOT NULL,
-	FOREIGN KEY (`fk_event`) REFERENCES `event`(`id`) ON DELETE cascade,
-	FOREIGN KEY (`fk_start_control_point`) REFERENCES `control_point`(`id`) ON DELETE cascade,
-	FOREIGN KEY (`fk_finish_control_point`) REFERENCES `control_point`(`id`) ON DELETE cascade
+	FOREIGN KEY (`fk_event`) REFERENCES `event`(`id`) ON UPDATE no action ON DELETE cascade,
+	FOREIGN KEY (`fk_start_control_point`) REFERENCES `control_point`(`id`) ON UPDATE no action ON DELETE cascade,
+	FOREIGN KEY (`fk_finish_control_point`) REFERENCES `control_point`(`id`) ON UPDATE no action ON DELETE cascade
 );
 --> statement-breakpoint
 CREATE TABLE `live_event` (
@@ -48,7 +48,7 @@ CREATE TABLE `live_event` (
 	`live_provider` text NOT NULL,
 	`url` text NOT NULL,
 	`is_primary` boolean NOT NULL,
-	FOREIGN KEY (`fk_event`) REFERENCES `event`(`id`) ON DELETE cascade
+	FOREIGN KEY (`fk_event`) REFERENCES `event`(`id`) ON UPDATE no action ON DELETE cascade
 );
 --> statement-breakpoint
 CREATE TABLE `routechoice` (
@@ -59,14 +59,23 @@ CREATE TABLE `routechoice` (
 	`longitudes` text NOT NULL,
 	`latitudes` text NOT NULL,
 	`length` integer NOT NULL,
-	FOREIGN KEY (`fk_leg`) REFERENCES `leg`(`id`) ON DELETE cascade
+	FOREIGN KEY (`fk_leg`) REFERENCES `leg`(`id`) ON UPDATE no action ON DELETE cascade
+);
+--> statement-breakpoint
+CREATE TABLE `routechoice_statistics` (
+	`id` text PRIMARY KEY NOT NULL,
+	`fk_routchoice` text NOT NULL,
+	`number_of_runners` integer DEFAULT 0 NOT NULL,
+	`best_time` integer DEFAULT 0 NOT NULL,
+	FOREIGN KEY (`fk_routchoice`) REFERENCES `routechoice`(`id`) ON UPDATE no action ON DELETE cascade
 );
 --> statement-breakpoint
 CREATE TABLE `runner` (
 	`id` text PRIMARY KEY NOT NULL,
-	`tracking_device_id` text,
 	`fk_event` text NOT NULL,
 	`fk_user` text,
+	`fk_live_event` text,
+	`tracking_device_id` text,
 	`status` text NOT NULL,
 	`first_name` text NOT NULL,
 	`last_name` text NOT NULL,
@@ -76,8 +85,9 @@ CREATE TABLE `runner` (
 	`time_behind` integer,
 	`total_time_lost` integer DEFAULT 0 NOT NULL,
 	`time_offset` integer DEFAULT 0 NOT NULL,
-	FOREIGN KEY (`fk_event`) REFERENCES `event`(`id`) ON DELETE cascade,
-	FOREIGN KEY (`fk_user`) REFERENCES `auth_user`(`id`) ON DELETE set null
+	FOREIGN KEY (`fk_event`) REFERENCES `event`(`id`) ON UPDATE no action ON DELETE cascade,
+	FOREIGN KEY (`fk_user`) REFERENCES `auth_user`(`id`) ON UPDATE no action ON DELETE set null,
+	FOREIGN KEY (`fk_live_event`) REFERENCES `live_event`(`id`) ON UPDATE no action ON DELETE set null
 );
 --> statement-breakpoint
 CREATE TABLE `runner_leg` (
@@ -95,10 +105,10 @@ CREATE TABLE `runner_leg` (
 	`time_behind_superman` integer,
 	`time_loss` integer NOT NULL,
 	`routechoice_time_loss` integer NOT NULL,
-	FOREIGN KEY (`fk_detected_routechoice`) REFERENCES `routechoice`(`id`) ON DELETE cascade,
-	FOREIGN KEY (`fk_manual_routechoice`) REFERENCES `routechoice`(`id`) ON DELETE cascade,
-	FOREIGN KEY (`fk_leg`) REFERENCES `leg`(`id`) ON DELETE cascade,
-	FOREIGN KEY (`fk_runner`) REFERENCES `runner`(`id`) ON DELETE cascade
+	FOREIGN KEY (`fk_detected_routechoice`) REFERENCES `routechoice`(`id`) ON UPDATE no action ON DELETE cascade,
+	FOREIGN KEY (`fk_manual_routechoice`) REFERENCES `routechoice`(`id`) ON UPDATE no action ON DELETE cascade,
+	FOREIGN KEY (`fk_leg`) REFERENCES `leg`(`id`) ON UPDATE no action ON DELETE cascade,
+	FOREIGN KEY (`fk_runner`) REFERENCES `runner`(`id`) ON UPDATE no action ON DELETE cascade
 );
 --> statement-breakpoint
 CREATE TABLE `auth_session` (
@@ -106,7 +116,7 @@ CREATE TABLE `auth_session` (
 	`user_id` text NOT NULL,
 	`active_expires` integer NOT NULL,
 	`idle_expires` integer NOT NULL,
-	FOREIGN KEY (`user_id`) REFERENCES `auth_user`(`id`) ON DELETE cascade
+	FOREIGN KEY (`user_id`) REFERENCES `auth_user`(`id`) ON UPDATE no action ON DELETE cascade
 );
 --> statement-breakpoint
 CREATE TABLE `tag` (
@@ -120,5 +130,5 @@ CREATE TABLE `auth_user` (
 	`name` text NOT NULL,
 	`email` text NOT NULL,
 	`email_verified` integer DEFAULT 0 NOT NULL,
-	`role` text DEFAULT ('default') NOT NULL
+	`role` text DEFAULT 'default' NOT NULL
 );

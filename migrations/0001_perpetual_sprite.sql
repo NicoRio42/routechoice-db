@@ -1,1 +1,0 @@
-ALTER TABLE runner ADD `fk_live_event` text REFERENCES live_event(id);

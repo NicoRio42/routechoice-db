@@ -11,7 +11,7 @@ export async function load({ params: { eventId }, locals, fetch }) {
 		with: {
 			liveEvents: true,
 			runners: { with: { legs: true } },
-			legs: { with: { routechoices: true } },
+			legs: { with: { routechoices: { with: { statistics: true } } } },
 			controlPoints: true
 		}
 	});

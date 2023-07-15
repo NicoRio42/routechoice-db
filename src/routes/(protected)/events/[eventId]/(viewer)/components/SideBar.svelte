@@ -4,23 +4,24 @@
 	import SummaryPanel from './SummaryPanel.svelte';
 	import Toggle from './Toggle.svelte';
 	import { page } from '$app/stores';
-	import type { Runner } from '../models/runner.model.js';
-	import type { Routechoice } from '$lib/server/db/schema.js';
-	import type { Leg } from '../models/leg.model.js';
+	import type { Leg, Routechoice } from '$lib/server/db/schema.js';
+	import type { LegWithRoutechoices } from '$lib/models/leg.model.js';
+	import type { RunnerWithNullableLegsAndTrack } from '$lib/models/runner.model.js';
+	import type { RoutechoiceWithStatistics } from '$lib/models/routechoice.model.js';
 
 	export let selectedRunners: string[];
-	export let runners: Runner[];
-	export let legs: Leg[];
+	export let runners: RunnerWithNullableLegsAndTrack[];
+	export let legs: LegWithRoutechoices[];
 	export let legNumber: number;
 
 	let isInSplitMode = true;
-	let sortedRunnersWithOneLeg: Runner[] = [];
-	let legRoutechoices: Routechoice[] = [];
+	let sortedRunnersWithOneLeg: RunnerWithNullableLegsAndTrack[] = [];
+	let legRoutechoices: RoutechoiceWithStatistics[] = [];
 
 	$: hideSideBar = $page.url.searchParams.has('hideSideBar');
 
 	$: {
-		const clonedRunnersWithOneLeg = (structuredClone(runners) as Runner[]).map((runner) => ({
+		const clonedRunnersWithOneLeg = runners.map((runner) => ({
 			...runner,
 			legs: runner.legs.filter((l, i) => i + 1 === legNumber)
 		}));
@@ -54,11 +55,9 @@
 	<div class="main-wrapper">
 		<Toggle bind:isFirstValueSelected={isInSplitMode} firstLabel={'Splits'} secondLabel={'Graph'} />
 
-		<!-- {#if !isInSplitMode}
-			<section class="routechoices-graph">
-				<LegStatistics {courseData} {legNumber} />
-			</section>
-		{/if} -->
+		<section style:display={isInSplitMode ? 'none' : 'block'} class="routechoices-graph">
+			<LegStatistics {legRoutechoices} />
+		</section>
 
 		<section
 			style:display={isInSplitMode ? 'block' : 'none'}

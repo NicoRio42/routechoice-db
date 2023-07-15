@@ -1,5 +1,6 @@
 import { GPS_PROVIDERS } from '$lib/constants.js';
 import {
+	createRoutechoiceStatistics,
 	extractLiveProviderAndEventIdFromUrl,
 	getRunnersWithTracksAndSortedLegs,
 	parseRoutechoicesTracksInLegs,
@@ -10,6 +11,7 @@ import {
 	leg as legTable,
 	liveEvent,
 	liveEvent as liveEventTable,
+	routechoiceStatistics as routechoiceStatisticsTable,
 	runnerLeg as runnerLegTable,
 	runner as runnerTable,
 	user
@@ -183,6 +185,8 @@ export const actions = {
 			runnersWithTracksAndSortedLegs
 		);
 
+		const routechoicesStatistics = createRoutechoiceStatistics(runnersWithDetectedRoutechoices);
+
 		await locals.db.transaction(async (tx) => {
 			for (const runner of runnersWithDetectedRoutechoices) {
 				await tx
@@ -197,12 +201,21 @@ export const actions = {
 
 				for (const runnerLeg of runner.legs) {
 					if (runnerLeg === null || !runnerLeg.fkDetectedRoutechoice) continue;
+
 					await tx
 						.update(runnerLegTable)
 						.set({ fkDetectedRoutechoice: runnerLeg.fkDetectedRoutechoice })
 						.where(eq(runnerLegTable.id, runnerLeg.id))
 						.run();
 				}
+			}
+
+			for (const { bestTime, numberOfRunners, fkRoutechoice } of routechoicesStatistics) {
+				await tx
+					.update(routechoiceStatisticsTable)
+					.set({ bestTime, numberOfRunners })
+					.where(eq(routechoiceStatisticsTable.fkRoutechoice, fkRoutechoice))
+					.run();
 			}
 
 			throw redirect(302, `/events/${eventId}`);

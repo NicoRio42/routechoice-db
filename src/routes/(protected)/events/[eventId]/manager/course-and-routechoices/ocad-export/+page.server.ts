@@ -1,6 +1,14 @@
 import { fail, redirect } from '@sveltejs/kit';
 import { DOMParser } from 'linkedom';
-import { controlPoint, routechoice, leg } from '$lib/server/db/schema.js';
+import {
+	controlPoint,
+	routechoice,
+	leg,
+	routechoiceStatistics,
+	type Leg,
+	type Routechoice,
+	type RoutechoiceStatistics
+} from '$lib/server/db/schema.js';
 import { parseIOFXML3CourseOCADExport, parseGPXRoutechoicesOCADExport } from 'orienteering-js/ocad';
 
 export const actions = {
@@ -52,50 +60,58 @@ export const actions = {
 		);
 
 		await locals.db.transaction(async (tx) => {
-			controls.forEach(async (control) => {
-				await tx
-					.insert(controlPoint)
-					.values({
-						id: control.id,
-						fkEvent: eventId,
-						code: control.code,
-						latitude: control.lat,
-						longitude: control.lon
-					})
-					.returning()
-					.get();
-			});
+			const controlPointsToInsert = controls.map((control) => ({
+				id: control.id,
+				fkEvent: eventId,
+				code: control.code,
+				latitude: control.lat,
+				longitude: control.lon
+			}));
 
-			legsWithRoutechoices.forEach(async (lg) => {
+			await tx.insert(controlPoint).values(controlPointsToInsert).run();
+
+			const legsToInsert: Leg[] = [];
+			const routechoicesToInsert: Routechoice[] = [];
+			const routechoicesStatisticsToInsert: Omit<
+				RoutechoiceStatistics,
+				'numberOfRunners' | 'bestTime'
+			>[] = [];
+
+			for (const lg of legsWithRoutechoices) {
 				const [fkStartControlPoint, fkFinishControlPoint] = legsMap[lg.id];
 
 				if (fkStartControlPoint === undefined || fkFinishControlPoint === undefined) {
 					throw new Error('Control point not found');
 				}
 
-				await tx
-					.insert(leg)
-					.values({ id: lg.id, fkEvent: eventId, fkFinishControlPoint, fkStartControlPoint })
-					.run();
+				legsToInsert.push({
+					id: lg.id,
+					fkEvent: eventId,
+					fkFinishControlPoint,
+					fkStartControlPoint
+				});
 
-				lg.routechoices.forEach(async (rc) => {
+				for (const rc of lg.routechoices) {
 					const latitudes = rc.track.map((pt) => pt[0]).join(';');
 					const longitudes = rc.track.map((pt) => pt[1]).join(';');
 
-					await tx
-						.insert(routechoice)
-						.values({
-							color: rc.color,
-							fkLeg: lg.id,
-							id: rc.id,
-							latitudes,
-							longitudes,
-							length: rc.length,
-							name: rc.name
-						})
-						.run();
-				});
-			});
+					routechoicesToInsert.push({
+						color: rc.color,
+						fkLeg: lg.id,
+						id: rc.id,
+						latitudes,
+						longitudes,
+						length: rc.length,
+						name: rc.name
+					});
+
+					routechoicesStatisticsToInsert.push({ id: crypto.randomUUID(), fkRoutechoice: rc.id });
+				}
+			}
+
+			await tx.insert(leg).values(legsToInsert).run();
+			await tx.insert(routechoice).values(routechoicesToInsert).run();
+			await tx.insert(routechoiceStatistics).values(routechoicesStatisticsToInsert).run();
 
 			throw redirect(302, `/events/${eventId}/manager/split-times`);
 		});

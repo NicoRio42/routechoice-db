@@ -1,9 +1,7 @@
 import { sqliteTable, text, integer, customType, primaryKey, real } from 'drizzle-orm/sqlite-core';
 import { relations, type InferModel } from 'drizzle-orm';
-import { RolesEnum } from '../../models/enums/roles.enum.js';
-import { RunnerStatusEnum } from '../../models/enums/runner-status.enum.js';
-// import { RolesEnum } from '../../models/enums/roles.enum';
-// import { RunnerStatusEnum } from '../../models/enums/runner-status.enum';
+import { RolesEnum } from '../../models/enums/roles.enum';
+import { RunnerStatusEnum } from '../../models/enums/runner-status.enum';
 
 const boolean = customType<{ data: boolean }>({
 	dataType() {
@@ -128,8 +126,30 @@ export const routechoicesRelations = relations(routechoice, ({ one }) => ({
 	event: one(leg, {
 		fields: [routechoice.fkLeg],
 		references: [leg.id]
+	}),
+	statistics: one(routechoiceStatistics, {
+		fields: [routechoice.id],
+		references: [routechoiceStatistics.fkRoutechoice]
 	})
 }));
+
+export const routechoiceStatistics = sqliteTable('routechoice_statistics', {
+	id: text('id').primaryKey(),
+	fkRoutechoice: text('fk_routchoice')
+		.notNull()
+		.references(() => routechoice.id, { onDelete: 'cascade' }),
+	numberOfRunners: integer('number_of_runners').notNull().default(0),
+	bestTime: integer('best_time').notNull().default(0)
+});
+
+export const routechoiceStatisticsRelations = relations(routechoiceStatistics, ({ one }) => ({
+	routechoice: one(routechoice, {
+		fields: [routechoiceStatistics.fkRoutechoice],
+		references: [routechoice.id]
+	})
+}));
+
+export type RoutechoiceStatistics = InferModel<typeof routechoiceStatistics>;
 
 export const runner = sqliteTable('runner', {
 	id: text('id').primaryKey(),
