@@ -1,4 +1,5 @@
 import {
+	createRoutechoiceStatistics,
 	getRunnersWithTracksAndSortedLegs,
 	parseRoutechoicesTracksInLegs,
 	sortLegs
@@ -9,11 +10,12 @@ import {
 	leg as legFromDatabase,
 	liveEvent as liveEventFromDatabase,
 	routechoice as routechoiceFromDatabase,
+	routechoiceStatistics as routechoiceStatisticsTable,
 	runner as runnerFromDatabase,
 	runnerLeg as runnerLegTable
 } from '$lib/server/db/schema.js';
 import { fail, redirect } from '@sveltejs/kit';
-import { eq } from 'drizzle-orm';
+import { eq, inArray } from 'drizzle-orm';
 import { transform } from 'ol/proj.js';
 import { getLineStringLength } from 'orienteering-js/utils';
 import { superValidate } from 'sveltekit-superforms/server';
@@ -39,17 +41,24 @@ export const actions = {
 
 		const length = getLineStringLength(mercatorCoordinates as [number, number][]);
 
+		const routechoiceId = crypto.randomUUID();
+
 		await locals.db
 			.insert(routechoiceFromDatabase)
 			.values({
 				color: form.data.color,
-				id: crypto.randomUUID(),
+				id: routechoiceId,
 				length,
 				name: form.data.name,
 				fkLeg: legId,
 				latitudes,
 				longitudes
 			})
+			.run();
+
+		await locals.db
+			.insert(routechoiceStatisticsTable)
+			.values({ fkRoutechoice: routechoiceId, id: crypto.randomUUID() })
 			.run();
 
 		const runners = await locals.db.query.runner.findMany({
@@ -101,6 +110,32 @@ export const actions = {
 				.update(runnerLegTable)
 				.set({ fkDetectedRoutechoice })
 				.where(eq(runnerLegTable.id, runnerLeg.id))
+				.run();
+		}
+
+		const routechoicesStatistics = createRoutechoiceStatistics(
+			runnersWithDetectedRoutechoices,
+			legIndex
+		);
+
+		// TODO refactor routechoice statistics update
+
+		locals.db
+			.update(routechoiceStatisticsTable)
+			.set({ bestTime: 0, numberOfRunners: 0 })
+			.where(
+				inArray(
+					routechoiceStatisticsTable.fkRoutechoice,
+					legs.flatMap((leg) => leg.routechoices.map((rc) => rc.id))
+				)
+			)
+			.run();
+
+		for (const { bestTime, numberOfRunners, fkRoutechoice } of routechoicesStatistics) {
+			await locals.db
+				.update(routechoiceStatisticsTable)
+				.set({ bestTime, numberOfRunners })
+				.where(eq(routechoiceStatisticsTable.fkRoutechoice, fkRoutechoice))
 				.run();
 		}
 

@@ -14,7 +14,7 @@
 		{item.label}<span class="bar-group">
 			<span
 				style:background-color={item.color}
-				style:width={`${(item.value * 100) / max}%`}
+				style:width="{(item.value * 100) / max}%"
 				class="bar"><span class="value">{item.value}{suffix}</span></span
 			>
 		</span>

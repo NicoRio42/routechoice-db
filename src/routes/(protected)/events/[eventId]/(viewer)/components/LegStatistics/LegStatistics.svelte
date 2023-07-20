@@ -12,7 +12,7 @@
 		fasestTimeGraphData = legRoutechoices
 			.map((rc) => ({
 				label: rc.name,
-				value: rc.statistics.bestTime,
+				value: rc.statistics !== null ? rc.statistics.bestTime : 0,
 				color: rc.color
 			}))
 			.filter((rc) => rc.value !== 0);
@@ -20,7 +20,7 @@
 		runnerNumberGraphData = legRoutechoices
 			.map((rc) => ({
 				label: rc.name,
-				value: rc.statistics.numberOfRunners,
+				value: rc.statistics !== null ? rc.statistics.numberOfRunners : 0,
 				color: rc.color
 			}))
 			.filter((rc) => rc.value !== 0);
