@@ -30,8 +30,6 @@ export const actions = {
 			)
 			.all();
 
-		console.log(`[LOGGING FROM /signup]: existingUser is`, existingUser, existingUser.length);
-
 		if (existingUser.length !== 0) {
 			return setError(form, null, 'First name and last name conbination allready exists');
 		}
@@ -46,32 +44,22 @@ export const actions = {
 			return setError(form, 'email', 'Email allready linked to an account');
 		}
 
-		const user = await locals.auth.createUser({
+		await locals.auth.createUser({
 			primaryKey: {
 				providerId: 'email',
 				providerUserId: form.data.email,
-				password: form.data.password
+				password: crypto.randomUUID()
 			},
 			attributes: {
 				first_name: form.data.firstName,
 				last_name: form.data.lastName,
 				email: form.data.email,
-				role: RolesEnum.Enum.default,
+				role: form.data.isAdmin ? RolesEnum.Enum.admin : RolesEnum.Enum.default,
 				email_verified: 0,
-				password_expired: 0
+				password_expired: 1
 			}
 		});
 
-		const session = await locals.auth.createSession(user.id);
-		locals.authRequest.setSession(session);
-
-		const token = await locals.emailVerificationToken.issue(user.id);
-		await sendEmailVerificationEmail(
-			user.email,
-			`${user.firstName} ${user.lastName}`,
-			token.toString()
-		);
-
-		throw redirect(302, '/');
+		throw redirect(302, '/users');
 	}
 };
