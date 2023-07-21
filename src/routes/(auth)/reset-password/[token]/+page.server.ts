@@ -25,8 +25,15 @@ export const actions = {
 				});
 			}
 
+			if (user.passwordExpired) {
+				user = await locals.auth.updateUserAttributes(user.id, {
+					password_expired: 0
+				});
+			}
+
 			await locals.auth.invalidateAllUserSessions(user.id);
-			await locals.auth.updateKeyPassword('username', user.name, form.data.password);
+			await locals.auth.updateKeyPassword('email', user.email, form.data.password);
+
 			const session = await locals.auth.createSession(user.id);
 			locals.authRequest.setSession(session);
 		} catch (e) {

@@ -19,18 +19,26 @@ export const actions = {
 			return setError(form, null, 'An error occured');
 		}
 
+		const user = locals.db
+			.select()
+			.from(userTable)
+			.where(eq(userTable.email, form.data.email))
+			.get();
+
+		if (user === undefined) {
+			return setError(form, null, "This account doesn't exist");
+		}
+
+		if (user.passwordExpired) {
+			return setError(
+				form,
+				null,
+				'Your password has expired, you will have to reset it. Please follow the reset password link above.'
+			);
+		}
+
 		try {
 			const key = await locals.auth.useKey('email', form.data.email, form.data.password);
-			const user = locals.db.select().from(userTable).where(eq(userTable.id, key.userId)).get();
-
-			if (user.passwordExpired) {
-				return setError(
-					form,
-					null,
-					'Your password has expired, you will have to reset it. Please follow the reset password link above.'
-				);
-			}
-
 			const session = await locals.auth.createSession(key.userId);
 			locals.authRequest.setSession(session);
 		} catch (e) {

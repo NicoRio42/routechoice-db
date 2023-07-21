@@ -27,7 +27,12 @@ export const actions = {
 
 			if (databaseUser) {
 				const token = await locals.passwordResetToken.issue(databaseUser.id);
-				await sendPasswordResetEmail(databaseUser.email, databaseUser.name, token.toString());
+
+				await sendPasswordResetEmail(
+					databaseUser.email,
+					`${databaseUser.firstName} ${databaseUser.lastName}`,
+					token.toString()
+				);
 			}
 
 			return message(

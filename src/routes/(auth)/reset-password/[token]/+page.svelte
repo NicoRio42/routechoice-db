@@ -1,52 +1,25 @@
 <script lang="ts">
 	import { superForm } from 'sveltekit-superforms/client';
-	import { resetPasswordSchema } from './schema.js';
+	import { resetPasswordSchema } from './schema';
+	import PasswordField from '$lib/components/form-fields/PasswordField.svelte';
 
 	export let data;
 
-	const { form, errors, delayed, tainted, enhance } = superForm(data.form, {
+	const form = superForm(data.form, {
 		validators: resetPasswordSchema
 	});
+
+	const { errors, delayed, enhance } = form;
 </script>
 
 <form method="post" use:enhance>
 	<h1>Reset password</h1>
 
-	<label>
-		Password
-		<input
-			type="password"
-			name="password"
-			bind:value={$form.password}
-			data-invalid={$errors.password}
-			aria-invalid={$tainted?.password &&
-				$errors.password !== undefined &&
-				$errors.password.length !== 0}
-		/>
+	<PasswordField {form} field="password" label="Password" />
 
-		{#each $errors.password ?? [] as passwordError}
-			<small class="error">{passwordError}</small>
-		{/each}
-	</label>
+	<PasswordField {form} field="passwordConfirmation" label="Confirm password" />
 
-	<label>
-		Confirm password
-		<input
-			type="password"
-			name="passwordConfirmation"
-			bind:value={$form.passwordConfirmation}
-			data-invalid={$errors.passwordConfirmation}
-			aria-invalid={$tainted?.passwordConfirmation &&
-				$errors.passwordConfirmation !== undefined &&
-				$errors.passwordConfirmation.length !== 0}
-		/>
-
-		{#each $errors.passwordConfirmation ?? [] as passwordConfirmationError}
-			<small class="error">{passwordConfirmationError}</small>
-		{/each}
-	</label>
-
-	<button type="submit" aria-busy={$delayed}>Sign up</button>
+	<button type="submit" aria-busy={$delayed}>Change password</button>
 
 	{#each $errors._errors ?? [] as globalError}
 		<p>
