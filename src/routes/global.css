@@ -49,6 +49,7 @@ label {
 	background-color: transparent;
 	border: none;
 	width: unset;
+	color: var(--h1-color)
 }
 
 .btn-unset:focus {

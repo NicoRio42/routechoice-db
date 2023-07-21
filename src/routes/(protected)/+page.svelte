@@ -4,9 +4,6 @@
 	import { RolesEnum } from '$lib/models/enums/roles.enum.js';
 
 	export let data;
-
-	let courseCurrentlyDeletedID: string | null = null;
-	let isCourseDeletionLoading = false;
 	// let tags: Tag[] = data.tags;
 
 	// function handleTagsSelected(event: CustomEvent<Tag[]>) {
@@ -21,7 +18,7 @@
 	<title>Routechoice DB</title>
 </svelte:head>
 
-<main class="container flex-shrink-0 flex-grow-1">
+<main class="container flex-shrink-0 flex-grow-1 px-4">
 	<h1 class="mt-4 mb-6">Events</h1>
 
 	<!-- <TagsSelect on:tagsSelect={handleTagsSelected} /> -->

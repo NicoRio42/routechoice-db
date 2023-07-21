@@ -3,6 +3,7 @@
 	import { RolesEnum } from '$lib/models/enums/roles.enum.js';
 	import type { User } from 'lucia-auth';
 	import ThemeSwitch from './ThemeSwitch.svelte';
+	import { enhance } from '$app/forms';
 
 	export let user: User | undefined;
 </script>
@@ -50,10 +51,12 @@
 			{:else}
 				<li class="py-0 large">
 					<details role="list" dir="rtl">
-						<summary aria-haspopup="listbox"> {user.name} </summary>
+						<summary aria-haspopup="listbox"> {user.firstName} {user.lastName} </summary>
 						<ul>
 							<li class="option-item">
-								<button on:click={console.log}>Logout</button>
+								<form action="/logout" method="post" use:enhance>
+									<button type="submit">Logout</button>
+								</form>
 							</li>
 
 							<li class="option-item">
@@ -75,12 +78,15 @@
 				{#if user !== undefined}
 					<li class="option-item">
 						<strong>
-							{user.name}
+							{user.firstName}
+							{user.lastName}
 						</strong>
 					</li>
 
 					<li class="option-item">
-						<button on:click={console.log}>Logout</button>
+						<form action="/logout" method="post" use:enhance>
+							<button type="submit">Logout</button>
+						</form>
 					</li>
 
 					<li class="option-item">

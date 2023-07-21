@@ -220,9 +220,11 @@ export const runnerLegsRelations = relations(runnerLeg, ({ one }) => ({
 
 export const user = sqliteTable('auth_user', {
 	id: text('id').primaryKey(),
-	name: text('name').notNull(),
+	firstName: text('first_name').notNull(),
+	lastName: text('last_name').notNull(),
 	email: text('email').notNull(),
-	emailVerified: integer('email_verified').default(0).notNull(),
+	emailVerified: boolean('email_verified').default(false).notNull(),
+	passwordExpired: boolean('password_expired').default(false).notNull(),
 	role: text('role', { enum: [RolesEnum.Enum.admin, RolesEnum.Enum.default] })
 		.default(RolesEnum.Enum.default)
 		.notNull()

@@ -127,8 +127,10 @@ CREATE TABLE `tag` (
 --> statement-breakpoint
 CREATE TABLE `auth_user` (
 	`id` text PRIMARY KEY NOT NULL,
-	`name` text NOT NULL,
+	`first_name` text NOT NULL,
+	`last_name` text NOT NULL,
 	`email` text NOT NULL,
-	`email_verified` integer DEFAULT 0 NOT NULL,
+	`email_verified` boolean DEFAULT false NOT NULL,
+	`password_expired` boolean DEFAULT false NOT NULL,
 	`role` text DEFAULT 'default' NOT NULL
 );

@@ -1,8 +1,8 @@
 <script lang="ts">
+	import EmailField from '$lib/components/form-fields/EmailField.svelte';
+	import PasswordField from '$lib/components/form-fields/PasswordField.svelte';
 	import { superForm } from 'sveltekit-superforms/client';
 	import { loginFormSchema } from './schema';
-	import TextField from '$lib/components/form-fields/TextField.svelte';
-	import PasswordField from '$lib/components/form-fields/PasswordField.svelte';
 
 	export let data;
 
@@ -17,7 +17,7 @@
 <form method="POST" use:enhance novalidate>
 	<h1>Login</h1>
 
-	<TextField {form} field="name" label="Name" />
+	<EmailField {form} field="email" label="Email" />
 
 	<PasswordField {form} field="password" label="Password" />
 

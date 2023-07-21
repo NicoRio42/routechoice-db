@@ -1,7 +1,7 @@
 {
   "version": "5",
   "dialect": "sqlite",
-  "id": "c2c1e669-1748-4660-88b4-d79b4cbac9af",
+  "id": "4530e7d3-c619-4e8a-aae7-af407ad14aca",
   "prevId": "00000000-0000-0000-0000-000000000000",
   "tables": {
     "asso_event_tag": {
@@ -881,8 +881,15 @@
           "notNull": true,
           "autoincrement": false
         },
-        "name": {
-          "name": "name",
+        "first_name": {
+          "name": "first_name",
+          "type": "text",
+          "primaryKey": false,
+          "notNull": true,
+          "autoincrement": false
+        },
+        "last_name": {
+          "name": "last_name",
           "type": "text",
           "primaryKey": false,
           "notNull": true,
@@ -897,11 +904,19 @@
         },
         "email_verified": {
           "name": "email_verified",
-          "type": "integer",
+          "type": "boolean",
           "primaryKey": false,
           "notNull": true,
           "autoincrement": false,
-          "default": 0
+          "default": false
+        },
+        "password_expired": {
+          "name": "password_expired",
+          "type": "boolean",
+          "primaryKey": false,
+          "notNull": true,
+          "autoincrement": false,
+          "default": false
         },
         "role": {
           "name": "role",

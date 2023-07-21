@@ -17,7 +17,9 @@
 <form method="POST" use:enhance novalidate>
 	<h1>Create an account</h1>
 
-	<TextField {form} field="name" label="Name" />
+	<TextField {form} field="firstName" label="First name" />
+
+	<TextField {form} field="lastName" label="Last name" />
 
 	<TextField {form} field="email" label="Email address" />
 

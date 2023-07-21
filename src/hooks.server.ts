@@ -33,7 +33,7 @@ async function getDatabaseInstance(platform: App.Platform | undefined) {
 	if (dev) return new (await import('better-sqlite3')).default('sqlite.db');
 	if (platform === undefined) throw new Error('platform is undefined');
 	if (platform.env === undefined) throw new Error('platform.env is undefined');
-	return platform.env.TODO_LIST_DB;
+	return platform.env.ROUTECHOICE_DB;
 }
 
 let drizzleInstance: BetterSQLite3Database;
@@ -60,9 +60,11 @@ function createNewAuth(db: Database | D1Database) {
 		middleware: sveltekit(),
 		transformDatabaseUser: (userData) => ({
 			id: userData.id,
-			name: userData.name,
+			firstName: userData.first_name,
+			lastName: userData.last_name,
 			email: userData.email,
-			emailVerified: userData.email_verified,
+			emailVerified: userData.email_verified === 1,
+			passwordExpired: userData.password_expired === 1,
 			role: userData.role
 		})
 	});

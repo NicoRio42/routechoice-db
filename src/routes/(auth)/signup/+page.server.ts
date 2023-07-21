@@ -1,10 +1,10 @@
-import { RolesEnum } from '$lib/models/enums/roles.enum';
-import { user as userDBShema } from '$lib/server/db/schema';
-import { sendEmailVerificationEmail } from '$lib/server/email';
+import { RolesEnum } from '$lib/models/enums/roles.enum.js';
+import { user as userDBShema } from '$lib/server/db/schema.js';
+import { sendEmailVerificationEmail } from '$lib/server/email.js';
 import { redirect } from '@sveltejs/kit';
-import { eq } from 'drizzle-orm';
+import { and, eq } from 'drizzle-orm';
 import { setError, superValidate } from 'sveltekit-superforms/server';
-import { signUpFormSchema } from './schema';
+import { signUpFormSchema } from './schema.js';
 
 export async function load() {
 	const form = await superValidate(signUpFormSchema);
@@ -22,13 +22,18 @@ export const actions = {
 		const existingUser = await locals.db
 			.select()
 			.from(userDBShema)
-			.where(eq(userDBShema.name, form.data.name))
+			.where(
+				and(
+					eq(userDBShema.firstName, form.data.firstName),
+					eq(userDBShema.lastName, form.data.lastName)
+				)
+			)
 			.all();
 
 		console.log(`[LOGGING FROM /signup]: existingUser is`, existingUser, existingUser.length);
 
 		if (existingUser.length !== 0) {
-			return setError(form, 'name', 'Name allready exists');
+			return setError(form, null, 'First name and last name conbination allready exists');
 		}
 
 		const existingEmail = await locals.db
@@ -43,15 +48,17 @@ export const actions = {
 
 		const user = await locals.auth.createUser({
 			primaryKey: {
-				providerId: 'username',
-				providerUserId: form.data.name,
+				providerId: 'email',
+				providerUserId: form.data.email,
 				password: form.data.password
 			},
 			attributes: {
-				name: form.data.name,
+				first_name: form.data.firstName,
+				last_name: form.data.lastName,
 				email: form.data.email,
 				role: RolesEnum.Enum.default,
-				email_verified: 0
+				email_verified: 0,
+				password_expired: 0
 			}
 		});
 
@@ -59,7 +66,11 @@ export const actions = {
 		locals.authRequest.setSession(session);
 
 		const token = await locals.emailVerificationToken.issue(user.id);
-		await sendEmailVerificationEmail(user.email, user.name, token.toString());
+		await sendEmailVerificationEmail(
+			user.email,
+			`${user.firstName} ${user.lastName}`,
+			token.toString()
+		);
 
 		throw redirect(302, '/');
 	}

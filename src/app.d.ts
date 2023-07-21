@@ -19,7 +19,7 @@ declare global {
 
 		interface Platform {
 			env?: {
-				TODO_LIST_DB: D1Database;
+				ROUTECHOICE_DB: D1Database;
 			};
 		}
 	}
@@ -30,9 +30,11 @@ declare global {
 	namespace Lucia {
 		type Auth = import('./hooks.server.js').Auth;
 		type UserAttributes = {
-			name: string;
+			first_name: string;
+			last_name: string;
 			email: string;
 			email_verified: number;
+			password_expired: number;
 			role: RolesEnum;
 		};
 	}

@@ -1,9 +1,10 @@
-import { NUMBERS } from '$lib/constants';
+import { NUMBERS } from '$lib/constants.js';
 import { z } from 'zod';
 
 export const signUpFormSchema = z
 	.object({
-		name: z.string().describe('Name').nonempty('User name should not be empty'),
+		firstName: z.string().describe('Name').nonempty('User name should not be empty'),
+		lastName: z.string().describe('Name').nonempty('User name should not be empty'),
 		email: z.string().email('Please enter a valid email'),
 		password: z
 			.string()
