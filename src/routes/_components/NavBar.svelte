@@ -40,6 +40,12 @@
 				</li>
 			{/if}
 
+			<li class="link-list-item large">
+				<a href="/bug" class="flex gap-1 items-center">
+					<i class="i-carbon-debug block h-5 w-5" /> Bug
+				</a>
+			</li>
+
 			{#if user === undefined}
 				<li class="py-0 large">
 					<a href="/login">Login</a>
@@ -70,6 +76,7 @@
 
 		<details role="list" dir="rtl" class="hamburger-menu">
 			<summary aria-haspopup="listbox"> <i class="i-carbon-menu w-8 h-8" /> </summary>
+
 			<ul>
 				{#if user !== undefined}
 					<li class="option-item">
@@ -103,12 +110,22 @@
 						<a href="/help">Help</a>
 					</li>
 				{/if}
+
+				<li class="option-item">
+					<a href="/bug" class="ltr important:flex gap-1 items-center">
+						<i class="i-carbon-debug block h-5 w-5" /> Bug
+					</a>
+				</li>
 			</ul>
 		</details>
 	</div>
 </nav>
 
 <style>
+	.ltr {
+		direction: ltr;
+	}
+
 	.logo-list {
 		margin-left: calc(var(--nav-element-spacing-horizontal) * -2);
 	}
