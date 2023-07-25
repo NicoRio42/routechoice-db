@@ -13,15 +13,15 @@ An experimental starter template for production ready sveltekit web apps.
 
 Missing features:
 
-- Autoanalysis
-- Recap pannel
-- Time offset editor
+- Tags
 - Import course and routechoices from 2D rerun
 - Import splits from Winsplits
+- Time offset editor
+- Autoanalysis
+- Recap pannel
 
 Bugs:
 
-- Routechoice select not displaying routechoices
 - Routechoice select 500 (relative to statistics)
 
 Improvements:

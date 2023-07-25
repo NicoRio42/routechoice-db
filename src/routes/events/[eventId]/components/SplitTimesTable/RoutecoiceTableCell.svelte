@@ -51,6 +51,7 @@
 				use:enhance
 			>
 				<select
+					class="routechoice-select"
 					name="routechoiceId"
 					style:color={selectedRoutechoice?.color}
 					value={selectedRoutechoice?.id}
@@ -74,10 +75,10 @@
 </td>
 
 <style>
-	select {
+	select.routechoice-select {
 		margin: 0;
-		width: 2rem;
-		padding: 0.125rem 0.25rem;
+		max-width: 2rem;
+		padding: 0.125rem 0 0.125rem 0.25rem;
 		background-position: center right 0;
 	}
 </style>
