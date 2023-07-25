@@ -84,11 +84,7 @@ export const actions = {
 		}
 
 		if (form.data.email !== user.email) {
-			return setError(
-				form,
-				'email',
-				'Not possible to update email yet (ask the developper if needed).'
-			);
+			return setError(form, 'email', 'Not possible to update email yet (ask the dev if needed).');
 			// locals.auth.deleteKey('email', user.email);
 
 			// locals.auth.updateKeyPassword
