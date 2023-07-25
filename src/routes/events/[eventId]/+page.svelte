@@ -23,6 +23,7 @@
 	import AddRoutechoiceDialog from './components/AddRoutechoiceDialog.svelte';
 	import type { LineString } from 'ol/geom.js';
 	import type { DrawEvent } from 'ol/interaction/Draw.js';
+	import { RolesEnum } from '$lib/models/enums/roles.enum.js';
 
 	export let data;
 
@@ -103,7 +104,9 @@
 	}
 </script>
 
-<ModeDropDown courseId={data.event.id} {mode} />
+{#if data.user?.role === RolesEnum.Enum.admin}
+	<ModeDropDown courseId={data.event.id} {mode} />
+{/if}
 
 <div class="wrapper">
 	{#if showAddRoutechoiceDialog && currentDrawnRoutechoice !== null}

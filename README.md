@@ -8,3 +8,23 @@ An experimental starter template for production ready sveltekit web apps.
 - Ready to deploy on [Clouflare Pages](https://pages.cloudflare.com/) with D1 distributed database
 - [pico.css](https://picocss.com/) for nice base styles
 - [unocss](https://unocss.dev/) for icons and additional styles
+
+## Migrating away from Firebase
+
+Missing features:
+
+- Autoanalysis
+- Recap pannel
+- Time offset editor
+- Import course and routechoices from 2D rerun
+- Import splits from Winsplits
+
+Bugs:
+
+- Routechoice select not displaying routechoices
+- Routechoice select 500 (relative to statistics)
+
+Improvements:
+
+- No full page reload when changing routechoice or drawing a new one
+- loading indicator when navigating directly to an event

@@ -4,6 +4,7 @@
 	import type { User } from 'lucia-auth';
 	import ThemeSwitch from './ThemeSwitch.svelte';
 	import { enhance } from '$app/forms';
+	import { page } from '$app/stores';
 
 	export let user: User | undefined;
 </script>
@@ -48,7 +49,7 @@
 
 			{#if user === undefined}
 				<li class="py-0 large">
-					<a href="/login">Login</a>
+					<a href="/login?redirectTo={$page.url.toString()}">Login</a>
 				</li>
 			{:else}
 				<li class="py-0 large">
@@ -97,7 +98,7 @@
 					</li>
 				{:else}
 					<li>
-						<a href="/login">Login</a>
+						<a href="/login?redirectTo={$page.url.toString()}">Login</a>
 					</li>
 				{/if}
 

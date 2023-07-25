@@ -12,7 +12,7 @@ export const load = async ({ locals }) => {
 };
 
 export const actions = {
-	default: async ({ request, locals }) => {
+	default: async ({ request, locals, url }) => {
 		const form = await superValidate(request, loginFormSchema);
 
 		if (!form.valid) {
@@ -47,6 +47,21 @@ export const actions = {
 			return setError(form, null, "This account doesn't exist");
 		}
 
-		throw redirect(302, '/');
+		const redirectToSearchParam = url.searchParams.get('redirectTo');
+
+		if (redirectToSearchParam === null) {
+			throw redirect(302, '/');
+		}
+
+		let urlString = '/';
+
+		try {
+			const url = new URL(redirectToSearchParam);
+			urlString = url.toString();
+		} catch (e) {
+			console.error(e);
+		}
+
+		throw redirect(302, urlString);
 	}
 };
