@@ -8,6 +8,8 @@
 	function confirmDeletion(e: Event) {
 		if (!confirm('Are you sure to delete this user ?')) {
 			e.preventDefault();
+			e.stopPropagation();
+			e.stopImmediatePropagation();
 		}
 	}
 </script>
@@ -28,6 +30,7 @@
 					<th>Email verified</th>
 					<th>Password expired</th>
 					<th />
+					<th />
 				</tr>
 			</thead>
 
@@ -40,13 +43,21 @@
 						<td>{user.role}</td>
 						<td>{user.emailVerified ? 'Yes' : 'No'}</td>
 						<td>{user.passwordExpired ? 'Yes' : 'No'}</td>
+
 						<td>
+							<a href="/users/{user.id}/update" role="button" class="btn-unset">
+								<i class="i-carbon-edit block translate-y-0.75" />
+							</a>
+						</td>
+
+						<td>
+							<!-- Warning: submit event handler should be before enhance action -->
 							<form
 								action="/users/{user.id}/delete"
 								method="post"
-								class="m-0"
-								use:enhance
+								class="m-0 p-0"
 								on:submit={confirmDeletion}
+								use:enhance
 							>
 								<button type="submit" class="btn-unset">
 									<i class="i-carbon-trash-can block" />

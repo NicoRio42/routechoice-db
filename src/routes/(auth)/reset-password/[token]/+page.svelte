@@ -12,7 +12,7 @@
 	const { errors, delayed, enhance } = form;
 </script>
 
-<form method="post" use:enhance>
+<form method="post" use:enhance class="mt-10">
 	<h1>Reset password</h1>
 
 	<PasswordField {form} field="password" label="Password" />

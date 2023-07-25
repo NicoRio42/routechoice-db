@@ -28,7 +28,11 @@ export async function load({ params: { eventId }, locals, fetch }) {
 		.where(and(eq(liveEventTable.fkEvent, eventId), eq(liveEventTable.isPrimary, true)))
 		.get();
 
-	const users = locals.db.select({ id: user.id, name: user.name }).from(user).all();
+	const users = locals.db
+		.select({ id: user.id, firstName: user.firstName, lastName: user.lastName })
+		.from(user)
+		.all()
+		.map((u) => ({ ...u, name: `${u.firstName} ${u.lastName}` }));
 
 	let competitors: {
 		deviceId: number;
@@ -102,7 +106,7 @@ export const actions = {
 	default: async ({ params: { eventId }, request, locals, fetch }) => {
 		const { user } = await locals.authRequest.validateUser();
 		if (!user) throw redirect(302, '/login');
-		if (user.emailVerified === 0) throw redirect(302, '/email-verification');
+		if (!user.emailVerified) throw redirect(302, '/email-verification');
 
 		const formData = await request.formData();
 

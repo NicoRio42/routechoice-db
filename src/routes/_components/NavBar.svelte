@@ -44,10 +44,6 @@
 				<li class="py-0 large">
 					<a href="/login">Login</a>
 				</li>
-
-				<li class="py-0 large">
-					<a href="/signup">Sign up</a>
-				</li>
 			{:else}
 				<li class="py-0 large">
 					<details role="list" dir="rtl">

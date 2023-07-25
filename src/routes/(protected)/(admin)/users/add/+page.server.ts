@@ -1,19 +1,18 @@
 import { RolesEnum } from '$lib/models/enums/roles.enum.js';
 import { user as userDBShema } from '$lib/server/db/schema.js';
-import { sendEmailVerificationEmail } from '$lib/server/email.js';
 import { redirect } from '@sveltejs/kit';
 import { and, eq } from 'drizzle-orm';
 import { setError, superValidate } from 'sveltekit-superforms/server';
-import { signUpFormSchema } from './schema.js';
+import { userFormSchema } from '../userFormSchema.js';
 
 export async function load() {
-	const form = await superValidate(signUpFormSchema);
+	const form = await superValidate(userFormSchema);
 	return { form };
 }
 
 export const actions = {
 	default: async ({ request, locals }) => {
-		const form = await superValidate(request, signUpFormSchema);
+		const form = await superValidate(request, userFormSchema);
 
 		if (!form.valid) {
 			return setError(form, null, 'An error occured');

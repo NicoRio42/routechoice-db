@@ -2,7 +2,7 @@
 	import CheckboxField from '$lib/components/form-fields/CheckboxField.svelte';
 	import TextField from '$lib/components/form-fields/TextField.svelte';
 	import { superForm } from 'sveltekit-superforms/client';
-	import { userFormSchema } from '../userFormSchema';
+	import { userFormSchema } from '../../userFormSchema';
 
 	export let data;
 
@@ -15,7 +15,7 @@
 </script>
 
 <form method="POST" use:enhance novalidate class="mt-4">
-	<h1 class="mb-2">Add user</h1>
+	<h1 class="mb-2">Update user</h1>
 
 	<TextField {form} field="firstName" label="First name" />
 
@@ -25,7 +25,7 @@
 
 	<CheckboxField {form} field="isAdmin" label="Admin" />
 
-	<button type="submit" aria-busy={$delayed}>Add</button>
+	<button type="submit" aria-busy={$delayed}>Update</button>
 
 	{#each $errors._errors ?? [] as globalError}
 		<p>
