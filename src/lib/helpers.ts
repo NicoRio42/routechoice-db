@@ -291,3 +291,12 @@ export function createRoutechoiceStatistics(
 
 	return routechoicesStatistics;
 }
+
+export function addAlpha(color: string, opacity: number) {
+	if (!color.startsWith('#')) throw new Error('Hexadecimal color should start with #');
+	if (color.length !== 7 && color.length !== 9)
+		throw new Error('Hexadecimal color should be 7 or 9 characters long');
+
+	const _opacity = Math.round(Math.min(Math.max(opacity || 1, 0), 1) * 255);
+	return color.slice(0, 7) + _opacity.toString(16).toUpperCase();
+}

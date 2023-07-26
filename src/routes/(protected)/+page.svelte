@@ -1,17 +1,29 @@
 <script lang="ts">
-	import TagComponent from '$lib/components/TagsSelect/Tag.svelte';
+	import { page } from '$app/stores';
+	import TagsSelect from '$lib/components/form-fields/TagsSelect.svelte';
 	import { SPLITTIMES_BASE_URL } from '$lib/constants.js';
 	import { RolesEnum } from '$lib/models/enums/roles.enum.js';
+	import { superForm } from 'sveltekit-superforms/client';
 
 	export let data;
-	// let tags: Tag[] = data.tags;
 
-	// function handleTagsSelected(event: CustomEvent<Tag[]>) {
-	// 	tags = event.detail;
-	// 	let url = location.pathname;
-	// 	if (tags.length !== 0) url += `?tags=${tags.map((t) => t.id).join(',')}`;
-	// 	goto(url);
-	// }
+	let formElement: HTMLFormElement;
+
+	const form = superForm(data.form, {
+		taintedMessage: null
+	});
+
+	function handleTagsToggle(e: CustomEvent<string>) {
+		const selectedTags = e.detail.split(',');
+		const currentTags = $page.url.searchParams.get('tags')?.split(',') ?? [];
+		const tagsHaveNotChange =
+			currentTags.every((currentTag) => selectedTags.includes(currentTag)) &&
+			selectedTags.every((selectedTag) => currentTags.includes(selectedTag));
+
+		if (tagsHaveNotChange) return;
+
+		formElement.submit();
+	}
 </script>
 
 <svelte:head>
@@ -21,11 +33,20 @@
 <main class="container flex-shrink-0 flex-grow-1 px-4">
 	<h1 class="mt-4 mb-6">Events</h1>
 
-	<!-- <TagsSelect on:tagsSelect={handleTagsSelected} /> -->
-
 	{#if data.user.role === RolesEnum.Enum.admin}
 		<a href="events/add" role="button"> Add new event </a>
 	{/if}
+
+	<form method="get" class="m-0 p-0 mt-4 max-w-100% md:max-w-100" bind:this={formElement}>
+		<TagsSelect
+			{form}
+			allTags={data.tags}
+			field="tags"
+			label="Tags"
+			on:toggle={handleTagsToggle}
+			initialTagsIds={$page.url.searchParams.get('tags')?.split(',') ?? []}
+		/>
+	</form>
 
 	<figure class="mt-4">
 		<table>
@@ -56,9 +77,18 @@
 						<td>{new Date(event.publishTime).toLocaleString()}</td>
 
 						<td>
-							<!-- {#each course.tags as tag}
-								<TagComponent {tag} />
-							{/each} -->
+							{#each event.tags as { fkTag: tagId }}
+								{@const tag = data.tags.find((t) => t.id === tagId)}
+
+								{#if tag !== undefined}
+									<span
+										style:background-color={tag.color}
+										class="mr-1 px-1 rounded text-white nowrap"
+									>
+										{tag.name}
+									</span>
+								{/if}
+							{/each}
 						</td>
 
 						<td class="text-right">

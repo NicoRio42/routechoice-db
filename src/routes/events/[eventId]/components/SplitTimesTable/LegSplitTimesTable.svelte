@@ -1,13 +1,13 @@
 <script lang="ts">
 	import { createEventDispatcher } from 'svelte';
-	import { addAlpha } from '../utils.js';
 	import RoutechoiceTableCell from './RoutecoiceTableCell.svelte';
 	import { fullNameToShortName, rankToCSSClass, secondsToPrettyTime } from './utils.js';
-	import type { Runner } from '../../models/runner.model.js';
 	import type { Routechoice } from '$lib/server/db/schema.js';
+	import type { RunnerWithNullableLegsAndTrack } from '$lib/models/runner.model.js';
+	import { addAlpha } from '$lib/helpers.js';
 
 	export let selectedRunners: string[];
-	export let sortedRunnersWithOneLeg: Runner[];
+	export let sortedRunnersWithOneLeg: RunnerWithNullableLegsAndTrack[];
 	export let legRoutechoices: Routechoice[];
 
 	let iShowAllRunnersTracksChecked = false;
@@ -68,13 +68,13 @@
 				{fullNameToShortName(runner.firstName, runner.lastName)}
 			</td>
 
-			<td class:mistake={runnerLeg.timeLoss !== 0}>
+			<td class:mistake={runnerLeg?.timeLoss !== 0}>
 				{#if runnerLeg !== null}
 					<div
-						class="tooltip-container {rankToCSSClass(runner.legs[0].rankSplit)}"
-						data-tooltip={`+ ${secondsToPrettyTime(runner.legs[0].timeBehindSplit)}`}
+						class="tooltip-container {rankToCSSClass(runnerLeg?.rankSplit)}"
+						data-tooltip={`+ ${secondsToPrettyTime(runnerLeg?.timeBehindSplit)}`}
 					>
-						{`${secondsToPrettyTime(runner.legs[0].time)} (${runner.legs[0].rankSplit})`}
+						{`${secondsToPrettyTime(runnerLeg?.time)} (${runnerLeg?.rankSplit})`}
 					</div>
 
 					<div

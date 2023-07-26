@@ -20,6 +20,7 @@ const timestampFromString = z.string().transform((arg, ctx) => {
 export const addEventSchema = z
 	.object({
 		name: z.string().nonempty('Please enter a name for the event'),
+		tags: z.string().transform((arg) => arg.split(',')),
 		liveProviderUrl: z.string().url('Please enter a valid url'),
 		timeZoneOffset: z.number(),
 		startTime: timestampFromString,

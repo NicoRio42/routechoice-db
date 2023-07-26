@@ -1,8 +1,9 @@
 <script lang="ts">
+	import { onDestroy } from 'svelte';
 	import type { UnwrapEffects } from 'sveltekit-superforms';
 	import type { SuperForm } from 'sveltekit-superforms/client';
 	import { formFieldProxy } from 'sveltekit-superforms/client';
-	import type { z, AnyZodObject } from 'zod';
+	import type { AnyZodObject, z } from 'zod';
 
 	type T = $$Generic<AnyZodObject>;
 
@@ -14,9 +15,11 @@
 
 	const { value, errors } = formFieldProxy(form, field);
 
-	errors.subscribe((errs) => {
+	const unsub = errors.subscribe((errs) => {
 		if (!errorsHaveBeenshownOnce) errorsHaveBeenshownOnce = errs !== undefined && errs.length !== 0;
 	});
+
+	onDestroy(unsub);
 </script>
 
 <label>

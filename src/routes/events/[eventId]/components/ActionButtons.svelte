@@ -84,6 +84,7 @@
 		href={$page.url.searchParams.has('hideSideBar')
 			? deleteSearchParamsToURL($page.url, 'hideSideBar')
 			: addSearchParamsToURL($page.url, 'hideSideBar', '')}
+		data-sveltekit-replacestate
 	>
 		<i class="i-carbon-chart-column" />
 	</a>

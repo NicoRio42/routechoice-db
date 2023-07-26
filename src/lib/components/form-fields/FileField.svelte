@@ -1,4 +1,5 @@
 <script lang="ts">
+	import { onDestroy } from 'svelte';
 	import type { UnwrapEffects } from 'sveltekit-superforms';
 	import type { SuperForm } from 'sveltekit-superforms/client';
 	import { formFieldProxy } from 'sveltekit-superforms/client';
@@ -15,11 +16,13 @@
 
 	const { value, errors } = formFieldProxy(form, field);
 
-	errors.subscribe((errs) => {
+	const unsub = errors.subscribe((errs) => {
 		if (!errorsHaveBeenshownOnce) errorsHaveBeenshownOnce = errs !== undefined && errs.length !== 0;
 	});
 
 	const dispatch = createEventDispatcher<{ filesChange: FileList | null }>();
+
+	onDestroy(unsub);
 </script>
 
 <label>

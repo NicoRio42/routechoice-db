@@ -15,7 +15,11 @@ import { fail, redirect } from '@sveltejs/kit';
 import { eq, inArray } from 'drizzle-orm';
 
 export const actions = {
-	updateRoutechoice: async ({ request, params: { eventId, runnerId, legId }, locals }) => {
+	updateRoutechoice: async ({
+		request,
+		params: { eventId, runnerId, legId: runnerLegId },
+		locals
+	}) => {
 		const { user } = await locals.authRequest.validateUser();
 
 		if (user === null) {
@@ -31,7 +35,7 @@ export const actions = {
 		const runnerLeg = await locals.db
 			.select()
 			.from(runnerLegFromDatabase)
-			.where(eq(runnerLegFromDatabase.id, legId))
+			.where(eq(runnerLegFromDatabase.id, runnerLegId))
 			.get();
 
 		if (runnerLeg.fkRunner !== runnerId) {
@@ -52,7 +56,7 @@ export const actions = {
 		await locals.db
 			.update(runnerLegFromDatabase)
 			.set({ fkManualRoutechoice: newRoutechoiceId })
-			.where(eq(runnerLegFromDatabase.id, legId))
+			.where(eq(runnerLegFromDatabase.id, runnerLegId))
 			.run();
 
 		const runners = await locals.db.query.runner.findMany({
@@ -81,10 +85,9 @@ export const actions = {
 		);
 
 		const legIndex = sortedLegsWithRoutechoicesWithParsedTracks.findIndex(
-			(leg) => leg.id === legId
+			(leg) => leg.id === runnerLeg.fkLeg
 		);
 
-		console.log(sortedLegsWithRoutechoicesWithParsedTracks, legId);
 		if (legIndex === -1) {
 			return fail(400);
 		}

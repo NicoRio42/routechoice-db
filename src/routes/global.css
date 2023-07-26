@@ -55,3 +55,7 @@ label {
 .btn-unset:focus {
 	box-shadow: none;
 }
+
+.nowrap {
+	text-wrap: nowrap;
+}

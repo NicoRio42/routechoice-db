@@ -10,6 +10,7 @@
 		formatDateTimeForDateTimeInput
 	} from '$lib/helpers.js';
 	import { loggatorEventSchema } from 'orienteering-js/models';
+	import TagsSelect from '$lib/components/form-fields/TagsSelect.svelte';
 
 	export let data;
 
@@ -50,6 +51,8 @@
 	<UrlField {form} field="liveProviderUrl" label="Live provider URL" />
 
 	<input name="timeZoneOffset" type="hidden" bind:value={$formStore.timeZoneOffset} />
+
+	<TagsSelect allTags={data.tags} {form} field="tags" label="Tags" />
 
 	<DateTimeField {form} field="startTime" label="Start time" />
 

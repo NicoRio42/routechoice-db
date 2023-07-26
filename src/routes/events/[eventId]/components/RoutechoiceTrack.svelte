@@ -1,8 +1,8 @@
 <script lang="ts">
 	import LineString from './LineString.svelte';
 	import { transform } from 'ol/proj.js';
-	import { addAlpha } from './utils.js';
 	import type { Routechoice } from '$lib/server/db/schema.js';
+	import { addAlpha } from '$lib/helpers.js';
 
 	export let routechoice: Routechoice;
 	export let opacity: number;

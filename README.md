@@ -16,13 +16,12 @@ Missing features:
 - Tags
 - Import course and routechoices from 2D rerun
 - Import splits from Winsplits
+- Splittimes integration
 - Time offset editor
 - Autoanalysis
 - Recap pannel
 
 Bugs:
-
-- Routechoice select 500 (relative to statistics)
 
 Improvements:
 

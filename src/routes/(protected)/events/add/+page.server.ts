@@ -1,11 +1,18 @@
-import { event, liveEvent } from '$lib/server/db/schema.js';
+import {
+	assoEventTag as assoEventTagTable,
+	event,
+	liveEvent,
+	tag as tagTable
+} from '$lib/server/db/schema.js';
 import { fail, redirect } from '@sveltejs/kit';
 import { setError, superValidate } from 'sveltekit-superforms/server';
 import { addEventSchema } from './schema.js';
 
-export async function load() {
+export async function load({ locals }) {
 	const form = await superValidate(addEventSchema);
-	return { form };
+	const tags = locals.db.select().from(tagTable).all();
+
+	return { form, tags };
 }
 
 export const actions = {
@@ -36,6 +43,11 @@ export const actions = {
 					url: form.data.liveProviderUrl,
 					isPrimary: true
 				})
+				.run();
+
+			await tx
+				.insert(assoEventTagTable)
+				.values(form.data.tags.map((fkTag) => ({ fkEvent: eventId, fkTag })))
 				.run();
 
 			throw redirect(302, `/events/${eventId}/manager/course-and-routechoices`);

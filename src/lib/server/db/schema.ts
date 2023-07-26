@@ -27,7 +27,8 @@ export const eventsRelations = relations(event, ({ many }) => ({
 	liveEvents: many(liveEvent),
 	runners: many(runner),
 	legs: many(leg),
-	controlPoints: many(controlPoint)
+	controlPoints: many(controlPoint),
+	tags: many(assoEventTag)
 }));
 
 export type Event = InferModel<typeof event>;
@@ -53,9 +54,11 @@ export const liveEventsRelations = relations(liveEvent, ({ one }) => ({
 
 export const tag = sqliteTable('tag', {
 	id: text('id').primaryKey(),
-	name: text('name').notNull(),
-	color: text('color').notNull()
+	name: text('name').notNull().unique(),
+	color: text('color').notNull().unique()
 });
+
+export type Tag = InferModel<typeof tag>;
 
 export const assoEventTag = sqliteTable(
 	'asso_event_tag',
@@ -65,6 +68,13 @@ export const assoEventTag = sqliteTable(
 	},
 	(table) => ({ pk: primaryKey(table.fkEvent, table.fkTag) })
 );
+
+export const assoEventTagsRelations = relations(assoEventTag, ({ one }) => ({
+	event: one(event, {
+		fields: [assoEventTag.fkEvent],
+		references: [event.id]
+	})
+}));
 
 export const leg = sqliteTable('leg', {
 	id: text('id').primaryKey(),
