@@ -3,8 +3,6 @@
 
 	export let data;
 
-	console.log(data);
-
 	function confirmDeletion(e: Event) {
 		if (!confirm('Are you sure to delete this user ?')) {
 			e.preventDefault();

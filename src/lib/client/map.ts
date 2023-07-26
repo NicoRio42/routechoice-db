@@ -46,8 +46,8 @@ export async function getMapCallibrationByFetchingMapImageIfNeeded(
 		};
 
 		image.onerror = () => reject('Failed to load map image');
-		// image.src = courseMap.url;
-		image.src = 'http://localhost:5173/tile_0_0.jpg';
+		image.src = courseMap.url;
+		// image.src = 'http://localhost:5173/tile_0_0.jpg';
 
 		cachedImages[courseMap.url] = image;
 	});

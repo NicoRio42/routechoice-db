@@ -44,8 +44,8 @@ export async function load({ params: { eventId }, locals, fetch }) {
 	const loggatorEventUrl = `${gpsProvider.apiBaseUrl}/events/${liveEventId}`;
 
 	try {
-		// const response = await fetch(loggatorEventUrl);
-		const response = await fetch('http://localhost:5173/20220622meylan.json');
+		const response = await fetch(loggatorEventUrl);
+		// const response = await fetch('http://localhost:5173/20220622meylan.json');
 
 		const loggatorEvent = loggatorEventSchema.parse(await response.json());
 		competitors = loggatorEvent.competitors.map((c) => ({ deviceId: c.device_id, name: c.name }));

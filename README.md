@@ -13,7 +13,7 @@ An experimental starter template for production ready sveltekit web apps.
 
 Missing features:
 
-- Tags
+- Upgrade Svelte Sveltekit Lucia Drizzle Superform
 - Import course and routechoices from 2D rerun
 - Import splits from Winsplits
 - Splittimes integration

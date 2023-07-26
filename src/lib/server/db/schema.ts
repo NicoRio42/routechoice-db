@@ -1,7 +1,7 @@
 import { sqliteTable, text, integer, customType, primaryKey, real } from 'drizzle-orm/sqlite-core';
 import { relations, type InferModel } from 'drizzle-orm';
-import { RolesEnum } from '../../models/enums/roles.enum';
-import { RunnerStatusEnum } from '../../models/enums/runner-status.enum';
+import { RolesEnum } from '../../models/enums/roles.enum.js';
+import { RunnerStatusEnum } from '../../models/enums/runner-status.enum.js';
 
 const boolean = customType<{ data: boolean }>({
 	dataType() {
