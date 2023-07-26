@@ -59,6 +59,10 @@
 		</summary>
 
 		<ul role="listbox">
+			<li>
+				<button type="button" on:click={() => (tags = [])} class="outline">Clear</button>
+			</li>
+
 			{#each allTags as tag}
 				<li>
 					<label>

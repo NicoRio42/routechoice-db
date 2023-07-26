@@ -16,11 +16,12 @@
 	function handleTagsToggle(e: CustomEvent<string>) {
 		const selectedTags = e.detail.split(',');
 		const currentTags = $page.url.searchParams.get('tags')?.split(',') ?? [];
-		const tagsHaveNotChange =
+
+		const tagsDidNotChange =
 			currentTags.every((currentTag) => selectedTags.includes(currentTag)) &&
 			selectedTags.every((selectedTag) => currentTags.includes(selectedTag));
 
-		if (tagsHaveNotChange) return;
+		if (tagsDidNotChange) return;
 
 		formElement.submit();
 	}
