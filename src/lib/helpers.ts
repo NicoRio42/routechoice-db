@@ -171,11 +171,14 @@ export function sortLegs(legs: LegWithRoutechoices[]): LegWithRoutechoices[] {
 			(leg) => leg.fkStartControlPoint === sortedLegs[sortedLegs.length - 1].fkFinishControlPoint
 		);
 
-		if (nextLeg === undefined) {
-			throw new Error('There is holes in the course.');
-		}
+		if (nextLeg === undefined) break;
 
-		sortedLegs.push(nextLeg);
+		sortedLegs.push({
+			...nextLeg,
+			routechoices: nextLeg.routechoices.sort((routechoiceA, routechoiceB) =>
+				routechoiceA.name.localeCompare(routechoiceB.name)
+			)
+		});
 	}
 
 	return sortedLegs;
