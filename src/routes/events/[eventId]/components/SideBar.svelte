@@ -45,7 +45,7 @@
 			return 0;
 		});
 
-		legRoutechoices = legs[legNumber - 1].routechoices;
+		legRoutechoices = legs[legNumber - 1]?.routechoices ?? [];
 	}
 </script>
 

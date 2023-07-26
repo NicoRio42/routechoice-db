@@ -118,6 +118,10 @@
 							</td>
 						{/if}
 					</tr>
+				{:else}
+					<tr>
+						<td colspan="7" class="text-center py-10"> No event for these filters. </td>
+					</tr>
 				{/each}
 			</tbody>
 		</table>

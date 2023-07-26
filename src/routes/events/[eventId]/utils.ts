@@ -1,13 +1,18 @@
 import { transform, transformExtent } from 'ol/proj.js';
 import { ModesEnum } from './models/modes.enum.js';
 import type { EventWithLiveEventsRunnersLegsAndControlPoints } from '$lib/models/event.model.js';
+import type { CourseMap } from 'orienteering-js/models';
 
 export function computeFitBoxAndAngleFromLegNumber(
 	legNumber: number,
-	event: EventWithLiveEventsRunnersLegsAndControlPoints
+	event: EventWithLiveEventsRunnersLegsAndControlPoints,
+	eventMap: CourseMap
 ): [[number, number, number, number], number] {
 	const leg = event.legs[legNumber - 1];
-	if (leg === undefined) throw new Error('Cannot find leg');
+
+	if (leg === undefined) {
+		return computeFitBoxAndAngleFromCourseMap(eventMap);
+	}
 
 	const startControl = event.controlPoints.find(
 		(control) => control.id === leg.fkStartControlPoint
@@ -17,7 +22,7 @@ export function computeFitBoxAndAngleFromLegNumber(
 	);
 
 	if (startControl === undefined || finishControl === undefined) {
-		throw new Error('Control point not found for the given leg.');
+		return computeFitBoxAndAngleFromCourseMap(eventMap);
 	}
 
 	const minLat = Math.min(startControl.latitude, finishControl.latitude);
@@ -45,6 +50,35 @@ export function computeFitBoxAndAngleFromLegNumber(
 	const newAngle = -Math.atan(deltaX / deltaY) - (deltaY > 0 ? 0 : Math.PI);
 
 	return [extend as [number, number, number, number], newAngle];
+}
+
+function computeFitBoxAndAngleFromCourseMap(
+	eventMap: CourseMap
+): [[number, number, number, number], number] {
+	const minLat = Math.min(
+		eventMap.calibration[0].gps.lat,
+		eventMap.calibration[1].gps.lat,
+		eventMap.calibration[2].gps.lat
+	);
+	const maxLat = Math.max(
+		eventMap.calibration[0].gps.lat,
+		eventMap.calibration[1].gps.lat,
+		eventMap.calibration[2].gps.lat
+	);
+	const minLon = Math.min(
+		eventMap.calibration[0].gps.lon,
+		eventMap.calibration[1].gps.lon,
+		eventMap.calibration[2].gps.lon
+	);
+	const maxLon = Math.max(
+		eventMap.calibration[0].gps.lon,
+		eventMap.calibration[1].gps.lon,
+		eventMap.calibration[2].gps.lon
+	);
+
+	const extend = transformExtent([minLon, minLat, maxLon, maxLat], 'EPSG:4326', 'EPSG:3857');
+
+	return [extend as [number, number, number, number], 0];
 }
 
 export function getModeFromSearchParams(searchParams: URLSearchParams): ModesEnum {

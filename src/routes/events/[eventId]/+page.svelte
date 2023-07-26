@@ -37,12 +37,13 @@
 
 	$: mode = getModeFromSearchParams($page.url.searchParams);
 	$: legNumber = getLegNumberFromSearchParams($page.url.searchParams);
-	$: legRoutechoices = data.event.legs[legNumber - 1].routechoices;
+	$: legRoutechoices = data.event.legs[legNumber - 1]?.routechoices ?? [];
 
 	$: {
 		const [newFitBox, newAngle] = computeFitBoxAndAngleFromLegNumber(
 			legNumber,
-			data.event as Event
+			data.event as Event,
+			data.eventMap
 		);
 
 		fitBox = newFitBox;
