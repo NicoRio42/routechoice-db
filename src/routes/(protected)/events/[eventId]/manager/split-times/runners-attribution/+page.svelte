@@ -6,7 +6,7 @@
 
 <h1>Runners / GPS tracks / User correspondence</h1>
 
-<p>
+<p class="container">
 	&#62;
 	<a href={`/courses/${data.event.id}/manager`}>{data.event.name}</a>
 

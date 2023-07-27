@@ -65,8 +65,11 @@ export async function getTracksFromLiveEvents(
 			const gpsProvider = GPS_PROVIDERS.loggator;
 			const eventUrl = `${gpsProvider.apiBaseUrl}/events/${eventId}`;
 			const pointsUrl = `${eventUrl}/points`;
-			const pointsResponse = await fetch(pointsUrl);
-			// const pointsResponse = await fetch('http://localhost:5173/points.json');
+
+			const pointsResponse =
+				import.meta.env.MODE === 'dev-offline'
+					? await fetch('http://localhost:5173/points.json')
+					: await fetch(pointsUrl);
 
 			if (!pointsResponse.ok) {
 				throw new Error(`Failed to load points for loggator event with id ${eventId}`);
@@ -94,8 +97,11 @@ export async function getEventMap(liveEvent: LiveEvent, fetch: Fetch): Promise<C
 		const [provider, eventId] = extractLiveProviderAndEventIdFromUrl(liveEvent.url);
 		const gpsProvider = GPS_PROVIDERS.loggator;
 		const eventUrl = `${gpsProvider.apiBaseUrl}/events/${eventId}`;
-		const eventResponse = await fetch(eventUrl);
-		// const eventResponse = await fetch('http://localhost:5173/20220622meylan.json');
+
+		const eventResponse =
+			import.meta.env.MODE === 'dev-offline'
+				? await fetch('http://localhost:5173/20220622meylan.json')
+				: await fetch(eventUrl);
 
 		if (!eventResponse.ok) {
 			throw new Error(`Failed to load loggator event with id ${eventId}`);
