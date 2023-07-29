@@ -10,12 +10,15 @@ import {
 	type RoutechoiceStatistics
 } from '$lib/server/db/schema.js';
 import { parseIOFXML3CourseOCADExport, parseGPXRoutechoicesOCADExport } from 'orienteering-js/ocad';
+import { redirectIfNotAdmin } from '$lib/server/auth/helpers.js';
 
 export const actions = {
 	default: async ({ locals, request, params: { eventId } }) => {
-		const { user } = await locals.authRequest.validateUser();
-		if (!user) throw redirect(302, '/login');
-		if (user.emailVerified === 0) throw redirect(302, '/email-verification');
+		const session = await locals.authRequest.validate();
+		if (!session) throw redirect(302, '/login');
+		const { user } = session;
+
+		redirectIfNotAdmin(user);
 
 		const formData = await request.formData();
 

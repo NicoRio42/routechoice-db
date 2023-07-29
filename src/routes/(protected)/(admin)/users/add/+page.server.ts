@@ -4,14 +4,29 @@ import { redirect } from '@sveltejs/kit';
 import { and, eq } from 'drizzle-orm';
 import { setError, superValidate } from 'sveltekit-superforms/server';
 import { userFormSchema } from '../userFormSchema.js';
+import { redirectIfNotAdmin } from '$lib/server/auth/helpers.js';
 
-export async function load() {
+export async function load({ locals }) {
+	const session = await locals.authRequest.validate();
+	if (!session) throw redirect(302, '/login');
+	const { user: connectedUser } = session;
+
+	redirectIfNotAdmin(connectedUser);
+
 	const form = await superValidate(userFormSchema);
 	return { form };
 }
 
 export const actions = {
 	default: async ({ request, locals }) => {
+		const session = await locals.authRequest.validate();
+		if (!session) throw redirect(302, '/login');
+		const { user: connectedUser } = session;
+
+		if (!connectedUser || connectedUser.role !== RolesEnum.Enum.admin) {
+			throw redirect(302, '/login');
+		}
+
 		const form = await superValidate(request, userFormSchema);
 
 		if (!form.valid) {
@@ -44,7 +59,7 @@ export const actions = {
 		}
 
 		await locals.auth.createUser({
-			primaryKey: {
+			key: {
 				providerId: 'email',
 				providerUserId: form.data.email,
 				password: crypto.randomUUID()

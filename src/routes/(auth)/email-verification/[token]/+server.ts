@@ -1,29 +1,23 @@
-import { LuciaTokenError } from '@lucia-auth/tokens';
-import { error, redirect } from '@sveltejs/kit';
+import { validateEmailVerificationToken } from '$lib/server/auth/tokens.js';
+import { redirect } from '@sveltejs/kit';
 
 export const GET = async ({ params, locals }) => {
-	const tokenParams = params.token;
+	const userId = await validateEmailVerificationToken(params.token, locals.db);
 
-	try {
-		const token = await locals.emailVerificationToken.validate(tokenParams);
-		await locals.auth.invalidateAllUserSessions(token.userId);
-
-		await locals.auth.updateUserAttributes(token.userId, {
-			email_verified: 1
+	if (!userId) {
+		return new Response('Invalid or expired token', {
+			status: 422
 		});
-
-		const session = await locals.auth.createSession(token.userId);
-		locals.authRequest.setSession(session);
-	} catch (e) {
-		if (e instanceof LuciaTokenError && e.message === 'EXPIRED_TOKEN') {
-			throw error(401, 'Expired token');
-		}
-		if (e instanceof LuciaTokenError && e.message === 'INVALID_TOKEN') {
-			throw error(401, 'Invalid token');
-		}
-
-		throw error(500);
 	}
 
+	await locals.auth.invalidateAllUserSessions(userId);
+
+	await locals.auth.updateUserAttributes(userId, {
+		email_verified: 1
+	});
+
+	const session = await locals.auth.createSession({ userId, attributes: {} });
+
+	locals.authRequest.setSession(session);
 	throw redirect(302, '/');
 };

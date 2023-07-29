@@ -3,10 +3,12 @@ import { loginFormSchema } from './schema.js';
 import { setError, superValidate } from 'sveltekit-superforms/server';
 import { user as userTable } from '$lib/server/db/schema.js';
 import { eq } from 'drizzle-orm';
+import { LuciaError } from 'lucia';
 
 export const load = async ({ locals }) => {
 	const session = await locals.authRequest.validate();
 	if (session) throw redirect(302, '/');
+
 	const form = await superValidate(loginFormSchema);
 	return { form };
 };
@@ -19,7 +21,7 @@ export const actions = {
 			return setError(form, null, 'An error occured');
 		}
 
-		const user = locals.db
+		const user = await locals.db
 			.select()
 			.from(userTable)
 			.where(eq(userTable.email, form.data.email))
@@ -39,12 +41,19 @@ export const actions = {
 
 		try {
 			const key = await locals.auth.useKey('email', form.data.email, form.data.password);
-			const session = await locals.auth.createSession(key.userId);
+			const session = await locals.auth.createSession({ userId: key.userId, attributes: {} });
 			locals.authRequest.setSession(session);
 		} catch (e) {
 			console.error(e);
 
-			return setError(form, null, "This account doesn't exist");
+			if (
+				e instanceof LuciaError &&
+				(e.message === 'AUTH_INVALID_KEY_ID' || e.message === 'AUTH_INVALID_PASSWORD')
+			) {
+				return setError(form, null, 'Incorrect email or password');
+			}
+
+			return setError(form, null, 'An unknown error occurred');
 		}
 
 		const redirectToSearchParam = url.searchParams.get('redirectTo');

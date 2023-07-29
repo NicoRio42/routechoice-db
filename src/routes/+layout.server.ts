@@ -1,9 +1,5 @@
 export async function load({ locals }) {
-	const { user } = await locals.authRequest.validateUser();
+	const session = await locals.authRequest.validate();
 
-	if (user) {
-		return {
-			user
-		};
-	}
+	return { user: session?.user ?? null };
 }

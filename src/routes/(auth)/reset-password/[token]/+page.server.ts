@@ -1,6 +1,7 @@
 import { fail, redirect } from '@sveltejs/kit';
 import { setError, superValidate } from 'sveltekit-superforms/server';
 import { resetPasswordSchema } from './schema.js';
+import { validatePasswordResetToken } from '$lib/server/auth/tokens.js';
 
 export async function load() {
 	const form = await superValidate(resetPasswordSchema);
@@ -16,8 +17,13 @@ export const actions = {
 		}
 
 		try {
-			const token = await locals.passwordResetToken.validate(params.token ?? '');
-			let user = await locals.auth.getUser(token.userId);
+			const userId = await validatePasswordResetToken(params.token ?? '', locals.db);
+
+			if (userId === null) {
+				throw redirect(302, '/login');
+			}
+
+			let user = await locals.auth.getUser(userId);
 
 			if (!user.emailVerified) {
 				user = await locals.auth.updateUserAttributes(user.id, {
@@ -34,7 +40,7 @@ export const actions = {
 			await locals.auth.invalidateAllUserSessions(user.id);
 			await locals.auth.updateKeyPassword('email', user.email, form.data.password);
 
-			const session = await locals.auth.createSession(user.id);
+			const session = await locals.auth.createSession({ userId: user.id, attributes: {} });
 			locals.authRequest.setSession(session);
 		} catch (e) {
 			console.error(e);

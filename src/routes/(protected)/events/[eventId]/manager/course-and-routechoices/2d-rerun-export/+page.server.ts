@@ -1,12 +1,14 @@
+import { redirectIfNotAdmin } from '$lib/server/auth/helpers.js';
 import { fail, redirect } from '@sveltejs/kit';
 import { twoDRerunCourseExportSchema } from 'orienteering-js/models';
-import { parseTwoDRerunCourseAndRoutechoicesExport } from 'orienteering-js/two-d-rerun';
 
 export const actions = {
 	default: async ({ request, locals }) => {
-		const { user } = await locals.authRequest.validateUser();
-		if (!user) throw redirect(302, '/login');
-		if (user.emailVerified === 0) throw redirect(302, '/email-verification');
+		const session = await locals.authRequest.validate();
+		if (!session) throw redirect(302, '/login');
+		const { user } = session;
+
+		redirectIfNotAdmin(user);
 
 		const formData = await request.formData();
 		const file = formData.get('twoDRerunExport');

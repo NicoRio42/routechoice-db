@@ -1,3 +1,4 @@
+import { redirectIfNotAdmin } from '$lib/server/auth/helpers.js';
 import {
 	assoEventTag as assoEventTagTable,
 	event,
@@ -5,10 +6,16 @@ import {
 	tag as tagTable
 } from '$lib/server/db/schema.js';
 import { fail, redirect } from '@sveltejs/kit';
-import { setError, superValidate } from 'sveltekit-superforms/server';
+import { superValidate } from 'sveltekit-superforms/server';
 import { addEventSchema } from './schema.js';
 
 export async function load({ locals }) {
+	const session = await locals.authRequest.validate();
+	if (!session) throw redirect(302, '/login');
+	const { user } = session;
+
+	redirectIfNotAdmin(user);
+
 	const form = await superValidate(addEventSchema);
 	const tags = locals.db.select().from(tagTable).all();
 
@@ -17,6 +24,12 @@ export async function load({ locals }) {
 
 export const actions = {
 	default: async ({ request, locals }) => {
+		const session = await locals.authRequest.validate();
+		if (!session) throw redirect(302, '/login');
+		const { user } = session;
+
+		redirectIfNotAdmin(user);
+
 		const form = await superValidate(request, addEventSchema);
 		if (!form.valid) return fail(400, { form });
 

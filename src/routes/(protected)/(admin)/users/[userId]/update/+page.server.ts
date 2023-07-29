@@ -1,4 +1,5 @@
 import { RolesEnum } from '$lib/models/enums/roles.enum.js';
+import { redirectIfNotAdminOrNotCurrentUser } from '$lib/server/auth/helpers.js';
 import { user as userTable } from '$lib/server/db/schema.js';
 import { error, redirect } from '@sveltejs/kit';
 import { and, eq, ne } from 'drizzle-orm';
@@ -6,14 +7,11 @@ import { setError, superValidate } from 'sveltekit-superforms/server';
 import { userFormSchema } from '../../userFormSchema.js';
 
 export async function load({ locals, params: { userId } }) {
-	const { user: connectedUser } = await locals.authRequest.validateUser();
+	const session = await locals.authRequest.validate();
+	if (!session) throw redirect(302, '/login');
+	const { user: connectedUser } = session;
 
-	if (
-		connectedUser === null ||
-		(connectedUser.role !== RolesEnum.Enum.admin && connectedUser.id !== userId)
-	) {
-		throw error(403);
-	}
+	redirectIfNotAdminOrNotCurrentUser(connectedUser, userId);
 
 	const user = await locals.db.select().from(userTable).where(eq(userTable.id, userId)).get();
 
@@ -36,14 +34,11 @@ export async function load({ locals, params: { userId } }) {
 
 export const actions = {
 	default: async ({ params: { userId }, locals, request }) => {
-		const { user: connectedUser } = await locals.authRequest.validateUser();
+		const session = await locals.authRequest.validate();
+		if (!session) throw redirect(302, '/login');
+		const { user: connectedUser } = session;
 
-		if (
-			connectedUser === null ||
-			(connectedUser.role !== RolesEnum.Enum.admin && connectedUser.id !== userId)
-		) {
-			throw error(403);
-		}
+		redirectIfNotAdminOrNotCurrentUser(connectedUser, userId);
 
 		const user = await locals.db.select().from(userTable).where(eq(userTable.id, userId)).get();
 

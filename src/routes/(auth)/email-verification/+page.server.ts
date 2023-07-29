@@ -1,23 +1,40 @@
+import { generateEmailVerificationToken } from '$lib/server/auth/tokens.js';
 import { sendEmailVerificationEmail } from '$lib/server/email.js';
 import { fail, redirect } from '@sveltejs/kit';
 
 export async function load({ locals }) {
-	const { user } = await locals.authRequest.validateUser();
-	if (!user) throw redirect(301, '/login');
-	if (user.emailVerified) throw redirect(301, '/');
+	const session = await locals.authRequest.validate();
+
+	if (!session) {
+		throw redirect(302, '/login');
+	}
+
+	if (session.user.emailVerified) {
+		throw redirect(302, '/');
+	}
 
 	return { sent: false };
 }
 
 export const actions = {
 	default: async ({ locals }) => {
-		const { user } = await locals.authRequest.validateUser();
-		if (!user) throw redirect(301, '/login');
-		if (user.emailVerified) throw redirect(301, '/');
+		const session = await locals.authRequest.validate();
 
-		await locals.emailVerificationToken.invalidateAllUserTokens(user.id);
-		const token = await locals.emailVerificationToken.issue(user.id);
-		await sendEmailVerificationEmail(user.email, user.name, token.toString());
+		if (!session) {
+			throw redirect(302, '/login');
+		}
+
+		if (session.user.emailVerified) {
+			throw redirect(302, '/');
+		}
+
+		const token = await generateEmailVerificationToken(session.user.userId, locals.db);
+
+		await sendEmailVerificationEmail(
+			session.user.email,
+			`${session.user.firstName} ${session.user.lastName}`,
+			token
+		);
 
 		return { sent: true };
 	}

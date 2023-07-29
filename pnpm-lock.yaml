@@ -9,11 +9,8 @@ dependencies:
     specifier: ^0.3.1
     version: 0.3.1
   '@lucia-auth/adapter-sqlite':
-    specifier: ^1.1.1
-    version: 1.1.1(better-sqlite3@8.3.0)(lucia-auth@1.5.0)
-  '@lucia-auth/tokens':
-    specifier: ^1.0.1
-    version: 1.0.1(lucia-auth@1.5.0)
+    specifier: ^2.0.0
+    version: 2.0.0(@libsql/client@0.3.1)(better-sqlite3@8.3.0)(lucia@2.0.0)
   better-sqlite3:
     specifier: ^8.3.0
     version: 8.3.0
@@ -23,9 +20,9 @@ dependencies:
   linkedom:
     specifier: ^0.14.26
     version: 0.14.26
-  lucia-auth:
-    specifier: ^1.5.0
-    version: 1.5.0
+  lucia:
+    specifier: ^2.0.0
+    version: 2.0.0
   ol:
     specifier: ^7.4.0
     version: 7.4.0
@@ -974,25 +971,21 @@ packages:
       - utf-8-validate
     dev: false
 
-  /@lucia-auth/adapter-sqlite@1.1.1(better-sqlite3@8.3.0)(lucia-auth@1.5.0):
-    resolution: {integrity: sha512-u9d1iUcyxZepQ+HXgLMRyIk0E9lTaiQsD7zJNLim/jaK16TWmchS68cIbAF1m+Z9rFkVFinNmWXPcA620xUmXg==}
+  /@lucia-auth/adapter-sqlite@2.0.0(@libsql/client@0.3.1)(better-sqlite3@8.3.0)(lucia@2.0.0):
+    resolution: {integrity: sha512-Hiy8WND/1mi25r0M2ruSml+Ab5GJLr4XZEHApYw1lxybF+VlPUyX7oTtIVCSgvq/SWiP/tvnyPwnXAPmNr8/bg==}
     peerDependencies:
+      '@libsql/client': ^0.3.0
       better-sqlite3: ^8.0.0
-      lucia-auth: ^1.4.0
+      lucia: ^2.0.0
     peerDependenciesMeta:
+      '@libsql/client':
+        optional: true
       better-sqlite3:
         optional: true
     dependencies:
+      '@libsql/client': 0.3.1
       better-sqlite3: 8.3.0
-      lucia-auth: 1.5.0
-    dev: false
-
-  /@lucia-auth/tokens@1.0.1(lucia-auth@1.5.0):
-    resolution: {integrity: sha512-7oMdJias2W1Ta/LiCKxa5fCV7E+NIRuw02RHkaxwAN/CL/T4ew2omEBVOkpHn3KJTHMNdPlDfZ5ZT0HyIrPHbw==}
-    peerDependencies:
-      lucia-auth: 1.x
-    dependencies:
-      lucia-auth: 1.5.0
+      lucia: 2.0.0
     dev: false
 
   /@mapbox/jsonlint-lines-primitives@2.0.2:
@@ -2861,8 +2854,8 @@ packages:
       es5-ext: 0.10.62
     dev: true
 
-  /lucia-auth@1.5.0:
-    resolution: {integrity: sha512-lLgLvyJcCjK+dYwJrgzPWGjT+YGgl7JF13TahXKozf/C3KkX/fFzOAUkY0h5xnm585lJE5BBrQIXAXa+rDzW6g==}
+  /lucia@2.0.0:
+    resolution: {integrity: sha512-WRBMoZIgTHH6y2bAEHZWgWcMH6tDsQ+wf45juUgmn3ycjipn/e6OGpWki4XSjEuRm50WXghH+2EF9LCjCHUsUw==}
     dev: false
 
   /magic-string@0.25.9:

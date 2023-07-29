@@ -4,7 +4,7 @@ import { error } from '@sveltejs/kit';
 import { eq } from 'drizzle-orm';
 
 export async function load({ params: { eventId }, locals, fetch }) {
-	const { user } = await locals.authRequest.validateUser();
+	const session = await locals.authRequest.validate();
 
 	const event = await locals.db.query.event.findFirst({
 		where: eq(eventTable.id, eventId),
@@ -29,6 +29,6 @@ export async function load({ params: { eventId }, locals, fetch }) {
 	return {
 		event: { ...eventWithSortedLegs, runners: runnersWithTracksAndSortedLegs },
 		eventMap: getEventMap(event.liveEvents[0], fetch),
-		user
+		user: session?.user ?? null
 	};
 }

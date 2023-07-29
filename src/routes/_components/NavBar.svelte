@@ -1,12 +1,12 @@
 <script lang="ts">
 	import Logo from '$lib/components/Logo.svelte';
 	import { RolesEnum } from '$lib/models/enums/roles.enum.js';
-	import type { User } from 'lucia-auth';
+	import type { User } from 'lucia';
 	import ThemeSwitch from './ThemeSwitch.svelte';
 	import { enhance } from '$app/forms';
 	import { page } from '$app/stores';
 
-	export let user: User | undefined;
+	export let user: User | null;
 </script>
 
 <nav class="container-fluid border-b-2 border-b-solid border-b-[var(--table-border-color)]">
@@ -47,7 +47,7 @@
 				</a>
 			</li>
 
-			{#if user === undefined}
+			{#if user === null}
 				<li class="py-0 large">
 					<a href="/login?redirectTo={$page.url.toString()}">Login</a>
 				</li>
@@ -79,7 +79,7 @@
 			<summary aria-haspopup="listbox"> <i class="i-carbon-menu w-8 h-8" /> </summary>
 
 			<ul>
-				{#if user !== undefined}
+				{#if user !== null}
 					<li class="option-item">
 						<strong>
 							{user.firstName}

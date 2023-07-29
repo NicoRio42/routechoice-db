@@ -1,35 +1,24 @@
 // See https://kit.svelte.dev/docs/types#app
 
-import type { User as UserFromDB } from '$lib/server/db/schema';
-import type { RolesEnum } from '$lib/models/enums/roles.enum.ts';
-import type { BetterSQLite3Database } from 'drizzle-orm/better-sqlite3';
-import type { DrizzleD1Database } from 'drizzle-orm/d1';
 import type * as schema from '$lib/server/db/schema.js';
+import type { LibSQLDatabase } from 'drizzle-orm/libsql';
 
 // for information about these interfaces
 declare global {
 	namespace App {
 		interface Locals {
-			authRequest: import('lucia-auth').AuthRequest;
-			db: BetterSQLite3Database<typeof schema> | DrizzleD1Database<typeof schema>;
+			authRequest: import('lucia').AuthRequest<Lucia.Auth>;
+			db: LibSQLDatabase<typeof schema>;
 			auth: Lucia.Auth;
-			emailVerificationToken: import('./hooks.server').EmailVerificationToken;
-			passwordResetToken: import('./hooks.server').PasswordResetToken;
-		}
-
-		interface Platform {
-			env?: {
-				ROUTECHOICE_DB: D1Database;
-			};
 		}
 	}
 }
 
-/// <reference types="lucia-auth" />
+/// <reference types="lucia" />
 declare global {
 	namespace Lucia {
 		type Auth = import('./hooks.server.js').Auth;
-		type UserAttributes = {
+		type DatabaseUserAttributes = {
 			first_name: string;
 			last_name: string;
 			email: string;
@@ -37,6 +26,16 @@ declare global {
 			password_expired: number;
 			role: RolesEnum;
 		};
+		type UserAttributes = {
+			firstName: string;
+			lastName: string;
+			email: string;
+			emaiVerified: number;
+			passwordExpired: number;
+			role: RolesEnum;
+		};
+		// eslint-disable-next-line @typescript-eslint/ban-types
+		type DatabaseSessionAttributes = {};
 	}
 }
 

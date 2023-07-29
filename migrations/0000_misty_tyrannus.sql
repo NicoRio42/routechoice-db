@@ -15,6 +15,13 @@ CREATE TABLE `control_point` (
 	FOREIGN KEY (`fk_event`) REFERENCES `event`(`id`) ON UPDATE no action ON DELETE cascade
 );
 --> statement-breakpoint
+CREATE TABLE `email_verification_token` (
+	`id` text PRIMARY KEY NOT NULL,
+	`user_id` text NOT NULL,
+	`expires` integer,
+	FOREIGN KEY (`user_id`) REFERENCES `auth_user`(`id`) ON UPDATE no action ON DELETE cascade
+);
+--> statement-breakpoint
 CREATE TABLE `event` (
 	`id` text PRIMARY KEY NOT NULL,
 	`name` text NOT NULL,
@@ -26,9 +33,7 @@ CREATE TABLE `event` (
 CREATE TABLE `auth_key` (
 	`id` text PRIMARY KEY NOT NULL,
 	`user_id` text NOT NULL,
-	`primary_key` integer NOT NULL,
 	`hashed_password` text,
-	`expires` integer,
 	FOREIGN KEY (`user_id`) REFERENCES `auth_user`(`id`) ON UPDATE no action ON DELETE cascade
 );
 --> statement-breakpoint
@@ -49,6 +54,13 @@ CREATE TABLE `live_event` (
 	`url` text NOT NULL,
 	`is_primary` boolean NOT NULL,
 	FOREIGN KEY (`fk_event`) REFERENCES `event`(`id`) ON UPDATE no action ON DELETE cascade
+);
+--> statement-breakpoint
+CREATE TABLE `password_reset_token` (
+	`id` text PRIMARY KEY NOT NULL,
+	`user_id` text NOT NULL,
+	`expires` integer,
+	FOREIGN KEY (`user_id`) REFERENCES `auth_user`(`id`) ON UPDATE no action ON DELETE cascade
 );
 --> statement-breakpoint
 CREATE TABLE `routechoice` (
@@ -134,3 +146,6 @@ CREATE TABLE `auth_user` (
 	`password_expired` boolean DEFAULT false NOT NULL,
 	`role` text DEFAULT 'default' NOT NULL
 );
+--> statement-breakpoint
+CREATE UNIQUE INDEX `tag_name_unique` ON `tag` (`name`);--> statement-breakpoint
+CREATE UNIQUE INDEX `tag_color_unique` ON `tag` (`color`);

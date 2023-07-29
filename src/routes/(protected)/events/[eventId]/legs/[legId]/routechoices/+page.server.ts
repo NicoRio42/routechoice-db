@@ -20,14 +20,15 @@ import { transform } from 'ol/proj.js';
 import { getLineStringLength } from 'orienteering-js/utils';
 import { superValidate } from 'sveltekit-superforms/server';
 import { newRoutechoiceSchema } from './schema.js';
+import { redirectIfNotAdmin } from '$lib/server/auth/helpers.js';
 
 export const actions = {
 	add: async ({ request, params: { eventId, legId }, locals }) => {
-		const { user } = await locals.authRequest.validateUser();
+		const session = await locals.authRequest.validate();
+		if (!session) throw redirect(302, '/login');
+		const { user } = session;
 
-		if (!user || user.role !== RolesEnum.Enum.admin) {
-			return fail(403);
-		}
+		redirectIfNotAdmin(user);
 
 		const form = await superValidate(request, newRoutechoiceSchema);
 		if (!form.valid) return fail(400, { form });

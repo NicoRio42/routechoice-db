@@ -1,7 +1,7 @@
 import { sqliteTable, text, integer, customType, primaryKey, real } from 'drizzle-orm/sqlite-core';
 import { relations, type InferModel } from 'drizzle-orm';
-import { RolesEnum } from '../../models/enums/roles.enum.js';
-import { RunnerStatusEnum } from '../../models/enums/runner-status.enum.js';
+import { RolesEnum } from '../../models/enums/roles.enum';
+import { RunnerStatusEnum } from '../../models/enums/runner-status.enum';
 
 const boolean = customType<{ data: boolean }>({
 	dataType() {
@@ -241,7 +241,7 @@ export const user = sqliteTable('auth_user', {
 });
 
 export type User = InferModel<typeof user>;
-export type InsertUser = InferModel<typeof user, 'insert'>;
+export type UserColumnsNames = InferModel<typeof user, 'select', { dbColumnNames: true }>;
 
 export const session = sqliteTable('auth_session', {
 	id: text('id').primaryKey(),
@@ -257,7 +257,21 @@ export const key = sqliteTable('auth_key', {
 	userId: text('user_id')
 		.notNull()
 		.references(() => user.id, { onDelete: 'cascade' }),
-	primaryKey: integer('primary_key').notNull(),
-	hashedPassword: text('hashed_password'),
+	hashedPassword: text('hashed_password')
+});
+
+export const emailVerificationToken = sqliteTable('email_verification_token', {
+	id: text('id').primaryKey(),
+	userId: text('user_id')
+		.notNull()
+		.references(() => user.id, { onDelete: 'cascade' }),
+	expires: integer('expires')
+});
+
+export const passwordResetToken = sqliteTable('password_reset_token', {
+	id: text('id').primaryKey(),
+	userId: text('user_id')
+		.notNull()
+		.references(() => user.id, { onDelete: 'cascade' }),
 	expires: integer('expires')
 });

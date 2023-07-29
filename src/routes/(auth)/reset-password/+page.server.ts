@@ -4,6 +4,7 @@ import { fail } from '@sveltejs/kit';
 import { eq } from 'drizzle-orm';
 import { message, superValidate } from 'sveltekit-superforms/server';
 import { resetPasswordEmailSchema } from './schema.js';
+import { generatePasswordResetToken } from '$lib/server/auth/tokens.js';
 
 export async function load() {
 	const form = await superValidate(resetPasswordEmailSchema);
@@ -26,7 +27,7 @@ export const actions = {
 				.get();
 
 			if (databaseUser) {
-				const token = await locals.passwordResetToken.issue(databaseUser.id);
+				const token = await generatePasswordResetToken(databaseUser.id, locals.db);
 
 				await sendPasswordResetEmail(
 					databaseUser.email,

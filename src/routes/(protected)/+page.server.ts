@@ -7,11 +7,14 @@ import { redirect } from '@sveltejs/kit';
 import { desc, eq, inArray } from 'drizzle-orm';
 import { superValidate } from 'sveltekit-superforms/server';
 import { filterEventFormSchema } from './schema.js';
+import { redirectIfNotLogedIn } from '$lib/server/auth/helpers.js';
 
 export async function load({ url, locals }) {
-	const { user } = await locals.authRequest.validateUser();
-	if (!user) throw redirect(302, '/login');
-	if (!user.emailVerified) throw redirect(302, '/email-verification');
+	const session = await locals.authRequest.validate();
+	if (!session) throw redirect(302, '/login');
+	const { user } = session;
+
+	redirectIfNotLogedIn(user);
 
 	const form = await superValidate(filterEventFormSchema);
 

@@ -14,25 +14,33 @@ import {
 	routechoiceStatistics as routechoiceStatisticsTable,
 	runnerLeg as runnerLegTable,
 	runner as runnerTable,
-	user
+	user as userTable
 } from '$lib/server/db/schema.js';
 import { error, redirect } from '@sveltejs/kit';
 import { and, eq } from 'drizzle-orm';
 import { loggatorEventSchema } from 'orienteering-js/models';
 import { matchRunnersByName } from './helpers.js';
+import { redirectIfNotAdmin } from '$lib/server/auth/helpers.js';
 
 export async function load({ params: { eventId }, locals, fetch }) {
-	const liveEvent = locals.db
+	const session = await locals.authRequest.validate();
+	if (!session) throw redirect(302, '/login');
+	const { user } = session;
+
+	redirectIfNotAdmin(user);
+
+	const liveEvent = await locals.db
 		.select()
 		.from(liveEventTable)
 		.where(and(eq(liveEventTable.fkEvent, eventId), eq(liveEventTable.isPrimary, true)))
 		.get();
 
-	const users = locals.db
-		.select({ id: user.id, firstName: user.firstName, lastName: user.lastName })
-		.from(user)
-		.all()
-		.map((u) => ({ ...u, name: `${u.firstName} ${u.lastName}` }));
+	const users = (
+		await locals.db
+			.select({ id: userTable.id, firstName: userTable.firstName, lastName: userTable.lastName })
+			.from(userTable)
+			.all()
+	).map((u) => ({ ...u, name: `${u.firstName} ${u.lastName}` }));
 
 	let competitors: {
 		deviceId: number;
@@ -56,7 +64,7 @@ export async function load({ params: { eventId }, locals, fetch }) {
 		throw error(500);
 	}
 
-	const runners = locals.db
+	const runners = await locals.db
 		.select({
 			id: runnerTable.id,
 			firstName: runnerTable.firstName,
@@ -106,9 +114,11 @@ export async function load({ params: { eventId }, locals, fetch }) {
 
 export const actions = {
 	default: async ({ params: { eventId }, request, locals, fetch }) => {
-		const { user } = await locals.authRequest.validateUser();
-		if (!user) throw redirect(302, '/login');
-		if (!user.emailVerified) throw redirect(302, '/email-verification');
+		const session = await locals.authRequest.validate();
+		if (!session) throw redirect(302, '/login');
+		const { user } = session;
+
+		redirectIfNotAdmin(user);
 
 		const formData = await request.formData();
 

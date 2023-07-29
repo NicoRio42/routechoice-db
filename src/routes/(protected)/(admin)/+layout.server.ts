@@ -1,10 +1,10 @@
-import { RolesEnum } from '$lib/models/enums/roles.enum.js';
+import { redirectIfNotAdmin } from '$lib/server/auth/helpers.js';
 import { redirect } from '@sveltejs/kit';
 
 export async function load({ locals }) {
-	const { user } = await locals.authRequest.validateUser();
+	const session = await locals.authRequest.validate();
+	if (!session) throw redirect(302, '/login');
+	const { user: connectedUser } = session;
 
-	if (user === null || user.role !== RolesEnum.Enum.admin) {
-		throw redirect(302, '/');
-	}
+	redirectIfNotAdmin(connectedUser);
 }

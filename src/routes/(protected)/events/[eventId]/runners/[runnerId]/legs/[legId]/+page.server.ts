@@ -4,6 +4,7 @@ import {
 	parseRoutechoicesTracksInLegs,
 	sortLegs
 } from '$lib/helpers.js';
+import { redirectIfNotAdmin } from '$lib/server/auth/helpers.js';
 import {
 	leg as legFromDatabase,
 	liveEvent as liveEventFromDatabase,
@@ -20,11 +21,11 @@ export const actions = {
 		params: { eventId, runnerId, legId: runnerLegId },
 		locals
 	}) => {
-		const { user } = await locals.authRequest.validateUser();
+		const session = await locals.authRequest.validate();
+		if (!session) throw redirect(302, '/login');
+		const { user } = session;
 
-		if (user === null) {
-			return fail(403);
-		}
+		redirectIfNotAdmin(user);
 
 		const runner = await locals.db
 			.select()
