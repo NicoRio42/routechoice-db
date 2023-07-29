@@ -27,7 +27,25 @@ export const handle: Handle = async ({ event, resolve }) => {
 	event.locals.auth = auth;
 	event.locals.authRequest = auth.handleRequest(event);
 
-	return await resolve(event);
+	if (event.url.pathname.startsWith('/api/public')) {
+		if (event.request.method === 'OPTIONS') {
+			return new Response(null, {
+				headers: {
+					'Access-Control-Allow-Methods': 'GET, POST, PUT, DELETE, PATCH, OPTIONS',
+					'Access-Control-Allow-Origin': '*',
+					'Access-Control-Allow-Headers': '*'
+				}
+			});
+		}
+	}
+
+	const response = await resolve(event);
+
+	if (event.url.pathname.startsWith('/api/public')) {
+		response.headers.append('Access-Control-Allow-Origin', `*`);
+	}
+
+	return response;
 };
 
 export type Auth = ReturnType<typeof createNewAuth>;

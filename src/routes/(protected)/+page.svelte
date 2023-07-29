@@ -1,7 +1,8 @@
 <script lang="ts">
-	import { page } from '$app/stores';
+	import { dev } from '$app/environment';
+import { page } from '$app/stores';
 	import TagsSelect from '$lib/components/form-fields/TagsSelect.svelte';
-	import { SPLITTIMES_BASE_URL } from '$lib/constants.js';
+	import { SPLITTIMES_BASE_URL, SPLITTIMES_BASE_URL_DEV } from '$lib/constants.js';
 	import { RolesEnum } from '$lib/models/enums/roles.enum.js';
 	import { superForm } from 'sveltekit-superforms/client';
 
@@ -68,6 +69,8 @@
 
 			<tbody>
 				{#each data.events as event (event.id)}
+					{@const splittimesBaseUrl = dev ? SPLITTIMES_BASE_URL_DEV : SPLITTIMES_BASE_URL}
+
 					<tr>
 						<td>
 							<a href="/events/{event.id}">{event.name}</a>
@@ -94,7 +97,7 @@
 
 						<td class="text-right">
 							<a
-								href="{SPLITTIMES_BASE_URL}/routechoice-db-dev/{event.id}/classes/1"
+								href="{splittimesBaseUrl}/routechoice-db-dev/{event.id}/classes/1"
 								target="_blank"
 								rel="noreferrer"
 							>

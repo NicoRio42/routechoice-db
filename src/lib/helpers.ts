@@ -141,24 +141,34 @@ export async function getEventMap(liveEvent: LiveEvent, fetch: Fetch): Promise<C
 	throw new Error('Only Loggator is available in routechoice DB for the moment');
 }
 
-export function sortRunnersLegs(
+export function sortRunnersAndRunnersLegs(
 	runners: RunnerWithNullableLegsAndTrack[],
 	legs: LegWithRoutechoices[]
 ): RunnerWithNullableLegsAndTrack[] {
-	return runners.map((runner) => {
-		const runnerLegs: (RunnerLeg | null)[] = [];
+	return runners
+		.map((runner) => {
+			const runnerLegs: (RunnerLeg | null)[] = [];
 
-		legs.forEach((leg) => {
-			const runnerLeg = runner.legs.find((l) => leg.id === l?.fkLeg);
-			if (runnerLeg === undefined) runnerLegs.push(null);
-			else runnerLegs.push(runnerLeg);
+			legs.forEach((leg) => {
+				const runnerLeg = runner.legs.find((l) => leg.id === l?.fkLeg);
+				if (runnerLeg === undefined) runnerLegs.push(null);
+				else runnerLegs.push(runnerLeg);
+			});
+
+			return { ...runner, legs: runnerLegs };
+		})
+		.sort((runnerA, runnerB) => {
+			if (runnerA.rank === null && runnerB.rank === null) return 0;
+			if (runnerA.rank === null) return -1;
+			if (runnerB.rank === null) return 1;
+			return runnerA.rank - runnerB.rank;
 		});
-
-		return { ...runner, legs: runnerLegs };
-	});
 }
 
-export function sortLegs(legs: LegWithRoutechoices[]): LegWithRoutechoices[] {
+export function sortLegs(
+	legs: LegWithRoutechoices[],
+	sortRoutechoices = true
+): LegWithRoutechoices[] {
 	if (legs.length === 0) return [];
 	const sortedLegs: LegWithRoutechoices[] = [];
 
@@ -179,12 +189,16 @@ export function sortLegs(legs: LegWithRoutechoices[]): LegWithRoutechoices[] {
 
 		if (nextLeg === undefined) break;
 
-		sortedLegs.push({
-			...nextLeg,
-			routechoices: nextLeg.routechoices.sort((routechoiceA, routechoiceB) =>
-				routechoiceA.name.localeCompare(routechoiceB.name)
-			)
-		});
+		if (sortRoutechoices) {
+			sortedLegs.push({
+				...nextLeg,
+				routechoices: nextLeg.routechoices.sort((routechoiceA, routechoiceB) =>
+					routechoiceA.name.localeCompare(routechoiceB.name)
+				)
+			});
+		} else {
+			sortedLegs.push(nextLeg);
+		}
 	}
 
 	return sortedLegs;
@@ -244,7 +258,7 @@ export async function getRunnersWithTracksAndSortedLegs(
 				return { ...runner, track: track === undefined ? null : track.track };
 			})
 		)
-		.then((runners) => sortRunnersLegs(runners, sortedLegs));
+		.then((runners) => sortRunnersAndRunnersLegs(runners, sortedLegs));
 }
 
 /**
