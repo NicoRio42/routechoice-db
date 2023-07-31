@@ -1,9 +1,12 @@
 import { redirectIfNotAdmin } from '$lib/server/auth/helpers.js';
+import { getCoordinatesConverterFromTwoDRerunCourseExport } from '$lib/two-d-rerun.js';
 import { fail, redirect } from '@sveltejs/kit';
 import { twoDRerunCourseExportSchema } from 'orienteering-js/models';
+import { parseTwoDRerunCourseAndRoutechoicesExport } from 'orienteering-js/two-d-rerun';
+import { insertControlPointsLegsRoutechoicesAndRoutechoicesStatistics } from '../helpers.js';
 
 export const actions = {
-	default: async ({ request, locals }) => {
+	default: async ({ request, locals, params: { eventId } }) => {
 		const session = await locals.authRequest.validate();
 		if (!session) throw redirect(302, '/login');
 		const { user } = session;
@@ -15,12 +18,21 @@ export const actions = {
 
 		if (!(file instanceof File)) throw fail(400);
 
-		try {
-			const twoDRerunExport = twoDRerunCourseExportSchema.parse(JSON.parse(await file.text()));
-			// parseTwoDRerunCourseAndRoutechoicesExport(twoDRerunExport, )
-			console.log(twoDRerunExport.tags[0]);
-		} catch (e) {
-			throw fail(400);
-		}
+		const twoDRerunExport = twoDRerunCourseExportSchema.parse(JSON.parse(await file.text()));
+
+		const coordinatesConverter = getCoordinatesConverterFromTwoDRerunCourseExport(twoDRerunExport);
+		const [controls, legs] = parseTwoDRerunCourseAndRoutechoicesExport(
+			twoDRerunExport,
+			coordinatesConverter
+		);
+
+		await insertControlPointsLegsRoutechoicesAndRoutechoicesStatistics(
+			controls,
+			legs,
+			locals.db,
+			eventId
+		);
+
+		throw redirect(302, `/events/${eventId}/manager/split-times`);
 	}
 };

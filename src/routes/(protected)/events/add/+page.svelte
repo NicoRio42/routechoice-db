@@ -19,7 +19,7 @@
 		taintedMessage: null
 	});
 
-	const { delayed, enhance, form: formStore } = form;
+	const { delayed, enhance, form: formStore, errors } = form;
 	$formStore.timeZoneOffset = new Date().getTimezoneOffset();
 
 	$: if (browser) fetchEvent($formStore.liveProviderUrl);
@@ -61,4 +61,10 @@
 	<DateTimeField {form} field="finishTime" label="Finish time" />
 
 	<button type="submit" aria-busy={$delayed}>Add new event</button>
+
+	{#each $errors._errors ?? [] as globalError}
+		<p>
+			<small class="error">{globalError}</small>
+		</p>
+	{/each}
 </form>
