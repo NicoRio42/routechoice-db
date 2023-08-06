@@ -3,14 +3,13 @@
 	import type { UnwrapEffects } from 'sveltekit-superforms';
 	import type { SuperForm } from 'sveltekit-superforms/client';
 	import { formFieldProxy } from 'sveltekit-superforms/client';
-	import type { z, AnyZodObject } from 'zod';
+	import type { AnyZodObject, z } from 'zod';
 
 	type T = $$Generic<AnyZodObject>;
 
 	export let form: SuperForm<UnwrapEffects<T>, unknown>;
 	export let field: keyof z.infer<T>;
 	export let label: string | undefined = undefined;
-	export let loading = false;
 
 	let errorsHaveBeenshownOnce = false;
 
@@ -23,21 +22,20 @@
 	onDestroy(unsub);
 </script>
 
-<label aria-busy={loading}>
+<label>
 	{#if label !== undefined}
 		{label}
 	{/if}
 
-	<select
+	<input
 		name={String(field)}
+		type="date"
 		bind:value={$value}
 		data-invalid={$errors}
 		aria-invalid={errorsHaveBeenshownOnce ? $errors !== undefined && $errors.length !== 0 : null}
 		on:change
 		{...$$restProps}
-	>
-		<slot />
-	</select>
+	/>
 
 	{#each $errors ?? [] as error}
 		<small class="error">{error}</small>
