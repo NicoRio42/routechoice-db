@@ -1,12 +1,12 @@
-import { building, dev } from '$app/environment';
-import { libsql } from '@lucia-auth/adapter-sqlite';
-import type { Handle } from '@sveltejs/kit';
-import { lucia } from 'lucia';
-import { sveltekit } from 'lucia/middleware';
+import { dev } from '$app/environment';
+import { TURSO_DB_TOKEN } from '$env/static/private';
 import * as schema from '$lib/server/db/schema.js';
 import { createClient, type Client } from '@libsql/client';
+import { libsql } from '@lucia-auth/adapter-sqlite';
+import type { Handle } from '@sveltejs/kit';
 import { drizzle, type LibSQLDatabase } from 'drizzle-orm/libsql';
-import { TURSO_DB_TOKEN } from '$env/static/private';
+import { lucia } from 'lucia';
+import { sveltekit } from 'lucia/middleware';
 
 let libsqlClient: Client;
 let drizzleClient: LibSQLDatabase<typeof schema>;
