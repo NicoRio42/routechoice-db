@@ -6,6 +6,7 @@ import { sveltekit } from 'lucia/middleware';
 import * as schema from '$lib/server/db/schema.js';
 import { createClient, type Client } from '@libsql/client';
 import { drizzle, type LibSQLDatabase } from 'drizzle-orm/libsql';
+import { TURSO_DB_TOKEN } from '$env/static/private';
 
 let libsqlClient: Client;
 let drizzleClient: LibSQLDatabase<typeof schema>;
@@ -15,7 +16,11 @@ export const handle: Handle = async ({ event, resolve }) => {
 	if (building) return await resolve(event);
 
 	if (libsqlClient === undefined) {
-		libsqlClient = createClient({ url: 'file:sqlite.db' });
+		const config = dev
+			? { url: 'file:sqlite.db' }
+			: { url: 'libsql://routechoice-db-routechoice-db.turso.io', authToken: TURSO_DB_TOKEN };
+
+		libsqlClient = createClient(config);
 	}
 
 	if (drizzleClient === undefined) {

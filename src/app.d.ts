@@ -14,6 +14,10 @@ declare global {
 	}
 }
 
+declare module '$env/static/private' {
+	export const TURSO_DB_TOKEN: string;
+}
+
 /// <reference types="lucia" />
 declare global {
 	namespace Lucia {
