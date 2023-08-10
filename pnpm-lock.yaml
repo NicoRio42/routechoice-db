@@ -10,13 +10,10 @@ dependencies:
     version: 0.3.1
   '@lucia-auth/adapter-sqlite':
     specifier: ^2.0.0
-    version: 2.0.0(@libsql/client@0.3.1)(better-sqlite3@8.3.0)(lucia@2.0.0)
-  better-sqlite3:
-    specifier: ^8.3.0
-    version: 8.3.0
+    version: 2.0.0(@libsql/client@0.3.1)(lucia@2.0.0)
   drizzle-orm:
     specifier: ^0.27.2
-    version: 0.27.2(@libsql/client@0.3.1)(@types/better-sqlite3@7.6.4)(better-sqlite3@8.3.0)
+    version: 0.27.2(@libsql/client@0.3.1)(@types/better-sqlite3@7.6.4)
   linkedom:
     specifier: ^0.14.26
     version: 0.14.26
@@ -971,7 +968,7 @@ packages:
       - utf-8-validate
     dev: false
 
-  /@lucia-auth/adapter-sqlite@2.0.0(@libsql/client@0.3.1)(better-sqlite3@8.3.0)(lucia@2.0.0):
+  /@lucia-auth/adapter-sqlite@2.0.0(@libsql/client@0.3.1)(lucia@2.0.0):
     resolution: {integrity: sha512-Hiy8WND/1mi25r0M2ruSml+Ab5GJLr4XZEHApYw1lxybF+VlPUyX7oTtIVCSgvq/SWiP/tvnyPwnXAPmNr8/bg==}
     peerDependencies:
       '@libsql/client': ^0.3.0
@@ -984,7 +981,6 @@ packages:
         optional: true
     dependencies:
       '@libsql/client': 0.3.1
-      better-sqlite3: 8.3.0
       lucia: 2.0.0
     dev: false
 
@@ -1978,7 +1974,7 @@ packages:
       - supports-color
     dev: true
 
-  /drizzle-orm@0.27.2(@libsql/client@0.3.1)(@types/better-sqlite3@7.6.4)(better-sqlite3@8.3.0):
+  /drizzle-orm@0.27.2(@libsql/client@0.3.1)(@types/better-sqlite3@7.6.4):
     resolution: {integrity: sha512-ZvBvceff+JlgP7FxHKe0zOU9CkZ4RcOtibumIrqfYzDGuOeF0YUY0F9iMqYpRM7pxnLRfC+oO7rWOUH3T5oFQA==}
     peerDependencies:
       '@aws-sdk/client-rds-data': '>=3'
@@ -2042,7 +2038,6 @@ packages:
     dependencies:
       '@libsql/client': 0.3.1
       '@types/better-sqlite3': 7.6.4
-      better-sqlite3: 8.3.0
     dev: false
 
   /duplexer@0.1.2:

@@ -1,7 +1,7 @@
 import { dev } from '$app/environment';
 import { TURSO_DB_TOKEN } from '$env/static/private';
 import * as schema from '$lib/server/db/schema.js';
-import { createClient, type Client } from '@libsql/client';
+import { createClient, type Client } from '@libsql/client/web';
 import { libsql } from '@lucia-auth/adapter-sqlite';
 import type { Handle } from '@sveltejs/kit';
 import { drizzle, type LibSQLDatabase } from 'drizzle-orm/libsql';
