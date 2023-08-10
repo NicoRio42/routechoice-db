@@ -12,9 +12,6 @@ let libsqlClient: Client;
 let drizzleClient: LibSQLDatabase<typeof schema>;
 
 export const handle: Handle = async ({ event, resolve }) => {
-	// TODO see if still relevant
-	if (building) return await resolve(event);
-
 	if (libsqlClient === undefined) {
 		const config = dev
 			? { url: 'file:sqlite.db' }
