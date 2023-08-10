@@ -193,7 +193,8 @@ export const actions = {
 		const runnersWithTracksAndSortedLegs = await getRunnersWithTracksAndSortedLegs(
 			sortedLegs,
 			liveEvents,
-			runnersWithLiveEventAndtrackingDeviceId
+			runnersWithLiveEventAndtrackingDeviceId,
+			fetch
 		);
 
 		const runnersWithDetectedRoutechoices = detectRunnersRoutechoices(
@@ -203,38 +204,36 @@ export const actions = {
 
 		const routechoicesStatistics = createRoutechoiceStatistics(runnersWithDetectedRoutechoices);
 
-		await locals.db.transaction(async (tx) => {
-			for (const runner of runnersWithDetectedRoutechoices) {
-				await tx
-					.update(runnerTable)
-					.set({
-						fkLiveEvent: runner.fkLiveEvent,
-						trackingDeviceId: runner.trackingDeviceId,
-						fkUser: runner.fkUser
-					})
-					.where(eq(runnerTable.id, runner.id))
-					.run();
+		for (const runner of runnersWithDetectedRoutechoices) {
+			await locals.db
+				.update(runnerTable)
+				.set({
+					fkLiveEvent: runner.fkLiveEvent,
+					trackingDeviceId: runner.trackingDeviceId,
+					fkUser: runner.fkUser
+				})
+				.where(eq(runnerTable.id, runner.id))
+				.run();
 
-				for (const runnerLeg of runner.legs) {
-					if (runnerLeg === null || !runnerLeg.fkDetectedRoutechoice) continue;
+			for (const runnerLeg of runner.legs) {
+				if (runnerLeg === null || !runnerLeg.fkDetectedRoutechoice) continue;
 
-					await tx
-						.update(runnerLegTable)
-						.set({ fkDetectedRoutechoice: runnerLeg.fkDetectedRoutechoice })
-						.where(eq(runnerLegTable.id, runnerLeg.id))
-						.run();
-				}
-			}
-
-			for (const { bestTime, numberOfRunners, fkRoutechoice } of routechoicesStatistics) {
-				await tx
-					.update(routechoiceStatisticsTable)
-					.set({ bestTime, numberOfRunners })
-					.where(eq(routechoiceStatisticsTable.fkRoutechoice, fkRoutechoice))
+				await locals.db
+					.update(runnerLegTable)
+					.set({ fkDetectedRoutechoice: runnerLeg.fkDetectedRoutechoice })
+					.where(eq(runnerLegTable.id, runnerLeg.id))
 					.run();
 			}
+		}
 
-			throw redirect(302, `/events/${eventId}`);
-		});
+		for (const { bestTime, numberOfRunners, fkRoutechoice } of routechoicesStatistics) {
+			await locals.db
+				.update(routechoiceStatisticsTable)
+				.set({ bestTime, numberOfRunners })
+				.where(eq(routechoiceStatisticsTable.fkRoutechoice, fkRoutechoice))
+				.run();
+		}
+
+		throw redirect(302, `/events/${eventId}`);
 	}
 };

@@ -7,39 +7,46 @@ import { parseAndInsertSplitTimesFromIofXml3File } from '../helpers.js';
 import { reThrowRedirectsAndErrors } from '$lib/server/sveltekit-helpers.js';
 
 export async function load({ locals }) {
-    const session = await locals.authRequest.validate();
-    if (!session) throw redirect(302, '/login');
-    const { user } = session;
+	const session = await locals.authRequest.validate();
+	if (!session) throw redirect(302, '/login');
+	const { user } = session;
 
-    redirectIfNotAdmin(user);
+	redirectIfNotAdmin(user);
 
-    const form = await superValidate(splitTimesFromWinsplitsSchema);
-    return { form };
+	const form = await superValidate(splitTimesFromWinsplitsSchema);
+	return { form };
 }
 
 export const actions = {
-    default: async ({ locals, request, params: { eventId } }) => {
-        const session = await locals.authRequest.validate();
-        if (!session) throw redirect(302, '/login');
-        redirectIfNotAdmin(session.user);
+	default: async ({ locals, request, params: { eventId } }) => {
+		const session = await locals.authRequest.validate();
+		if (!session) throw redirect(302, '/login');
+		redirectIfNotAdmin(session.user);
 
-        const formData = await request.formData();
-        const form = await superValidate(formData, splitTimesFromWinsplitsSchema);
-        if (!form.valid) return fail(400, { form });
+		const formData = await request.formData();
+		const form = await superValidate(formData, splitTimesFromWinsplitsSchema);
+		if (!form.valid) return fail(400, { form });
 
-        try {
-            const response = await fetch(`${TWO_D_RERUN_URL}?id=${eventId}&classid=${form.data.classId}`);
-            const splitTimesRaw = await response.text();
+		try {
+			const response = await fetch(
+				`${TWO_D_RERUN_URL}?id=${form.data.eventId}&classid=${form.data.classId}`
+			);
 
-            await parseAndInsertSplitTimesFromIofXml3File(
-                splitTimesRaw, form.data.classId, form.data.timezone, eventId, locals.db
-            );
+			const splitTimesRaw = await response.text();
 
-            throw redirect(302, `/events/${eventId}/manager/split-times/runners-attribution`);
-        } catch (e) {
-            reThrowRedirectsAndErrors(e)
-            console.error(e)
-            return setError(form, null, `Problem with split times parsing: ${e}`);
-        }
-    }
-}
+			await parseAndInsertSplitTimesFromIofXml3File(
+				splitTimesRaw,
+				form.data.classId,
+				form.data.timezone,
+				eventId,
+				locals.db
+			);
+
+			throw redirect(302, `/events/${eventId}/manager/split-times/runners-attribution`);
+		} catch (e) {
+			reThrowRedirectsAndErrors(e);
+			console.error(e);
+			return setError(form, null, `Problem with split times parsing: ${e}`);
+		}
+	}
+};

@@ -23,7 +23,7 @@ import { newRoutechoiceSchema } from './schema.js';
 import { redirectIfNotAdmin } from '$lib/server/auth/helpers.js';
 
 export const actions = {
-	add: async ({ request, params: { eventId, legId }, locals }) => {
+	add: async ({ request, params: { eventId, legId }, locals, fetch }) => {
 		const session = await locals.authRequest.validate();
 		if (!session) throw redirect(302, '/login');
 		const { user } = session;
@@ -84,7 +84,8 @@ export const actions = {
 		const runnersWithTracksAndSortedLegs = await getRunnersWithTracksAndSortedLegs(
 			sortedLegs,
 			liveEvents,
-			runners
+			runners,
+			fetch
 		);
 
 		const legIndex = sortedLegsWithRoutechoicesWithParsedTracks.findIndex(

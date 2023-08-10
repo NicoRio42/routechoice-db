@@ -23,7 +23,8 @@ export async function load({ params: { eventId }, locals, fetch }) {
 	const runnersWithTracksAndSortedLegs = await getRunnersWithTracksAndSortedLegs(
 		eventWithSortedLegs.legs,
 		eventWithSortedLegs.liveEvents,
-		eventWithSortedLegs.runners
+		eventWithSortedLegs.runners,
+		fetch
 	);
 
 	return {

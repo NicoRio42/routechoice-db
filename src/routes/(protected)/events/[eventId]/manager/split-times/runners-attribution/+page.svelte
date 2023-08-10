@@ -30,7 +30,7 @@
 					<td>{`${runner.firstName} ${runner.lastName}`}</td>
 
 					<td>
-						<select value={runner.trackingDeviceId} name="{runner.id}-tracking">
+						<select value={runner.trackingDeviceId} name="{runner.id}-tracking" class="m-0">
 							<option />
 
 							{#each data.competitors as competitor (competitor.deviceId)}
@@ -42,7 +42,7 @@
 					</td>
 
 					<td>
-						<select value={runner.userId} name="{runner.id}-user">
+						<select value={runner.userId} name="{runner.id}-user" class="m-0">
 							<option />
 
 							{#each data.users as user (user.id)}

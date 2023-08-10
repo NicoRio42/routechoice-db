@@ -28,6 +28,7 @@ export const actions = {
 
 			const coordinatesConverter =
 				getCoordinatesConverterFromTwoDRerunCourseExport(twoDRerunExport);
+
 			const [controls, legs] = parseTwoDRerunCourseAndRoutechoicesExport(
 				twoDRerunExport,
 				coordinatesConverter

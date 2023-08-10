@@ -19,7 +19,8 @@ export const actions = {
 	updateRoutechoice: async ({
 		request,
 		params: { eventId, runnerId, legId: runnerLegId },
-		locals
+		locals,
+		fetch
 	}) => {
 		const session = await locals.authRequest.validate();
 		if (!session) throw redirect(302, '/login');
@@ -82,7 +83,8 @@ export const actions = {
 		const runnersWithTracksAndSortedLegs = await getRunnersWithTracksAndSortedLegs(
 			sortedLegs,
 			liveEvents,
-			runners
+			runners,
+			fetch
 		);
 
 		const legIndex = sortedLegsWithRoutechoicesWithParsedTracks.findIndex(

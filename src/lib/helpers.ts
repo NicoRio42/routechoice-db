@@ -245,7 +245,8 @@ function parseFloatOrThrow(str: string): number {
 export async function getRunnersWithTracksAndSortedLegs(
 	sortedLegs: LegWithRoutechoices[],
 	liveEvents: LiveEvent[],
-	runners: RunnerWithNullableLegs[]
+	runners: RunnerWithNullableLegs[],
+	fetch: Fetch
 ) {
 	return getTracksFromLiveEvents(liveEvents, fetch)
 		.then((tracks) =>
