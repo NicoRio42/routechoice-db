@@ -70,7 +70,7 @@
 				</li>
 			{/if}
 
-			<li class="py-0">
+			<li class="py-0 large">
 				<ThemeSwitch />
 			</li>
 		</ul>
@@ -116,6 +116,10 @@
 					<a href="/bug" class="ltr important:flex gap-1 items-center">
 						<i class="i-carbon-debug block h-5 w-5" /> Bug
 					</a>
+				</li>
+
+				<li class="py-0 ltr">
+					<ThemeSwitch />
 				</li>
 			</ul>
 		</details>

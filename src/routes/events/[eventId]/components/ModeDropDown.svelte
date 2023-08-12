@@ -60,6 +60,7 @@
 		.mode-select {
 			top: 0.375rem;
 			font-size: 0.75rem;
+			margin-left: -4.5rem;
 		}
 
 		.mode-select summary {
