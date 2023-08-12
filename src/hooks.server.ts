@@ -95,5 +95,6 @@ function getAuth(client: Client) {
 	}
 
 	console.debug('[HOOK HANDLE] init Lucia auth');
-	return createNewAuth(client);
+	auth = createNewAuth(client);
+	return auth;
 }
