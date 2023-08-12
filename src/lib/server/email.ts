@@ -1,10 +1,10 @@
 import { dev } from '$app/environment';
 
-const BASE_URL = dev ? 'http://localhost:5173' : 'https://sveltekit-todo-auth.pages.dev';
+const BASE_URL = dev ? 'http://localhost:5173' : 'https://routechoice-db.pages.dev';
 const EMAIL_VERIFICATION_URL = `${BASE_URL}/email-verification`;
 const PASSWORD_RESET_URL = `${BASE_URL}/reset-password`;
 const MAILCHANNELS_API_URL = 'https://api.mailchannels.net/tx/v1/send';
-const SENDER_ADRESS = 'no-reply@sveltekit-todo-auth.pages.dev';
+const SENDER_ADRESS = 'no-reply@routechoice-db.pages.dev';
 const SENDER_NAME = 'Online todo list';
 
 type Fetch = typeof fetch;
