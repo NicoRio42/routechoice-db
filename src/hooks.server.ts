@@ -2,7 +2,6 @@ import { dev } from '$app/environment';
 import { TURSO_DB_TOKEN } from '$env/static/private';
 import * as schema from '$lib/server/db/schema.js';
 import { createClient as createClientWeb, type Client } from '@libsql/client/web';
-import { createClient } from '@libsql/client';
 import { libsql } from '@lucia-auth/adapter-sqlite';
 import type { Handle } from '@sveltejs/kit';
 import { drizzle, type LibSQLDatabase } from 'drizzle-orm/libsql';
@@ -20,7 +19,9 @@ export const handle: Handle = async ({ event, resolve }) => {
 			? { url: 'file:sqlite.db' }
 			: { url: 'libsql://routechoice-db-routechoice-db.turso.io', authToken: TURSO_DB_TOKEN };
 
-		libsqlClient = dev ? createClient(config) : createClientWeb(config);
+		libsqlClient = dev
+			? (await import('@libsql/client')).createClient(config)
+			: createClientWeb(config);
 	}
 
 	if (drizzleClient === undefined) {
