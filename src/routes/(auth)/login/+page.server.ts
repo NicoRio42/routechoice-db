@@ -40,9 +40,13 @@ export const actions = {
 		}
 
 		try {
+			console.debug('[LOGIN DEFAULT ACTION] starting login');
 			const key = await locals.auth.useKey('email', form.data.email, form.data.password);
+			console.debug('[LOGIN DEFAULT ACTION] Key found');
 			const session = await locals.auth.createSession({ userId: key.userId, attributes: {} });
+			console.debug('[LOGIN DEFAULT ACTION] Session found');
 			locals.authRequest.setSession(session);
+			console.debug('[LOGIN DEFAULT ACTION] Session set');
 		} catch (e) {
 			console.error(e);
 
