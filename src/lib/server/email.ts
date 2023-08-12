@@ -4,8 +4,8 @@ const BASE_URL = dev ? 'http://localhost:5173' : 'https://routechoice-db.pages.d
 const EMAIL_VERIFICATION_URL = `${BASE_URL}/email-verification`;
 const PASSWORD_RESET_URL = `${BASE_URL}/reset-password`;
 const MAILCHANNELS_API_URL = 'https://api.mailchannels.net/tx/v1/send';
-const SENDER_ADRESS = 'no-reply@routechoice-db.pages.dev';
-const SENDER_NAME = 'Online todo list';
+const SENDER_ADRESS = 'no-reply@routechoice-db.workers.dev';
+const SENDER_NAME = 'Routechoice DB';
 
 type Fetch = typeof fetch;
 
