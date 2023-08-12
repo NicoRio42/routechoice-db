@@ -4,7 +4,7 @@ const BASE_URL = dev ? 'http://localhost:5173' : 'https://routechoice-db.pages.d
 const EMAIL_VERIFICATION_URL = `${BASE_URL}/email-verification`;
 const PASSWORD_RESET_URL = `${BASE_URL}/reset-password`;
 const MAILCHANNELS_API_URL = 'https://api.mailchannels.net/tx/v1/send';
-const SENDER_ADRESS = 'no-reply@routechoice-db.workers.dev';
+const SENDER_ADRESS = 'no-reply@routechoice-db.pages.dev';
 const SENDER_NAME = 'Routechoice DB';
 
 type Fetch = typeof fetch;
@@ -86,7 +86,7 @@ async function sendEmailViaMailChannelsFromCloudflareWorker(
 		},
 		body: JSON.stringify({
 			personalizations: [{ to: [{ email: recipientEmailAddress, name: recipientName }] }],
-			from: { email: senderEmailAddress, name: senderName },
+			// from: { email: senderEmailAddress, name: senderName },
 			subject: subject,
 			content: [{ type: contentType, value: content }]
 		})
