@@ -5,10 +5,16 @@
 	import { loginFormSchema } from './schema';
 
 	export let data;
+	let showCloudflareWorkerCpuErrorMessage = false
 
 	const form = superForm(data.form, {
 		validators: loginFormSchema,
-		taintedMessage: null
+		taintedMessage: null,
+		onError: ({ result, message }) => {
+			if ( result.status === 503) {
+				showCloudflareWorkerCpuErrorMessage = true
+			}
+		}
 	});
 
 	const { delayed, enhance, errors } = form;
@@ -30,4 +36,12 @@
 			<small class="error">{globalError}</small>
 		</p>
 	{/each}
+	
+	{#if showCloudflareWorkerCpuErrorMessage}
+		<p>
+			<small class="error">
+				Server error, please try login later.
+			</small>
+		</p>
+	{/if}
 </form>
