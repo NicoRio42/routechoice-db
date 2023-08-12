@@ -14,7 +14,7 @@ let drizzleClient: LibSQLDatabase<typeof schema>;
 
 export const handle: Handle = async ({ event, resolve }) => {
 	if (libsqlClient === undefined) {
-		console.debug('[HOOK HANDLE] init libsqlClient');
+		console.debug('[HOOK HANDLE] Init libsqlClient');
 
 		const config = dev
 			? { url: 'file:sqlite.db' }
