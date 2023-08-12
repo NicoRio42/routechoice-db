@@ -1,5 +1,6 @@
 import { dev } from '$app/environment';
 import { TURSO_DB_TOKEN } from '$env/static/private';
+import { generateScryptHash, validateScryptHash } from '$lib/server/auth/crypto.js';
 import * as schema from '$lib/server/db/schema.js';
 import { createClient as createClientWeb, type Client } from '@libsql/client/web';
 import { libsql } from '@lucia-auth/adapter-sqlite';
@@ -85,7 +86,11 @@ function createNewAuth(client: Client) {
 			emailVerified: !!userData.email_verified,
 			passwordExpired: !!userData.password_expired,
 			role: userData.role
-		})
+		}),
+		passwordHash: {
+			generate: generateScryptHash,
+			validate: validateScryptHash
+		}
 	});
 }
 

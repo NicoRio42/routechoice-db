@@ -18,7 +18,7 @@ export const actions = {
 		const form = await superValidate(request, loginFormSchema);
 
 		if (!form.valid) {
-			return setError(form, null, 'An error occured');
+			return setError(form, '', 'An error occured');
 		}
 
 		const user = await locals.db
@@ -28,13 +28,13 @@ export const actions = {
 			.get();
 
 		if (user === undefined) {
-			return setError(form, null, "This account doesn't exist");
+			return setError(form, '', "This account doesn't exist");
 		}
 
 		if (user.passwordExpired) {
 			return setError(
 				form,
-				null,
+				'',
 				'Your password has expired, you will have to reset it. Please follow the reset password link above.'
 			);
 		}
@@ -54,10 +54,10 @@ export const actions = {
 				e instanceof LuciaError &&
 				(e.message === 'AUTH_INVALID_KEY_ID' || e.message === 'AUTH_INVALID_PASSWORD')
 			) {
-				return setError(form, null, 'Incorrect email or password');
+				return setError(form, '', 'Incorrect email or password');
 			}
 
-			return setError(form, null, 'An unknown error occurred');
+			return setError(form, '', 'An unknown error occurred');
 		}
 
 		const redirectToSearchParam = url.searchParams.get('redirectTo');
