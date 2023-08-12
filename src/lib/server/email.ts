@@ -86,7 +86,7 @@ async function sendEmailViaMailChannelsFromCloudflareWorker(
 		},
 		body: JSON.stringify({
 			personalizations: [{ to: [{ email: recipientEmailAddress, name: recipientName }] }],
-			// from: { email: senderEmailAddress, name: senderName },
+			from: { email: senderEmailAddress, name: senderName },
 			subject: subject,
 			content: [{ type: contentType, value: content }]
 		})
