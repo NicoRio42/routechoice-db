@@ -7,10 +7,13 @@ const MAILCHANNELS_API_URL = 'https://api.mailchannels.net/tx/v1/send';
 const SENDER_ADRESS = 'no-reply@sveltekit-todo-auth.pages.dev';
 const SENDER_NAME = 'Online todo list';
 
+type Fetch = typeof fetch;
+
 export async function sendEmailVerificationEmail(
 	recipientEmailAddress: string,
 	recipientName: string,
-	token: string
+	token: string,
+	fetch: Fetch
 ) {
 	if (dev) {
 		console.log(`Email verification url for ${recipientName}: ${EMAIL_VERIFICATION_URL}/${token}`);
@@ -29,7 +32,8 @@ export async function sendEmailVerificationEmail(
 		recipientName,
 		'Verify your email address',
 		content,
-		'text/html'
+		'text/html',
+		fetch
 	);
 
 	console.log('[email confirmation]', response.status, await response.json());
@@ -38,7 +42,8 @@ export async function sendEmailVerificationEmail(
 export async function sendPasswordResetEmail(
 	recipientEmailAddress: string,
 	recipientName: string,
-	token: string
+	token: string,
+	fetch: Fetch
 ) {
 	if (dev) {
 		console.log(`Email verification url for ${recipientName}: ${PASSWORD_RESET_URL}/${token}`);
@@ -57,7 +62,8 @@ export async function sendPasswordResetEmail(
 		recipientName,
 		'Verify your email address',
 		content,
-		'text/html'
+		'text/html',
+		fetch
 	);
 
 	console.log('[email confirmation]', response.status, await response.json());
@@ -70,7 +76,8 @@ async function sendEmailViaMailChannelsFromCloudflareWorker(
 	recipientName: string,
 	subject: string,
 	content: string,
-	contentType: 'text/html' | 'text/plain'
+	contentType: 'text/html' | 'text/plain',
+	fetch: Fetch
 ) {
 	return await fetch(MAILCHANNELS_API_URL, {
 		method: 'POST',

@@ -12,7 +12,7 @@ export async function load() {
 }
 
 export const actions = {
-	default: async ({ request, locals }) => {
+	default: async ({ request, locals, fetch }) => {
 		const form = await superValidate(request, resetPasswordEmailSchema);
 
 		if (!form.valid) {
@@ -32,7 +32,8 @@ export const actions = {
 				await sendPasswordResetEmail(
 					databaseUser.email,
 					`${databaseUser.firstName} ${databaseUser.lastName}`,
-					token.toString()
+					token.toString(),
+					fetch
 				);
 			}
 

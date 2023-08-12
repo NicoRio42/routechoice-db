@@ -17,7 +17,7 @@ export async function load({ locals }) {
 }
 
 export const actions = {
-	default: async ({ locals }) => {
+	default: async ({ locals, fetch }) => {
 		const session = await locals.authRequest.validate();
 
 		if (!session) {
@@ -33,7 +33,8 @@ export const actions = {
 		await sendEmailVerificationEmail(
 			session.user.email,
 			`${session.user.firstName} ${session.user.lastName}`,
-			token
+			token,
+			fetch
 		);
 
 		return { sent: true };
