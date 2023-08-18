@@ -102,15 +102,14 @@ export const actions = {
 
 		// TODO refactor routechoice statistics update
 
+		const legRoutechoicesIds = legs
+			.filter((_, index) => index === legIndex)
+			.flatMap((leg) => leg.routechoices.map((rc) => rc.id));
+
 		locals.db
 			.update(routechoiceStatisticsTable)
 			.set({ bestTime: 0, numberOfRunners: 0 })
-			.where(
-				inArray(
-					routechoiceStatisticsTable.fkRoutechoice,
-					legs.flatMap((leg) => leg.routechoices.map((rc) => rc.id))
-				)
-			)
+			.where(inArray(routechoiceStatisticsTable.fkRoutechoice, legRoutechoicesIds))
 			.run();
 
 		for (const { bestTime, numberOfRunners, fkRoutechoice } of routechoicesStatistics) {

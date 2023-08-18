@@ -1,8 +1,8 @@
 <script lang="ts">
 	import { page } from '$app/stores';
 	import type { EventWithLiveEventsRunnersLegsAndControlPoints as Event } from '$lib/models/event.model.js';
-	import type { User } from 'lucia-auth';
-	import { setContext } from 'svelte';
+	import type { User } from 'lucia';
+	import { onDestroy, setContext } from 'svelte';
 	import { writable } from 'svelte/store';
 	import ActionButtons from './components/ActionButtons.svelte';
 	import GeoreferencedImage from './components/GeoreferencedImage.svelte';
@@ -13,7 +13,9 @@
 	import VectorLayer from './components/VectorLayer.svelte';
 	import './styles.css';
 	import {
+	addSearchParamsToURL,
 		computeFitBoxAndAngleFromLegNumber,
+		deleteSearchParamsToURL,
 		getLegNumberFromSearchParams,
 		getModeFromSearchParams
 	} from './utils.js';
@@ -24,8 +26,11 @@
 	import type { LineString } from 'ol/geom.js';
 	import type { DrawEvent } from 'ol/interaction/Draw.js';
 	import { RolesEnum } from '$lib/models/enums/roles.enum.js';
+	import { eventName } from '../../_components/event-name-store.js';
 
 	export let data;
+
+	$eventName = data.event.name
 
 	let angle: number;
 	let fitBox: [number, number, number, number];
@@ -103,13 +108,25 @@
 		// 	...runnerWithNewOssetAndDetectedRoutechoice
 		// });
 	}
+
+	onDestroy(() => $eventName = null)
 </script>
 
-{#if data.user?.role === RolesEnum.Enum.admin}
-	<ModeDropDown courseId={data.event.id} {mode} />
-{/if}
-
 <div class="wrapper">
+	{#if data.user?.role === RolesEnum.Enum.admin}
+		<a
+			href={mode === ModesEnum.ANALYSIS ? addSearchParamsToURL($page.url, 'mode', ModesEnum.DRAW) : deleteSearchParamsToURL($page.url, "mode")}
+			role="button"
+			class="btn-unset absolute top-25 right-2 z-1 bg-white text-black w-6 h-6 flex items-center justify-center"
+		>
+			{#if mode === ModesEnum.ANALYSIS }
+				<i class="block i-carbon-edit"></i>
+			{:else}
+				<i class="block i-carbon-edit-off"></i>
+			{/if}
+		</a>
+	{/if}
+
 	{#if showAddRoutechoiceDialog && currentDrawnRoutechoice !== null}
 		<AddRoutechoiceDialog
 			leg={data.event.legs[legNumber - 1]}

@@ -5,6 +5,7 @@
 	import ThemeSwitch from './ThemeSwitch.svelte';
 	import { enhance } from '$app/forms';
 	import { page } from '$app/stores';
+	import { eventName } from './event-name-store.js';
 
 	export let user: User | null;
 </script>
@@ -27,6 +28,14 @@
 				</div>
 			</a>
 		</li>
+
+		{#if $eventName !== null}
+			<li class="p-0">
+				<p class="m-0 ml-2 sm:ml-4 sm:pl-4 pl-2 py-1 border-l-1 border-l-solid border-l-[var(--table-border-color)]">
+					{$eventName}
+				</p>
+			</li>
+		{/if}
 	</ul>
 
 	<div class="flex gap-2">
