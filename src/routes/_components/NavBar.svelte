@@ -30,10 +30,8 @@
 		</li>
 
 		{#if $eventName !== null}
-			<li class="p-0">
-				<p class="m-0 ml-2 sm:ml-4 sm:pl-4 pl-2 py-1 border-l-1 border-l-solid border-l-[var(--table-border-color)]">
-					{$eventName}
-				</p>
+			<li class="m-0 ml-2 sm:ml-4 sm:pl-4 pl-2 py-1 border-l-1 border-l-solid border-l-[var(--table-border-color)] whitespace-nowrap text-ellipsis overflow-hidden min-w-0">
+				{$eventName}
 			</li>
 		{/if}
 	</ul>
