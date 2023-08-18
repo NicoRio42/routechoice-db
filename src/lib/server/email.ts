@@ -1,10 +1,10 @@
 import { dev } from '$app/environment';
 
-const BASE_URL = dev ? 'http://localhost:5173' : 'https://routechoice-db.pages.dev';
+const BASE_URL = dev ? 'http://localhost:5173' : 'https://routechoice-db.com';
 const EMAIL_VERIFICATION_URL = `${BASE_URL}/email-verification`;
 const PASSWORD_RESET_URL = `${BASE_URL}/reset-password`;
 const MAILCHANNELS_API_URL = 'https://api.mailchannels.net/tx/v1/send';
-const SENDER_ADRESS = 'no-reply@routechoice-db.pages.dev';
+const SENDER_ADRESS = 'no-reply@routechoice-db.com';
 const SENDER_NAME = 'Routechoice DB';
 
 type Fetch = typeof fetch;
