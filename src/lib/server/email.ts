@@ -1,10 +1,11 @@
 import { dev } from '$app/environment';
+import { BREVO_API_KEY } from '$env/static/private';
 
 const BASE_URL = dev ? 'http://localhost:5173' : 'https://routechoice-db.com';
 const EMAIL_VERIFICATION_URL = `${BASE_URL}/email-verification`;
 const PASSWORD_RESET_URL = `${BASE_URL}/reset-password`;
-const MAILCHANNELS_API_URL = 'https://api.mailchannels.net/tx/v1/send';
-const SENDER_ADRESS = 'no-reply@routechoice-db.com';
+const BREVO_API_URL = 'https:/api.sendinblue.com/v3/smtp/email';
+const SENDER_ADRESS = 'noreply@routechoice-db.com';
 const SENDER_NAME = 'Routechoice DB';
 
 type Fetch = typeof fetch;
@@ -25,14 +26,13 @@ export async function sendEmailVerificationEmail(
 		${EMAIL_VERIFICATION_URL}/${token}
 	`;
 
-	const response = await sendEmailViaMailChannelsFromCloudflareWorker(
+	const response = await sendEmailViaBrevoFromCloudflareWorker(
 		SENDER_ADRESS,
 		SENDER_NAME,
 		recipientEmailAddress,
 		recipientName,
 		'Verify your email address',
 		content,
-		'text/html',
 		fetch
 	);
 
@@ -55,40 +55,40 @@ export async function sendPasswordResetEmail(
 		${PASSWORD_RESET_URL}/${token}
 	`;
 
-	const response = await sendEmailViaMailChannelsFromCloudflareWorker(
+	const response = await sendEmailViaBrevoFromCloudflareWorker(
 		SENDER_ADRESS,
 		SENDER_NAME,
 		recipientEmailAddress,
 		recipientName,
 		'Verify your email address',
 		content,
-		'text/html',
 		fetch
 	);
 
 	console.log('[email confirmation]', response.status, await response.json());
 }
 
-async function sendEmailViaMailChannelsFromCloudflareWorker(
+async function sendEmailViaBrevoFromCloudflareWorker(
 	senderEmailAddress: string,
 	senderName: string,
 	recipientEmailAddress: string,
 	recipientName: string,
 	subject: string,
-	content: string,
-	contentType: 'text/html' | 'text/plain',
+	htmlContent: string,
 	fetch: Fetch
 ) {
-	return await fetch(MAILCHANNELS_API_URL, {
+	return await fetch(BREVO_API_URL, {
 		method: 'POST',
 		headers: {
-			'content-type': 'application/json'
+			'api-key': BREVO_API_KEY,
+			'Content-Type': 'application/json',
+			'Content-Length': htmlContent.length.toString()
 		},
 		body: JSON.stringify({
-			personalizations: [{ to: [{ email: recipientEmailAddress, name: recipientName }] }],
-			from: { email: senderEmailAddress, name: senderName },
-			subject: subject,
-			content: [{ type: contentType, value: content }]
+			sender: { email: senderEmailAddress, name: senderName },
+			to: [{ email: recipientEmailAddress, name: recipientName }],
+			subject,
+			htmlContent
 		})
 	});
 }

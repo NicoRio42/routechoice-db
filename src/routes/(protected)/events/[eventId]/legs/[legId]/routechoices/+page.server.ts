@@ -96,8 +96,10 @@ export const actions = {
 			return fail(400);
 		}
 
+		const leg = sortedLegsWithRoutechoicesWithParsedTracks[legIndex];
+
 		const runnersWithDetectedRoutechoices = detectRunnersRoutechoicesForASingleLeg(
-			sortedLegsWithRoutechoicesWithParsedTracks[legIndex],
+			leg,
 			runnersWithTracksAndSortedLegs,
 			legIndex
 		);
@@ -128,7 +130,7 @@ export const actions = {
 			.where(
 				inArray(
 					routechoiceStatisticsTable.fkRoutechoice,
-					legs.flatMap((leg) => leg.routechoices.map((rc) => rc.id))
+					leg.routechoices.map((rc) => rc.id)
 				)
 			)
 			.run();

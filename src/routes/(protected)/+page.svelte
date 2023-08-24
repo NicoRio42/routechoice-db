@@ -1,5 +1,6 @@
 <script lang="ts">
 	import { dev } from '$app/environment';
+	import { enhance } from '$app/forms';
 import { page } from '$app/stores';
 	import TagsSelect from '$lib/components/form-fields/TagsSelect.svelte';
 	import { SPLITTIMES_BASE_URL, SPLITTIMES_BASE_URL_DEV } from '$lib/constants.js';
@@ -25,6 +26,15 @@ import { page } from '$app/stores';
 		if (tagsDidNotChange) return;
 
 		formElement.submit();
+	}
+	
+
+	function confirmDeletion(e: Event) {
+		if (!confirm('Are you sure to delete this user ?')) {
+			e.preventDefault();
+			e.stopPropagation();
+			e.stopImmediatePropagation();
+		}
 	}
 </script>
 
@@ -113,7 +123,7 @@ import { page } from '$app/stores';
 							</td>
 
 							<td class="text-right">
-								<form action="/events/{event.id}/delete" method="post" class="m-0 p-0">
+								<form action="/events/{event.id}/delete" method="post" on:submit={confirmDeletion} use:enhance class="m-0 p-0">
 									<button type="submit" class="btn-unset">
 										<i class="i-carbon-trash-can w-5 h-5 block" />
 									</button>
