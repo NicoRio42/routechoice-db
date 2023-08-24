@@ -4,7 +4,7 @@ import { BREVO_API_KEY } from '$env/static/private';
 const BASE_URL = dev ? 'http://localhost:5173' : 'https://routechoice-db.com';
 const EMAIL_VERIFICATION_URL = `${BASE_URL}/email-verification`;
 const PASSWORD_RESET_URL = `${BASE_URL}/reset-password`;
-const BREVO_API_URL = 'https:/api.sendinblue.com/v3/smtp/email';
+const BREVO_API_URL = 'https://api.brevo.com/v3/smtp/email';
 const SENDER_ADRESS = 'noreply@routechoice-db.com';
 const SENDER_NAME = 'Routechoice DB';
 
