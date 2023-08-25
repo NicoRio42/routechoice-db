@@ -159,8 +159,8 @@ export function sortRunnersAndRunnersLegs(
 		})
 		.sort((runnerA, runnerB) => {
 			if (runnerA.rank === null && runnerB.rank === null) return 0;
-			if (runnerA.rank === null) return -1;
-			if (runnerB.rank === null) return 1;
+			if (runnerA.rank === null) return 1;
+			if (runnerB.rank === null) return -1;
 			return runnerA.rank - runnerB.rank;
 		});
 }

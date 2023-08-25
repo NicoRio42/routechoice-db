@@ -22,7 +22,7 @@ export async function sendEmailVerificationEmail(
 	}
 
 	const content = `Please click this <a href="${EMAIL_VERIFICATION_URL}/${token}" target="_blank">link</a> to verify your email address.	
-		If you encourter a problem, please copy the link below to your url bar:
+		If you encounter a problem, please copy the link below to your url bar:
 		${EMAIL_VERIFICATION_URL}/${token}
 	`;
 
@@ -51,7 +51,7 @@ export async function sendPasswordResetEmail(
 	}
 
 	const content = `Please click this <a href="${PASSWORD_RESET_URL}/${token}" target="_blank">link</a> to reset your password.	
-		If you encourter a problem, please copy the link below to your url bar:
+		If you encounter a problem, please copy the link below to your url bar:
 		${PASSWORD_RESET_URL}/${token}
 	`;
 

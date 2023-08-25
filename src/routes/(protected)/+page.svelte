@@ -107,7 +107,7 @@ import { page } from '$app/stores';
 
 						<td class="text-right">
 							<a
-								href="{splittimesBaseUrl}/routechoice-db-dev/{event.id}/classes/1"
+								href="{splittimesBaseUrl}/routechoice-db-dev/{event.id}/classes/1/table"
 								target="_blank"
 								rel="noreferrer"
 							>
