@@ -12,8 +12,8 @@ dependencies:
     specifier: ^2.0.0
     version: 2.0.0(@libsql/client@0.3.1)(lucia@2.0.0)
   drizzle-orm:
-    specifier: ^0.27.2
-    version: 0.27.2(@libsql/client@0.3.1)(@types/better-sqlite3@7.6.4)
+    specifier: ^0.28.5
+    version: 0.28.5(@libsql/client@0.3.1)(@types/better-sqlite3@7.6.4)
   linkedom:
     specifier: ^0.14.26
     version: 0.14.26
@@ -75,7 +75,7 @@ devDependencies:
     version: 4.1.1
   svelte-check:
     specifier: ^3.4.6
-    version: 3.4.6(postcss@8.4.27)(svelte@4.1.1)
+    version: 3.4.6(postcss@8.4.28)(svelte@4.1.1)
   sveltekit-superforms:
     specifier: ^1.5.1
     version: 1.5.1(@sveltejs/kit@1.22.3)(svelte@4.1.1)(zod@3.21.4)
@@ -87,7 +87,7 @@ devDependencies:
     version: 5.0.4
   unocss:
     specifier: ^0.52.4
-    version: 0.52.4(postcss@8.4.27)(vite@4.4.7)
+    version: 0.52.4(postcss@8.4.28)(vite@4.4.7)
   vite:
     specifier: ^4.4.7
     version: 4.4.7
@@ -1361,7 +1361,7 @@ packages:
       sirv: 2.0.3
     dev: true
 
-  /@unocss/postcss@0.52.4(postcss@8.4.27):
+  /@unocss/postcss@0.52.4(postcss@8.4.28):
     resolution: {integrity: sha512-czgtSpVoGloYLigWL9y4FfEqq6MLDE0M89GWx5L2wbwaR5jgTYvCus0r23dUxqbDRidAJ2zXD+QFCh3Gk0wvoQ==}
     engines: {node: '>=14'}
     peerDependencies:
@@ -1372,7 +1372,7 @@ packages:
       css-tree: 2.3.1
       fast-glob: 3.2.12
       magic-string: 0.30.0
-      postcss: 8.4.27
+      postcss: 8.4.28
     dev: true
 
   /@unocss/preset-attributify@0.52.4:
@@ -1706,7 +1706,7 @@ packages:
       normalize-path: 3.0.0
       readdirp: 3.6.0
     optionalDependencies:
-      fsevents: 2.3.2
+      fsevents: 2.3.3
     dev: true
 
   /chownr@1.1.4:
@@ -1974,8 +1974,8 @@ packages:
       - supports-color
     dev: true
 
-  /drizzle-orm@0.27.2(@libsql/client@0.3.1)(@types/better-sqlite3@7.6.4):
-    resolution: {integrity: sha512-ZvBvceff+JlgP7FxHKe0zOU9CkZ4RcOtibumIrqfYzDGuOeF0YUY0F9iMqYpRM7pxnLRfC+oO7rWOUH3T5oFQA==}
+  /drizzle-orm@0.28.5(@libsql/client@0.3.1)(@types/better-sqlite3@7.6.4):
+    resolution: {integrity: sha512-6r6Iw4c38NAmW6TiKH3TUpGUQ1YdlEoLJOQptn8XPx3Z63+vFNKfAiANqrIiYZiMjKR9+NYAL219nFrmo1duXA==}
     peerDependencies:
       '@aws-sdk/client-rds-data': '>=3'
       '@cloudflare/workers-types': '>=3'
@@ -2492,8 +2492,8 @@ packages:
     resolution: {integrity: sha512-OO0pH2lK6a0hZnAdau5ItzHPI6pUlvI7jMVnxUQRtw4owF2wk8lOSabtGDCTP4Ggrg2MbGnWO9X8K1t4+fGMDw==}
     dev: true
 
-  /fsevents@2.3.2:
-    resolution: {integrity: sha512-xiqMQR4xAeHTuB9uWm+fFRcIOgKBMiOBP+eXiyT7jsgVCq1bkVygt00oASowB7EdtpOHaaPgKt812P9ab+DDKA==}
+  /fsevents@2.3.3:
+    resolution: {integrity: sha512-5xoDfX+fL7faATnagmWPpbFtwh/R77WmMMqqHGS65C3vvB0YHrgF+B1YmZ3441tMj5n63k0212XNoJwzlhffQw==}
     engines: {node: ^8.16.0 || ^10.6.0 || >=11.0.0}
     os: [darwin]
     requiresBuild: true
@@ -3306,8 +3306,8 @@ packages:
       source-map-js: 1.0.2
     dev: true
 
-  /postcss@8.4.27:
-    resolution: {integrity: sha512-gY/ACJtJPSmUFPDCHtX78+01fHa64FaU4zaaWfuh1MhGJISufJAH4cun6k/8fwsHYeK4UQmENQK+tRLCFJE8JQ==}
+  /postcss@8.4.28:
+    resolution: {integrity: sha512-Z7V5j0cq8oEKyejIKfpD8b4eBy9cwW2JWPk0+fB1HOAMsfHbnAXLLS+PfVWlzMSLQaWttKDt607I0XHmpE67Vw==}
     engines: {node: ^10 || ^12 || >=14}
     dependencies:
       nanoid: 3.3.6
@@ -3485,7 +3485,7 @@ packages:
     engines: {node: '>=14.18.0', npm: '>=8.0.0'}
     hasBin: true
     optionalDependencies:
-      fsevents: 2.3.2
+      fsevents: 2.3.3
     dev: true
 
   /run-parallel@1.2.0:
@@ -3703,7 +3703,7 @@ packages:
       has-flag: 4.0.0
     dev: true
 
-  /svelte-check@3.4.6(postcss@8.4.27)(svelte@4.1.1):
+  /svelte-check@3.4.6(postcss@8.4.28)(svelte@4.1.1):
     resolution: {integrity: sha512-OBlY8866Zh1zHQTkBMPS6psPi7o2umTUyj6JWm4SacnIHXpWFm658pG32m3dKvKFL49V4ntAkfFHKo4ztH07og==}
     hasBin: true
     peerDependencies:
@@ -3716,7 +3716,7 @@ packages:
       picocolors: 1.0.0
       sade: 1.8.1
       svelte: 4.1.1
-      svelte-preprocess: 5.0.4(postcss@8.4.27)(svelte@4.1.1)(typescript@5.0.4)
+      svelte-preprocess: 5.0.4(postcss@8.4.28)(svelte@4.1.1)(typescript@5.0.4)
       typescript: 5.0.4
     transitivePeerDependencies:
       - '@babel/core'
@@ -3756,7 +3756,7 @@ packages:
       svelte: 4.1.1
     dev: true
 
-  /svelte-preprocess@5.0.4(postcss@8.4.27)(svelte@4.1.1)(typescript@5.0.4):
+  /svelte-preprocess@5.0.4(postcss@8.4.28)(svelte@4.1.1)(typescript@5.0.4):
     resolution: {integrity: sha512-ABia2QegosxOGsVlsSBJvoWeXy1wUKSfF7SWJdTjLAbx/Y3SrVevvvbFNQqrSJw89+lNSsM58SipmZJ5SRi5iw==}
     engines: {node: '>= 14.10.0'}
     requiresBuild: true
@@ -3797,7 +3797,7 @@ packages:
       '@types/pug': 2.0.6
       detect-indent: 6.1.0
       magic-string: 0.27.0
-      postcss: 8.4.27
+      postcss: 8.4.28
       sorcery: 0.11.0
       strip-indent: 3.0.0
       svelte: 4.1.1
@@ -3961,7 +3961,7 @@ packages:
       busboy: 1.6.0
     dev: true
 
-  /unocss@0.52.4(postcss@8.4.27)(vite@4.4.7):
+  /unocss@0.52.4(postcss@8.4.28)(vite@4.4.7):
     resolution: {integrity: sha512-EaXc398NWrTfxQBkYXXFLjAGMDL7lAlP3QRPE59uQCwlKxZ52WZs7L+ekhe6ZTIRyDGuNVEBcndy+9tSVLbN8A==}
     engines: {node: '>=14'}
     peerDependencies:
@@ -3974,7 +3974,7 @@ packages:
       '@unocss/cli': 0.52.4
       '@unocss/core': 0.52.4
       '@unocss/extractor-arbitrary-variants': 0.52.4
-      '@unocss/postcss': 0.52.4(postcss@8.4.27)
+      '@unocss/postcss': 0.52.4(postcss@8.4.28)
       '@unocss/preset-attributify': 0.52.4
       '@unocss/preset-icons': 0.52.4
       '@unocss/preset-mini': 0.52.4
@@ -4038,7 +4038,7 @@ packages:
       postcss: 8.4.26
       rollup: 3.26.3
     optionalDependencies:
-      fsevents: 2.3.2
+      fsevents: 2.3.3
     dev: true
 
   /vitefu@0.2.4(vite@4.4.7):
@@ -4123,7 +4123,7 @@ packages:
       source-map: 0.7.4
       xxhash-wasm: 1.0.2
     optionalDependencies:
-      fsevents: 2.3.2
+      fsevents: 2.3.3
     transitivePeerDependencies:
       - bufferutil
       - supports-color

@@ -1,5 +1,5 @@
 import type * as schema from '$lib/server/db/schema.js';
-import type { Runner, RunnerLeg } from '$lib/server/db/schema.js';
+import type { RunnerInsert, RunnerLegInsert } from '$lib/server/db/schema.js';
 import {
 	controlPoint as controlPointTable,
 	leg,
@@ -71,8 +71,8 @@ export async function parseAndInsertSplitTimesFromIofXml3File(
 			});
 	});
 
-	const runnersToInsert: Runner[] = [];
-	const runnersLegsToInsert: RunnerLeg[] = [];
+	const runnersToInsert: RunnerInsert[] = [];
+	const runnersLegsToInsert: RunnerLegInsert[] = [];
 
 	for (const runner of runners) {
 		runnersToInsert.push({
@@ -114,6 +114,16 @@ export async function parseAndInsertSplitTimesFromIofXml3File(
 		}
 	}
 
-	await db.insert(runnerTable).values(runnersToInsert).run();
-	await db.insert(runnerLegTable).values(runnersLegsToInsert).run();
+	const insertedRunnersIds = await db
+		.insert(runnerTable)
+		.values(runnersToInsert)
+		.returning({ insertedId: runnerTable.id });
+
+	const insertedLegsIds = await db
+		.insert(runnerLegTable)
+		.values(runnersLegsToInsert)
+		.returning({ insertedId: runnerLegTable.id });
+
+	console.log('RUNNERS', insertedRunnersIds.length);
+	console.log('RUNNERS LEGS', insertedLegsIds.length);
 }
