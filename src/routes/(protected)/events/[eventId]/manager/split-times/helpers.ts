@@ -27,8 +27,6 @@ export async function parseAndInsertSplitTimesFromIofXml3File(
 		timezone
 	);
 
-	console.log('HELPERS');
-
 	const rawLegs = await db
 		.select({
 			id: leg.id,
@@ -119,13 +117,15 @@ export async function parseAndInsertSplitTimesFromIofXml3File(
 	const insertedRunnersIds = await db
 		.insert(runnerTable)
 		.values(runnersToInsert)
-		.returning({ insertedId: runnerTable.id });
+		.returning({ insertedId: runnerTable.id })
+		.run();
 
 	const insertedLegsIds = await db
 		.insert(runnerLegTable)
 		.values(runnersLegsToInsert)
-		.returning({ insertedId: runnerLegTable.id });
+		.returning({ insertedId: runnerLegTable.id })
+		.run();
 
-	console.log('RUNNERS', insertedRunnersIds.length);
-	console.log('RUNNERS LEGS', insertedLegsIds.length);
+	console.log('RUNNERS', insertedRunnersIds);
+	console.log('RUNNERS LEGS', insertedLegsIds);
 }

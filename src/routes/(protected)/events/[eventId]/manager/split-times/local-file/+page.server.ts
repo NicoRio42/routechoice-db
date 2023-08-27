@@ -43,7 +43,6 @@ export const actions = {
 
 		const splitTimesRaw = await splitTimesFile.text();
 
-		console.log('BEFORE');
 		try {
 			await parseAndInsertSplitTimesFromIofXml3File(
 				splitTimesRaw,
