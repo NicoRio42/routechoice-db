@@ -114,18 +114,9 @@ export async function parseAndInsertSplitTimesFromIofXml3File(
 		}
 	}
 
-	const insertedRunnersIds = await db
-		.insert(runnerTable)
-		.values(runnersToInsert)
-		.returning({ insertedId: runnerTable.id })
-		.run();
+	console.log('RUNNERS', runnersToInsert.length);
+	console.log('RUNNERS LEGS', runnersLegsToInsert.length);
 
-	const insertedLegsIds = await db
-		.insert(runnerLegTable)
-		.values(runnersLegsToInsert)
-		.returning({ insertedId: runnerLegTable.id })
-		.run();
-
-	console.log('RUNNERS', insertedRunnersIds);
-	console.log('RUNNERS LEGS', insertedLegsIds);
+	await db.insert(runnerTable).values(runnersToInsert).run();
+	await db.insert(runnerLegTable).values(runnersLegsToInsert).run();
 }
