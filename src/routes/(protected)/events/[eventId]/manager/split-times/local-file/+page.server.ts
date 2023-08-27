@@ -45,14 +45,18 @@ export const actions = {
 
 		try {
 			await parseAndInsertSplitTimesFromIofXml3File(
-				splitTimesRaw, form.data.className, form.data.timezone, eventId, locals.db
+				splitTimesRaw,
+				form.data.className,
+				form.data.timezone,
+				eventId,
+				locals.db
 			);
 
 			throw redirect(302, `/events/${eventId}/manager/split-times/runners-attribution`);
 		} catch (e) {
-			reThrowRedirectsAndErrors(e)
-			console.error(e)
-			return setError(form, null, `Problem with split times parsing: ${e}`);
+			reThrowRedirectsAndErrors(e);
+			console.error(e);
+			return setError(form, '', `Problem with split times parsing: ${e}`);
 		}
 	}
 };

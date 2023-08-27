@@ -7,10 +7,7 @@ export function detectRunnersRoutechoices(
 	legs: LegWithRoutechoiceWithParsedTrack[],
 	runners: RunnerWithNullableLegsAndTrack[]
 ): RunnerWithNullableLegsAndTrack[] {
-	return runners.map((runner, i) => {
-		console.log('RUNNER INDEX', i);
-		return detectSingleRunnerRoutechoices(legs, runner);
-	});
+	return runners.map((runner) => detectSingleRunnerRoutechoices(legs, runner));
 }
 
 export function detectRunnersRoutechoicesForASingleLeg(
@@ -112,20 +109,21 @@ function checkIfRunnerTrackConsistentWithSplitTimes(runner: RunnerWithNullableLe
 	const lastTrackTime = runner.track.times[length - 1];
 	if (lastTrackTime === undefined) throw new Error("2DRerun track's is empty.");
 
-	console.log(JSON.stringify(runner.legs));
 	const lastCompleteLeg = structuredClone(runner.legs)
 		.reverse()
 		.find((l) => l !== null);
 
 	if (lastCompleteLeg === undefined || lastCompleteLeg === null) {
-		console.log(runner.firstName, runner.lastName);
 		throw new Error('Runner have no valid legs.');
 	}
 
-	if (runner.track.lats.length !== runner.track.lons.length)
+	if (runner.track.lats.length !== runner.track.lons.length) {
 		throw new Error("Lats and lons don't have the same length");
-	if (runner.track.lats.length !== runner.track.lons.length)
+	}
+
+	if (runner.track.lats.length !== runner.track.lons.length) {
 		throw new Error("Lats and times don't have the same length");
+	}
 }
 
 const distancePointToSegment = (
