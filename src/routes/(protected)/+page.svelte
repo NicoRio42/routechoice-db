@@ -30,7 +30,7 @@ import { page } from '$app/stores';
 	
 
 	function confirmDeletion(e: Event) {
-		if (!confirm('Are you sure to delete this user ?')) {
+		if (!confirm('Are you sure to delete this event?')) {
 			e.preventDefault();
 			e.stopPropagation();
 			e.stopImmediatePropagation();

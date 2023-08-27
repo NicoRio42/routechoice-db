@@ -19,8 +19,6 @@ export async function load({ url, locals }) {
 		with: { tags: { columns: { fkTag: true } } }
 	});
 
-	console.log(form.data.tags);
-
 	// TODO: do this in sql when limit is needed
 	if (form.data.tags.length !== 0) {
 		events = events.filter((event) =>

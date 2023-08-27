@@ -72,53 +72,51 @@ export async function parseAndInsertSplitTimesFromIofXml3File(
 			});
 	});
 
-	await db.transaction(async (tx) => {
-		runners.forEach(async (runner) => {
-			await tx
-				.insert(runnerTable)
+	runners.forEach(async (runner) => {
+		await db
+			.insert(runnerTable)
+			.values({
+				id: runner.id,
+				firstName: runner.firstName,
+				lastName: runner.lastName,
+				fkEvent: eventId,
+				startTime: new Date(runner.startTime * 1000),
+				status: runner.status,
+				rank: runner.rank,
+				time: runner.time,
+				timeBehind: runner.timeBehind,
+				timeOffset: runner.timeOffset,
+				totalTimeLost: runner.totalTimeLost
+			})
+			.run();
+
+		if (runner.legs.length !== legs.length) {
+			throw new Error(
+				`Runner ${runner.firstName} ${runner.lastName} doesn't have same numbre of legs than the course.`
+			);
+		}
+
+		runner.legs.forEach(async (runnerLeg, runnerLegIndex) => {
+			if (runnerLeg === null) return;
+			const leg = legs[runnerLegIndex];
+
+			await db
+				.insert(runnerLegTable)
 				.values({
-					id: runner.id,
-					firstName: runner.firstName,
-					lastName: runner.lastName,
-					fkEvent: eventId,
-					startTime: new Date(runner.startTime * 1000),
-					status: runner.status,
-					rank: runner.rank,
-					time: runner.time,
-					timeBehind: runner.timeBehind,
-					timeOffset: runner.timeOffset,
-					totalTimeLost: runner.totalTimeLost
+					id: crypto.randomUUID(),
+					fkRunner: runner.id,
+					fkLeg: leg.id,
+					timeOverall: runnerLeg.timeOverall,
+					time: runnerLeg.time,
+					rankSplit: runnerLeg.rankSplit,
+					timeBehindSplit: runnerLeg.timeBehindSplit,
+					rankOverall: runnerLeg.rankOverall,
+					timeBehindOverall: runnerLeg.timeBehindOverall,
+					timeBehindSuperman: runnerLeg.timeBehindSuperman,
+					timeLoss: runnerLeg.timeLoss,
+					routechoiceTimeLoss: 0
 				})
 				.run();
-
-			if (runner.legs.length !== legs.length) {
-				throw new Error(
-					`Runner ${runner.firstName} ${runner.lastName} doesn't have same numbre of legs than the course.`
-				);
-			}
-
-			runner.legs.forEach(async (runnerLeg, runnerLegIndex) => {
-				if (runnerLeg === null) return;
-				const leg = legs[runnerLegIndex];
-
-				await tx
-					.insert(runnerLegTable)
-					.values({
-						id: crypto.randomUUID(),
-						fkRunner: runner.id,
-						fkLeg: leg.id,
-						timeOverall: runnerLeg.timeOverall,
-						time: runnerLeg.time,
-						rankSplit: runnerLeg.rankSplit,
-						timeBehindSplit: runnerLeg.timeBehindSplit,
-						rankOverall: runnerLeg.rankOverall,
-						timeBehindOverall: runnerLeg.timeBehindOverall,
-						timeBehindSuperman: runnerLeg.timeBehindSuperman,
-						timeLoss: runnerLeg.timeLoss,
-						routechoiceTimeLoss: 0
-					})
-					.run();
-			});
 		});
 	});
 }

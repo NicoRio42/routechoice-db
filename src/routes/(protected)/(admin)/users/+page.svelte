@@ -4,7 +4,7 @@
 	export let data;
 
 	function confirmDeletion(e: Event) {
-		if (!confirm('Are you sure to delete this user ?')) {
+		if (!confirm('Are you sure to delete this user?')) {
 			e.preventDefault();
 			e.stopPropagation();
 			e.stopImmediatePropagation();
