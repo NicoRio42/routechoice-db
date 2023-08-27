@@ -12,7 +12,7 @@ dependencies:
     specifier: ^2.0.0
     version: 2.0.0(@libsql/client@0.3.1)(lucia@2.0.0)
   drizzle-orm:
-    specifier: 0.27.2
+    specifier: ^0.27.2
     version: 0.27.2(@libsql/client@0.3.1)(@types/better-sqlite3@7.6.4)
   linkedom:
     specifier: ^0.14.26
