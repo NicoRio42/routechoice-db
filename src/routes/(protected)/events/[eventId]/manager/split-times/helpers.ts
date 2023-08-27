@@ -27,6 +27,8 @@ export async function parseAndInsertSplitTimesFromIofXml3File(
 		timezone
 	);
 
+	console.log('HELPERS');
+
 	const rawLegs = await db
 		.select({
 			id: leg.id,
