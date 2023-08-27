@@ -19,7 +19,7 @@ export async function GET({ url, fetch, locals }) {
 		headers: { Referer: 'http://loggator2.worldofo.com' }
 	});
 
-	console.log(response);
+	console.log(response.status, response.statusText);
 
 	const eventsText = await response.text();
 
