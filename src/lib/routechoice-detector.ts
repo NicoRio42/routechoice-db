@@ -112,6 +112,7 @@ function checkIfRunnerTrackConsistentWithSplitTimes(runner: RunnerWithNullableLe
 	const lastTrackTime = runner.track.times[length - 1];
 	if (lastTrackTime === undefined) throw new Error("2DRerun track's is empty.");
 
+	console.log(JSON.stringify(runner.legs));
 	const lastCompleteLeg = structuredClone(runner.legs)
 		.reverse()
 		.find((l) => l !== null);
