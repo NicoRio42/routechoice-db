@@ -10,7 +10,6 @@
 	type T = $$Generic<AnyZodObject>;
 
 	export let allTags: Tag[];
-	export let initialTagsIds: string[] = [];
 	export let form: SuperForm<UnwrapEffects<T>, unknown>;
 	export let field: keyof z.infer<T>;
 	export let label: string | undefined = undefined;
@@ -25,7 +24,7 @@
 	});
 
 	let inputElement: HTMLInputElement;
-	let tags: Tag[] = allTags.filter((t) => initialTagsIds.includes(t.id));
+	let tags: Tag[] = allTags.filter((t) => $value.includes(t.id));
 
 	$: {
 		if (inputElement) {

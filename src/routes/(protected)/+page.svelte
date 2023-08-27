@@ -56,7 +56,6 @@ import { page } from '$app/stores';
 			field="tags"
 			label="Tags"
 			on:toggle={handleTagsToggle}
-			initialTagsIds={$page.url.searchParams.get('tags')?.split(',') ?? []}
 		/>
 	</form>
 
