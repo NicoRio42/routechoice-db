@@ -117,7 +117,7 @@
 		<a
 			href={mode === ModesEnum.ANALYSIS ? addSearchParamsToURL($page.url, 'mode', ModesEnum.DRAW) : deleteSearchParamsToURL($page.url, "mode")}
 			role="button"
-			class="btn-unset absolute top-25 right-2 z-1 bg-white text-black w-6 h-6 flex items-center justify-center"
+			class="hidden btn-unset absolute top-25 right-2 z-1 bg-white text-black w-6 h-6 sm:flex items-center justify-center"
 		>
 			{#if mode === ModesEnum.ANALYSIS }
 				<i class="block i-carbon-edit"></i>

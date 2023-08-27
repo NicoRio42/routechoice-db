@@ -19,7 +19,8 @@
 		</li>
 
 		<li>
-			<a href="/events/{data.event.id}/manager/split-times/winsplits">From Winsplits</a>
+			<!-- <a href="/events/{data.event.id}/manager/split-times/winsplits">From Winsplits</a> -->
+			<em>From Winsplits (back soon)</em>
 		</li>
 
 		<li>

@@ -11,7 +11,7 @@
 </script>
 
 <nav class="container-fluid border-b-2 border-b-solid border-b-[var(--table-border-color)]">
-	<ul class="logo-list">
+	<ul class="logo-list min-w-0">
 		<li class="link-list-item">
 			<a
 				class="flex items-center gap-2 sm:gap-4 p-0 text-5 text-[var(--primary)] whitespace-nowrap"
@@ -44,7 +44,11 @@
 				</li>
 
 				<li class="link-list-item large">
-					<a href="/help">Help</a>
+					<a
+						href="https://docs.google.com/document/d/1bL9xlAb3Aw2Ga-Dk5r925952SeWGsHUR/edit?usp=sharing&ouid=108799233450859256284&rtpof=true&sd=true"
+						target="_blank"
+						rel="noreferrer"
+					>Help</a>
 				</li>
 			{/if}
 
