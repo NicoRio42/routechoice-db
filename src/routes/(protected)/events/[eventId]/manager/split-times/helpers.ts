@@ -26,8 +26,6 @@ export async function parseAndInsertSplitTimesFromIofXml3File(
 		timezone
 	);
 
-	console.log(JSON.stringify(runners));
-
 	const rawLegs = await db
 		.select({
 			id: leg.id,
@@ -72,7 +70,9 @@ export async function parseAndInsertSplitTimesFromIofXml3File(
 			});
 	});
 
-	runners.forEach(async (runner) => {
+	let runnerIndex = 0;
+
+	for (const runner of runners) {
 		await db
 			.insert(runnerTable)
 			.values({
@@ -96,9 +96,13 @@ export async function parseAndInsertSplitTimesFromIofXml3File(
 			);
 		}
 
-		runner.legs.forEach(async (runnerLeg, runnerLegIndex) => {
+		let runnerLegIndex = 0;
+
+		for (const runnerLeg of runner.legs) {
 			if (runnerLeg === null) return;
 			const leg = legs[runnerLegIndex];
+
+			if (runnerIndex === 0) console.log(runnerLeg.time);
 
 			await db
 				.insert(runnerLegTable)
@@ -117,6 +121,10 @@ export async function parseAndInsertSplitTimesFromIofXml3File(
 					routechoiceTimeLoss: 0
 				})
 				.run();
-		});
-	});
+
+			runnerLegIndex++;
+		}
+
+		runnerIndex++;
+	}
 }
