@@ -12,9 +12,10 @@ export async function GET({ url, fetch, locals }) {
 
 	const date = url.searchParams.get('date');
 	if (date === null) throw error(400);
-	const response = await fetch(`${TWO_D_RERUN_URL}?date=${date}`);
+	const response = await fetch(`${TWO_D_RERUN_URL}?date=${date}`, {
+		headers: { Referer: 'http://loggator2.worldofo.com' }
+	});
 	const eventsText = await response.text();
-	console.log(eventsText);
 
 	const parser = new DOMParser();
 	const xmlDoc = parser.parseFromString(eventsText, 'text/xml');
