@@ -1,4 +1,5 @@
 import type * as schema from '$lib/server/db/schema.js';
+import type { Runner, RunnerLeg } from '$lib/server/db/schema.js';
 import {
 	controlPoint as controlPointTable,
 	leg,
@@ -70,31 +71,23 @@ export async function parseAndInsertSplitTimesFromIofXml3File(
 			});
 	});
 
-	let runnerIndex = 0;
+	const runnersToInsert: Runner[] = [];
+	const runnersLegsToInsert: RunnerLeg[] = [];
 
 	for (const runner of runners) {
-		await db
-			.insert(runnerTable)
-			.values({
-				id: runner.id,
-				firstName: runner.firstName,
-				lastName: runner.lastName,
-				fkEvent: eventId,
-				startTime: new Date(runner.startTime * 1000),
-				status: runner.status,
-				rank: runner.rank,
-				time: runner.time,
-				timeBehind: runner.timeBehind,
-				timeOffset: runner.timeOffset,
-				totalTimeLost: runner.totalTimeLost
-			})
-			.run();
-
-		if (runner.legs.length !== legs.length) {
-			throw new Error(
-				`Runner ${runner.firstName} ${runner.lastName} doesn't have same numbre of legs than the course.`
-			);
-		}
+		runnersToInsert.push({
+			id: runner.id,
+			firstName: runner.firstName,
+			lastName: runner.lastName,
+			fkEvent: eventId,
+			startTime: new Date(runner.startTime * 1000),
+			status: runner.status,
+			rank: runner.rank,
+			time: runner.time,
+			timeBehind: runner.timeBehind,
+			timeOffset: runner.timeOffset,
+			totalTimeLost: runner.totalTimeLost
+		});
 
 		let runnerLegIndex = 0;
 
@@ -102,29 +95,25 @@ export async function parseAndInsertSplitTimesFromIofXml3File(
 			if (runnerLeg === null) return;
 			const leg = legs[runnerLegIndex];
 
-			if (runnerIndex === 0) console.log(runnerLeg.time);
-
-			await db
-				.insert(runnerLegTable)
-				.values({
-					id: crypto.randomUUID(),
-					fkRunner: runner.id,
-					fkLeg: leg.id,
-					timeOverall: runnerLeg.timeOverall,
-					time: runnerLeg.time,
-					rankSplit: runnerLeg.rankSplit,
-					timeBehindSplit: runnerLeg.timeBehindSplit,
-					rankOverall: runnerLeg.rankOverall,
-					timeBehindOverall: runnerLeg.timeBehindOverall,
-					timeBehindSuperman: runnerLeg.timeBehindSuperman,
-					timeLoss: runnerLeg.timeLoss,
-					routechoiceTimeLoss: 0
-				})
-				.run();
+			runnersLegsToInsert.push({
+				id: crypto.randomUUID(),
+				fkRunner: runner.id,
+				fkLeg: leg.id,
+				timeOverall: runnerLeg.timeOverall,
+				time: runnerLeg.time,
+				rankSplit: runnerLeg.rankSplit,
+				timeBehindSplit: runnerLeg.timeBehindSplit,
+				rankOverall: runnerLeg.rankOverall,
+				timeBehindOverall: runnerLeg.timeBehindOverall,
+				timeBehindSuperman: runnerLeg.timeBehindSuperman,
+				timeLoss: runnerLeg.timeLoss,
+				routechoiceTimeLoss: 0
+			});
 
 			runnerLegIndex++;
 		}
-
-		runnerIndex++;
 	}
+
+	await db.insert(runnerTable).values(runnersToInsert).run();
+	await db.insert(runnerLegTable).values(runnersLegsToInsert).run();
 }
