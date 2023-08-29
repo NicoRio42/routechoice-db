@@ -23,12 +23,16 @@ export function matchRunnersByName(
 		key: string;
 	}[] = runnersForMatching.map((r) => ({
 		...r,
-		name: replaceAll(r.name, /\s\s+/g, ' ').split(' ').map(trimToLowerCaseRemoveAccents)
+		name: replaceAll(r.name, /\s\s+/g, ' ')
+			.split(' ')
+			.flatMap((name) => name.split('-'))
+			.map(trimToLowerCaseRemoveAccents)
 	}));
 
 	clonedRunners.forEach((runner) => {
 		const standardizedRunnerName = [runner.firstName, runner.lastName]
 			.flatMap((name) => replaceAll(name, /\s\s+/g, ' ').split(' '))
+			.flatMap((name) => name.split('-'))
 			.map(trimToLowerCaseRemoveAccents);
 
 		for (const runnerForMatching of standardizedRunnersForMatching) {
