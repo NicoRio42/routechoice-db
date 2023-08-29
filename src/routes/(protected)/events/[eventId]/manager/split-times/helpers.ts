@@ -71,13 +71,10 @@ export async function parseAndInsertSplitTimesFromIofXml3File(
 			});
 	});
 
-	console.log('BEFORE COMPUTE');
-
 	const runnersToInsert: RunnerInsert[] = [];
 	const runnersLegsToInsert: RunnerLegInsert[] = [];
 
 	for (const runner of runners) {
-		console.log(runner.firstName);
 		runnersToInsert.push({
 			id: runner.id,
 			firstName: runner.firstName,
@@ -95,7 +92,7 @@ export async function parseAndInsertSplitTimesFromIofXml3File(
 		let runnerLegIndex = 0;
 
 		for (const runnerLeg of runner.legs) {
-			if (runnerLeg === null) return;
+			if (runnerLeg === null) continue;
 			const leg = legs[runnerLegIndex];
 
 			runnersLegsToInsert.push({
@@ -117,7 +114,6 @@ export async function parseAndInsertSplitTimesFromIofXml3File(
 		}
 	}
 
-	// Not logging, don't know why
 	console.log('RUNNERS', runnersToInsert.length);
 	console.log('RUNNERS LEGS', runnersLegsToInsert.length);
 
