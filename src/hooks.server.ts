@@ -31,6 +31,7 @@ export const handle: Handle = async ({ event, resolve }) => {
 		drizzleClient = drizzle(libsqlClient, { schema });
 	}
 
+	event.locals.libsqlClient = libsqlClient;
 	event.locals.db = drizzleClient;
 	const auth = getAuth(libsqlClient);
 	event.locals.auth = auth;

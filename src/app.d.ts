@@ -2,6 +2,7 @@
 
 import type * as schema from '$lib/server/db/schema.js';
 import type { LibSQLDatabase } from 'drizzle-orm/libsql';
+import { type Client } from '@libsql/client/web';
 
 // for information about these interfaces
 declare global {
@@ -10,6 +11,7 @@ declare global {
 			authRequest: import('lucia').AuthRequest<Lucia.Auth>;
 			db: LibSQLDatabase<typeof schema>;
 			auth: Lucia.Auth;
+			libsqlClient: Client;
 		}
 	}
 }

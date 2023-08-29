@@ -1,5 +1,5 @@
 import type * as schema from '$lib/server/db/schema.js';
-import type { RunnerInsert, RunnerLegInsert } from '$lib/server/db/schema.js';
+import type { Runner, RunnerLeg } from '$lib/server/db/schema.js';
 import {
 	controlPoint as controlPointTable,
 	leg,
@@ -71,8 +71,9 @@ export async function parseAndInsertSplitTimesFromIofXml3File(
 			});
 	});
 
-	const runnersToInsert: RunnerInsert[] = [];
-	const runnersLegsToInsert: RunnerLegInsert[] = [];
+	const runnersToInsert: Omit<Runner, 'fkUser' | 'fkLiveEvent' | 'trackingDeviceId'>[] = [];
+	const runnersLegsToInsert: Omit<RunnerLeg, 'fkDetectedRoutechoice' | 'fkManualRoutechoice'>[] =
+		[];
 
 	for (const runner of runners) {
 		runnersToInsert.push({
@@ -113,9 +114,6 @@ export async function parseAndInsertSplitTimesFromIofXml3File(
 			runnerLegIndex++;
 		}
 	}
-
-	console.log('RUNNERS', runnersToInsert.length);
-	console.log('RUNNERS LEGS', runnersLegsToInsert.length);
 
 	await db.insert(runnerTable).values(runnersToInsert).run();
 	await db.insert(runnerLegTable).values(runnersLegsToInsert).run();

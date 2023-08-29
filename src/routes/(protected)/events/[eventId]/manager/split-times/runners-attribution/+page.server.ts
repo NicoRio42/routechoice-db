@@ -21,6 +21,7 @@ import { and, eq } from 'drizzle-orm';
 import { loggatorEventSchema } from 'orienteering-js/models';
 import { matchRunnersByName } from './helpers.js';
 import { redirectIfNotAdmin } from '$lib/server/auth/helpers.js';
+import type { InArgs, InStatement } from '@libsql/client';
 
 export async function load({ params: { eventId }, locals, fetch }) {
 	const session = await locals.authRequest.validate();
@@ -204,37 +205,46 @@ export const actions = {
 
 		const routechoicesStatistics = createRoutechoiceStatistics(runnersWithDetectedRoutechoices);
 
-		await locals.db.transaction(async (tx) => {
-			for (const runner of runnersWithDetectedRoutechoices) {
-				await tx
-					.update(runnerTable)
-					.set({
-						fkLiveEvent: runner.fkLiveEvent,
-						trackingDeviceId: runner.trackingDeviceId,
-						fkUser: runner.fkUser
-					})
-					.where(eq(runnerTable.id, runner.id))
-					.run();
+		// Temporary fix to prevent usuing too many http sub requests
+		const statements: InStatement[] = [];
 
-				for (const runnerLeg of runner.legs) {
-					if (runnerLeg === null || !runnerLeg.fkDetectedRoutechoice) continue;
+		for (const runner of runnersWithDetectedRoutechoices) {
+			const { sql, params } = locals.db
+				.update(runnerTable)
+				.set({
+					fkLiveEvent: runner.fkLiveEvent,
+					trackingDeviceId: runner.trackingDeviceId,
+					fkUser: runner.fkUser
+				})
+				.where(eq(runnerTable.id, runner.id))
+				.toSQL();
 
-					await tx
-						.update(runnerLegTable)
-						.set({ fkDetectedRoutechoice: runnerLeg.fkDetectedRoutechoice })
-						.where(eq(runnerLegTable.id, runnerLeg.id))
-						.run();
-				}
+			statements.push({ sql, args: params as any as InArgs });
+
+			for (const runnerLeg of runner.legs) {
+				if (runnerLeg === null || !runnerLeg.fkDetectedRoutechoice) continue;
+
+				const { sql, params } = locals.db
+					.update(runnerLegTable)
+					.set({ fkDetectedRoutechoice: runnerLeg.fkDetectedRoutechoice })
+					.where(eq(runnerLegTable.id, runnerLeg.id))
+					.toSQL();
+
+				statements.push({ sql, args: params as any as InArgs });
 			}
+		}
 
-			for (const { bestTime, numberOfRunners, fkRoutechoice } of routechoicesStatistics) {
-				await tx
-					.update(routechoiceStatisticsTable)
-					.set({ bestTime, numberOfRunners })
-					.where(eq(routechoiceStatisticsTable.fkRoutechoice, fkRoutechoice))
-					.run();
-			}
-		});
+		for (const { bestTime, numberOfRunners, fkRoutechoice } of routechoicesStatistics) {
+			const { sql, params } = locals.db
+				.update(routechoiceStatisticsTable)
+				.set({ bestTime, numberOfRunners })
+				.where(eq(routechoiceStatisticsTable.fkRoutechoice, fkRoutechoice))
+				.toSQL();
+
+			statements.push({ sql, args: params as any as InArgs });
+		}
+
+		await locals.libsqlClient.batch(statements);
 
 		throw redirect(302, `/events/${eventId}`);
 	}

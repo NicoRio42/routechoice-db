@@ -29,7 +29,6 @@
 	import { eventName } from '../../_components/event-name-store.js';
 
 	export let data;
-	console.log(data.event.runners)
 
 	$eventName = data.event.name
 
