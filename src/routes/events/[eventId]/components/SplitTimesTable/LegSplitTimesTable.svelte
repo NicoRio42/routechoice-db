@@ -5,6 +5,8 @@
 	import type { Routechoice } from '$lib/server/db/schema.js';
 	import type { RunnerWithNullableLegsAndTrack } from '$lib/models/runner.model.js';
 	import { addAlpha } from '$lib/helpers.js';
+	import { page } from '$app/stores';
+	import { RolesEnum } from '$lib/models/enums/roles.enum.js';
 
 	export let selectedRunners: string[];
 	export let sortedRunnersWithOneLeg: RunnerWithNullableLegsAndTrack[];
@@ -117,6 +119,28 @@
 					>
 				</td>
 			{/if} -->
+		</tr>
+	{:else}
+		<tr>
+			<td colspan="4" class="text-8 text-center border-none">				
+				{#if $page.data.event.legs.length === 0}
+					<p class="mt-8">
+						No course yet.
+					</p>
+					
+					{#if $page.data.user?.role === RolesEnum.Enum.admin}
+						<a href="/events/{$page.data.event.id}/manager/course-and-routechoices" class="text-6">Add course and routechoices</a>
+					{/if}
+				{:else}
+					<p class="mt-8">
+						No split times yet.
+					</p>
+					
+					{#if $page.data.user?.role === RolesEnum.Enum.admin}
+						<a href="/events/{$page.data.event.id}/manager/split-times" class="text-6">Add split times</a>
+					{/if}
+				{/if}
+			</td>
 		</tr>
 	{/each}
 	<tbody />

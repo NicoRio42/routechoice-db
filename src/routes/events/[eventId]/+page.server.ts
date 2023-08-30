@@ -1,6 +1,6 @@
 import { getEventMap, getRunnersWithTracksAndSortedLegs, sortLegs } from '$lib/helpers.js';
 import { event as eventTable } from '$lib/server/db/schema.js';
-import { error } from '@sveltejs/kit';
+import { error, redirect } from '@sveltejs/kit';
 import { eq } from 'drizzle-orm';
 
 export async function load({ params: { eventId }, locals, fetch }) {
@@ -17,6 +17,10 @@ export async function load({ params: { eventId }, locals, fetch }) {
 	});
 
 	if (event === undefined) throw error(404, 'Event not found');
+
+	if (new Date().getTime() < event.publishTime.getTime()) {
+		throw redirect(302, `/events/${eventId}/not-started`);
+	}
 
 	const eventWithSortedLegs = { ...event, legs: sortLegs(event.legs) };
 

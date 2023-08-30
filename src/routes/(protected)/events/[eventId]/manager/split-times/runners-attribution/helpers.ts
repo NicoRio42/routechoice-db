@@ -44,8 +44,8 @@ export function matchRunnersByName(
 				break;
 			}
 
-			const routeNumberOfInitiuals = getNumberOfInitiuals(runnerForMatching.name);
-			const runnerNumberOfInitiuals = getNumberOfInitiuals(standardizedRunnerName);
+			const routeNumberOfInitiuals = getNumberOfInitials(runnerForMatching.name);
+			const runnerNumberOfInitiuals = getNumberOfInitials(standardizedRunnerName);
 
 			if (
 				!(
@@ -106,7 +106,7 @@ export function matchRunnersByName(
 	return clonedRunners;
 }
 
-function getNumberOfInitiuals(name: string[]): number {
+function getNumberOfInitials(name: string[]): number {
 	return name.reduce((previous, current) => (current.length === 1 ? previous + 1 : previous), 0);
 }
 

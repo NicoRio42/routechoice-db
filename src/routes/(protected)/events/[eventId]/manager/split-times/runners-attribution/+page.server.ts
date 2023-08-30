@@ -16,7 +16,7 @@ import {
 	runner as runnerTable,
 	user as userTable
 } from '$lib/server/db/schema.js';
-import { error, redirect } from '@sveltejs/kit';
+import { error, fail, redirect } from '@sveltejs/kit';
 import { and, eq } from 'drizzle-orm';
 import { loggatorEventSchema } from 'orienteering-js/models';
 import { matchRunnersByName } from './helpers.js';
@@ -41,7 +41,9 @@ export async function load({ params: { eventId }, locals, fetch }) {
 			.select({ id: userTable.id, firstName: userTable.firstName, lastName: userTable.lastName })
 			.from(userTable)
 			.all()
-	).map((u) => ({ ...u, name: `${u.firstName} ${u.lastName}` }));
+	)
+		.map((u) => ({ ...u, name: `${u.firstName} ${u.lastName}` }))
+		.sort((a, b) => a.name.localeCompare(b.name));
 
 	let competitors: {
 		deviceId: number;
@@ -59,7 +61,9 @@ export async function load({ params: { eventId }, locals, fetch }) {
 				: await fetch(loggatorEventUrl);
 
 		const loggatorEvent = loggatorEventSchema.parse(await response.json());
-		competitors = loggatorEvent.competitors.map((c) => ({ deviceId: c.device_id, name: c.name }));
+		competitors = loggatorEvent.competitors
+			.map((c) => ({ deviceId: c.device_id, name: c.name }))
+			.sort((a, b) => a.name.localeCompare(b.name));
 	} catch (e) {
 		console.error(e);
 		throw error(500);
@@ -156,6 +160,23 @@ export const actions = {
 				} else {
 					runnersFormData[runnerId] = { ...runnersFormData[runnerId], userId };
 				}
+			}
+		}
+
+		for (const [runnerId, { trackingDeviceId, userId }] of Object.entries(runnersFormData)) {
+			const runnersFormDataClone = { ...runnersFormData };
+			delete runnersFormDataClone[runnerId];
+			const runnersFormDataValues = Object.values(runnersFormDataClone);
+
+			if (
+				trackingDeviceId !== null &&
+				runnersFormDataValues.some((r) => r.trackingDeviceId === trackingDeviceId)
+			) {
+				return fail(400, { error: { runnerId, code: 'SAME_TRACKING_DEVICE_ID' } } as const);
+			}
+
+			if (userId !== null && runnersFormDataValues.some((r) => r.userId === userId)) {
+				return fail(400, { error: { runnerId, code: 'SAME_USER_ID' } } as const);
 			}
 		}
 
