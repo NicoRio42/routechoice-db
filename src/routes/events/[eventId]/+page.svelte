@@ -27,6 +27,7 @@
 	import type { DrawEvent } from 'ol/interaction/Draw.js';
 	import { RolesEnum } from '$lib/models/enums/roles.enum.js';
 	import { eventName } from '../../_components/event-name-store.js';
+	import ManageRoutechoicesDialog from './components/ManageRoutechoicesDialog.svelte';
 
 	export let data;
 
@@ -39,8 +40,10 @@
 	let isAutoAnalysisMode = false;
 	let currentDrawnRoutechoice: null | LineString = null;
 	let showAddRoutechoiceDialog = false;
+	let showManageRoutechoicesDialog = false;
+	let isDrawingNewRoutechoice = false;
 
-	$: mode = getModeFromSearchParams($page.url.searchParams);
+	// $: mode = getModeFromSearchParams($page.url.searchParams);
 	$: legNumber = getLegNumberFromSearchParams($page.url.searchParams);
 	$: legRoutechoices = data.event.legs[legNumber - 1]?.routechoices ?? [];
 
@@ -112,19 +115,25 @@
 	onDestroy(() => $eventName = null)
 </script>
 
+<ManageRoutechoicesDialog
+	routechoices={data.event.legs[legNumber - 1].routechoices}
+	eventId={data.event.id}
+	bind:show={showManageRoutechoicesDialog}
+	on:startDrawingNewRoutechoice={() => isDrawingNewRoutechoice = true}
+/>
+	
 <div class="wrapper">
 	{#if data.user?.role === RolesEnum.Enum.admin}
-		<a
-			href={mode === ModesEnum.ANALYSIS ? addSearchParamsToURL($page.url, 'mode', ModesEnum.DRAW) : deleteSearchParamsToURL($page.url, "mode")}
-			role="button"
+		<button
+			on:click={() => showManageRoutechoicesDialog = !showManageRoutechoicesDialog}
 			class="hidden btn-unset absolute top-25 right-2 z-1 bg-white text-black w-6 h-6 sm:flex items-center justify-center"
 		>
-			{#if mode === ModesEnum.ANALYSIS }
-				<i class="block i-carbon-edit"></i>
-			{:else}
+			{#if showManageRoutechoicesDialog }
 				<i class="block i-carbon-edit-off"></i>
+			{:else}
+				<i class="block i-carbon-edit"></i>
 			{/if}
-		</a>
+		</button>
 	{/if}
 
 	{#if showAddRoutechoiceDialog && currentDrawnRoutechoice !== null}
@@ -148,8 +157,8 @@
 		on:changeRunnerTimeOffset={handleRunnerTimeOffsetChange}
 	/>
 
-	<OlMap {mode} {angle} {fitBox} padding={[100, 0, 100, 0]}>
-		{#if mode === ModesEnum.DRAW}
+	<OlMap {isDrawingNewRoutechoice} {angle} {fitBox} padding={[100, 0, 100, 0]}>
+		{#if isDrawingNewRoutechoice}
 			<Draw type={'LineString'} on:drawEnd={handleDrawEnd} />
 		{/if}
 

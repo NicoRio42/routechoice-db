@@ -39,7 +39,7 @@
 
 <dialog open transition:fade>
 	<article>
-		<form method="post" action="/events/{$event.id}/legs/{leg.id}/routechoices?/add">
+		<form method="post" action="/events/{$event.id}/legs/{leg.id}/routechoices?/add" class="min-w-75">
 			<label for="name">
 				Name
 
@@ -62,24 +62,11 @@
 				value={JSON.stringify(currentDrawnRoutechoice.getCoordinates())}
 			/>
 
-			<footer>
-				<button type="button" class="outline" on:click={() => dispatchCancel('cancel')}
-					>Cancel</button
-				>
-
-				<button type="submit">Add Routechoice</button>
-			</footer>
+			<button type="submit">Add Routechoice</button>
+			
+			<button type="button" class="outline" on:click={() => dispatchCancel('cancel')}>
+				Cancel
+			</button>
 		</form>
 	</article>
 </dialog>
-
-<style>
-	footer {
-		display: flex;
-		gap: 1rem;
-	}
-
-	footer button {
-		width: fit-content;
-	}
-</style>

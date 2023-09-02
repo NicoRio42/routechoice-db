@@ -1,14 +1,13 @@
 <script lang="ts">
 	import { Map, View } from 'ol';
+	import DoubleClickZoom from 'ol/interaction/DoubleClickZoom.js';
 	import 'ol/ol.css';
 	import { onDestroy, onMount, setContext } from 'svelte';
-	import DoubleClickZoom from 'ol/interaction/DoubleClickZoom.js';
-	import { ModesEnum } from '../models/modes.enum.js';
 
 	export let angle: number;
 	export let fitBox: [number, number, number, number];
 	export let padding: [number, number, number, number];
-	export let mode: ModesEnum;
+	export let isDrawingNewRoutechoice: boolean;
 
 	let map: Map;
 	let view: View;
@@ -40,7 +39,7 @@
 	});
 </script>
 
-<div id="mapviewer" class="map" style:cursor={mode === ModesEnum.DRAW ? 'crosshair' : 'auto'} />
+<div id="mapviewer" class="map" style:cursor={isDrawingNewRoutechoice ? 'crosshair' : 'auto'} />
 
 {#if map}
 	<slot />
