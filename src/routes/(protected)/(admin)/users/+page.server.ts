@@ -1,6 +1,7 @@
 import { redirectIfNotAdmin } from '$lib/server/auth/helpers.js';
 import { user as userTable } from '$lib/server/db/schema.js';
 import { redirect } from '@sveltejs/kit';
+import { asc } from 'drizzle-orm';
 
 export async function load({ locals }) {
 	const session = await locals.authRequest.validate();
@@ -20,6 +21,7 @@ export async function load({ locals }) {
 			passwordExpired: userTable.passwordExpired
 		})
 		.from(userTable)
+		.orderBy(asc(userTable.lastName), asc(userTable.firstName))
 		.all();
 
 	return { users };

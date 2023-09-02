@@ -21,8 +21,8 @@
 		<table>
 			<thead>
 				<tr>
-					<th>First name</th>
 					<th>Last name</th>
+					<th>First name</th>
 					<th>Email</th>
 					<th>Role</th>
 					<th>Email verified</th>
@@ -35,8 +35,8 @@
 			<tbody>
 				{#each data.users as user}
 					<tr>
-						<td>{user.firstName}</td>
 						<td>{user.lastName}</td>
+						<td>{user.firstName}</td>
 						<td>{user.email}</td>
 						<td>{user.role}</td>
 						<td>{user.emailVerified ? 'Yes' : 'No'}</td>
