@@ -21,11 +21,15 @@ export async function parseAndInsertSplitTimesFromIofXml3File(
 	const parser = new DOMParser();
 	const splitTimesDoc = parser.parseFromString(splitTimesRaw, 'text/xml');
 
-	const runners = parseIOFXML3SplitTimesFile(
+	const [runners, runnersError] = parseIOFXML3SplitTimesFile(
 		splitTimesDoc as any as XMLDocument,
 		classNameOrId,
 		timezone
 	);
+
+	if (runnersError !== null) {
+		return runnersError;
+	}
 
 	const rawLegs = await db
 		.select({
@@ -90,9 +94,9 @@ export async function parseAndInsertSplitTimesFromIofXml3File(
 			totalTimeLost: runner.totalTimeLost
 		});
 
-		let runnerLegIndex = 0;
+		for (let runnerLegIndex = 0; runnerLegIndex < runner.legs.length; runnerLegIndex++) {
+			const runnerLeg = runner.legs[runnerLegIndex];
 
-		for (const runnerLeg of runner.legs) {
 			if (runnerLeg === null) continue;
 			const leg = legs[runnerLegIndex];
 
@@ -110,8 +114,6 @@ export async function parseAndInsertSplitTimesFromIofXml3File(
 				timeLoss: runnerLeg.timeLoss,
 				routechoiceTimeLoss: 0
 			});
-
-			runnerLegIndex++;
 		}
 	}
 

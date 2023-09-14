@@ -24,8 +24,8 @@ dependencies:
     specifier: ^7.4.0
     version: 7.4.0
   orienteering-js:
-    specifier: ^0.0.23
-    version: 0.0.23(zod@3.21.4)
+    specifier: ^0.0.26
+    version: 0.0.26(zod@3.21.4)
 
 devDependencies:
   '@iconify-json/carbon':
@@ -119,11 +119,11 @@ packages:
     resolution: {integrity: sha512-sAPXKvlJFVQB4cvmdGoUa9IAavzRrm7N2ctxdD1GuAEIOZu8BRrv2SUzquGXTpRDUa0sY7OkkVHqhi6ySMnMTg==}
     dev: true
 
-  /@babel/runtime@7.22.3:
-    resolution: {integrity: sha512-XsDuspWKLUsxwCp6r7EhsExHtYfbe5oAGQ19kqngTdCPUoPQzOPdUbD/pB9PJiwb2ptYKQDjSJT3R6dC+EPqfQ==}
+  /@babel/runtime@7.22.15:
+    resolution: {integrity: sha512-T0O+aa+4w0u06iNmapipJXMV4HoUir03hpx3/YqXXhu9xim3w+dVphjFWl1OH8NbZHw5Lbm9k45drDkgq2VNNA==}
     engines: {node: '>=6.9.0'}
     dependencies:
-      regenerator-runtime: 0.13.11
+      regenerator-runtime: 0.14.0
     dev: false
 
   /@cloudflare/kv-asset-handler@0.2.0:
@@ -2481,8 +2481,8 @@ packages:
       mime-types: 2.1.35
     dev: false
 
-  /fraction.js@4.2.0:
-    resolution: {integrity: sha512-MhLuK+2gUcnZe8ZHlaaINnQLl0xRIGRfcGk2yl8xoQAfHrSsL3rYu6FCmBdkdbhc9EPlwyGHewaRsvwRMJtAlA==}
+  /fraction.js@4.3.4:
+    resolution: {integrity: sha512-pwiTgt0Q7t+GHZA4yaLjObx4vXmmdcS0iSJ19o8d/goUGgItX9UZWKWNnLHehxviD8wU2IWRsnR8cD5+yOJP2Q==}
     dev: false
 
   /fs-constants@1.0.0:
@@ -2884,16 +2884,16 @@ packages:
     resolution: {integrity: sha512-f+NBjJJY4T3dHtlEz1wCG7YFlkODEjFIYlxDdLIDMNpkSksqTt+l/d4rjuwItxuzkuMFvPyrjzV2lxRM4ePcIA==}
     dev: false
 
-  /mathjs@11.8.0:
-    resolution: {integrity: sha512-I7r8HCoqUGyEiHQdeOCF2m2k9N+tcOHO3cZQ3tyJkMMBQMFqMR7dMQEboBMJAiFW2Um3PEItGPwcOc4P6KRqwg==}
+  /mathjs@11.11.0:
+    resolution: {integrity: sha512-i1Ao/tv1mlNd09XlOMOUu3KMySX3S0jhHNfDPzh0sCnPf1i62x6RjxhLwZ9ytmVSs0OdhF3moI4O84VSEjmUFw==}
     engines: {node: '>= 14'}
     hasBin: true
     dependencies:
-      '@babel/runtime': 7.22.3
+      '@babel/runtime': 7.22.15
       complex.js: 2.1.1
       decimal.js: 10.4.3
       escape-latex: 1.2.0
-      fraction.js: 4.2.0
+      fraction.js: 4.3.4
       javascript-natural-sort: 0.7.1
       seedrandom: 3.0.5
       tiny-emitter: 2.1.0
@@ -3159,12 +3159,12 @@ packages:
       word-wrap: 1.2.3
     dev: true
 
-  /orienteering-js@0.0.23(zod@3.21.4):
-    resolution: {integrity: sha512-S6TmwDRdntx2mJHhvq7Syp20syVopHC3TRODPnjTKRjuafY2IabEhuPeyuKgNWlkQzBrf6M3CbawaixRaXnUNQ==}
+  /orienteering-js@0.0.26(zod@3.21.4):
+    resolution: {integrity: sha512-0DQMwl0azR698HwpGS21Nl5xQ7sfy0zPK9pmJtpBbgrAqzGWL+ivbAQtyb06k++n3BhTrmtZQgQWPYGfyBKrGA==}
     peerDependencies:
       zod: ^3.21.4
     dependencies:
-      mathjs: 11.8.0
+      mathjs: 11.11.0
       zod: 3.21.4
     dev: false
 
@@ -3416,8 +3416,8 @@ packages:
       picomatch: 2.3.1
     dev: true
 
-  /regenerator-runtime@0.13.11:
-    resolution: {integrity: sha512-kY1AZVr2Ra+t+piVaJ4gxaFaReZVH40AKNo7UCX6W+dEwBo/2oZJzqfuN1qLq1oL45o56cPaTXELwrTh8Fpggg==}
+  /regenerator-runtime@0.14.0:
+    resolution: {integrity: sha512-srw17NI0TUWHuGa5CFGGmhfNIeja30WMBfbslPNhf6JrqQlLN5gcrvig1oqPxiVaXb0oW0XRKtH6Nngs5lKCIA==}
     dev: false
 
   /regexparam@2.0.1:

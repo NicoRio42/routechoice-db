@@ -50,6 +50,6 @@
 		"linkedom": "^0.14.26",
 		"lucia": "^2.0.0",
 		"ol": "^7.4.0",
-		"orienteering-js": "^0.0.23"
+		"orienteering-js": "^0.0.26"
 	}
 }
