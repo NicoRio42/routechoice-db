@@ -2,6 +2,7 @@ import type * as schema from '$lib/server/db/schema.js';
 import type { Runner, RunnerLeg } from '$lib/server/db/schema.js';
 import {
 	controlPoint as controlPointTable,
+	event as eventTable,
 	leg,
 	runnerLeg as runnerLegTable,
 	runner as runnerTable
@@ -9,7 +10,7 @@ import {
 import { eq, or } from 'drizzle-orm';
 import type { LibSQLDatabase } from 'drizzle-orm/libsql';
 import { DOMParser } from 'linkedom';
-import { parseIOFXML3SplitTimesFile } from 'orienteering-js/split-times';
+import { parseIofXmlSplitTimesFile } from 'orienteering-js/split-times';
 
 export async function parseAndInsertSplitTimesFromIofXml3File(
 	splitTimesRaw: string,
@@ -20,11 +21,13 @@ export async function parseAndInsertSplitTimesFromIofXml3File(
 ) {
 	const parser = new DOMParser();
 	const splitTimesDoc = parser.parseFromString(splitTimesRaw, 'text/xml');
+	const event = await db.select().from(eventTable).where(eq(eventTable.id, eventId)).get();
 
-	const [runners, runnersError] = parseIOFXML3SplitTimesFile(
+	const [runners, runnersError] = parseIofXmlSplitTimesFile(
 		splitTimesDoc as any as XMLDocument,
 		classNameOrId,
-		timezone
+		timezone,
+		event.publishTime.toISOString().split('T')[0]
 	);
 
 	if (runnersError !== null) {

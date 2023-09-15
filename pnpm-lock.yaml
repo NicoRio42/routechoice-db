@@ -24,8 +24,8 @@ dependencies:
     specifier: ^7.4.0
     version: 7.4.0
   orienteering-js:
-    specifier: ^0.0.26
-    version: 0.0.26(zod@3.21.4)
+    specifier: ^0.0.29
+    version: 0.0.29(zod@3.21.4)
 
 devDependencies:
   '@iconify-json/carbon':
@@ -3159,8 +3159,8 @@ packages:
       word-wrap: 1.2.3
     dev: true
 
-  /orienteering-js@0.0.26(zod@3.21.4):
-    resolution: {integrity: sha512-0DQMwl0azR698HwpGS21Nl5xQ7sfy0zPK9pmJtpBbgrAqzGWL+ivbAQtyb06k++n3BhTrmtZQgQWPYGfyBKrGA==}
+  /orienteering-js@0.0.29(zod@3.21.4):
+    resolution: {integrity: sha512-1ma5jU+ZwoUUwzEyf9JdUhKU7KnytTNGWB4bydQjn9ERKdG4AVWJP3KvWqzQW8lRmCTkS604Mbtof/TJRL50sQ==}
     peerDependencies:
       zod: ^3.21.4
     dependencies:

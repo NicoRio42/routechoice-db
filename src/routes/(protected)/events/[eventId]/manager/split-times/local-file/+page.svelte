@@ -43,25 +43,21 @@
 			if (resultListTag === null) return;
 			const IOFXMLVersion = resultListTag.getAttribute('iofVersion');
 
-			if (IOFXMLVersion !== '3.0') {
-				alert('Only IOF XML 3.0 split times files are supported yet.');
-				return;
-			}
-
 			classNames = Array.from(xmlDoc.querySelectorAll('ClassResult Class Name')).map(
 				(cl) => cl.textContent?.trim() ?? ''
 			);
 
+			if (classNames.length === 0) {
+				classNames = Array.from(xmlDoc.querySelectorAll('ClassResult ClassShortName')).map(
+				(cl) => cl.textContent?.trim() ?? ''
+			);
+			}
+
 			if (classNames.length > 0) $formStore.className = classNames[0];
-
-			const dateTag = xmlDoc.querySelector('Date');
-
-			if (dateTag === null || dateTag.textContent === null) return;
 
 			// Trying to guess the timezone
 			try {
-				const date = new Date(dateTag.textContent);
-				const timeZoneOffset = date.getTimezoneOffset();
+				const timeZoneOffset = data.event.startTime.getTimezoneOffset();
 
 				const foundTimeZone = timezones.find(
 					(tz) => tz.offsetInSeconds === -timeZoneOffset
@@ -78,7 +74,9 @@
 </script>
 
 <main class="container max-w-2xl">
-	<h1 class="mt-4 md:mt-15">Load split times from local IOF XML 3.0 file</h1>
+	<h1 class="mt-4 md:mt-15 mb-2" >Load split times from local IOF XML 3.0 file</h1>
+
+	<h3 class="font-normal">(IOF XML 2 support is experimental)</h3>
 
 	<p>
 		&#62;

@@ -1,0 +1,2536 @@
+<?xml version="1.0" encoding="UTF-8" standalone="no"?>
+<!DOCTYPE ResultList SYSTEM "IOFdata.dtd">
+<ResultList status="complete">
+<IOFVersion version="2.0.3"/>
+<ClassResult>
+<ClassShortName>Dames</ClassShortName>
+<PersonResult>
+<Person>
+<PersonId>9932</PersonId>
+<PersonName>
+<Family>BASSET</Family>
+<Given>Isia</Given>
+</PersonName>
+</Person>
+<Result>
+<StartTime>10:52:00</StartTime>
+<FinishTime>11:06:22</FinishTime>
+<Time>14:22</Time>
+<ResultPosition>1</ResultPosition>
+<CompetitorStatus value="OK"/>
+<SplitTime sequence="1">
+<ControlCode>101</ControlCode>
+<Time>0:31</Time>
+</SplitTime>
+<SplitTime sequence="2">
+<ControlCode>102</ControlCode>
+<Time>1:27</Time>
+</SplitTime>
+<SplitTime sequence="3">
+<ControlCode>106</ControlCode>
+<Time>3:38</Time>
+</SplitTime>
+<SplitTime sequence="4">
+<ControlCode>107</ControlCode>
+<Time>6:00</Time>
+</SplitTime>
+<SplitTime sequence="5">
+<ControlCode>108</ControlCode>
+<Time>6:37</Time>
+</SplitTime>
+<SplitTime sequence="6">
+<ControlCode>109</ControlCode>
+<Time>7:54</Time>
+</SplitTime>
+<SplitTime sequence="7">
+<ControlCode>110</ControlCode>
+<Time>8:15</Time>
+</SplitTime>
+<SplitTime sequence="8">
+<ControlCode>111</ControlCode>
+<Time>9:27</Time>
+</SplitTime>
+<SplitTime sequence="9">
+<ControlCode>112</ControlCode>
+<Time>10:07</Time>
+</SplitTime>
+<SplitTime sequence="10">
+<ControlCode>113</ControlCode>
+<Time>10:47</Time>
+</SplitTime>
+<SplitTime sequence="11">
+<ControlCode>114</ControlCode>
+<Time>11:21</Time>
+</SplitTime>
+<SplitTime sequence="12">
+<ControlCode>115</ControlCode>
+<Time>12:04</Time>
+</SplitTime>
+<SplitTime sequence="13">
+<ControlCode>116</ControlCode>
+<Time>13:29</Time>
+</SplitTime>
+<SplitTime sequence="14">
+<ControlCode>117</ControlCode>
+<Time>14:14</Time>
+</SplitTime>
+</Result>
+</PersonResult>
+<PersonResult>
+<Person>
+<PersonId>20408</PersonId>
+<PersonName>
+<Family>HANAUER</Family>
+<Given>Florence</Given>
+</PersonName>
+</Person>
+<Result>
+<StartTime>10:53:00</StartTime>
+<FinishTime>11:07:32</FinishTime>
+<Time>14:32</Time>
+<ResultPosition>2</ResultPosition>
+<CompetitorStatus value="OK"/>
+<SplitTime sequence="1">
+<ControlCode>101</ControlCode>
+<Time>0:32</Time>
+</SplitTime>
+<SplitTime sequence="2">
+<ControlCode>102</ControlCode>
+<Time>1:26</Time>
+</SplitTime>
+<SplitTime sequence="3">
+<ControlCode>106</ControlCode>
+<Time>3:37</Time>
+</SplitTime>
+<SplitTime sequence="4">
+<ControlCode>107</ControlCode>
+<Time>5:54</Time>
+</SplitTime>
+<SplitTime sequence="5">
+<ControlCode>108</ControlCode>
+<Time>6:31</Time>
+</SplitTime>
+<SplitTime sequence="6">
+<ControlCode>109</ControlCode>
+<Time>7:44</Time>
+</SplitTime>
+<SplitTime sequence="7">
+<ControlCode>110</ControlCode>
+<Time>8:07</Time>
+</SplitTime>
+<SplitTime sequence="8">
+<ControlCode>111</ControlCode>
+<Time>9:18</Time>
+</SplitTime>
+<SplitTime sequence="9">
+<ControlCode>112</ControlCode>
+<Time>9:59</Time>
+</SplitTime>
+<SplitTime sequence="10">
+<ControlCode>113</ControlCode>
+<Time>10:39</Time>
+</SplitTime>
+<SplitTime sequence="11">
+<ControlCode>114</ControlCode>
+<Time>11:15</Time>
+</SplitTime>
+<SplitTime sequence="12">
+<ControlCode>115</ControlCode>
+<Time>12:04</Time>
+</SplitTime>
+<SplitTime sequence="13">
+<ControlCode>116</ControlCode>
+<Time>13:40</Time>
+</SplitTime>
+<SplitTime sequence="14">
+<ControlCode>117</ControlCode>
+<Time>14:22</Time>
+</SplitTime>
+</Result>
+</PersonResult>
+<PersonResult>
+<Person>
+<PersonId>16817</PersonId>
+<PersonName>
+<Family>CALANDRY</Family>
+<Given>Cécile</Given>
+</PersonName>
+</Person>
+<Result>
+<StartTime>10:51:00</StartTime>
+<FinishTime>11:05:44</FinishTime>
+<Time>14:44</Time>
+<ResultPosition>3</ResultPosition>
+<CompetitorStatus value="OK"/>
+<SplitTime sequence="1">
+<ControlCode>101</ControlCode>
+<Time>0:33</Time>
+</SplitTime>
+<SplitTime sequence="2">
+<ControlCode>102</ControlCode>
+<Time>1:26</Time>
+</SplitTime>
+<SplitTime sequence="3">
+<ControlCode>106</ControlCode>
+<Time>3:39</Time>
+</SplitTime>
+<SplitTime sequence="4">
+<ControlCode>107</ControlCode>
+<Time>6:10</Time>
+</SplitTime>
+<SplitTime sequence="5">
+<ControlCode>108</ControlCode>
+<Time>6:44</Time>
+</SplitTime>
+<SplitTime sequence="6">
+<ControlCode>109</ControlCode>
+<Time>8:06</Time>
+</SplitTime>
+<SplitTime sequence="7">
+<ControlCode>110</ControlCode>
+<Time>8:28</Time>
+</SplitTime>
+<SplitTime sequence="8">
+<ControlCode>111</ControlCode>
+<Time>9:38</Time>
+</SplitTime>
+<SplitTime sequence="9">
+<ControlCode>112</ControlCode>
+<Time>10:18</Time>
+</SplitTime>
+<SplitTime sequence="10">
+<ControlCode>113</ControlCode>
+<Time>10:59</Time>
+</SplitTime>
+<SplitTime sequence="11">
+<ControlCode>114</ControlCode>
+<Time>11:35</Time>
+</SplitTime>
+<SplitTime sequence="12">
+<ControlCode>115</ControlCode>
+<Time>12:21</Time>
+</SplitTime>
+<SplitTime sequence="13">
+<ControlCode>116</ControlCode>
+<Time>13:51</Time>
+</SplitTime>
+<SplitTime sequence="14">
+<ControlCode>117</ControlCode>
+<Time>14:35</Time>
+</SplitTime>
+</Result>
+</PersonResult>
+<PersonResult>
+<Person>
+<PersonId>21076</PersonId>
+<PersonName>
+<Family>DELENNE</Family>
+<Given>Annabelle</Given>
+</PersonName>
+</Person>
+<Result>
+<StartTime>10:58:01</StartTime>
+<FinishTime>11:13:02</FinishTime>
+<Time>15:01</Time>
+<ResultPosition>4</ResultPosition>
+<CompetitorStatus value="OK"/>
+<SplitTime sequence="1">
+<ControlCode>101</ControlCode>
+<Time>0:33</Time>
+</SplitTime>
+<SplitTime sequence="2">
+<ControlCode>102</ControlCode>
+<Time>1:30</Time>
+</SplitTime>
+<SplitTime sequence="3">
+<ControlCode>106</ControlCode>
+<Time>3:46</Time>
+</SplitTime>
+<SplitTime sequence="4">
+<ControlCode>107</ControlCode>
+<Time>6:18</Time>
+</SplitTime>
+<SplitTime sequence="5">
+<ControlCode>108</ControlCode>
+<Time>6:57</Time>
+</SplitTime>
+<SplitTime sequence="6">
+<ControlCode>109</ControlCode>
+<Time>8:15</Time>
+</SplitTime>
+<SplitTime sequence="7">
+<ControlCode>110</ControlCode>
+<Time>8:38</Time>
+</SplitTime>
+<SplitTime sequence="8">
+<ControlCode>111</ControlCode>
+<Time>9:53</Time>
+</SplitTime>
+<SplitTime sequence="9">
+<ControlCode>112</ControlCode>
+<Time>10:36</Time>
+</SplitTime>
+<SplitTime sequence="10">
+<ControlCode>113</ControlCode>
+<Time>11:15</Time>
+</SplitTime>
+<SplitTime sequence="11">
+<ControlCode>114</ControlCode>
+<Time>11:51</Time>
+</SplitTime>
+<SplitTime sequence="12">
+<ControlCode>115</ControlCode>
+<Time>12:36</Time>
+</SplitTime>
+<SplitTime sequence="13">
+<ControlCode>116</ControlCode>
+<Time>14:06</Time>
+</SplitTime>
+<SplitTime sequence="14">
+<ControlCode>117</ControlCode>
+<Time>14:53</Time>
+</SplitTime>
+</Result>
+</PersonResult>
+<PersonResult>
+<Person>
+<PersonId>12398</PersonId>
+<PersonName>
+<Family>BASSET</Family>
+<Given>Juliette</Given>
+</PersonName>
+</Person>
+<Result>
+<StartTime>10:56:00</StartTime>
+<FinishTime>11:11:05</FinishTime>
+<Time>15:05</Time>
+<ResultPosition>5</ResultPosition>
+<CompetitorStatus value="OK"/>
+<SplitTime sequence="1">
+<ControlCode>101</ControlCode>
+<Time>0:34</Time>
+</SplitTime>
+<SplitTime sequence="2">
+<ControlCode>102</ControlCode>
+<Time>1:32</Time>
+</SplitTime>
+<SplitTime sequence="3">
+<ControlCode>106</ControlCode>
+<Time>3:53</Time>
+</SplitTime>
+<SplitTime sequence="4">
+<ControlCode>107</ControlCode>
+<Time>6:23</Time>
+</SplitTime>
+<SplitTime sequence="5">
+<ControlCode>108</ControlCode>
+<Time>7:01</Time>
+</SplitTime>
+<SplitTime sequence="6">
+<ControlCode>109</ControlCode>
+<Time>8:19</Time>
+</SplitTime>
+<SplitTime sequence="7">
+<ControlCode>110</ControlCode>
+<Time>8:41</Time>
+</SplitTime>
+<SplitTime sequence="8">
+<ControlCode>111</ControlCode>
+<Time>9:52</Time>
+</SplitTime>
+<SplitTime sequence="9">
+<ControlCode>112</ControlCode>
+<Time>10:34</Time>
+</SplitTime>
+<SplitTime sequence="10">
+<ControlCode>113</ControlCode>
+<Time>11:16</Time>
+</SplitTime>
+<SplitTime sequence="11">
+<ControlCode>114</ControlCode>
+<Time>11:53</Time>
+</SplitTime>
+<SplitTime sequence="12">
+<ControlCode>115</ControlCode>
+<Time>12:38</Time>
+</SplitTime>
+<SplitTime sequence="13">
+<ControlCode>116</ControlCode>
+<Time>14:08</Time>
+</SplitTime>
+<SplitTime sequence="14">
+<ControlCode>117</ControlCode>
+<Time>14:55</Time>
+</SplitTime>
+</Result>
+</PersonResult>
+<PersonResult>
+<Person>
+<PersonId>12709</PersonId>
+<PersonName>
+<Family>BEAUVIR</Family>
+<Given>Maëlle</Given>
+</PersonName>
+</Person>
+<Result>
+<StartTime>10:54:00</StartTime>
+<FinishTime>11:09:05</FinishTime>
+<Time>15:05</Time>
+<ResultPosition>5</ResultPosition>
+<CompetitorStatus value="OK"/>
+<SplitTime sequence="1">
+<ControlCode>101</ControlCode>
+<Time>0:35</Time>
+</SplitTime>
+<SplitTime sequence="2">
+<ControlCode>102</ControlCode>
+<Time>1:34</Time>
+</SplitTime>
+<SplitTime sequence="3">
+<ControlCode>106</ControlCode>
+<Time>3:49</Time>
+</SplitTime>
+<SplitTime sequence="4">
+<ControlCode>107</ControlCode>
+<Time>6:18</Time>
+</SplitTime>
+<SplitTime sequence="5">
+<ControlCode>108</ControlCode>
+<Time>6:58</Time>
+</SplitTime>
+<SplitTime sequence="6">
+<ControlCode>109</ControlCode>
+<Time>8:16</Time>
+</SplitTime>
+<SplitTime sequence="7">
+<ControlCode>110</ControlCode>
+<Time>8:39</Time>
+</SplitTime>
+<SplitTime sequence="8">
+<ControlCode>111</ControlCode>
+<Time>9:51</Time>
+</SplitTime>
+<SplitTime sequence="9">
+<ControlCode>112</ControlCode>
+<Time>10:33</Time>
+</SplitTime>
+<SplitTime sequence="10">
+<ControlCode>113</ControlCode>
+<Time>11:15</Time>
+</SplitTime>
+<SplitTime sequence="11">
+<ControlCode>114</ControlCode>
+<Time>11:52</Time>
+</SplitTime>
+<SplitTime sequence="12">
+<ControlCode>115</ControlCode>
+<Time>12:37</Time>
+</SplitTime>
+<SplitTime sequence="13">
+<ControlCode>116</ControlCode>
+<Time>14:13</Time>
+</SplitTime>
+<SplitTime sequence="14">
+<ControlCode>117</ControlCode>
+<Time>14:56</Time>
+</SplitTime>
+</Result>
+</PersonResult>
+<PersonResult>
+<Person>
+<PersonId>34682</PersonId>
+<PersonName>
+<Family>SMELIKOVA</Family>
+<Given>Tereza</Given>
+</PersonName>
+</Person>
+<Result>
+<StartTime>11:04:00</StartTime>
+<FinishTime>11:19:21</FinishTime>
+<Time>15:21</Time>
+<ResultPosition>7</ResultPosition>
+<CompetitorStatus value="OK"/>
+<SplitTime sequence="1">
+<ControlCode>101</ControlCode>
+<Time>0:36</Time>
+</SplitTime>
+<SplitTime sequence="2">
+<ControlCode>102</ControlCode>
+<Time>1:36</Time>
+</SplitTime>
+<SplitTime sequence="3">
+<ControlCode>106</ControlCode>
+<Time>3:56</Time>
+</SplitTime>
+<SplitTime sequence="4">
+<ControlCode>107</ControlCode>
+<Time>6:23</Time>
+</SplitTime>
+<SplitTime sequence="5">
+<ControlCode>108</ControlCode>
+<Time>7:03</Time>
+</SplitTime>
+<SplitTime sequence="6">
+<ControlCode>109</ControlCode>
+<Time>8:27</Time>
+</SplitTime>
+<SplitTime sequence="7">
+<ControlCode>110</ControlCode>
+<Time>8:48</Time>
+</SplitTime>
+<SplitTime sequence="8">
+<ControlCode>111</ControlCode>
+<Time>10:02</Time>
+</SplitTime>
+<SplitTime sequence="9">
+<ControlCode>112</ControlCode>
+<Time>10:44</Time>
+</SplitTime>
+<SplitTime sequence="10">
+<ControlCode>113</ControlCode>
+<Time>11:26</Time>
+</SplitTime>
+<SplitTime sequence="11">
+<ControlCode>114</ControlCode>
+<Time>12:04</Time>
+</SplitTime>
+<SplitTime sequence="12">
+<ControlCode>115</ControlCode>
+<Time>12:52</Time>
+</SplitTime>
+<SplitTime sequence="13">
+<ControlCode>116</ControlCode>
+<Time>14:26</Time>
+</SplitTime>
+<SplitTime sequence="14">
+<ControlCode>117</ControlCode>
+<Time>15:12</Time>
+</SplitTime>
+</Result>
+</PersonResult>
+<PersonResult>
+<Person>
+<PersonId>29850</PersonId>
+<PersonName>
+<Family>MOULET</Family>
+<Given>Tifenn</Given>
+</PersonName>
+</Person>
+<Result>
+<StartTime>10:55:02</StartTime>
+<FinishTime>11:10:50</FinishTime>
+<Time>15:48</Time>
+<ResultPosition>8</ResultPosition>
+<CompetitorStatus value="OK"/>
+<SplitTime sequence="1">
+<ControlCode>101</ControlCode>
+<Time>0:34</Time>
+</SplitTime>
+<SplitTime sequence="2">
+<ControlCode>102</ControlCode>
+<Time>1:34</Time>
+</SplitTime>
+<SplitTime sequence="3">
+<ControlCode>106</ControlCode>
+<Time>4:00</Time>
+</SplitTime>
+<SplitTime sequence="4">
+<ControlCode>107</ControlCode>
+<Time>6:35</Time>
+</SplitTime>
+<SplitTime sequence="5">
+<ControlCode>108</ControlCode>
+<Time>7:14</Time>
+</SplitTime>
+<SplitTime sequence="6">
+<ControlCode>109</ControlCode>
+<Time>8:38</Time>
+</SplitTime>
+<SplitTime sequence="7">
+<ControlCode>110</ControlCode>
+<Time>9:01</Time>
+</SplitTime>
+<SplitTime sequence="8">
+<ControlCode>111</ControlCode>
+<Time>10:19</Time>
+</SplitTime>
+<SplitTime sequence="9">
+<ControlCode>112</ControlCode>
+<Time>11:01</Time>
+</SplitTime>
+<SplitTime sequence="10">
+<ControlCode>113</ControlCode>
+<Time>11:45</Time>
+</SplitTime>
+<SplitTime sequence="11">
+<ControlCode>114</ControlCode>
+<Time>12:23</Time>
+</SplitTime>
+<SplitTime sequence="12">
+<ControlCode>115</ControlCode>
+<Time>13:14</Time>
+</SplitTime>
+<SplitTime sequence="13">
+<ControlCode>116</ControlCode>
+<Time>14:51</Time>
+</SplitTime>
+<SplitTime sequence="14">
+<ControlCode>117</ControlCode>
+<Time>15:38</Time>
+</SplitTime>
+</Result>
+</PersonResult>
+<PersonResult>
+<Person>
+<PersonId>18089</PersonId>
+<PersonName>
+<Family>DUDOIGNON</Family>
+<Given>Chloé</Given>
+</PersonName>
+</Person>
+<Result>
+<StartTime>10:57:01</StartTime>
+<FinishTime>11:13:12</FinishTime>
+<Time>16:11</Time>
+<ResultPosition>9</ResultPosition>
+<CompetitorStatus value="OK"/>
+<SplitTime sequence="1">
+<ControlCode>101</ControlCode>
+<Time>0:36</Time>
+</SplitTime>
+<SplitTime sequence="2">
+<ControlCode>102</ControlCode>
+<Time>1:42</Time>
+</SplitTime>
+<SplitTime sequence="3">
+<ControlCode>106</ControlCode>
+<Time>4:16</Time>
+</SplitTime>
+<SplitTime sequence="4">
+<ControlCode>107</ControlCode>
+<Time>6:51</Time>
+</SplitTime>
+<SplitTime sequence="5">
+<ControlCode>108</ControlCode>
+<Time>7:31</Time>
+</SplitTime>
+<SplitTime sequence="6">
+<ControlCode>109</ControlCode>
+<Time>8:56</Time>
+</SplitTime>
+<SplitTime sequence="7">
+<ControlCode>110</ControlCode>
+<Time>9:20</Time>
+</SplitTime>
+<SplitTime sequence="8">
+<ControlCode>111</ControlCode>
+<Time>10:42</Time>
+</SplitTime>
+<SplitTime sequence="9">
+<ControlCode>112</ControlCode>
+<Time>11:29</Time>
+</SplitTime>
+<SplitTime sequence="10">
+<ControlCode>113</ControlCode>
+<Time>12:10</Time>
+</SplitTime>
+<SplitTime sequence="11">
+<ControlCode>114</ControlCode>
+<Time>12:50</Time>
+</SplitTime>
+<SplitTime sequence="12">
+<ControlCode>115</ControlCode>
+<Time>13:37</Time>
+</SplitTime>
+<SplitTime sequence="13">
+<ControlCode>116</ControlCode>
+<Time>15:13</Time>
+</SplitTime>
+<SplitTime sequence="14">
+<ControlCode>117</ControlCode>
+<Time>16:02</Time>
+</SplitTime>
+</Result>
+</PersonResult>
+<PersonResult>
+<Person>
+<PersonId>15271</PersonId>
+<PersonName>
+<Family>PALCAU</Family>
+<Given>Alina</Given>
+</PersonName>
+</Person>
+<Result>
+<StartTime>10:59:01</StartTime>
+<FinishTime>11:15:23</FinishTime>
+<Time>16:22</Time>
+<ResultPosition>10</ResultPosition>
+<CompetitorStatus value="OK"/>
+<SplitTime sequence="1">
+<ControlCode>101</ControlCode>
+<Time>0:36</Time>
+</SplitTime>
+<SplitTime sequence="2">
+<ControlCode>102</ControlCode>
+<Time>1:38</Time>
+</SplitTime>
+<SplitTime sequence="3">
+<ControlCode>106</ControlCode>
+<Time>4:04</Time>
+</SplitTime>
+<SplitTime sequence="4">
+<ControlCode>107</ControlCode>
+<Time>6:44</Time>
+</SplitTime>
+<SplitTime sequence="5">
+<ControlCode>108</ControlCode>
+<Time>7:24</Time>
+</SplitTime>
+<SplitTime sequence="6">
+<ControlCode>109</ControlCode>
+<Time>8:57</Time>
+</SplitTime>
+<SplitTime sequence="7">
+<ControlCode>110</ControlCode>
+<Time>9:21</Time>
+</SplitTime>
+<SplitTime sequence="8">
+<ControlCode>111</ControlCode>
+<Time>10:45</Time>
+</SplitTime>
+<SplitTime sequence="9">
+<ControlCode>112</ControlCode>
+<Time>11:31</Time>
+</SplitTime>
+<SplitTime sequence="10">
+<ControlCode>113</ControlCode>
+<Time>12:16</Time>
+</SplitTime>
+<SplitTime sequence="11">
+<ControlCode>114</ControlCode>
+<Time>12:55</Time>
+</SplitTime>
+<SplitTime sequence="12">
+<ControlCode>115</ControlCode>
+<Time>13:48</Time>
+</SplitTime>
+<SplitTime sequence="13">
+<ControlCode>116</ControlCode>
+<Time>15:27</Time>
+</SplitTime>
+<SplitTime sequence="14">
+<ControlCode>117</ControlCode>
+<Time>16:13</Time>
+</SplitTime>
+</Result>
+</PersonResult>
+<PersonResult>
+<Person>
+<PersonId>43302</PersonId>
+<PersonName>
+<Family>DEWICKERE</Family>
+<Given>Danielle</Given>
+</PersonName>
+</Person>
+<Result>
+<StartTime>11:03:00</StartTime>
+<FinishTime>11:19:29</FinishTime>
+<Time>16:29</Time>
+<ResultPosition>11</ResultPosition>
+<CompetitorStatus value="OK"/>
+<SplitTime sequence="1">
+<ControlCode>101</ControlCode>
+<Time>0:40</Time>
+</SplitTime>
+<SplitTime sequence="2">
+<ControlCode>102</ControlCode>
+<Time>1:43</Time>
+</SplitTime>
+<SplitTime sequence="3">
+<ControlCode>106</ControlCode>
+<Time>4:21</Time>
+</SplitTime>
+<SplitTime sequence="4">
+<ControlCode>107</ControlCode>
+<Time>6:59</Time>
+</SplitTime>
+<SplitTime sequence="5">
+<ControlCode>108</ControlCode>
+<Time>7:40</Time>
+</SplitTime>
+<SplitTime sequence="6">
+<ControlCode>109</ControlCode>
+<Time>9:03</Time>
+</SplitTime>
+<SplitTime sequence="7">
+<ControlCode>110</ControlCode>
+<Time>9:27</Time>
+</SplitTime>
+<SplitTime sequence="8">
+<ControlCode>111</ControlCode>
+<Time>10:49</Time>
+</SplitTime>
+<SplitTime sequence="9">
+<ControlCode>112</ControlCode>
+<Time>11:37</Time>
+</SplitTime>
+<SplitTime sequence="10">
+<ControlCode>113</ControlCode>
+<Time>12:22</Time>
+</SplitTime>
+<SplitTime sequence="11">
+<ControlCode>114</ControlCode>
+<Time>13:04</Time>
+</SplitTime>
+<SplitTime sequence="12">
+<ControlCode>115</ControlCode>
+<Time>13:53</Time>
+</SplitTime>
+<SplitTime sequence="13">
+<ControlCode>116</ControlCode>
+<Time>15:34</Time>
+</SplitTime>
+<SplitTime sequence="14">
+<ControlCode>117</ControlCode>
+<Time>16:20</Time>
+</SplitTime>
+</Result>
+</PersonResult>
+<PersonResult>
+<Person>
+<PersonId>18699</PersonId>
+<PersonName>
+<Family>VILLAR</Family>
+<Given>Alix</Given>
+</PersonName>
+</Person>
+<Result>
+<StartTime>11:00:01</StartTime>
+<FinishTime>11:16:38</FinishTime>
+<Time>16:37</Time>
+<ResultPosition>12</ResultPosition>
+<CompetitorStatus value="OK"/>
+<SplitTime sequence="1">
+<ControlCode>101</ControlCode>
+<Time>0:35</Time>
+</SplitTime>
+<SplitTime sequence="2">
+<ControlCode>102</ControlCode>
+<Time>1:38</Time>
+</SplitTime>
+<SplitTime sequence="3">
+<ControlCode>106</ControlCode>
+<Time>4:12</Time>
+</SplitTime>
+<SplitTime sequence="4">
+<ControlCode>107</ControlCode>
+<Time>6:52</Time>
+</SplitTime>
+<SplitTime sequence="5">
+<ControlCode>108</ControlCode>
+<Time>7:33</Time>
+</SplitTime>
+<SplitTime sequence="6">
+<ControlCode>109</ControlCode>
+<Time>8:59</Time>
+</SplitTime>
+<SplitTime sequence="7">
+<ControlCode>110</ControlCode>
+<Time>9:21</Time>
+</SplitTime>
+<SplitTime sequence="8">
+<ControlCode>111</ControlCode>
+<Time>10:51</Time>
+</SplitTime>
+<SplitTime sequence="9">
+<ControlCode>112</ControlCode>
+<Time>11:38</Time>
+</SplitTime>
+<SplitTime sequence="10">
+<ControlCode>113</ControlCode>
+<Time>12:21</Time>
+</SplitTime>
+<SplitTime sequence="11">
+<ControlCode>114</ControlCode>
+<Time>13:04</Time>
+</SplitTime>
+<SplitTime sequence="12">
+<ControlCode>115</ControlCode>
+<Time>13:55</Time>
+</SplitTime>
+<SplitTime sequence="13">
+<ControlCode>116</ControlCode>
+<Time>15:42</Time>
+</SplitTime>
+<SplitTime sequence="14">
+<ControlCode>117</ControlCode>
+<Time>16:28</Time>
+</SplitTime>
+</Result>
+</PersonResult>
+<PersonResult>
+<Person>
+<PersonId>20030</PersonId>
+<PersonName>
+<Family>BODY</Family>
+<Given>Diane</Given>
+</PersonName>
+</Person>
+<Result>
+<StartTime>11:01:00</StartTime>
+<FinishTime>11:18:08</FinishTime>
+<Time>17:08</Time>
+<ResultPosition>13</ResultPosition>
+<CompetitorStatus value="OK"/>
+<SplitTime sequence="1">
+<ControlCode>101</ControlCode>
+<Time>0:36</Time>
+</SplitTime>
+<SplitTime sequence="2">
+<ControlCode>102</ControlCode>
+<Time>1:36</Time>
+</SplitTime>
+<SplitTime sequence="3">
+<ControlCode>106</ControlCode>
+<Time>4:08</Time>
+</SplitTime>
+<SplitTime sequence="4">
+<ControlCode>107</ControlCode>
+<Time>6:53</Time>
+</SplitTime>
+<SplitTime sequence="5">
+<ControlCode>108</ControlCode>
+<Time>7:37</Time>
+</SplitTime>
+<SplitTime sequence="6">
+<ControlCode>109</ControlCode>
+<Time>9:02</Time>
+</SplitTime>
+<SplitTime sequence="7">
+<ControlCode>110</ControlCode>
+<Time>9:26</Time>
+</SplitTime>
+<SplitTime sequence="8">
+<ControlCode>111</ControlCode>
+<Time>11:01</Time>
+</SplitTime>
+<SplitTime sequence="9">
+<ControlCode>112</ControlCode>
+<Time>11:48</Time>
+</SplitTime>
+<SplitTime sequence="10">
+<ControlCode>113</ControlCode>
+<Time>12:38</Time>
+</SplitTime>
+<SplitTime sequence="11">
+<ControlCode>114</ControlCode>
+<Time>13:22</Time>
+</SplitTime>
+<SplitTime sequence="12">
+<ControlCode>115</ControlCode>
+<Time>14:17</Time>
+</SplitTime>
+<SplitTime sequence="13">
+<ControlCode>116</ControlCode>
+<Time>16:02</Time>
+</SplitTime>
+<SplitTime sequence="14">
+<ControlCode>117</ControlCode>
+<Time>16:57</Time>
+</SplitTime>
+</Result>
+</PersonResult>
+</ClassResult>
+<ClassResult>
+<ClassShortName>Hommes</ClassShortName>
+<PersonResult>
+<Person>
+<PersonId>23838</PersonId>
+<PersonName>
+<Family>BARROS-VALLET</Family>
+<Given>Mathias</Given>
+</PersonName>
+</Person>
+<Result>
+<StartTime>10:42:00</StartTime>
+<FinishTime>10:55:38</FinishTime>
+<Time>13:38</Time>
+<ResultPosition>1</ResultPosition>
+<CompetitorStatus value="OK"/>
+<SplitTime sequence="1">
+<ControlCode>101</ControlCode>
+<Time>0:28</Time>
+</SplitTime>
+<SplitTime sequence="2">
+<ControlCode>102</ControlCode>
+<Time>1:13</Time>
+</SplitTime>
+<SplitTime sequence="3">
+<ControlCode>103</ControlCode>
+<Time>1:53</Time>
+</SplitTime>
+<SplitTime sequence="4">
+<ControlCode>104</ControlCode>
+<Time>2:03</Time>
+</SplitTime>
+<SplitTime sequence="5">
+<ControlCode>105</ControlCode>
+<Time>2:40</Time>
+</SplitTime>
+<SplitTime sequence="6">
+<ControlCode>106</ControlCode>
+<Time>4:39</Time>
+</SplitTime>
+<SplitTime sequence="7">
+<ControlCode>107</ControlCode>
+<Time>6:39</Time>
+</SplitTime>
+<SplitTime sequence="8">
+<ControlCode>108</ControlCode>
+<Time>7:09</Time>
+</SplitTime>
+<SplitTime sequence="9">
+<ControlCode>109</ControlCode>
+<Time>8:10</Time>
+</SplitTime>
+<SplitTime sequence="10">
+<ControlCode>110</ControlCode>
+<Time>8:28</Time>
+</SplitTime>
+<SplitTime sequence="11">
+<ControlCode>111</ControlCode>
+<Time>9:24</Time>
+</SplitTime>
+<SplitTime sequence="12">
+<ControlCode>112</ControlCode>
+<Time>10:02</Time>
+</SplitTime>
+<SplitTime sequence="13">
+<ControlCode>113</ControlCode>
+<Time>10:36</Time>
+</SplitTime>
+<SplitTime sequence="14">
+<ControlCode>114</ControlCode>
+<Time>11:06</Time>
+</SplitTime>
+<SplitTime sequence="15">
+<ControlCode>115</ControlCode>
+<Time>11:44</Time>
+</SplitTime>
+<SplitTime sequence="16">
+<ControlCode>116</ControlCode>
+<Time>12:53</Time>
+</SplitTime>
+<SplitTime sequence="17">
+<ControlCode>117</ControlCode>
+<Time>13:30</Time>
+</SplitTime>
+</Result>
+</PersonResult>
+<PersonResult>
+<Person>
+<PersonId>8976</PersonId>
+<PersonName>
+<Family>PERRIN</Family>
+<Given>Mathieu</Given>
+</PersonName>
+</Person>
+<Result>
+<StartTime>10:34:00</StartTime>
+<FinishTime>10:47:52</FinishTime>
+<Time>13:52</Time>
+<ResultPosition>2</ResultPosition>
+<CompetitorStatus value="OK"/>
+<SplitTime sequence="1">
+<ControlCode>101</ControlCode>
+<Time>0:29</Time>
+</SplitTime>
+<SplitTime sequence="2">
+<ControlCode>102</ControlCode>
+<Time>1:14</Time>
+</SplitTime>
+<SplitTime sequence="3">
+<ControlCode>103</ControlCode>
+<Time>1:52</Time>
+</SplitTime>
+<SplitTime sequence="4">
+<ControlCode>104</ControlCode>
+<Time>2:03</Time>
+</SplitTime>
+<SplitTime sequence="5">
+<ControlCode>105</ControlCode>
+<Time>2:39</Time>
+</SplitTime>
+<SplitTime sequence="6">
+<ControlCode>106</ControlCode>
+<Time>4:39</Time>
+</SplitTime>
+<SplitTime sequence="7">
+<ControlCode>107</ControlCode>
+<Time>6:35</Time>
+</SplitTime>
+<SplitTime sequence="8">
+<ControlCode>108</ControlCode>
+<Time>7:08</Time>
+</SplitTime>
+<SplitTime sequence="9">
+<ControlCode>109</ControlCode>
+<Time>8:11</Time>
+</SplitTime>
+<SplitTime sequence="10">
+<ControlCode>110</ControlCode>
+<Time>8:30</Time>
+</SplitTime>
+<SplitTime sequence="11">
+<ControlCode>111</ControlCode>
+<Time>9:32</Time>
+</SplitTime>
+<SplitTime sequence="12">
+<ControlCode>112</ControlCode>
+<Time>10:08</Time>
+</SplitTime>
+<SplitTime sequence="13">
+<ControlCode>113</ControlCode>
+<Time>10:42</Time>
+</SplitTime>
+<SplitTime sequence="14">
+<ControlCode>114</ControlCode>
+<Time>11:14</Time>
+</SplitTime>
+<SplitTime sequence="15">
+<ControlCode>115</ControlCode>
+<Time>11:52</Time>
+</SplitTime>
+<SplitTime sequence="16">
+<ControlCode>116</ControlCode>
+<Time>13:06</Time>
+</SplitTime>
+<SplitTime sequence="17">
+<ControlCode>117</ControlCode>
+<Time>13:45</Time>
+</SplitTime>
+</Result>
+</PersonResult>
+<PersonResult>
+<Person>
+<PersonId>10384</PersonId>
+<PersonName>
+<Family>DELENNE</Family>
+<Given>Adrien</Given>
+</PersonName>
+</Person>
+<Result>
+<StartTime>10:33:00</StartTime>
+<FinishTime>10:46:55</FinishTime>
+<Time>13:55</Time>
+<ResultPosition>3</ResultPosition>
+<CompetitorStatus value="OK"/>
+<SplitTime sequence="1">
+<ControlCode>101</ControlCode>
+<Time>0:27</Time>
+</SplitTime>
+<SplitTime sequence="2">
+<ControlCode>102</ControlCode>
+<Time>1:14</Time>
+</SplitTime>
+<SplitTime sequence="3">
+<ControlCode>103</ControlCode>
+<Time>1:53</Time>
+</SplitTime>
+<SplitTime sequence="4">
+<ControlCode>104</ControlCode>
+<Time>2:03</Time>
+</SplitTime>
+<SplitTime sequence="5">
+<ControlCode>105</ControlCode>
+<Time>2:39</Time>
+</SplitTime>
+<SplitTime sequence="6">
+<ControlCode>106</ControlCode>
+<Time>4:42</Time>
+</SplitTime>
+<SplitTime sequence="7">
+<ControlCode>107</ControlCode>
+<Time>6:43</Time>
+</SplitTime>
+<SplitTime sequence="8">
+<ControlCode>108</ControlCode>
+<Time>7:17</Time>
+</SplitTime>
+<SplitTime sequence="9">
+<ControlCode>109</ControlCode>
+<Time>8:26</Time>
+</SplitTime>
+<SplitTime sequence="10">
+<ControlCode>110</ControlCode>
+<Time>8:46</Time>
+</SplitTime>
+<SplitTime sequence="11">
+<ControlCode>111</ControlCode>
+<Time>9:44</Time>
+</SplitTime>
+<SplitTime sequence="12">
+<ControlCode>112</ControlCode>
+<Time>10:17</Time>
+</SplitTime>
+<SplitTime sequence="13">
+<ControlCode>113</ControlCode>
+<Time>10:51</Time>
+</SplitTime>
+<SplitTime sequence="14">
+<ControlCode>114</ControlCode>
+<Time>11:20</Time>
+</SplitTime>
+<SplitTime sequence="15">
+<ControlCode>115</ControlCode>
+<Time>11:58</Time>
+</SplitTime>
+<SplitTime sequence="16">
+<ControlCode>116</ControlCode>
+<Time>13:09</Time>
+</SplitTime>
+<SplitTime sequence="17">
+<ControlCode>117</ControlCode>
+<Time>13:47</Time>
+</SplitTime>
+</Result>
+</PersonResult>
+<PersonResult>
+<Person>
+<PersonId>999000000</PersonId>
+<PersonName>
+<Family>SCALET</Family>
+<Given>Riccardo</Given>
+</PersonName>
+</Person>
+<Result>
+<StartTime>10:30:03</StartTime>
+<FinishTime>10:43:58</FinishTime>
+<Time>13:55</Time>
+<ResultPosition>3</ResultPosition>
+<CompetitorStatus value="OK"/>
+<SplitTime sequence="1">
+<ControlCode>101</ControlCode>
+<Time>0:28</Time>
+</SplitTime>
+<SplitTime sequence="2">
+<ControlCode>102</ControlCode>
+<Time>1:15</Time>
+</SplitTime>
+<SplitTime sequence="3">
+<ControlCode>103</ControlCode>
+<Time>1:53</Time>
+</SplitTime>
+<SplitTime sequence="4">
+<ControlCode>104</ControlCode>
+<Time>2:03</Time>
+</SplitTime>
+<SplitTime sequence="5">
+<ControlCode>105</ControlCode>
+<Time>2:40</Time>
+</SplitTime>
+<SplitTime sequence="6">
+<ControlCode>106</ControlCode>
+<Time>4:49</Time>
+</SplitTime>
+<SplitTime sequence="7">
+<ControlCode>107</ControlCode>
+<Time>6:47</Time>
+</SplitTime>
+<SplitTime sequence="8">
+<ControlCode>108</ControlCode>
+<Time>7:20</Time>
+</SplitTime>
+<SplitTime sequence="9">
+<ControlCode>109</ControlCode>
+<Time>8:21</Time>
+</SplitTime>
+<SplitTime sequence="10">
+<ControlCode>110</ControlCode>
+<Time>8:38</Time>
+</SplitTime>
+<SplitTime sequence="11">
+<ControlCode>111</ControlCode>
+<Time>9:37</Time>
+</SplitTime>
+<SplitTime sequence="12">
+<ControlCode>112</ControlCode>
+<Time>10:12</Time>
+</SplitTime>
+<SplitTime sequence="13">
+<ControlCode>113</ControlCode>
+<Time>10:44</Time>
+</SplitTime>
+<SplitTime sequence="14">
+<ControlCode>114</ControlCode>
+<Time>11:16</Time>
+</SplitTime>
+<SplitTime sequence="15">
+<ControlCode>115</ControlCode>
+<Time>11:55</Time>
+</SplitTime>
+<SplitTime sequence="16">
+<ControlCode>116</ControlCode>
+<Time>13:09</Time>
+</SplitTime>
+<SplitTime sequence="17">
+<ControlCode>117</ControlCode>
+<Time>13:47</Time>
+</SplitTime>
+</Result>
+</PersonResult>
+<PersonResult>
+<Person>
+<PersonId>11069</PersonId>
+<PersonName>
+<Family>CAPBERN</Family>
+<Given>Loïc</Given>
+</PersonName>
+</Person>
+<Result>
+<StartTime>10:32:01</StartTime>
+<FinishTime>10:45:59</FinishTime>
+<Time>13:58</Time>
+<ResultPosition>5</ResultPosition>
+<CompetitorStatus value="OK"/>
+<SplitTime sequence="1">
+<ControlCode>101</ControlCode>
+<Time>0:30</Time>
+</SplitTime>
+<SplitTime sequence="2">
+<ControlCode>102</ControlCode>
+<Time>1:15</Time>
+</SplitTime>
+<SplitTime sequence="3">
+<ControlCode>103</ControlCode>
+<Time>1:53</Time>
+</SplitTime>
+<SplitTime sequence="4">
+<ControlCode>104</ControlCode>
+<Time>2:03</Time>
+</SplitTime>
+<SplitTime sequence="5">
+<ControlCode>105</ControlCode>
+<Time>2:42</Time>
+</SplitTime>
+<SplitTime sequence="6">
+<ControlCode>106</ControlCode>
+<Time>4:43</Time>
+</SplitTime>
+<SplitTime sequence="7">
+<ControlCode>107</ControlCode>
+<Time>6:44</Time>
+</SplitTime>
+<SplitTime sequence="8">
+<ControlCode>108</ControlCode>
+<Time>7:14</Time>
+</SplitTime>
+<SplitTime sequence="9">
+<ControlCode>109</ControlCode>
+<Time>8:19</Time>
+</SplitTime>
+<SplitTime sequence="10">
+<ControlCode>110</ControlCode>
+<Time>8:37</Time>
+</SplitTime>
+<SplitTime sequence="11">
+<ControlCode>111</ControlCode>
+<Time>9:39</Time>
+</SplitTime>
+<SplitTime sequence="12">
+<ControlCode>112</ControlCode>
+<Time>10:12</Time>
+</SplitTime>
+<SplitTime sequence="13">
+<ControlCode>113</ControlCode>
+<Time>10:48</Time>
+</SplitTime>
+<SplitTime sequence="14">
+<ControlCode>114</ControlCode>
+<Time>11:20</Time>
+</SplitTime>
+<SplitTime sequence="15">
+<ControlCode>115</ControlCode>
+<Time>12:01</Time>
+</SplitTime>
+<SplitTime sequence="16">
+<ControlCode>116</ControlCode>
+<Time>13:13</Time>
+</SplitTime>
+<SplitTime sequence="17">
+<ControlCode>117</ControlCode>
+<Time>13:50</Time>
+</SplitTime>
+</Result>
+</PersonResult>
+<PersonResult>
+<Person>
+<PersonId>28495</PersonId>
+<PersonName>
+<Family>VEROVE</Family>
+<Given>Guilhem</Given>
+</PersonName>
+</Person>
+<Result>
+<StartTime>10:41:00</StartTime>
+<FinishTime>10:54:58</FinishTime>
+<Time>13:58</Time>
+<ResultPosition>5</ResultPosition>
+<CompetitorStatus value="OK"/>
+<SplitTime sequence="1">
+<ControlCode>101</ControlCode>
+<Time>0:27</Time>
+</SplitTime>
+<SplitTime sequence="2">
+<ControlCode>102</ControlCode>
+<Time>1:11</Time>
+</SplitTime>
+<SplitTime sequence="3">
+<ControlCode>103</ControlCode>
+<Time>1:49</Time>
+</SplitTime>
+<SplitTime sequence="4">
+<ControlCode>104</ControlCode>
+<Time>1:59</Time>
+</SplitTime>
+<SplitTime sequence="5">
+<ControlCode>105</ControlCode>
+<Time>2:39</Time>
+</SplitTime>
+<SplitTime sequence="6">
+<ControlCode>106</ControlCode>
+<Time>4:40</Time>
+</SplitTime>
+<SplitTime sequence="7">
+<ControlCode>107</ControlCode>
+<Time>6:48</Time>
+</SplitTime>
+<SplitTime sequence="8">
+<ControlCode>108</ControlCode>
+<Time>7:19</Time>
+</SplitTime>
+<SplitTime sequence="9">
+<ControlCode>109</ControlCode>
+<Time>8:20</Time>
+</SplitTime>
+<SplitTime sequence="10">
+<ControlCode>110</ControlCode>
+<Time>8:38</Time>
+</SplitTime>
+<SplitTime sequence="11">
+<ControlCode>111</ControlCode>
+<Time>9:37</Time>
+</SplitTime>
+<SplitTime sequence="12">
+<ControlCode>112</ControlCode>
+<Time>10:11</Time>
+</SplitTime>
+<SplitTime sequence="13">
+<ControlCode>113</ControlCode>
+<Time>10:46</Time>
+</SplitTime>
+<SplitTime sequence="14">
+<ControlCode>114</ControlCode>
+<Time>11:17</Time>
+</SplitTime>
+<SplitTime sequence="15">
+<ControlCode>115</ControlCode>
+<Time>11:56</Time>
+</SplitTime>
+<SplitTime sequence="16">
+<ControlCode>116</ControlCode>
+<Time>13:11</Time>
+</SplitTime>
+<SplitTime sequence="17">
+<ControlCode>117</ControlCode>
+<Time>13:49</Time>
+</SplitTime>
+</Result>
+</PersonResult>
+<PersonResult>
+<Person>
+<PersonId>4182</PersonId>
+<PersonName>
+<Family>RAUTURIER</Family>
+<Given>Maxime</Given>
+</PersonName>
+</Person>
+<Result>
+<StartTime>10:35:00</StartTime>
+<FinishTime>10:49:04</FinishTime>
+<Time>14:04</Time>
+<ResultPosition>7</ResultPosition>
+<CompetitorStatus value="OK"/>
+<SplitTime sequence="1">
+<ControlCode>101</ControlCode>
+<Time>0:28</Time>
+</SplitTime>
+<SplitTime sequence="2">
+<ControlCode>102</ControlCode>
+<Time>1:17</Time>
+</SplitTime>
+<SplitTime sequence="3">
+<ControlCode>103</ControlCode>
+<Time>1:54</Time>
+</SplitTime>
+<SplitTime sequence="4">
+<ControlCode>104</ControlCode>
+<Time>2:04</Time>
+</SplitTime>
+<SplitTime sequence="5">
+<ControlCode>105</ControlCode>
+<Time>2:47</Time>
+</SplitTime>
+<SplitTime sequence="6">
+<ControlCode>106</ControlCode>
+<Time>4:51</Time>
+</SplitTime>
+<SplitTime sequence="7">
+<ControlCode>107</ControlCode>
+<Time>6:49</Time>
+</SplitTime>
+<SplitTime sequence="8">
+<ControlCode>108</ControlCode>
+<Time>7:23</Time>
+</SplitTime>
+<SplitTime sequence="9">
+<ControlCode>109</ControlCode>
+<Time>8:25</Time>
+</SplitTime>
+<SplitTime sequence="10">
+<ControlCode>110</ControlCode>
+<Time>8:44</Time>
+</SplitTime>
+<SplitTime sequence="11">
+<ControlCode>111</ControlCode>
+<Time>9:43</Time>
+</SplitTime>
+<SplitTime sequence="12">
+<ControlCode>112</ControlCode>
+<Time>10:18</Time>
+</SplitTime>
+<SplitTime sequence="13">
+<ControlCode>113</ControlCode>
+<Time>10:51</Time>
+</SplitTime>
+<SplitTime sequence="14">
+<ControlCode>114</ControlCode>
+<Time>11:23</Time>
+</SplitTime>
+<SplitTime sequence="15">
+<ControlCode>115</ControlCode>
+<Time>12:04</Time>
+</SplitTime>
+<SplitTime sequence="16">
+<ControlCode>116</ControlCode>
+<Time>13:20</Time>
+</SplitTime>
+<SplitTime sequence="17">
+<ControlCode>117</ControlCode>
+<Time>13:56</Time>
+</SplitTime>
+</Result>
+</PersonResult>
+<PersonResult>
+<Person>
+<PersonId>27735</PersonId>
+<PersonName>
+<Family>MARCHAND</Family>
+<Given>Nathan</Given>
+</PersonName>
+</Person>
+<Result>
+<StartTime>10:43:00</StartTime>
+<FinishTime>10:57:15</FinishTime>
+<Time>14:15</Time>
+<ResultPosition>8</ResultPosition>
+<CompetitorStatus value="OK"/>
+<SplitTime sequence="1">
+<ControlCode>101</ControlCode>
+<Time>0:29</Time>
+</SplitTime>
+<SplitTime sequence="2">
+<ControlCode>102</ControlCode>
+<Time>1:18</Time>
+</SplitTime>
+<SplitTime sequence="3">
+<ControlCode>103</ControlCode>
+<Time>1:55</Time>
+</SplitTime>
+<SplitTime sequence="4">
+<ControlCode>104</ControlCode>
+<Time>2:05</Time>
+</SplitTime>
+<SplitTime sequence="5">
+<ControlCode>105</ControlCode>
+<Time>2:44</Time>
+</SplitTime>
+<SplitTime sequence="6">
+<ControlCode>106</ControlCode>
+<Time>4:47</Time>
+</SplitTime>
+<SplitTime sequence="7">
+<ControlCode>107</ControlCode>
+<Time>6:50</Time>
+</SplitTime>
+<SplitTime sequence="8">
+<ControlCode>108</ControlCode>
+<Time>7:24</Time>
+</SplitTime>
+<SplitTime sequence="9">
+<ControlCode>109</ControlCode>
+<Time>8:30</Time>
+</SplitTime>
+<SplitTime sequence="10">
+<ControlCode>110</ControlCode>
+<Time>8:48</Time>
+</SplitTime>
+<SplitTime sequence="11">
+<ControlCode>111</ControlCode>
+<Time>9:53</Time>
+</SplitTime>
+<SplitTime sequence="12">
+<ControlCode>112</ControlCode>
+<Time>10:30</Time>
+</SplitTime>
+<SplitTime sequence="13">
+<ControlCode>113</ControlCode>
+<Time>11:05</Time>
+</SplitTime>
+<SplitTime sequence="14">
+<ControlCode>114</ControlCode>
+<Time>11:36</Time>
+</SplitTime>
+<SplitTime sequence="15">
+<ControlCode>115</ControlCode>
+<Time>12:16</Time>
+</SplitTime>
+<SplitTime sequence="16">
+<ControlCode>116</ControlCode>
+<Time>13:29</Time>
+</SplitTime>
+<SplitTime sequence="17">
+<ControlCode>117</ControlCode>
+<Time>14:08</Time>
+</SplitTime>
+</Result>
+</PersonResult>
+<PersonResult>
+<Person>
+<PersonId>8975</PersonId>
+<PersonName>
+<Family>PERRIN</Family>
+<Given>Arnaud</Given>
+</PersonName>
+</Person>
+<Result>
+<StartTime>10:40:00</StartTime>
+<FinishTime>10:54:27</FinishTime>
+<Time>14:27</Time>
+<ResultPosition>9</ResultPosition>
+<CompetitorStatus value="OK"/>
+<SplitTime sequence="1">
+<ControlCode>101</ControlCode>
+<Time>0:30</Time>
+</SplitTime>
+<SplitTime sequence="2">
+<ControlCode>102</ControlCode>
+<Time>1:19</Time>
+</SplitTime>
+<SplitTime sequence="3">
+<ControlCode>103</ControlCode>
+<Time>1:57</Time>
+</SplitTime>
+<SplitTime sequence="4">
+<ControlCode>104</ControlCode>
+<Time>2:07</Time>
+</SplitTime>
+<SplitTime sequence="5">
+<ControlCode>105</ControlCode>
+<Time>2:50</Time>
+</SplitTime>
+<SplitTime sequence="6">
+<ControlCode>106</ControlCode>
+<Time>4:55</Time>
+</SplitTime>
+<SplitTime sequence="7">
+<ControlCode>107</ControlCode>
+<Time>6:56</Time>
+</SplitTime>
+<SplitTime sequence="8">
+<ControlCode>108</ControlCode>
+<Time>7:30</Time>
+</SplitTime>
+<SplitTime sequence="9">
+<ControlCode>109</ControlCode>
+<Time>8:34</Time>
+</SplitTime>
+<SplitTime sequence="10">
+<ControlCode>110</ControlCode>
+<Time>8:54</Time>
+</SplitTime>
+<SplitTime sequence="11">
+<ControlCode>111</ControlCode>
+<Time>9:59</Time>
+</SplitTime>
+<SplitTime sequence="12">
+<ControlCode>112</ControlCode>
+<Time>10:34</Time>
+</SplitTime>
+<SplitTime sequence="13">
+<ControlCode>113</ControlCode>
+<Time>11:08</Time>
+</SplitTime>
+<SplitTime sequence="14">
+<ControlCode>114</ControlCode>
+<Time>11:41</Time>
+</SplitTime>
+<SplitTime sequence="15">
+<ControlCode>115</ControlCode>
+<Time>12:22</Time>
+</SplitTime>
+<SplitTime sequence="16">
+<ControlCode>116</ControlCode>
+<Time>13:42</Time>
+</SplitTime>
+<SplitTime sequence="17">
+<ControlCode>117</ControlCode>
+<Time>14:19</Time>
+</SplitTime>
+</Result>
+</PersonResult>
+<PersonResult>
+<Person>
+<PersonId>18936</PersonId>
+<PersonName>
+<Family>ANDRIEUX</Family>
+<Given>Quentin</Given>
+</PersonName>
+</Person>
+<Result>
+<StartTime>10:37:00</StartTime>
+<FinishTime>10:51:30</FinishTime>
+<Time>14:30</Time>
+<ResultPosition>10</ResultPosition>
+<CompetitorStatus value="OK"/>
+<SplitTime sequence="1">
+<ControlCode>101</ControlCode>
+<Time>0:30</Time>
+</SplitTime>
+<SplitTime sequence="2">
+<ControlCode>102</ControlCode>
+<Time>1:17</Time>
+</SplitTime>
+<SplitTime sequence="3">
+<ControlCode>103</ControlCode>
+<Time>1:57</Time>
+</SplitTime>
+<SplitTime sequence="4">
+<ControlCode>104</ControlCode>
+<Time>2:07</Time>
+</SplitTime>
+<SplitTime sequence="5">
+<ControlCode>105</ControlCode>
+<Time>2:52</Time>
+</SplitTime>
+<SplitTime sequence="6">
+<ControlCode>106</ControlCode>
+<Time>5:02</Time>
+</SplitTime>
+<SplitTime sequence="7">
+<ControlCode>107</ControlCode>
+<Time>7:03</Time>
+</SplitTime>
+<SplitTime sequence="8">
+<ControlCode>108</ControlCode>
+<Time>7:35</Time>
+</SplitTime>
+<SplitTime sequence="9">
+<ControlCode>109</ControlCode>
+<Time>8:41</Time>
+</SplitTime>
+<SplitTime sequence="10">
+<ControlCode>110</ControlCode>
+<Time>9:00</Time>
+</SplitTime>
+<SplitTime sequence="11">
+<ControlCode>111</ControlCode>
+<Time>10:01</Time>
+</SplitTime>
+<SplitTime sequence="12">
+<ControlCode>112</ControlCode>
+<Time>10:36</Time>
+</SplitTime>
+<SplitTime sequence="13">
+<ControlCode>113</ControlCode>
+<Time>11:11</Time>
+</SplitTime>
+<SplitTime sequence="14">
+<ControlCode>114</ControlCode>
+<Time>11:43</Time>
+</SplitTime>
+<SplitTime sequence="15">
+<ControlCode>115</ControlCode>
+<Time>12:23</Time>
+</SplitTime>
+<SplitTime sequence="16">
+<ControlCode>116</ControlCode>
+<Time>13:43</Time>
+</SplitTime>
+<SplitTime sequence="17">
+<ControlCode>117</ControlCode>
+<Time>14:23</Time>
+</SplitTime>
+</Result>
+</PersonResult>
+<PersonResult>
+<Person>
+<PersonId>26389</PersonId>
+<PersonName>
+<Family>MASLIAH</Family>
+<Given>Raphaël</Given>
+</PersonName>
+</Person>
+<Result>
+<StartTime>10:49:00</StartTime>
+<FinishTime>11:03:42</FinishTime>
+<Time>14:42</Time>
+<ResultPosition>11</ResultPosition>
+<CompetitorStatus value="OK"/>
+<SplitTime sequence="1">
+<ControlCode>101</ControlCode>
+<Time>0:29</Time>
+</SplitTime>
+<SplitTime sequence="2">
+<ControlCode>102</ControlCode>
+<Time>1:23</Time>
+</SplitTime>
+<SplitTime sequence="3">
+<ControlCode>103</ControlCode>
+<Time>2:01</Time>
+</SplitTime>
+<SplitTime sequence="4">
+<ControlCode>104</ControlCode>
+<Time>2:11</Time>
+</SplitTime>
+<SplitTime sequence="5">
+<ControlCode>105</ControlCode>
+<Time>2:55</Time>
+</SplitTime>
+<SplitTime sequence="6">
+<ControlCode>106</ControlCode>
+<Time>5:05</Time>
+</SplitTime>
+<SplitTime sequence="7">
+<ControlCode>107</ControlCode>
+<Time>7:08</Time>
+</SplitTime>
+<SplitTime sequence="8">
+<ControlCode>108</ControlCode>
+<Time>7:41</Time>
+</SplitTime>
+<SplitTime sequence="9">
+<ControlCode>109</ControlCode>
+<Time>8:48</Time>
+</SplitTime>
+<SplitTime sequence="10">
+<ControlCode>110</ControlCode>
+<Time>9:07</Time>
+</SplitTime>
+<SplitTime sequence="11">
+<ControlCode>111</ControlCode>
+<Time>10:11</Time>
+</SplitTime>
+<SplitTime sequence="12">
+<ControlCode>112</ControlCode>
+<Time>10:47</Time>
+</SplitTime>
+<SplitTime sequence="13">
+<ControlCode>113</ControlCode>
+<Time>11:23</Time>
+</SplitTime>
+<SplitTime sequence="14">
+<ControlCode>114</ControlCode>
+<Time>11:55</Time>
+</SplitTime>
+<SplitTime sequence="15">
+<ControlCode>115</ControlCode>
+<Time>12:38</Time>
+</SplitTime>
+<SplitTime sequence="16">
+<ControlCode>116</ControlCode>
+<Time>13:55</Time>
+</SplitTime>
+<SplitTime sequence="17">
+<ControlCode>117</ControlCode>
+<Time>14:34</Time>
+</SplitTime>
+</Result>
+</PersonResult>
+<PersonResult>
+<Person>
+<PersonId>26923</PersonId>
+<PersonName>
+<Family>BECAERT</Family>
+<Given>Antoine</Given>
+</PersonName>
+</Person>
+<Result>
+<StartTime>10:44:00</StartTime>
+<FinishTime>10:58:42</FinishTime>
+<Time>14:42</Time>
+<ResultPosition>11</ResultPosition>
+<CompetitorStatus value="OK"/>
+<SplitTime sequence="1">
+<ControlCode>101</ControlCode>
+<Time>0:30</Time>
+</SplitTime>
+<SplitTime sequence="2">
+<ControlCode>102</ControlCode>
+<Time>1:16</Time>
+</SplitTime>
+<SplitTime sequence="3">
+<ControlCode>103</ControlCode>
+<Time>1:59</Time>
+</SplitTime>
+<SplitTime sequence="4">
+<ControlCode>104</ControlCode>
+<Time>2:10</Time>
+</SplitTime>
+<SplitTime sequence="5">
+<ControlCode>105</ControlCode>
+<Time>2:54</Time>
+</SplitTime>
+<SplitTime sequence="6">
+<ControlCode>106</ControlCode>
+<Time>5:04</Time>
+</SplitTime>
+<SplitTime sequence="7">
+<ControlCode>107</ControlCode>
+<Time>7:06</Time>
+</SplitTime>
+<SplitTime sequence="8">
+<ControlCode>108</ControlCode>
+<Time>7:39</Time>
+</SplitTime>
+<SplitTime sequence="9">
+<ControlCode>109</ControlCode>
+<Time>8:44</Time>
+</SplitTime>
+<SplitTime sequence="10">
+<ControlCode>110</ControlCode>
+<Time>9:06</Time>
+</SplitTime>
+<SplitTime sequence="11">
+<ControlCode>111</ControlCode>
+<Time>10:08</Time>
+</SplitTime>
+<SplitTime sequence="12">
+<ControlCode>112</ControlCode>
+<Time>10:44</Time>
+</SplitTime>
+<SplitTime sequence="13">
+<ControlCode>113</ControlCode>
+<Time>11:20</Time>
+</SplitTime>
+<SplitTime sequence="14">
+<ControlCode>114</ControlCode>
+<Time>11:51</Time>
+</SplitTime>
+<SplitTime sequence="15">
+<ControlCode>115</ControlCode>
+<Time>12:31</Time>
+</SplitTime>
+<SplitTime sequence="16">
+<ControlCode>116</ControlCode>
+<Time>13:56</Time>
+</SplitTime>
+<SplitTime sequence="17">
+<ControlCode>117</ControlCode>
+<Time>14:35</Time>
+</SplitTime>
+</Result>
+</PersonResult>
+<PersonResult>
+<Person>
+<PersonId>19099</PersonId>
+<PersonName>
+<Family>PANNIER</Family>
+<Given>Axel</Given>
+</PersonName>
+</Person>
+<Result>
+<StartTime>10:47:00</StartTime>
+<FinishTime>11:01:43</FinishTime>
+<Time>14:43</Time>
+<ResultPosition>13</ResultPosition>
+<CompetitorStatus value="OK"/>
+<SplitTime sequence="1">
+<ControlCode>101</ControlCode>
+<Time>0:27</Time>
+</SplitTime>
+<SplitTime sequence="2">
+<ControlCode>102</ControlCode>
+<Time>1:16</Time>
+</SplitTime>
+<SplitTime sequence="3">
+<ControlCode>103</ControlCode>
+<Time>1:55</Time>
+</SplitTime>
+<SplitTime sequence="4">
+<ControlCode>104</ControlCode>
+<Time>2:05</Time>
+</SplitTime>
+<SplitTime sequence="5">
+<ControlCode>105</ControlCode>
+<Time>2:44</Time>
+</SplitTime>
+<SplitTime sequence="6">
+<ControlCode>106</ControlCode>
+<Time>4:48</Time>
+</SplitTime>
+<SplitTime sequence="7">
+<ControlCode>107</ControlCode>
+<Time>6:51</Time>
+</SplitTime>
+<SplitTime sequence="8">
+<ControlCode>108</ControlCode>
+<Time>7:25</Time>
+</SplitTime>
+<SplitTime sequence="9">
+<ControlCode>109</ControlCode>
+<Time>8:33</Time>
+</SplitTime>
+<SplitTime sequence="10">
+<ControlCode>110</ControlCode>
+<Time>8:55</Time>
+</SplitTime>
+<SplitTime sequence="11">
+<ControlCode>111</ControlCode>
+<Time>9:59</Time>
+</SplitTime>
+<SplitTime sequence="12">
+<ControlCode>112</ControlCode>
+<Time>10:51</Time>
+</SplitTime>
+<SplitTime sequence="13">
+<ControlCode>113</ControlCode>
+<Time>11:26</Time>
+</SplitTime>
+<SplitTime sequence="14">
+<ControlCode>114</ControlCode>
+<Time>11:58</Time>
+</SplitTime>
+<SplitTime sequence="15">
+<ControlCode>115</ControlCode>
+<Time>12:38</Time>
+</SplitTime>
+<SplitTime sequence="16">
+<ControlCode>116</ControlCode>
+<Time>13:54</Time>
+</SplitTime>
+<SplitTime sequence="17">
+<ControlCode>117</ControlCode>
+<Time>14:35</Time>
+</SplitTime>
+</Result>
+</PersonResult>
+<PersonResult>
+<Person>
+<PersonId>29849</PersonId>
+<PersonName>
+<Family>MOULET</Family>
+<Given>Quentin</Given>
+</PersonName>
+</Person>
+<Result>
+<StartTime>10:36:00</StartTime>
+<FinishTime>10:50:47</FinishTime>
+<Time>14:47</Time>
+<ResultPosition>14</ResultPosition>
+<CompetitorStatus value="OK"/>
+<SplitTime sequence="1">
+<ControlCode>101</ControlCode>
+<Time>0:28</Time>
+</SplitTime>
+<SplitTime sequence="2">
+<ControlCode>102</ControlCode>
+<Time>1:19</Time>
+</SplitTime>
+<SplitTime sequence="3">
+<ControlCode>103</ControlCode>
+<Time>2:00</Time>
+</SplitTime>
+<SplitTime sequence="4">
+<ControlCode>104</ControlCode>
+<Time>2:10</Time>
+</SplitTime>
+<SplitTime sequence="5">
+<ControlCode>105</ControlCode>
+<Time>2:53</Time>
+</SplitTime>
+<SplitTime sequence="6">
+<ControlCode>106</ControlCode>
+<Time>5:03</Time>
+</SplitTime>
+<SplitTime sequence="7">
+<ControlCode>107</ControlCode>
+<Time>7:07</Time>
+</SplitTime>
+<SplitTime sequence="8">
+<ControlCode>108</ControlCode>
+<Time>7:39</Time>
+</SplitTime>
+<SplitTime sequence="9">
+<ControlCode>109</ControlCode>
+<Time>9:01</Time>
+</SplitTime>
+<SplitTime sequence="10">
+<ControlCode>110</ControlCode>
+<Time>9:18</Time>
+</SplitTime>
+<SplitTime sequence="11">
+<ControlCode>111</ControlCode>
+<Time>10:19</Time>
+</SplitTime>
+<SplitTime sequence="12">
+<ControlCode>112</ControlCode>
+<Time>10:54</Time>
+</SplitTime>
+<SplitTime sequence="13">
+<ControlCode>113</ControlCode>
+<Time>11:29</Time>
+</SplitTime>
+<SplitTime sequence="14">
+<ControlCode>114</ControlCode>
+<Time>12:00</Time>
+</SplitTime>
+<SplitTime sequence="15">
+<ControlCode>115</ControlCode>
+<Time>12:40</Time>
+</SplitTime>
+<SplitTime sequence="16">
+<ControlCode>116</ControlCode>
+<Time>13:59</Time>
+</SplitTime>
+<SplitTime sequence="17">
+<ControlCode>117</ControlCode>
+<Time>14:39</Time>
+</SplitTime>
+</Result>
+</PersonResult>
+<PersonResult>
+<Person>
+<PersonId>21267</PersonId>
+<PersonName>
+<Family>PICHARD</Family>
+<Given>Romain</Given>
+</PersonName>
+</Person>
+<Result>
+<StartTime>10:45:00</StartTime>
+<FinishTime>11:00:05</FinishTime>
+<Time>15:05</Time>
+<ResultPosition>15</ResultPosition>
+<CompetitorStatus value="OK"/>
+<SplitTime sequence="1">
+<ControlCode>101</ControlCode>
+<Time>0:29</Time>
+</SplitTime>
+<SplitTime sequence="2">
+<ControlCode>102</ControlCode>
+<Time>1:19</Time>
+</SplitTime>
+<SplitTime sequence="3">
+<ControlCode>103</ControlCode>
+<Time>2:01</Time>
+</SplitTime>
+<SplitTime sequence="4">
+<ControlCode>104</ControlCode>
+<Time>2:12</Time>
+</SplitTime>
+<SplitTime sequence="5">
+<ControlCode>105</ControlCode>
+<Time>2:49</Time>
+</SplitTime>
+<SplitTime sequence="6">
+<ControlCode>106</ControlCode>
+<Time>5:05</Time>
+</SplitTime>
+<SplitTime sequence="7">
+<ControlCode>107</ControlCode>
+<Time>7:15</Time>
+</SplitTime>
+<SplitTime sequence="8">
+<ControlCode>108</ControlCode>
+<Time>7:49</Time>
+</SplitTime>
+<SplitTime sequence="9">
+<ControlCode>109</ControlCode>
+<Time>8:57</Time>
+</SplitTime>
+<SplitTime sequence="10">
+<ControlCode>110</ControlCode>
+<Time>9:18</Time>
+</SplitTime>
+<SplitTime sequence="11">
+<ControlCode>111</ControlCode>
+<Time>10:24</Time>
+</SplitTime>
+<SplitTime sequence="12">
+<ControlCode>112</ControlCode>
+<Time>11:01</Time>
+</SplitTime>
+<SplitTime sequence="13">
+<ControlCode>113</ControlCode>
+<Time>11:38</Time>
+</SplitTime>
+<SplitTime sequence="14">
+<ControlCode>114</ControlCode>
+<Time>12:10</Time>
+</SplitTime>
+<SplitTime sequence="15">
+<ControlCode>115</ControlCode>
+<Time>12:56</Time>
+</SplitTime>
+<SplitTime sequence="16">
+<ControlCode>116</ControlCode>
+<Time>14:17</Time>
+</SplitTime>
+<SplitTime sequence="17">
+<ControlCode>117</ControlCode>
+<Time>14:57</Time>
+</SplitTime>
+</Result>
+</PersonResult>
+<PersonResult>
+<Person>
+<PersonId>28111</PersonId>
+<PersonName>
+<Family>VAXELAIRE</Family>
+<Given>Hugo</Given>
+</PersonName>
+</Person>
+<Result>
+<StartTime>10:46:00</StartTime>
+<FinishTime>11:01:05</FinishTime>
+<Time>15:05</Time>
+<ResultPosition>15</ResultPosition>
+<CompetitorStatus value="OK"/>
+<SplitTime sequence="1">
+<ControlCode>101</ControlCode>
+<Time>0:28</Time>
+</SplitTime>
+<SplitTime sequence="2">
+<ControlCode>102</ControlCode>
+<Time>1:15</Time>
+</SplitTime>
+<SplitTime sequence="3">
+<ControlCode>103</ControlCode>
+<Time>1:57</Time>
+</SplitTime>
+<SplitTime sequence="4">
+<ControlCode>104</ControlCode>
+<Time>2:08</Time>
+</SplitTime>
+<SplitTime sequence="5">
+<ControlCode>105</ControlCode>
+<Time>2:47</Time>
+</SplitTime>
+<SplitTime sequence="6">
+<ControlCode>106</ControlCode>
+<Time>4:56</Time>
+</SplitTime>
+<SplitTime sequence="7">
+<ControlCode>107</ControlCode>
+<Time>7:02</Time>
+</SplitTime>
+<SplitTime sequence="8">
+<ControlCode>108</ControlCode>
+<Time>7:42</Time>
+</SplitTime>
+<SplitTime sequence="9">
+<ControlCode>109</ControlCode>
+<Time>8:55</Time>
+</SplitTime>
+<SplitTime sequence="10">
+<ControlCode>110</ControlCode>
+<Time>9:15</Time>
+</SplitTime>
+<SplitTime sequence="11">
+<ControlCode>111</ControlCode>
+<Time>10:19</Time>
+</SplitTime>
+<SplitTime sequence="12">
+<ControlCode>112</ControlCode>
+<Time>10:57</Time>
+</SplitTime>
+<SplitTime sequence="13">
+<ControlCode>113</ControlCode>
+<Time>11:35</Time>
+</SplitTime>
+<SplitTime sequence="14">
+<ControlCode>114</ControlCode>
+<Time>12:08</Time>
+</SplitTime>
+<SplitTime sequence="15">
+<ControlCode>115</ControlCode>
+<Time>12:53</Time>
+</SplitTime>
+<SplitTime sequence="16">
+<ControlCode>116</ControlCode>
+<Time>14:15</Time>
+</SplitTime>
+<SplitTime sequence="17">
+<ControlCode>117</ControlCode>
+<Time>14:58</Time>
+</SplitTime>
+</Result>
+</PersonResult>
+<PersonResult>
+<Person>
+<PersonId>28409</PersonId>
+<PersonName>
+<Family>DISCHER</Family>
+<Given>Romain</Given>
+</PersonName>
+</Person>
+<Result>
+<StartTime>10:48:00</StartTime>
+<FinishTime>11:03:10</FinishTime>
+<Time>15:10</Time>
+<ResultPosition>17</ResultPosition>
+<CompetitorStatus value="OK"/>
+<SplitTime sequence="1">
+<ControlCode>101</ControlCode>
+<Time>0:30</Time>
+</SplitTime>
+<SplitTime sequence="2">
+<ControlCode>102</ControlCode>
+<Time>1:21</Time>
+</SplitTime>
+<SplitTime sequence="3">
+<ControlCode>103</ControlCode>
+<Time>2:02</Time>
+</SplitTime>
+<SplitTime sequence="4">
+<ControlCode>104</ControlCode>
+<Time>2:12</Time>
+</SplitTime>
+<SplitTime sequence="5">
+<ControlCode>105</ControlCode>
+<Time>2:52</Time>
+</SplitTime>
+<SplitTime sequence="6">
+<ControlCode>106</ControlCode>
+<Time>5:08</Time>
+</SplitTime>
+<SplitTime sequence="7">
+<ControlCode>107</ControlCode>
+<Time>7:24</Time>
+</SplitTime>
+<SplitTime sequence="8">
+<ControlCode>108</ControlCode>
+<Time>8:05</Time>
+</SplitTime>
+<SplitTime sequence="9">
+<ControlCode>109</ControlCode>
+<Time>9:20</Time>
+</SplitTime>
+<SplitTime sequence="10">
+<ControlCode>110</ControlCode>
+<Time>9:40</Time>
+</SplitTime>
+<SplitTime sequence="11">
+<ControlCode>111</ControlCode>
+<Time>10:40</Time>
+</SplitTime>
+<SplitTime sequence="12">
+<ControlCode>112</ControlCode>
+<Time>11:17</Time>
+</SplitTime>
+<SplitTime sequence="13">
+<ControlCode>113</ControlCode>
+<Time>11:53</Time>
+</SplitTime>
+<SplitTime sequence="14">
+<ControlCode>114</ControlCode>
+<Time>12:24</Time>
+</SplitTime>
+<SplitTime sequence="15">
+<ControlCode>115</ControlCode>
+<Time>13:03</Time>
+</SplitTime>
+<SplitTime sequence="16">
+<ControlCode>116</ControlCode>
+<Time>14:23</Time>
+</SplitTime>
+<SplitTime sequence="17">
+<ControlCode>117</ControlCode>
+<Time>15:02</Time>
+</SplitTime>
+</Result>
+</PersonResult>
+<PersonResult>
+<Person>
+<PersonId>23577</PersonId>
+<PersonName>
+<Family>BASSET</Family>
+<Given>Basile</Given>
+</PersonName>
+</Person>
+<Result>
+<StartTime>10:38:00</StartTime>
+<FinishTime>10:51:55</FinishTime>
+<Time>13:55</Time>
+<CompetitorStatus value="MisPunch"/>
+<SplitTime sequence="1">
+<ControlCode>101</ControlCode>
+<Time>0:29</Time>
+</SplitTime>
+<SplitTime sequence="2">
+<ControlCode>102</ControlCode>
+<Time>1:15</Time>
+</SplitTime>
+<SplitTime sequence="3">
+<ControlCode>103</ControlCode>
+<Time>1:50</Time>
+</SplitTime>
+<SplitTime sequence="4">
+<ControlCode>104</ControlCode>
+<Time>1:59</Time>
+</SplitTime>
+<SplitTime sequence="5">
+<ControlCode>105</ControlCode>
+<Time>2:38</Time>
+</SplitTime>
+<SplitTime sequence="6">
+<ControlCode>106</ControlCode>
+<Time>4:38</Time>
+</SplitTime>
+<SplitTime sequence="7">
+<ControlCode>107</ControlCode>
+<Time>6:42</Time>
+</SplitTime>
+<SplitTime sequence="8">
+<ControlCode>108</ControlCode>
+<Time>7:16</Time>
+</SplitTime>
+<SplitTime sequence="9">
+<ControlCode>109</ControlCode>
+<Time>8:20</Time>
+</SplitTime>
+<SplitTime sequence="10">
+<ControlCode>110</ControlCode>
+<Time>8:39</Time>
+</SplitTime>
+<SplitTime sequence="11">
+<ControlCode>111</ControlCode>
+<Time>9:39</Time>
+</SplitTime>
+<SplitTime sequence="13">
+<ControlCode>113</ControlCode>
+<Time>10:40</Time>
+</SplitTime>
+<SplitTime sequence="14">
+<ControlCode>114</ControlCode>
+<Time>11:10</Time>
+</SplitTime>
+<SplitTime sequence="15">
+<ControlCode>115</ControlCode>
+<Time>11:50</Time>
+</SplitTime>
+<SplitTime sequence="16">
+<ControlCode>116</ControlCode>
+<Time>13:05</Time>
+</SplitTime>
+<SplitTime sequence="17">
+<ControlCode>117</ControlCode>
+<Time>13:47</Time>
+</SplitTime>
+</Result>
+</PersonResult>
+<PersonResult>
+<Person>
+<PersonId>12967</PersonId>
+<PersonName>
+<Family>LEPOUTRE</Family>
+<Given>Benjamin</Given>
+</PersonName>
+</Person>
+<Result>
+<StartTime>10:39:00</StartTime>
+<FinishTime>10:53:30</FinishTime>
+<Time>14:30</Time>
+<CompetitorStatus value="MisPunch"/>
+<SplitTime sequence="1">
+<ControlCode>101</ControlCode>
+<Time>0:28</Time>
+</SplitTime>
+<SplitTime sequence="2">
+<ControlCode>102</ControlCode>
+<Time>1:14</Time>
+</SplitTime>
+<SplitTime sequence="3">
+<ControlCode>103</ControlCode>
+<Time>1:56</Time>
+</SplitTime>
+<SplitTime sequence="4">
+<ControlCode>104</ControlCode>
+<Time>2:06</Time>
+</SplitTime>
+<SplitTime sequence="5">
+<ControlCode>105</ControlCode>
+<Time>2:48</Time>
+</SplitTime>
+<SplitTime sequence="6">
+<ControlCode>106</ControlCode>
+<Time>5:09</Time>
+</SplitTime>
+<SplitTime sequence="7">
+<ControlCode>107</ControlCode>
+<Time>7:11</Time>
+</SplitTime>
+<SplitTime sequence="8">
+<ControlCode>108</ControlCode>
+<Time>7:41</Time>
+</SplitTime>
+<SplitTime sequence="9">
+<ControlCode>109</ControlCode>
+<Time>8:45</Time>
+</SplitTime>
+<SplitTime sequence="10">
+<ControlCode>110</ControlCode>
+<Time>9:07</Time>
+</SplitTime>
+<SplitTime sequence="11">
+<ControlCode>111</ControlCode>
+<Time>10:06</Time>
+</SplitTime>
+<SplitTime sequence="13">
+<ControlCode>113</ControlCode>
+<Time>11:05</Time>
+</SplitTime>
+<SplitTime sequence="14">
+<ControlCode>114</ControlCode>
+<Time>11:37</Time>
+</SplitTime>
+<SplitTime sequence="15">
+<ControlCode>115</ControlCode>
+<Time>12:19</Time>
+</SplitTime>
+<SplitTime sequence="16">
+<ControlCode>116</ControlCode>
+<Time>13:41</Time>
+</SplitTime>
+<SplitTime sequence="17">
+<ControlCode>117</ControlCode>
+<Time>14:21</Time>
+</SplitTime>
+</Result>
+</PersonResult>
+</ClassResult>
+<ClassResult>
+<ClassShortName>[Auto]</ClassShortName>
+</ClassResult>
+</ResultList>
