@@ -37,6 +37,7 @@ export const handle: Handle = async ({ event, resolve }) => {
 	event.locals.auth = auth;
 	event.locals.authRequest = auth.handleRequest(event);
 
+	// CORS handling for pubic api routes
 	if (event.url.pathname.startsWith('/api/public')) {
 		if (event.request.method === 'OPTIONS') {
 			return new Response(null, {

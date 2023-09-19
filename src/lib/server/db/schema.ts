@@ -2,6 +2,8 @@ import { sqliteTable, text, integer, customType, primaryKey, real } from 'drizzl
 import { relations, type InferModel } from 'drizzle-orm';
 import { RolesEnum } from '../../models/enums/roles.enum.js';
 import { RunnerStatusEnum } from '../../models/enums/runner-status.enum.js';
+// import { RolesEnum } from '../../models/enums/roles.enum';
+// import { RunnerStatusEnum } from '../../models/enums/runner-status.enum';
 
 const boolean = customType<{ data: boolean }>({
 	dataType() {
@@ -203,10 +205,10 @@ export type Runner = InferModel<typeof runner>;
 export const runnerLeg = sqliteTable('runner_leg', {
 	id: text('id').primaryKey(),
 	fkDetectedRoutechoice: text('fk_detected_routechoice').references(() => routechoice.id, {
-		onDelete: 'cascade'
+		onDelete: 'set null'
 	}),
 	fkManualRoutechoice: text('fk_manual_routechoice').references(() => routechoice.id, {
-		onDelete: 'cascade'
+		onDelete: 'set null'
 	}),
 	fkLeg: text('fk_leg')
 		.notNull()
