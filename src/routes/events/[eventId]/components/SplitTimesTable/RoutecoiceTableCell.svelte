@@ -4,7 +4,7 @@
 	import type { EventWithLiveEventsRunnersLegsAndControlPoints } from '$lib/models/event.model.js';
 	import type { RunnerWithNullableLegs as Runner } from '$lib/models/runner.model.js';
 	import type { Routechoice } from '$lib/server/db/schema.js';
-	import type { User } from 'lucia-auth';
+	import type { User } from 'lucia';
 	import { getContext } from 'svelte';
 	import type { Writable } from 'svelte/store';
 
@@ -13,6 +13,16 @@
 
 	const user = getContext<Writable<User | null>>('user');
 	const event = getContext<Writable<EventWithLiveEventsRunnersLegsAndControlPoints>>('event');
+
+	$: manualRouteChoice = routechoices.find(
+		(rc) => runner.legs[0]?.fkManualRoutechoice === rc.id
+	)
+
+	$: detectedRouteChoice = routechoices.find(
+		(rc) => runner.legs[0]?.fkDetectedRoutechoice === rc.id
+	)
+
+	$: selectedRoutechoice = manualRouteChoice ?? detectedRouteChoice ?? null
 
 	async function handleChange(
 		event: Event & {
@@ -33,16 +43,6 @@
 
 <td class="text-right">
 	{#if runner.legs !== null && runner.legs[0] !== null}
-		{@const manualRouteChoice = routechoices.find(
-			(rc) => runner.legs[0]?.fkManualRoutechoice === rc.id
-		)}
-
-		{@const detectedRouteChoice = routechoices.find(
-			(rc) => runner.legs[0]?.fkDetectedRoutechoice === rc.id
-		)}
-
-		{@const selectedRoutechoice = manualRouteChoice ?? detectedRouteChoice ?? null}
-
 		{#if $user !== null && ($user.role === RolesEnum.Enum.admin || runner.fkUser === $user.id)}
 			<form
 				method="post"
@@ -54,7 +54,7 @@
 					class="routechoice-select"
 					name="routechoiceId"
 					style:color={selectedRoutechoice?.color}
-					value={selectedRoutechoice?.id}
+					value={selectedRoutechoice?.id ?? null}
 					on:change={handleChange}
 				>
 					<option value={null} />
