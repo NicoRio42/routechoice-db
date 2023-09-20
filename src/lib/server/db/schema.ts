@@ -96,6 +96,14 @@ export const legsRelations = relations(leg, ({ one, many }) => ({
 		fields: [leg.fkEvent],
 		references: [event.id]
 	}),
+	startControlPoint: one(controlPoint, {
+		fields: [leg.fkStartControlPoint],
+		references: [controlPoint.id]
+	}),
+	finishControlPoint: one(controlPoint, {
+		fields: [leg.fkFinishControlPoint],
+		references: [controlPoint.id]
+	}),
 	routechoices: many(routechoice)
 }));
 

@@ -6,7 +6,13 @@ import { parseTwoDRerunCourseAndRoutechoicesExport } from 'orienteering-js/two-d
 import { insertControlPointsLegsRoutechoicesAndRoutechoicesStatistics } from '../helpers.js';
 import { reThrowRedirectsAndErrors } from '$lib/server/sveltekit-helpers.js';
 
-export function load() {
+export async function load({ locals }) {
+	const session = await locals.authRequest.validate();
+	if (!session) throw redirect(302, '/login');
+	const { user } = session;
+
+	redirectIfNotAdmin(user);
+
 	return { displayError: false };
 }
 

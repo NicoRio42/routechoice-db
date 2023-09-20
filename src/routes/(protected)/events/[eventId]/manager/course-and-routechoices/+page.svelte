@@ -24,4 +24,10 @@
 			From OCAD export
 		</a>
 	</li>
+
+	<li>
+		<a href="/events/{data.event.id}/manager/course-and-routechoices/manage-course">
+			Manage course
+		</a>
+	</li>
 </ul>
