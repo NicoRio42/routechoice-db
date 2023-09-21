@@ -60,11 +60,18 @@
 	<form class="m0" data-sveltekit-replacestate>
 		<select
 			name="legNumber"
+			id="leg-select"
 			bind:value={legNumber}
 			on:change={(e) => e.currentTarget.form?.submit()}
 		>
-			{#each [...Array(numberOfLegs).keys()] as leg}
-				<option value={leg + 1}>{leg + 1}</option>
+			{#each [...Array(numberOfLegs).keys()] as leg, legIndex}
+				<option value={leg + 1}>
+					{#if legIndex === numberOfLegs - 1}
+						Finish
+					{:else}
+						{leg + 1}
+					{/if}
+				</option>
 			{/each}
 		</select>
 	</form>
@@ -117,6 +124,11 @@
 		justify-content: center;
 		align-items: center;
 		margin-bottom: 0;
+	}
+
+	#leg-select {
+		padding-right: var(--form-element-spacing-horizontal);
+		background-position: center right 0.375rem;
 	}
 
 	.map-buttons-toggler {

@@ -7,10 +7,12 @@
 	import { addAlpha } from '$lib/helpers.js';
 	import { page } from '$app/stores';
 	import { RolesEnum } from '$lib/models/enums/roles.enum.js';
+	import LegCell from './LegCell.svelte';
 
 	export let selectedRunners: string[];
 	export let sortedRunnersWithOneLeg: RunnerWithNullableLegsAndTrack[];
 	export let legRoutechoices: Routechoice[];
+	export let isLastSplit = false;
 
 	let iShowAllRunnersTracksChecked = false;
 
@@ -70,25 +72,7 @@
 				{fullNameToShortName(runner.firstName, runner.lastName)}
 			</td>
 
-			<td class:mistake={runnerLeg?.timeLoss !== 0}>
-				{#if runnerLeg !== null}
-					<div
-						class="tooltip-container {rankToCSSClass(runnerLeg?.rankSplit)}"
-						data-tooltip={`+ ${secondsToPrettyTime(runnerLeg?.timeBehindSplit)}`}
-					>
-						{`${secondsToPrettyTime(runnerLeg?.time)} (${runnerLeg?.rankSplit})`}
-					</div>
-
-					<div
-						class="tooltip-container {rankToCSSClass(runnerLeg.rankOverall)}"
-						data-tooltip={runnerLeg.timeBehindOverall !== null
-							? `+ ${secondsToPrettyTime(runnerLeg.timeBehindOverall)}`
-							: null}
-					>
-						{`${secondsToPrettyTime(runnerLeg.timeOverall)} (${runnerLeg.rankOverall})`}
-					</div>
-				{/if}
-			</td>
+			<LegCell {runnerLeg} {isLastSplit}></LegCell>
 
 			{#if legRoutechoices.length > 0}
 				<RoutechoiceTableCell routechoices={legRoutechoices} {runner} />

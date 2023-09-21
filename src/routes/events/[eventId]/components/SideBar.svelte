@@ -1,13 +1,11 @@
 <script lang="ts">
+	import { page } from '$app/stores';
+	import type { LegWithRoutechoices } from '$lib/models/leg.model.js';
+	import type { RoutechoiceWithStatistics } from '$lib/models/routechoice.model.js';
+	import type { RunnerWithNullableLegsAndTrack } from '$lib/models/runner.model.js';
 	import LegStatistics from './LegStatistics/LegStatistics.svelte';
 	import LegSplitTimesTable from './SplitTimesTable/LegSplitTimesTable.svelte';
-	import SummaryPanel from './SummaryPanel.svelte';
 	import Toggle from './Toggle.svelte';
-	import { page } from '$app/stores';
-	import type { Leg, Routechoice } from '$lib/server/db/schema.js';
-	import type { LegWithRoutechoices } from '$lib/models/leg.model.js';
-	import type { RunnerWithNullableLegsAndTrack } from '$lib/models/runner.model.js';
-	import type { RoutechoiceWithStatistics } from '$lib/models/routechoice.model.js';
 
 	export let selectedRunners: string[];
 	export let runners: RunnerWithNullableLegsAndTrack[];
@@ -66,6 +64,7 @@
 			<LegSplitTimesTable
 				{sortedRunnersWithOneLeg}
 				{legRoutechoices}
+				isLastSplit={legNumber === legs.length}
 				bind:selectedRunners
 				on:routechoiceChange
 				on:changeRunnerTimeOffset
