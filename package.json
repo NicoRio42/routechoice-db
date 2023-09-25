@@ -6,7 +6,7 @@
 		"dev": "vite dev",
 		"dev-offline": "vite dev --mode dev-offline",
 		"build": "vite build",
-		"build:prod": "vite build",
+		"build:prod": "npm run migrate:prod && vite build",
 		"preview": "vite preview",
 		"check": "svelte-kit sync && svelte-check --tsconfig ./tsconfig.json",
 		"check:watch": "svelte-kit sync && svelte-check --tsconfig ./tsconfig.json --watch",
@@ -14,8 +14,8 @@
 		"format": "prettier --plugin-search-dir . --write .",
 		"migrations": "drizzle-kit generate:sqlite",
 		"studio": "drizzle-kit studio",
-		"migrate": "node migrate.js",
-		"migrate:prod": "node migrate.js prod"
+		"migrate": "node scripts/migrate.js",
+		"migrate:prod": "node scripts/migrate-prod.js"
 	},
 	"devDependencies": {
 		"@iconify-json/carbon": "^1.1.17",
