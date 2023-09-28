@@ -16,9 +16,10 @@ export const handle: Handle = async ({ event, resolve }) => {
 	if (libsqlClient === undefined) {
 		console.debug('[HOOK HANDLE] Init libsqlClient');
 
-		const config = dev
-			? { url: 'file:sqlite.db' }
-			: { url: 'libsql://routechoice-db-routechoice-db.turso.io', authToken: TURSO_DB_TOKEN };
+		const config =
+			!dev || import.meta.env.MODE === 'production'
+				? { url: 'libsql://routechoice-db-routechoice-db.turso.io', authToken: TURSO_DB_TOKEN }
+				: { url: 'file:sqlite.db' };
 
 		libsqlClient = dev
 			? (await import('@libsql/client')).createClient(config)

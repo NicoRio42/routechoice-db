@@ -50,7 +50,7 @@
 		<tr>
 			<th class="sticky-header">Runners</th>
 
-			<th class="sticky-header">Time</th>
+			<th class="sticky-header text-end">Time</th>
 
 			<th class="sticky-header right">RC</th>
 
