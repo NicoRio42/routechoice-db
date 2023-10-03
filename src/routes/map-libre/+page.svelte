@@ -2,8 +2,11 @@
     import {Map} from "maplibre-gl"
 	import { onMount } from "svelte";
     import "maplibre-gl/dist/maplibre-gl.css"
+	import { convertJpegToPng } from "./utils.js";
 
-    onMount(() => {
+    onMount(async () => {
+        const url = await convertJpegToPng('test-maplibre.jpg')
+
         const style = {
             "version": 8,
                 "sources": {
@@ -16,7 +19,7 @@
                     },
                     "image": {
                         'type': 'image',
-                        'url': 'test-maplibre.jpg',
+                        url,
                         'coordinates': [
                             [5.356827445744547, 46.01014858538691,],
                             [5.3676488516148355, 46.00992606432991,],
