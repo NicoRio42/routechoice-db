@@ -4,7 +4,7 @@ import {
 	parseRoutechoicesTracksInLegs,
 	sortLegs
 } from '$lib/helpers.js';
-import { redirectIfNotAdmin } from '$lib/server/auth/helpers.js';
+import { redirectIfNotAdminOrNotCurrentUser } from '$lib/server/auth/helpers.js';
 import {
 	leg as legFromDatabase,
 	liveEvent as liveEventFromDatabase,
@@ -26,13 +26,13 @@ export const actions = {
 		if (!session) throw redirect(302, '/login');
 		const { user } = session;
 
-		redirectIfNotAdmin(user);
-
 		const runner = await locals.db
 			.select()
 			.from(runnerFromDatabase)
 			.where(eq(runnerFromDatabase.id, runnerId))
 			.get();
+
+		redirectIfNotAdminOrNotCurrentUser(user, runner.fkUser ?? '');
 
 		const runnerLeg = await locals.db
 			.select()

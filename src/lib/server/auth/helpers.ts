@@ -27,11 +27,7 @@ export function redirectIfNotAdmin(user: User) {
 export function redirectIfNotAdminOrNotCurrentUser(user: User, userId: string) {
 	redirectIfNotLogedIn(user);
 
-	if (user.id !== userId && user.role !== RolesEnum.Enum.admin) {
-		throw redirect(302, '/');
-	}
-
-	if (user.role !== RolesEnum.Enum.admin) {
+	if (user.role !== RolesEnum.Enum.admin && user.id !== userId) {
 		throw redirect(302, '/');
 	}
 }

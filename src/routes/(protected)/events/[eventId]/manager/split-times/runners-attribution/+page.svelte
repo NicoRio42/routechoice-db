@@ -42,7 +42,7 @@
 
 					<td>
 						<select
-							value={runner.trackingDeviceId}
+							value="{data.liveEvent.id}|{runner.trackingDeviceId}"
 							name="{runner.id}-tracking"
 							class="m-0"
 							aria-invalid={isTrackingDeviceIdError ? true : null}
@@ -50,16 +50,16 @@
 							<option />
 							
 							{#each data.competitors as competitor (competitor.deviceId)}
-								<option value={`${data.liveEvent.id}|${competitor.deviceId}`}>
+								<option value="{data.liveEvent.id}|{competitor.deviceId}">
 									{competitor.name}
 								</option>
 								{/each}
 							</select>
 
 							{#if isTrackingDeviceIdError}
-							<small class="error mt-0">
-								GPS track allready assigned.
-							</small>
+								<small class="error mt-0">
+									GPS track allready assigned.
+								</small>
 							{/if}
 						</td>
 

@@ -98,7 +98,7 @@ export async function load({ params: { eventId }, locals, fetch }) {
 		const runnersWithAttributedUsersAndCompetitors = matchRunnersByName(
 			runnersWithAttributedUsers,
 			'trackingDeviceId',
-			competitors.map((c) => ({ key: `${liveEvent.id}|${c.deviceId}`, name: c.name }))
+			competitors.map((c) => ({ key: c.deviceId.toString(), name: c.name }))
 		);
 
 		runners.forEach((runner) => {
