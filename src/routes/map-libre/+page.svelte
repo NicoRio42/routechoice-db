@@ -6,7 +6,7 @@
 
     onMount(async () => {
         // const url = await convertJpegToPng('test-maplibre.jpg')
-        const url = 'test-maplibre-min.jpg';
+        const url = 'https://docs.mapbox.com/mapbox-gl-js/assets/radar.gif';
 
         const style = {
             "version": 8,
