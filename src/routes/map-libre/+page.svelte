@@ -6,7 +6,7 @@
 
     onMount(async () => {
         // const url = await convertJpegToPng('test-maplibre.jpg')
-        const url = 'test-maplibre.png';
+        const url = 'test-maplibre-min.jpg';
 
         const style = {
             "version": 8,
