@@ -2,11 +2,10 @@
     import {Map} from "maplibre-gl"
 	import { onMount } from "svelte";
     import "maplibre-gl/dist/maplibre-gl.css"
-	import { convertJpegToPng } from "./utils.js";
+	import { resizeImageIfNedded } from "./utils.js";
 
     onMount(async () => {
-        // const url = await convertJpegToPng('test-maplibre.jpg')
-        const url = 'test-maplibre.gif';
+        const url = await resizeImageIfNedded('test-maplibre.jpg');
 
         const style = {
             "version": 8,
