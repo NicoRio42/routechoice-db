@@ -5,7 +5,8 @@
 	import { convertJpegToPng } from "./utils.js";
 
     onMount(async () => {
-        const url = await convertJpegToPng('test-maplibre.jpg')
+        // const url = await convertJpegToPng('test-maplibre.jpg')
+        const url = 'test-maplibre.png';
 
         const style = {
             "version": 8,
