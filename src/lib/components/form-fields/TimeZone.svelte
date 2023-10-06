@@ -45,6 +45,6 @@
 
 <datalist id="timezones">
 	{#each timezones as timezone}
-		<option value="{timezone.name} - {timezone.offset}" />
+		<option value="{timezone.offset}" />
 	{/each}
 </datalist>

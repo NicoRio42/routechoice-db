@@ -103,9 +103,9 @@
 			{/each}
 		</SelectField>
 
-		<SelectField {form} field="timezone" label="Time zone">
+		<SelectField {form} field="timezone" label="Time zone offset (With daylight saving time)">
 			{#each timezones as timezone}
-				<option value={timezone.offset}>{timezone.name} {timezone.offset}</option>
+				<option value={timezone.offset}>{timezone.offset}</option>
 			{/each}
 		</SelectField>
 
