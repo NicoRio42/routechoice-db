@@ -37,6 +37,10 @@
 
 		const event = loggatorEventSchema.parse(await response.json());
 
+		if ($formStore.name === "" || $formStore.name === undefined || $formStore.name === null) {
+			$formStore.name = event.event.name;
+		}
+
 		$formStore.startTime = formatDateTimeForDateTimeInput(new Date(event.event.start_date));
 		$formStore.publishTime = formatDateTimeForDateTimeInput(new Date(event.event.publish_date));
 		$formStore.finishTime = formatDateTimeForDateTimeInput(new Date(event.event.end_date));
@@ -46,9 +50,9 @@
 <form method="POST" use:enhance novalidate>
 	<h1>Create a new Event</h1>
 
-	<TextField {form} field="name" label="Name" />
-
 	<UrlField {form} field="liveProviderUrl" label="Live provider URL" />
+
+	<TextField {form} field="name" label="Name" />
 
 	<input name="timeZoneOffset" type="hidden" bind:value={$formStore.timeZoneOffset} />
 
