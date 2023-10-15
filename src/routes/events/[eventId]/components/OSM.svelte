@@ -1,7 +1,7 @@
 <script lang="ts">
   import type { Map } from "ol";
-  import TileLayer from "ol/layer/Tile";
-  import OSM from "ol/source/OSM";
+  import TileLayer from "ol/layer/Tile.js";
+  import OSM from "ol/source/OSM.js";
   import { getContext, onDestroy, onMount } from "svelte";
 
   const getMap = getContext<() => Map>("map");

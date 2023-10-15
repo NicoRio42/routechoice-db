@@ -54,7 +54,7 @@ export async function getMapCallibrationByFetchingMapImageIfNeeded(
 	});
 }
 
-export async function resizeImageIfNedded(src: string) {
+export async function resizeImageIfNedded(src: string): Promise<string> {
 	return new Promise<string>((resolve, reject) => {
 		const canvas2 = document.createElement('canvas');
 		const gl = canvas2.getContext('webgl');
@@ -75,7 +75,6 @@ export async function resizeImageIfNedded(src: string) {
 					? [img.width, img.height]
 					: computeResizedWidthHeight(img.width, img.height, maxTextureSize);
 
-			console.log([width, height]);
 			canvas.width = width;
 			canvas.height = height;
 

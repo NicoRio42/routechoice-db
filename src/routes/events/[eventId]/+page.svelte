@@ -1,11 +1,18 @@
 <script lang="ts">
 	import { page } from '$app/stores';
+	import { RolesEnum } from '$lib/models/enums/roles.enum.js';
 	import type { EventWithLiveEventsRunnersLegsAndControlPoints as Event } from '$lib/models/event.model.js';
 	import type { User } from 'lucia';
+	import type { LineString } from 'ol/geom.js';
+	import type { DrawEvent } from 'ol/interaction/Draw.js';
 	import { onDestroy, setContext } from 'svelte';
 	import { writable } from 'svelte/store';
+	import { eventName } from '../../_components/event-name-store.js';
 	import ActionButtons from './components/ActionButtons.svelte';
+	import AddRoutechoiceDialog from './components/AddRoutechoiceDialog.svelte';
+	import Draw from './components/Draw.svelte';
 	import GeoreferencedImage from './components/GeoreferencedImage.svelte';
+	import ManageRoutechoicesDialog from './components/ManageRoutechoicesDialog.svelte';
 	import OlMap from './components/OLMap.svelte';
 	import RoutechoiceTrack from './components/RoutechoiceTrack.svelte';
 	import RunnerRoute from './components/RunnerRoute.svelte';
@@ -13,21 +20,9 @@
 	import VectorLayer from './components/VectorLayer.svelte';
 	import './styles.css';
 	import {
-	addSearchParamsToURL,
 		computeFitBoxAndAngleFromLegNumber,
-		deleteSearchParamsToURL,
-		getLegNumberFromSearchParams,
-		getModeFromSearchParams
+		getLegNumberFromSearchParams
 	} from './utils.js';
-	import ModeDropDown from './components/ModeDropDown.svelte';
-	import { ModesEnum } from './models/modes.enum.js';
-	import Draw from './components/Draw.svelte';
-	import AddRoutechoiceDialog from './components/AddRoutechoiceDialog.svelte';
-	import type { LineString } from 'ol/geom.js';
-	import type { DrawEvent } from 'ol/interaction/Draw.js';
-	import { RolesEnum } from '$lib/models/enums/roles.enum.js';
-	import { eventName } from '../../_components/event-name-store.js';
-	import ManageRoutechoicesDialog from './components/ManageRoutechoicesDialog.svelte';
 
 	export let data;
 
@@ -71,46 +66,7 @@
 		showAddRoutechoiceDialog = true;
 	}
 
-	async function handleRunnerTimeOffsetChange(event: CustomEvent<string>): Promise<void> {
-		// const runnerId = event.detail;
-		// const previouslySelectedRunners = [...selectedRunners];
-		// selectedRunners = [runnerId];
-		// let newOffset: number, applyToAllRunners: boolean;
-		// try {
-		// 	[newOffset, applyToAllRunners] = await getNewRunnerOffset(runnerId);
-		// } catch (e) {
-		// 	return;
-		// } finally {
-		// 	selectedRunners = [...previouslySelectedRunners];
-		// }
-		// if (applyToAllRunners) {
-		// 	courseData.runners.forEach((runner) => (runner.timeOffset = newOffset));
-		// 	courseData.runners = detectRunnersRoutechoices(courseData.legs, courseData.runners);
-		// 	const batch = writeBatch(db);
-		// 	courseData.runners.forEach((runner) =>
-		// 		batch.update(doc(db, 'coursesData', courseData.id, 'runners', runner.id), {
-		// 			timeOffset: newOffset,
-		// 			legs: runner.legs
-		// 		})
-		// 	);
-		// 	batch.commit();
-		// 	return;
-		// }
-		// const runner = courseData.runners.find((runner) => runner.id === runnerId)!;
-		// const runnerWithNewOssetAndDetectedRoutechoice = detectSingleRunnerRoutechoices(
-		// 	courseData.legs,
-		// 	{
-		// 		...runner,
-		// 		timeOffset: newOffset
-		// 	}
-		// );
-		// courseData.runners = courseData.runners.map((runner) =>
-		// 	runner.id === runnerId ? runnerWithNewOssetAndDetectedRoutechoice : runner
-		// );
-		// updateDoc(doc(db, 'coursesData', courseData.id, 'runners', runnerId), {
-		// 	...runnerWithNewOssetAndDetectedRoutechoice
-		// });
-	}
+	async function handleRunnerTimeOffsetChange(event: CustomEvent<string>): Promise<void> {}
 
 	onDestroy(() => $eventName = null)
 </script>

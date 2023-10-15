@@ -1,15 +1,8 @@
 <script lang="ts">
 	import { enhance } from '$app/forms';
+	import { confirmSubmit } from '$lib/actions/confirm-submit.js';
 
 	export let data;
-
-	function confirmDeletion(e: Event) {
-		if (!confirm('Are you sure to delete this user?')) {
-			e.preventDefault();
-			e.stopPropagation();
-			e.stopImmediatePropagation();
-		}
-	}
 </script>
 
 <main class="container mt-6 px-4">
@@ -54,7 +47,7 @@
 								action="/users/{user.id}/delete"
 								method="post"
 								class="m-0 p-0"
-								on:submit={confirmDeletion}
+								use:confirmSubmit={'Are you sure to delete this user?'}
 								use:enhance
 							>
 								<button type="submit" class="btn-unset">

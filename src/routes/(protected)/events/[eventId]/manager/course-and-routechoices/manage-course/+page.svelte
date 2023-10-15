@@ -2,18 +2,11 @@
 	import { flip } from "svelte/animate";
 	import { page } from "$app/stores";
 	import { enhance } from "$app/forms";
+	import { confirmSubmit } from "$lib/actions/confirm-submit.js";
 
     export let data;
 
     const legs = [{...data.legs[0], finishControlPoint: data.legs[0].startControlPoint, id: "start"}, ...data.legs];
-    
-	function confirmDeletion(e: Event) {
-		if (!confirm('Are you sure to delete this control point?')) {
-			e.preventDefault();
-			e.stopPropagation();
-			e.stopImmediatePropagation();
-		}
-	}
 </script>
 
 <h1>Manage course</h1>
@@ -65,7 +58,7 @@
                         action="?/deleteControlPoint&controlPointId={leg.finishControlPoint.id}"
                         method="post"
                         class="m-0 p-0"
-                        on:submit={confirmDeletion}
+                        use:confirmSubmit={'Are you sure to delete this control point?'}
                         use:enhance
                     >
                         <button type="submit" class="btn-unset">

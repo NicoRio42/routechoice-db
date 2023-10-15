@@ -1,5 +1,6 @@
 import { z } from 'zod';
 
 export const filterEventFormSchema = z.object({
-	tags: z.string().transform((arg) => arg.split(',').filter((s) => s !== ''))
+	tags: z.string().transform((arg) => arg.split(',').filter((s) => s !== '')),
+	pageNumber: z.number().default(1)
 });

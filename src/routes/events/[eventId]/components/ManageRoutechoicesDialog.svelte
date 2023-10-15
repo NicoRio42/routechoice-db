@@ -1,5 +1,6 @@
 <script lang="ts">
 	import { enhance } from "$app/forms";
+	import { confirmSubmit } from "$lib/actions/confirm-submit.js";
 	import type { Routechoice } from "$lib/server/db/schema.js";
 	import { createEventDispatcher } from "svelte";
 	import { fade } from "svelte/transition";
@@ -10,14 +11,6 @@
     
     let loading = false;
     const dispatch = createEventDispatcher<{startDrawingNewRoutechoice: undefined}>();
-
-	function confirmDeletion(e: Event) {
-		if (!confirm('Are you sure to delete this routechoice?')) {
-			e.preventDefault();
-			e.stopPropagation();
-			e.stopImmediatePropagation();
-		}
-	}
 </script>
 
 <!-- Dialog showModal and close methods are not well supported on IOS -->
@@ -46,7 +39,7 @@
                         <td>
                             <form action="/events/{eventId}/legs/{routechoice.fkLeg}/routechoices/{routechoice.id}?/delete"
                                 method="post"
-                                on:submit={confirmDeletion}
+                                use:confirmSubmit={'Are you sure to delete this routechoice?'}
                                 use:enhance={() => {
                                     loading = true;
                                     return ({update}) => {

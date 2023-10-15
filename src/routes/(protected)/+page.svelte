@@ -1,11 +1,13 @@
 <script lang="ts">
 	import { dev } from '$app/environment';
 	import { enhance } from '$app/forms';
-import { page } from '$app/stores';
+	import { page } from '$app/stores';
+	import { confirmSubmit } from '$lib/actions/confirm-submit.js';
 	import TagsSelect from '$lib/components/form-fields/TagsSelect.svelte';
 	import { SPLITTIMES_BASE_URL, SPLITTIMES_BASE_URL_DEV } from '$lib/constants.js';
 	import { RolesEnum } from '$lib/models/enums/roles.enum.js';
 	import { superForm } from 'sveltekit-superforms/client';
+	import { addSearchParamsToURL } from '../events/[eventId]/utils.js';
 
 	export let data;
 
@@ -26,15 +28,6 @@ import { page } from '$app/stores';
 		if (tagsDidNotChange) return;
 
 		formElement.submit();
-	}
-	
-
-	function confirmDeletion(e: Event) {
-		if (!confirm('Are you sure to delete this event?')) {
-			e.preventDefault();
-			e.stopPropagation();
-			e.stopImmediatePropagation();
-		}
 	}
 </script>
 
@@ -58,6 +51,14 @@ import { page } from '$app/stores';
 			on:toggle={handleTagsToggle}
 		/>
 	</form>
+
+	<p>
+		<a href={addSearchParamsToURL($page.url, "pageNumber", `${data.pageNumber - 1}`)}>Previous</a>
+
+		{data.pageNumber}
+
+		<a href={addSearchParamsToURL($page.url, "pageNumber", `${data.pageNumber + 1}`)}>Next</a>
+	</p>
 
 	<figure class="mt-4">
 		<table>
@@ -90,7 +91,7 @@ import { page } from '$app/stores';
 						<td>{new Date(event.publishTime).toLocaleString()}</td>
 
 						<td>
-							{#each event.tags as { fkTag: tagId }}
+							{#each event.tagIds as tagId}
 								{@const tag = data.tags.find((t) => t.id === tagId)}
 
 								{#if tag !== undefined}
@@ -122,7 +123,12 @@ import { page } from '$app/stores';
 							</td>
 
 							<td class="text-right">
-								<form action="/events/{event.id}/delete" method="post" on:submit={confirmDeletion} use:enhance class="m-0 p-0">
+								<form
+									action="/events/{event.id}/delete"
+									method="post"
+									use:confirmSubmit={'Are you sure to delete this event?'}
+									use:enhance class="m-0 p-0"
+								>
 									<button type="submit" class="btn-unset">
 										<i class="i-carbon-trash-can w-5 h-5 block" />
 									</button>
