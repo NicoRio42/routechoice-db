@@ -7,7 +7,7 @@ import {
 	type Event
 } from '$lib/server/db/schema.js';
 import { redirect } from '@sveltejs/kit';
-import { and, desc, eq, exists, inArray } from 'drizzle-orm';
+import { and, desc, eq, inArray, like, type SQL } from 'drizzle-orm';
 import { superValidate } from 'sveltekit-superforms/server';
 import { filterEventFormSchema } from './schema.js';
 
@@ -21,66 +21,59 @@ export async function load({ url, locals }) {
 	redirectIfNotLogedIn(user);
 
 	const form = await superValidate(url.searchParams, filterEventFormSchema);
-	const pageNumber = form.data.pageNumber;
-
 	console.log(form.data);
-
+	const pageNumber = form.data.pageNumber;
 	const tags = locals.db.select().from(tagTable).all();
 
-	const queryWithoutTagsFilter = locals.db
+	let filteredEventsSelect = locals.db
 		.select()
 		.from(eventTable)
-		.leftJoin(assoEventTag, eq(assoEventTag.fkEvent, eventTable.id))
-		.orderBy(desc(eventTable.startTime));
+		.orderBy(desc(eventTable.startTime))
+		.limit(PAGE_SIZE + 1)
+		.offset((pageNumber - 1) * PAGE_SIZE);
 
-	const tagsClause = inArray(assoEventTagTable.fkTag, form.data.tags);
+	const whereClauses: SQL<unknown>[] = [];
 
-	const paginationClause =
-		form.data.tags.length === 0
-			? inArray(
-					eventTable.id,
-					locals.db
-						.select({ id: eventTable.id })
-						.from(eventTable)
-						.limit(PAGE_SIZE)
-						.offset((pageNumber - 1) * PAGE_SIZE)
-			  )
-			: inArray(
-					eventTable.id,
-					locals.db
-						.select({ id: eventTable.id })
-						.from(eventTable)
-						.where(
-							exists(
-								locals.db
-									.select()
-									.from(eventTable)
-									.leftJoin(assoEventTag, eq(assoEventTag.fkEvent, eventTable.id))
-									.where(inArray(assoEventTagTable.fkTag, form.data.tags))
-							)
-						)
-						.orderBy(desc(eventTable.startTime))
-						.limit(PAGE_SIZE)
-						.offset((pageNumber - 1) * PAGE_SIZE)
-			  );
+	if (form.data.tags.length !== 0) {
+		whereClauses.push(
+			inArray(
+				eventTable.id,
+				locals.db
+					.select({ id: eventTable.id })
+					.from(eventTable)
+					.innerJoin(assoEventTagTable, eq(assoEventTag.fkEvent, eventTable.id))
+					.where(inArray(assoEventTagTable.fkTag, form.data.tags))
+			)
+		);
+	}
 
-	const query =
-		form.data.tags.length === 0
-			? queryWithoutTagsFilter.where(paginationClause)
-			: queryWithoutTagsFilter.where(and(paginationClause, tagsClause));
+	if (form.data.search.length !== 0) {
+		whereClauses.push(like(eventTable.name, `%${form.data.search}%`));
+	}
 
-	console.log(query.toSQL());
+	if (whereClauses.length === 1) {
+		filteredEventsSelect = filteredEventsSelect.where(whereClauses[0]);
+	} else if (whereClauses.length !== 0) {
+		filteredEventsSelect = filteredEventsSelect.where(and(...whereClauses));
+	}
 
-	const eventRaw = await query.all();
+	const filteredEventsWith = locals.db.$with('filtered_event').as(filteredEventsSelect);
+
+	const eventRaw = await locals.db
+		.with(filteredEventsWith)
+		.select()
+		.from(filteredEventsWith)
+		.leftJoin(assoEventTag, eq(assoEventTag.fkEvent, filteredEventsWith.id))
+		.all();
 
 	type FormattedEvent = Event & { tagIds: string[] };
 	const events: FormattedEvent[] = [];
 
-	for (const { event, asso_event_tag } of eventRaw) {
-		const foundEvent = events.find((e) => e.id === event.id);
+	for (const { filtered_event, asso_event_tag } of eventRaw) {
+		const foundEvent = events.find((e) => e.id === filtered_event.id);
 
 		if (foundEvent === undefined) {
-			const newEvent: FormattedEvent = { ...event, tagIds: [] };
+			const newEvent: FormattedEvent = { ...filtered_event, tagIds: [] };
 
 			if (asso_event_tag !== null && asso_event_tag.fkTag !== null) {
 				newEvent.tagIds.push(asso_event_tag.fkTag);
@@ -92,5 +85,11 @@ export async function load({ url, locals }) {
 		}
 	}
 
-	return { events, user, tags, form, pageNumber };
+	const isLastPage = events.length !== PAGE_SIZE + 1;
+
+	if (!isLastPage) {
+		events.pop();
+	}
+
+	return { events, user, tags, form, pageNumber, isLastPage };
 }

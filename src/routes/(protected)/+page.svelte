@@ -4,6 +4,7 @@
 	import { page } from '$app/stores';
 	import { confirmSubmit } from '$lib/actions/confirm-submit.js';
 	import TagsSelect from '$lib/components/form-fields/TagsSelect.svelte';
+	import SearchField from '$lib/components/form-fields/SearchField.svelte';
 	import { SPLITTIMES_BASE_URL, SPLITTIMES_BASE_URL_DEV } from '$lib/constants.js';
 	import { RolesEnum } from '$lib/models/enums/roles.enum.js';
 	import { superForm } from 'sveltekit-superforms/client';
@@ -11,54 +12,51 @@
 
 	export let data;
 
-	let formElement: HTMLFormElement;
-
 	const form = superForm(data.form, {
 		taintedMessage: null
 	});
-
-	function handleTagsToggle(e: CustomEvent<string>) {
-		const selectedTags = e.detail.split(',');
-		const currentTags = $page.url.searchParams.get('tags')?.split(',') ?? [];
-
-		const tagsDidNotChange =
-			currentTags.every((currentTag) => selectedTags.includes(currentTag)) &&
-			selectedTags.every((selectedTag) => currentTags.includes(selectedTag));
-
-		if (tagsDidNotChange) return;
-
-		formElement.submit();
-	}
 </script>
 
 <svelte:head>
 	<title>Routechoice DB</title>
 </svelte:head>
 
-<main class="container flex-shrink-0 flex-grow-1 px-4">
-	<h1 class="mt-4 mb-6">Events</h1>
+<main class="container flex-shrink-0 flex-grow-1 px-4 pb4">
+	<header class="max-w-150 mx-auto">
+		<div class="flex items-center justify-between">
+			<h1 class="mt-4 mb-6">Events</h1>
+			
+			{#if data.user.role === RolesEnum.Enum.admin}
+				<a href="events/add" role="button" class="flex items-center gap-1 p2">
+					<i class="i-carbon-add inline-block w6 h6"></i>
 
-	{#if data.user.role === RolesEnum.Enum.admin}
-		<a href="events/add" role="button"> Add new event </a>
-	{/if}
+					New
+				</a>
+			{/if}
+		</div>
 
-	<form method="get" class="m-0 p-0 mt-4 max-w-100% md:max-w-100" bind:this={formElement}>
-		<TagsSelect
-			{form}
-			allTags={data.tags}
-			field="tags"
-			label="Tags"
-			on:toggle={handleTagsToggle}
-		/>
-	</form>
+		<form id="filter-form" method="get" class="m-0 p-0 mt-4 max-w-100% filter-form">
+			<TagsSelect
+				{form}
+				allTags={data.tags}
+				field="tags"
+				label="Tags"
+			/>
 
-	<p>
-		<a href={addSearchParamsToURL($page.url, "pageNumber", `${data.pageNumber - 1}`)}>Previous</a>
+			<SearchField
+				{form}
+				field="search"
+				class="important:mb0 important:rounded-[var(--border-radius)]"
+				label="Search"
+			/>
+		</form>
 
-		{data.pageNumber}
-
-		<a href={addSearchParamsToURL($page.url, "pageNumber", `${data.pageNumber + 1}`)}>Next</a>
-	</p>
+		<button type="submit" form="filter-form" class="outline w-fit flex items-center gap-1 p2 ml-auto">
+			<i class="i-carbon-filter inline-block w6 h6"></i>
+			
+			Filter
+		</button>
+	</header>
 
 	<figure class="mt-4">
 		<table>
@@ -144,4 +142,38 @@
 			</tbody>
 		</table>
 	</figure>
+
+	<p class="flex justify-center items-center gap-3">
+		{#if data.pageNumber === 1}
+			<button class="outline w-fit m-0" disabled>
+				<i class="i-carbon-arrow-left w-4 h-4 block" />
+			</button>
+		{:else}
+			<a role="button" class="outline" href={addSearchParamsToURL($page.url, "pageNumber", `${data.pageNumber - 1}`)} data-sveltekit-noscroll>
+				<i class="i-carbon-arrow-left w-4 h-4 block" />
+			</a>
+		{/if}
+
+		{data.pageNumber}
+
+		{#if data.isLastPage}
+			<button class="outline w-fit m-0" disabled>
+				<i class="i-carbon-arrow-right w-4 h-4 block" />
+			</button>
+		{:else}
+			<a role="button" class="outline" href={addSearchParamsToURL($page.url, "pageNumber", `${data.pageNumber + 1}`)} data-sveltekit-noscroll>
+				<i class="i-carbon-arrow-right w-4 h-4 block" />
+			</a>
+		{/if}
+	</p>
 </main>
+
+<style>
+	.filter-form :global(label) {
+		margin-bottom: 0.5rem;
+	}
+	
+	.filter-form :global(details) {
+		margin-bottom: 0;
+	}
+</style>

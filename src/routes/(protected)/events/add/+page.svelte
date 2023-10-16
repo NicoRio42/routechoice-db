@@ -47,7 +47,7 @@
 	}
 </script>
 
-<form method="POST" use:enhance novalidate>
+<form method="POST" use:enhance novalidate class="pb-8 pt-4">
 	<h1>Create a new Event</h1>
 
 	<UrlField {form} field="liveProviderUrl" label="Live provider URL" />
@@ -64,7 +64,7 @@
 
 	<DateTimeField {form} field="finishTime" label="Finish time" />
 
-	<button type="submit" aria-busy={$delayed}>Add new event</button>
+	<button type="submit" class="w-fit ml-auto" aria-busy={$delayed}>Add new event</button>
 
 	{#each $errors._errors ?? [] as globalError}
 		<p>
