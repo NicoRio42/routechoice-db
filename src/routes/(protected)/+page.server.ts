@@ -21,7 +21,6 @@ export async function load({ url, locals }) {
 	redirectIfNotLogedIn(user);
 
 	const form = await superValidate(url.searchParams, filterEventFormSchema);
-	console.log(form.data);
 	const pageNumber = form.data.pageNumber;
 	const tags = locals.db.select().from(tagTable).all();
 

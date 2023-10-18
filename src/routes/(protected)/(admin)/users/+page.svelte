@@ -1,14 +1,40 @@
 <script lang="ts">
 	import { enhance } from '$app/forms';
+	import { page } from '$app/stores';
 	import { confirmSubmit } from '$lib/actions/confirm-submit.js';
+	import Paginator from '$lib/components/Paginator.svelte';
 
 	export let data;
 </script>
 
 <main class="container mt-6 px-4">
-	<h1>Users</h1>
+	<header class="max-w-150 mx-auto">
+		<div class="flex items-center justify-between">
+			<h1 class="my-0">Users</h1>
+			
+			<a href="/users/add" role="button" class="flex items-center gap-1 p2">
+				<i class="i-carbon-add inline-block w6 h6"></i>
 
-	<a href="/users/add" role="button">Add user</a>
+				New
+			</a>
+		</div>
+
+		<form method="get" class="m-0 p-0 mt-4 max-w-100% flex items-center gap-4">
+			<input
+				type="search"
+				name="search"
+				placeholder="Search in users first names and last names"
+				value={$page.url.searchParams.get('search')}
+				class="important:mb0 important:rounded-[var(--border-radius)]"
+			>
+
+			<button type="submit" class="outline w-fit flex items-center gap-1 p2 ml-auto my4">
+				<i class="i-carbon-filter inline-block w6 h6"></i>
+				
+				Filter
+			</button>
+		</form>
+	</header>
 
 	<figure class="mt-6">
 		<table>
@@ -60,4 +86,6 @@
 			</tbody>
 		</table>
 	</figure>
+	
+	<Paginator pageNumber={data.pageNumber} isLastPage={data.isLastPage}></Paginator>
 </main>
