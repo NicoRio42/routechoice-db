@@ -11,7 +11,7 @@ import { and, desc, eq, inArray, like, type SQL } from 'drizzle-orm';
 import { superValidate } from 'sveltekit-superforms/server';
 import { filterEventFormSchema } from './schema.js';
 
-const PAGE_SIZE = 10;
+const PAGE_SIZE = 20;
 
 export async function load({ url, locals }) {
 	const session = await locals.authRequest.validate();

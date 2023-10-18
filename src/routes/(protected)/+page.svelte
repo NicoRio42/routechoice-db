@@ -1,14 +1,13 @@
 <script lang="ts">
 	import { dev } from '$app/environment';
 	import { enhance } from '$app/forms';
-	import { page } from '$app/stores';
 	import { confirmSubmit } from '$lib/actions/confirm-submit.js';
 	import TagsSelect from '$lib/components/form-fields/TagsSelect.svelte';
 	import SearchField from '$lib/components/form-fields/SearchField.svelte';
 	import { SPLITTIMES_BASE_URL, SPLITTIMES_BASE_URL_DEV } from '$lib/constants.js';
 	import { RolesEnum } from '$lib/models/enums/roles.enum.js';
 	import { superForm } from 'sveltekit-superforms/client';
-	import { addSearchParamsToURL } from '../events/[eventId]/utils.js';
+	import Paginator from '$lib/components/Paginator.svelte';
 
 	export let data;
 
@@ -51,7 +50,7 @@
 			/>
 		</form>
 
-		<button type="submit" form="filter-form" class="outline w-fit flex items-center gap-1 p2 ml-auto">
+		<button type="submit" form="filter-form" class="outline w-fit flex items-center gap-1 p2 ml-auto my4">
 			<i class="i-carbon-filter inline-block w6 h6"></i>
 			
 			Filter
@@ -143,29 +142,7 @@
 		</table>
 	</figure>
 
-	<p class="flex justify-center items-center gap-3">
-		{#if data.pageNumber === 1}
-			<button class="outline w-fit m-0" disabled>
-				<i class="i-carbon-arrow-left w-4 h-4 block" />
-			</button>
-		{:else}
-			<a role="button" class="outline" href={addSearchParamsToURL($page.url, "pageNumber", `${data.pageNumber - 1}`)} data-sveltekit-noscroll>
-				<i class="i-carbon-arrow-left w-4 h-4 block" />
-			</a>
-		{/if}
-
-		{data.pageNumber}
-
-		{#if data.isLastPage}
-			<button class="outline w-fit m-0" disabled>
-				<i class="i-carbon-arrow-right w-4 h-4 block" />
-			</button>
-		{:else}
-			<a role="button" class="outline" href={addSearchParamsToURL($page.url, "pageNumber", `${data.pageNumber + 1}`)} data-sveltekit-noscroll>
-				<i class="i-carbon-arrow-right w-4 h-4 block" />
-			</a>
-		{/if}
-	</p>
+	<Paginator pageNumber={data.pageNumber} isLastPage={data.isLastPage}></Paginator>
 </main>
 
 <style>

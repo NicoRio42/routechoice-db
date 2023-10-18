@@ -1,7 +1,7 @@
 import { z } from 'zod';
 
 export const filterEventFormSchema = z.object({
-	tags: z.string().transform((arg) => arg.split(',').filter((s) => s !== '')),
+	tags: z.array(z.string()),
 	pageNumber: z.number().default(1),
 	search: z.string()
 });

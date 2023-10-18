@@ -15,7 +15,6 @@
 	export let data;
 
 	const form = superForm(data.form, {
-		validators: addEventSchema,
 		taintedMessage: null
 	});
 
