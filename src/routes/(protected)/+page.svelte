@@ -47,6 +47,7 @@
 				field="search"
 				class="important:mb0 important:rounded-[var(--border-radius)]"
 				label="Search"
+				placeholder="Search in names"
 			/>
 		</form>
 
@@ -135,7 +136,7 @@
 					</tr>
 				{:else}
 					<tr>
-						<td colspan="7" class="text-center py-10"> No event for these filters. </td>
+						<td colspan="7" class="text-center py-10"> No events for these filters. </td>
 					</tr>
 				{/each}
 			</tbody>

@@ -23,7 +23,7 @@
 			<input
 				type="search"
 				name="search"
-				placeholder="Search in users first names and last names"
+				placeholder="Search in first name, last name"
 				value={$page.url.searchParams.get('search')}
 				class="important:mb0 important:rounded-[var(--border-radius)]"
 			>
@@ -81,6 +81,10 @@
 								</button>
 							</form>
 						</td>
+					</tr>
+				{:else}
+					<tr>
+						<td colspan="8" class="text-center py-10"> No users for these filters. </td>
 					</tr>
 				{/each}
 			</tbody>
