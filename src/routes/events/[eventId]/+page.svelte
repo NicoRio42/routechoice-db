@@ -23,6 +23,7 @@
 		computeFitBoxAndAngleFromLegNumber,
 		getLegNumberFromSearchParams
 	} from './utils.js';
+	import { mapIsLoading } from "./stores/map-loading.store.js"
 
 	export let data;
 
@@ -79,6 +80,12 @@
 />
 	
 <div class="wrapper">
+	{#if $mapIsLoading}
+		<article class="absolute z-1 bg-transparent top-40% left-50% -translate-x-50% -translate-y-50% backdrop-blur rounded-xl" aria-busy="true">
+			Map is loading
+		</article>
+	{/if}
+
 	{#if data.user?.role === RolesEnum.Enum.admin}
 		<button
 			on:click={() => showManageRoutechoicesDialog = !showManageRoutechoicesDialog}

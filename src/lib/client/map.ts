@@ -1,7 +1,9 @@
 import { browser } from '$app/environment';
 import type { CourseMap, MapCalibration } from 'orienteering-js/models';
+import { mapIsLoading } from '../../routes/events/[eventId]/stores/map-loading.store.js';
 
 export const cachedImages: Record<string, HTMLImageElement> = {};
+const IOS_CANVAS_MAX_PIXELS = 16777216;
 
 export async function getMapCallibrationByFetchingMapImageIfNeeded(
 	courseMap: CourseMap
@@ -20,6 +22,58 @@ export async function getMapCallibrationByFetchingMapImageIfNeeded(
 		const image = new Image();
 
 		image.onload = () => {
+			if (isIphone() && imageIsTooLargeForIphoneCanvas(image)) {
+				// Resize image for iphones
+				const [width, height] = computeResizedWidthHeight(image.naturalWidth, image.naturalHeight);
+
+				const canvas = document.createElement('canvas');
+				const ctx = canvas.getContext('2d');
+
+				if (ctx === null) {
+					reject();
+					return;
+				}
+
+				canvas.width = width;
+				canvas.height = height;
+				ctx.drawImage(image, 0, 0, width, height);
+				const resizedImage = new Image();
+				resizedImage.crossOrigin = 'Anonymous';
+				resizedImage.onerror = () => reject('Failed to load map image');
+				resizedImage.src = canvas.toDataURL();
+				cachedImages[courseMap.url] = resizedImage;
+
+				mapIsLoading.set(false);
+
+				resolve([
+					{
+						gps: {
+							lat: courseMap.calibration[0].gps.lat,
+							lon: courseMap.calibration[0].gps.lon
+						},
+						point: { x: 1, y: 1 }
+					},
+					{
+						gps: {
+							lat: courseMap.calibration[1].gps.lat,
+							lon: courseMap.calibration[1].gps.lon
+						},
+						point: { x: 1, y: height }
+					},
+					{
+						gps: {
+							lat: courseMap.calibration[2].gps.lat,
+							lon: courseMap.calibration[2].gps.lon
+						},
+						point: { x: width, y: 1 }
+					}
+				]);
+
+				return;
+			}
+
+			mapIsLoading.set(false);
+
 			resolve([
 				{
 					gps: {
@@ -46,67 +100,36 @@ export async function getMapCallibrationByFetchingMapImageIfNeeded(
 		};
 
 		image.onerror = () => reject('Failed to load map image');
-
-		image.src =
-			import.meta.env.MODE === 'dev-offline' ? 'http://localhost:5173/tile_0_0.jpg' : courseMap.url;
+		image.src = getImageSrc(courseMap.url);
 
 		cachedImages[courseMap.url] = image;
 	});
 }
 
-export async function resizeImageIfNedded(src: string): Promise<string> {
-	return new Promise<string>((resolve, reject) => {
-		const canvas2 = document.createElement('canvas');
-		const gl = canvas2.getContext('webgl');
-		const maxTextureSize: number | null = gl !== null ? gl.getParameter(gl.MAX_TEXTURE_SIZE) : null;
+function getImageSrc(imageUrl: string) {
+	if (import.meta.env.MODE === 'dev-offline') {
+		return 'http://localhost:5173/tile_0_0.jpg';
+	}
 
-		const img = new Image();
-		const canvas = document.createElement('canvas');
-		const ctx = canvas.getContext('2d');
+	if (isIphone()) {
+		// Proxy image through server to prevent CORS issues when resizing with canvas
+		return `/api/image-proxy?url=${encodeURI(imageUrl)}`;
+	}
 
-		img.onload = () => {
-			if (ctx === null) {
-				reject();
-				return;
-			}
-
-			const [width, height] =
-				maxTextureSize === null
-					? [img.width, img.height]
-					: computeResizedWidthHeight(img.width, img.height, maxTextureSize);
-
-			canvas.width = width;
-			canvas.height = height;
-
-			ctx.drawImage(img, 0, 0, width, height);
-			resolve(canvas.toDataURL());
-		};
-
-		img.src = src;
-	});
+	return imageUrl;
 }
 
-function computeResizedWidthHeight(
-	imageWidth: number,
-	imageHeight: number,
-	maxTextureSize: number
-): [number, number] {
-	if (imageWidth <= maxTextureSize && imageHeight <= maxTextureSize) {
-		return [imageWidth, imageHeight];
-	}
+function isIphone() {
+	return /iPad|iPhone|iPod/.test(navigator.userAgent);
+}
 
-	if (imageWidth > maxTextureSize && imageHeight > maxTextureSize) {
-		if (imageWidth > imageHeight) {
-			return [maxTextureSize, (maxTextureSize * imageHeight) / imageWidth];
-		} else {
-			return [(maxTextureSize * imageWidth) / imageHeight, maxTextureSize];
-		}
-	}
+function imageIsTooLargeForIphoneCanvas(img: HTMLImageElement) {
+	return img.naturalWidth * img.naturalHeight >= IOS_CANVAS_MAX_PIXELS;
+}
 
-	if (imageWidth > maxTextureSize) {
-		return [maxTextureSize, (maxTextureSize * imageHeight) / imageWidth];
-	}
+function computeResizedWidthHeight(imageWidth: number, imageHeight: number): [number, number] {
+	const newWidth = Math.sqrt((imageWidth * IOS_CANVAS_MAX_PIXELS) / imageHeight);
+	const newHeight = IOS_CANVAS_MAX_PIXELS / newWidth;
 
-	// if imageHeight > maxTextureSize
-	return [(maxTextureSize * imageWidth) / imageHeight, maxTextureSize];
+	return [Math.floor(newWidth), Math.floor(newHeight)];
 }
