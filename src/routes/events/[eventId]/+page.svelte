@@ -28,6 +28,7 @@
 	export let data;
 
 	$eventName = data.event.name
+	$mapIsLoading = true;
 
 	let angle: number;
 	let fitBox: [number, number, number, number];

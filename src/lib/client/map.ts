@@ -1,6 +1,7 @@
 import { browser } from '$app/environment';
 import type { CourseMap, MapCalibration } from 'orienteering-js/models';
 import { mapIsLoading } from '../../routes/events/[eventId]/stores/map-loading.store.js';
+import { CLOUDINARY_CLOUD_NAME } from '$lib/constants.js';
 
 export const cachedImages: Record<string, HTMLImageElement> = {};
 const IOS_CANVAS_MAX_PIXELS = 16777216;
@@ -26,21 +27,10 @@ export async function getMapCallibrationByFetchingMapImageIfNeeded(
 				// Resize image for iphones
 				const [width, height] = computeResizedWidthHeight(image.naturalWidth, image.naturalHeight);
 
-				const canvas = document.createElement('canvas');
-				const ctx = canvas.getContext('2d');
-
-				if (ctx === null) {
-					reject();
-					return;
-				}
-
-				canvas.width = width;
-				canvas.height = height;
-				ctx.drawImage(image, 0, 0, width, height);
 				const resizedImage = new Image();
 				resizedImage.crossOrigin = 'Anonymous';
 				resizedImage.onerror = () => reject('Failed to load map image');
-				resizedImage.src = canvas.toDataURL();
+				resizedImage.src = `https://res.cloudinary.com/${CLOUDINARY_CLOUD_NAME}/image/fetch/c_scale,w_${width}/${image.src}`;
 				cachedImages[courseMap.url] = resizedImage;
 
 				mapIsLoading.set(false);
@@ -109,11 +99,6 @@ export async function getMapCallibrationByFetchingMapImageIfNeeded(
 function getImageSrc(imageUrl: string) {
 	if (import.meta.env.MODE === 'dev-offline') {
 		return 'http://localhost:5173/tile_0_0.jpg';
-	}
-
-	if (isIphone()) {
-		// Proxy image through server to prevent CORS issues when resizing with canvas
-		return `/api/image-proxy?url=${encodeURI(imageUrl)}`;
 	}
 
 	return imageUrl;
