@@ -1,4 +1,9 @@
-import { getEventMap, getRunnersWithTracksAndSortedLegs, sortLegs } from '$lib/helpers.js';
+import {
+	getEventMap,
+	getTracksFromLiveEvents,
+	sortLegs,
+	sortRunnersAndRunnersLegs
+} from '$lib/helpers.js';
 import { event as eventTable } from '$lib/server/db/schema.js';
 import { error, redirect } from '@sveltejs/kit';
 import { eq } from 'drizzle-orm';
@@ -24,16 +29,16 @@ export async function load({ params: { eventId }, locals, fetch }) {
 
 	const eventWithSortedLegs = { ...event, legs: sortLegs(event.legs) };
 
-	const runnersWithTracksAndSortedLegs = await getRunnersWithTracksAndSortedLegs(
-		eventWithSortedLegs.legs,
-		eventWithSortedLegs.liveEvents,
-		eventWithSortedLegs.runners,
-		fetch
-	);
-
 	return {
-		event: { ...eventWithSortedLegs, runners: runnersWithTracksAndSortedLegs },
+		event: {
+			...eventWithSortedLegs,
+			runners: sortRunnersAndRunnersLegs(
+				eventWithSortedLegs.runners.map((r) => ({ ...r, track: null })),
+				eventWithSortedLegs.legs
+			)
+		},
 		eventMap: getEventMap(event.liveEvents[0], fetch),
-		user: session?.user ?? null
+		user: session?.user ?? null,
+		promises: { tracks: getTracksFromLiveEvents(eventWithSortedLegs.liveEvents, fetch) }
 	};
 }

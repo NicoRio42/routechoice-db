@@ -5,7 +5,7 @@
 	import type { User } from 'lucia';
 	import type { LineString } from 'ol/geom.js';
 	import type { DrawEvent } from 'ol/interaction/Draw.js';
-	import { onDestroy, setContext } from 'svelte';
+	import { onDestroy, onMount, setContext } from 'svelte';
 	import { writable } from 'svelte/store';
 	import { eventName } from '../../_components/event-name-store.js';
 	import ActionButtons from './components/ActionButtons.svelte';
@@ -62,6 +62,20 @@
 	const event = writable<Event>();
 	$: event.set(data.event);
 	setContext('event', event);
+	
+	onMount(() => {
+		data.promises.tracks.then(tracks => {
+			data.event.runners = data.event.runners.map((runner) => {
+				const track = tracks.find((t) =>
+					t.trackingDeviceId === runner.trackingDeviceId && t.fkLiveEvent === runner.fkLiveEvent
+				);
+					
+				return { ...runner, track: track === undefined ? null : track.track };
+			})
+		}).catch(() => {
+			alert("Could not load GPS tracks from Loggator.")
+		})	
+	})
 
 	async function handleDrawEnd(e: CustomEvent<DrawEvent>): Promise<void> {
 		currentDrawnRoutechoice = e.detail.feature.getGeometry() as LineString;
@@ -73,12 +87,14 @@
 	onDestroy(() => $eventName = null)
 </script>
 
-<ManageRoutechoicesDialog
-	routechoices={data.event.legs[legNumber - 1].routechoices}
-	eventId={data.event.id}
-	bind:show={showManageRoutechoicesDialog}
-	on:startDrawingNewRoutechoice={() => isDrawingNewRoutechoice = true}
-/>
+{#if data.event.legs.length !== 0}
+	<ManageRoutechoicesDialog
+		routechoices={data.event.legs[legNumber - 1].routechoices}
+		eventId={data.event.id}
+		bind:show={showManageRoutechoicesDialog}
+		on:startDrawingNewRoutechoice={() => isDrawingNewRoutechoice = true}
+	/>
+{/if}
 	
 <div class="wrapper">
 	{#if $mapIsLoading}
@@ -87,7 +103,7 @@
 		</article>
 	{/if}
 
-	{#if data.user?.role === RolesEnum.Enum.admin}
+	{#if data.event.legs.length !== 0 && data.user?.role === RolesEnum.Enum.admin}
 		<button
 			on:click={() => showManageRoutechoicesDialog = !showManageRoutechoicesDialog}
 			class="hidden btn-unset absolute top-25 right-2 z-1 bg-white text-black w-6 h-6 sm:flex items-center justify-center"
