@@ -23,10 +23,10 @@ export function extractLiveProviderAndEventIdFromUrl(
 	url: string
 ): [keyof typeof GPS_PROVIDERS, string] {
 	const provider = Object.entries(GPS_PROVIDERS).find(([providerId, { url: providerUrl }]) =>
-		url.startsWith(providerUrl)
+		url.includes(providerUrl)
 	);
 
-	if (provider === undefined) throw new Error('');
+	if (provider === undefined) throw new Error('Could not find provider from provided url.');
 
 	if (provider[0] === 'loggator') {
 		const eventId = url
@@ -34,7 +34,8 @@ export function extractLiveProviderAndEventIdFromUrl(
 			.map((s) => s.trim())
 			.filter((s) => s !== '')
 			.at(-1);
-		if (eventId === undefined) throw new Error('');
+		if (eventId === undefined) throw new Error('Could not extract eventId from provided url.');
+
 		return ['loggator', eventId];
 	}
 
@@ -72,6 +73,10 @@ export async function getTracksFromLiveEvents(
 					: await fetch(pointsUrl);
 
 			if (!pointsResponse.ok) {
+				console.error(
+					`[ERROR]  fetching points from Loggator: ${pointsResponse.status} ${pointsResponse.statusText}`
+				);
+
 				throw new Error(`Failed to load points for loggator event with id ${eventId}`);
 			}
 
