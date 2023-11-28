@@ -2,12 +2,12 @@
 	import { dev } from '$app/environment';
 	import { enhance } from '$app/forms';
 	import { confirmSubmit } from '$lib/actions/confirm-submit.js';
-	import TagsSelect from '$lib/components/form-fields/TagsSelect.svelte';
+	import Paginator from '$lib/components/Paginator.svelte';
 	import SearchField from '$lib/components/form-fields/SearchField.svelte';
+	import TagsSelect from '$lib/components/form-fields/TagsSelect.svelte';
 	import { SPLITTIMES_BASE_URL, SPLITTIMES_BASE_URL_DEV } from '$lib/constants.js';
 	import { RolesEnum } from '$lib/models/enums/roles.enum.js';
 	import { superForm } from 'sveltekit-superforms/client';
-	import Paginator from '$lib/components/Paginator.svelte';
 
 	export let data;
 
@@ -57,7 +57,7 @@
 			Filter
 		</button>
 	</header>
-
+	
 	<figure class="mt-4">
 		<table>
 			<thead>

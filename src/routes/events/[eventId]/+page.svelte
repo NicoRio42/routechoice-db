@@ -24,6 +24,7 @@
 		getLegNumberFromSearchParams
 	} from './utils.js';
 	import { mapIsLoading } from "./stores/map-loading.store.js"
+	import { pushNotification } from '$lib/components/Notifications.svelte';
 
 	export let data;
 
@@ -73,7 +74,7 @@
 				return { ...runner, track: track === undefined ? null : track.track };
 			})
 		}).catch(() => {
-			alert("Could not load GPS tracks from Loggator.")
+			pushNotification("Could not load GPS tracks from Loggator.", "error", 5)
 		})	
 	})
 
