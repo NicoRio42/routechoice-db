@@ -133,7 +133,7 @@ export const actions = {
 		> = {};
 
 		for (const [key, value] of formData.entries()) {
-			if (value instanceof File) return;
+			if (value instanceof File) return fail(400, 'Bad request.');
 
 			if (key.endsWith('-tracking')) {
 				let liveEvent: string | null = null;

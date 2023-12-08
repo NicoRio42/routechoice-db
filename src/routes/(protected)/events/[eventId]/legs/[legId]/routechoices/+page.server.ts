@@ -40,7 +40,7 @@ export const actions = {
 		const latitudes = mercatorCoordinates.map((pt) => pt[1]).join(';');
 		const longitudes = mercatorCoordinates.map((pt) => pt[0]).join(';');
 
-		const length = getLineStringLength(mercatorCoordinates as [number, number][]);
+		const length = getLineStringLength(mercatorCoordinates.map(([lat, lon]) => [lon, lat]));
 
 		const routechoiceId = crypto.randomUUID();
 
