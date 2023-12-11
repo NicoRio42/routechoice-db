@@ -19,6 +19,7 @@ declare global {
 declare module '$env/static/private' {
 	export const TURSO_DB_TOKEN: string;
 	export const BREVO_API_KEY: string;
+	export const LOGGATOR_POLE_FRANCE_BASIC_AUTH: string;
 }
 
 /// <reference types="lucia" />

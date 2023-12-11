@@ -11,6 +11,7 @@
 	} from '$lib/helpers.js';
 	import { loggatorEventSchema } from 'orienteering-js/models';
 	import TagsSelect from '$lib/components/form-fields/TagsSelect.svelte';
+	import { onMount } from 'svelte';
 
 	export let data;
 
@@ -24,6 +25,7 @@
 	$: if (browser) fetchEvent($formStore.liveProviderUrl);
 
 	let previousEventUrl: string;
+	let recentEvents: {url: string, name: string}[] = [];
 
 	async function fetchEvent(eventUrl: string) {
 		if (eventUrl === '' || eventUrl === previousEventUrl) return;
@@ -44,12 +46,22 @@
 		$formStore.publishTime = formatDateTimeForDateTimeInput(new Date(event.event.publish_date));
 		$formStore.finishTime = formatDateTimeForDateTimeInput(new Date(event.event.end_date));
 	}
+
+	onMount(async () => {
+		recentEvents = await ((await fetch("/api/live-events/loggator")).json())
+	})
 </script>
 
 <form method="POST" use:enhance novalidate class="pb-8 pt-4">
 	<h1>Create a new Event</h1>
 
-	<UrlField {form} field="liveProviderUrl" label="Live provider URL" />
+	<UrlField {form} field="liveProviderUrl" label="Live provider URL" list="recent-events" />
+
+	<datalist id="recent-events">
+		{#each recentEvents as {url, name} }
+			<option value={url}>{name}</option>
+		{/each}
+	</datalist>
 
 	<TextField {form} field="name" label="Name" />
 
