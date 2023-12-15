@@ -1,4 +1,4 @@
-import type { Leg as LegFromDatabase } from '$lib/server/db/schema.js';
+import type { Leg as LegFromDatabase } from '../server/db/schema.js';
 import type { RoutechoiceWithParsedTrack, RoutechoiceWithStatistics } from './routechoice.model.js';
 
 export type LegWithRoutechoices = LegFromDatabase & { routechoices: RoutechoiceWithStatistics[] };
