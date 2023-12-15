@@ -49,7 +49,7 @@ export const actions = {
 		const form = await superValidate(request, userFormSchema);
 
 		if (!form.valid) {
-			return setError(form, null, 'An error occured');
+			return setError(form, '', 'An error occured');
 		}
 
 		const existingUserName = await locals.db
@@ -65,7 +65,7 @@ export const actions = {
 			.all();
 
 		if (existingUserName.length !== 0) {
-			return setError(form, null, 'First name and last name conbination allready exists');
+			return setError(form, '', 'First name and last name conbination allready exists');
 		}
 
 		const existingEmail = await locals.db

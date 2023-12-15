@@ -7,7 +7,7 @@
 	import type { DrawEvent } from 'ol/interaction/Draw.js';
 	import { onDestroy, onMount, setContext } from 'svelte';
 	import { writable } from 'svelte/store';
-	import { eventName } from '../../_components/event-name-store.js';
+	import { eventName } from '$lib/stores/event-name-store.js';
 	import ActionButtons from './components/ActionButtons.svelte';
 	import AddRoutechoiceDialog from './components/AddRoutechoiceDialog.svelte';
 	import Draw from './components/Draw.svelte';

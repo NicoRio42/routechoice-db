@@ -5,7 +5,7 @@
 	import ThemeSwitch from './ThemeSwitch.svelte';
 	import { enhance } from '$app/forms';
 	import { page } from '$app/stores';
-	import { eventName } from './event-name-store.js';
+	import { eventName } from '$lib/stores/event-name-store.js';
 
 	export let user: User | null;
 </script>

@@ -2,7 +2,7 @@
 	import { navigating } from '$app/stores';
 	import Logo from '$lib/components/Logo.svelte';
 	import Notifications from '$lib/components/Notifications.svelte';
-	import NavBar from './_components/NavBar.svelte';
+	import NavBar from '$lib/components/NavBar.svelte';
 
 	import './global.css';
 	import 'uno.css';

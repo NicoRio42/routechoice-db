@@ -5,7 +5,7 @@
 </script>
 
 <form method="POST" use:enhance>
-	<h1>{data.user.name}</h1>
+	<h1>{data.user.firstName} {data.user.lastName}</h1>
 
 	<input type="submit" value="Delete account" />
 </form>
