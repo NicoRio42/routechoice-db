@@ -45,7 +45,7 @@ export const actions = {
 		} catch (e) {
 			console.error(e);
 
-			return setError(form, null, 'An error occured');
+			return setError(form, '', 'An error occured');
 		}
 
 		throw redirect(302, '/');

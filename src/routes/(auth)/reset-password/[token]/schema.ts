@@ -1,4 +1,4 @@
-import { NUMBERS } from '$lib/constants';
+import { NUMBERS } from '$lib/constants.js';
 import { z } from 'zod';
 
 export const resetPasswordSchema = z

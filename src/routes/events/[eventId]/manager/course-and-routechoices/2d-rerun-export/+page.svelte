@@ -1,8 +1,14 @@
 <script>
+	import { enhance } from '$app/forms';
+
 	export let data
 </script>
 
-<form method="post" enctype="multipart/form-data">
+<form method="post" enctype="multipart/form-data" use:enhance class="mt-4">
+	<h1>Load course and routechoices from 2D Rerun json export</h1>
+
+	<p>There should be at least one routechoice drawn, or the upload will fail.</p>
+
 	<label>
 		Select 2DRerun export file (.json)
 
