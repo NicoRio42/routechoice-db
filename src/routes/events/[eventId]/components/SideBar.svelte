@@ -54,7 +54,7 @@
 		<Toggle bind:isFirstValueSelected={isInSplitMode} firstLabel={'Splits'} secondLabel={'Graph'} />
 
 		<section style:display={isInSplitMode ? 'none' : 'block'} class="routechoices-graph">
-			<LegStatistics {legRoutechoices} />
+			<LegStatistics {legRoutechoices} {sortedRunnersWithOneLeg} />
 		</section>
 
 		<section

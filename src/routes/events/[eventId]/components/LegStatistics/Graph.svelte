@@ -6,18 +6,34 @@
 
 	let max = 0;
 
-	$: max = Math.max(...data.map((item) => item.value));
+	$: max = Math.max(...data.map((item) => item.value).filter((d): d is number => d !== null));
 </script>
 
 {#each data as item}
 	<p class="graph-item">
-		{item.label}<span class="bar-group">
-			<span
-				style:background-color={item.color}
-				style:width="{(item.value * 100) / max}%"
-				class="bar"><span class="value">{item.value}{suffix}</span></span
-			>
-		</span>
+		{item.label}
+		
+		{#if item.value === null}
+			<span class="text-xs ml-3">No data</span>
+		{:else}
+			{@const barWidth = (item.value * 100) / max}
+
+			<span class="bar-group">
+				<span
+					style:background-color={item.color}
+					style:width="{barWidth}%"
+					class="bar"
+				>
+					<span
+						class="value"
+						style:top={barWidth < 10 ? '0' : '0.5rem'}
+						style:right={barWidth < 10 ? '-0.5rem' : '0.25rem'}
+					>
+						{item.value}{suffix}
+					</span>
+				</span>
+			</span>
+		{/if}
 	</p>
 {/each}
 
@@ -44,8 +60,6 @@
 
 	.value {
 		position: absolute;
-		right: 0.25rem;
-		top: 0.5rem;
 		font-size: smaller;
 	}
 </style>
