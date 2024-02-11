@@ -17,7 +17,9 @@
 				class="flex items-center gap-2 sm:gap-4 p-0 text-5 text-[var(--primary)] whitespace-nowrap"
 				href="/"
 			>
-				<Logo --bg-color="var(--primary)" --width="3rem" --height="3rem" --logo-color="white" />
+				<div class="bg-[var(--primary)] w-12 h-12 flex justify-center items-center">
+					<i class="i-carbon-3d-curve-auto-colon block w-8 h-8 text-white"></i>
+				</div>
 
 				<span class="hidden sm:inline">Routechoice DB</span>
 
