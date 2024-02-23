@@ -7,7 +7,7 @@
 	import type { DrawEvent } from 'ol/interaction/Draw.js';
 	import { onDestroy, onMount, setContext } from 'svelte';
 	import { writable } from 'svelte/store';
-	import { eventName } from '$lib/stores/event-name-store.js';
+	import { eventStore } from '$lib/stores/event-store.js';
 	import ActionButtons from './components/ActionButtons.svelte';
 	import AddRoutechoiceDialog from './components/AddRoutechoiceDialog.svelte';
 	import Draw from './components/Draw.svelte';
@@ -28,7 +28,7 @@
 
 	export let data;
 
-	$eventName = data.event.name
+	$eventStore = {name: data.event.name, id: data.event.id}
 	$mapIsLoading = true;
 
 	let angle: number;
@@ -85,8 +85,16 @@
 
 	async function handleRunnerTimeOffsetChange(event: CustomEvent<string>): Promise<void> {}
 
-	onDestroy(() => $eventName = null)
+	onDestroy(() => $eventStore = null)
 </script>
+
+<svelte:head>
+	<meta property="og:title" content="Routechoice DB | {data.event.name}">
+	<meta property="og:type" content="website" />
+	<meta property="og:image" content={data.eventMap.url}>
+	<meta property="og:url" content={$page.url.href.split('?')[0]}>
+	<meta name="twitter:card" content="summary_large_image">
+</svelte:head>
 
 {#if data.event.legs.length !== 0}
 	<ManageRoutechoicesDialog

@@ -1,6 +1,5 @@
 <script>
 	import { navigating } from '$app/stores';
-	import Logo from '$lib/components/Logo.svelte';
 	import Notifications from '$lib/components/Notifications.svelte';
 	import NavBar from '$lib/components/NavBar.svelte';
 
@@ -28,15 +27,5 @@
 
 	<NavBar user={data.user} />
 
-	{#if $navigating !== null && $navigating.to?.route.id === '/(protected)/events/[eventId]/(viewer)' && !tooFast}
-		<div
-			class="flex flex-col content-center items-center flex-shrink-0 flex-grow-1 mt-40% -translate-y-50%"
-		>
-			<Logo --width="10rem" --height="10rem" --logo-color="var(--primary)" />
-
-			<p aria-busy="true" class="text-[var(--primary)]">Loading</p>
-		</div>
-	{:else}
-		<slot />
-	{/if}
+	<slot />
 </div>

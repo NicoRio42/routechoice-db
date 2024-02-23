@@ -1,17 +1,44 @@
 <script lang="ts">
-	import Logo from '$lib/components/Logo.svelte';
 	import { RolesEnum } from '$lib/models/enums/roles.enum.js';
 	import type { User } from 'lucia';
 	import ThemeSwitch from './ThemeSwitch.svelte';
 	import { enhance } from '$app/forms';
 	import { page } from '$app/stores';
-	import { eventName } from '$lib/stores/event-name-store.js';
+	import { eventStore } from '$lib/stores/event-store.js';
+	import { dev } from '$app/environment';
+	import { SPLITTIMES_BASE_URL, SPLITTIMES_BASE_URL_DEV } from '$lib/constants.js';
+	import { pushNotification } from './Notifications.svelte';
 
 	export let user: User | null;
+
+	function handleShare() {
+		if ($eventStore === null) return;
+
+		const urlToShare = $page.url.href.split('?')[0];
+
+		if (!('share' in navigator)) {
+			if (!('clipboard' in navigator)) {
+				pushNotification("Your browser do not allow direct url sharing. Please copy the url manually.", "warn", 5)
+				return;
+			}
+
+			window.navigator.clipboard.writeText(urlToShare);
+			pushNotification("Link copied to clipboard", "info", 5)
+			return;
+		}
+
+		window.navigator.share({
+			title: "Routechoice DB",
+			text: $eventStore.name,
+			url: urlToShare
+		}).catch(() => {
+			pushNotification("Error while sharing the event. Please copy the url manually.", "error", 5)
+		}).then();
+	}
 </script>
 
 <nav class="container-fluid border-b-2 border-b-solid border-b-[var(--table-border-color)]">
-	<ul class="logo-list min-w-0">
+	<ul class="logo-list min-w-0 grow !mr0">
 		<li class="link-list-item">
 			<a
 				class="flex items-center gap-2 sm:gap-4 p-0 text-5 text-[var(--primary)] whitespace-nowrap"
@@ -23,23 +50,42 @@
 
 				<span class="hidden sm:inline">Routechoice DB</span>
 
-				<div class="sm:hidden flex flex-col items-center leading-none">
-					<span class="text-[0.625rem]">Routechoice</span>
+				{#if $eventStore === null}
+					<div class="sm:hidden flex flex-col items-center leading-none">
+						<span class="text-[0.625rem]">Routechoice</span>
 
-					<span class="text-8">DB</span>
-				</div>
+						<span class="text-8">DB</span>
+					</div>
+				{/if}
 			</a>
 		</li>
 
-		{#if $eventName !== null}
-			<li class="m-0 ml-2 sm:ml-4 sm:pl-4 pl-2 py-1 border-l-1 border-l-solid border-l-[var(--table-border-color)] whitespace-nowrap text-ellipsis overflow-hidden min-w-0">
-				{$eventName}
+		{#if $eventStore !== null}
+			{@const splittimesBaseUrl = dev ? SPLITTIMES_BASE_URL_DEV : SPLITTIMES_BASE_URL}
+
+			<li class="m-0 sm:ml-4 sm:pl-4 pl-2 py-1 sm:border-l-1 sm:border-l-solid sm:border-l-[var(--table-border-color)] whitespace-nowrap text-ellipsis overflow-hidden min-w-0">
+				{$eventStore.name}
+			</li>
+
+			<li class="p-0 flex items-center gap2 sm:mr2">
+				<a
+					href="{splittimesBaseUrl}/{dev ? 'routechoice-db-dev' : 'routechoice-db'}/{$eventStore.id}/classes/1/table"
+					target="_blank"
+					rel="noreferrer"
+					class="text-[var(--h1-color)]"
+				>
+					<i class="i-carbon-table-shortcut w-5 h-5 inline-block mt1" />
+				</a>
+
+				<button class="btn-unset" type="button" on:click={handleShare}>
+					<i class="i-carbon-share w-5 h-5 inline-block mt1"></i>
+				</button>
 			</li>
 		{/if}
 	</ul>
 
 	<div class="flex gap-2">
-		<ul>
+		<ul class="!ml0">
 			{#if user?.role === RolesEnum.enum.admin}
 				<li class="link-list-item large">
 					<a href="/users">Users</a>
