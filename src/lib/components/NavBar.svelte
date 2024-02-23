@@ -11,7 +11,7 @@
 
 	export let user: User | null;
 
-	function handleShare() {
+	async function handleShare() {
 		if ($eventStore === null) return;
 
 		const urlToShare = $page.url.href.split('?')[0];
@@ -27,13 +27,11 @@
 			return;
 		}
 
-		window.navigator.share({
+		await window.navigator.share({
 			title: "Routechoice DB",
 			text: $eventStore.name,
 			url: urlToShare
-		}).catch(() => {
-			pushNotification("Error while sharing the event. Please copy the url manually.", "error", 5)
-		}).then();
+		})
 	}
 </script>
 
