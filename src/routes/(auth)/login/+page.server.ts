@@ -63,10 +63,10 @@ export const actions = {
 		const redirectToSearchParam = url.searchParams.get('redirectTo');
 
 		if (redirectToSearchParam === null) {
-			throw redirect(302, '/');
+			throw redirect(302, '/events');
 		}
 
-		let urlString = '/';
+		let urlString = '/events';
 
 		try {
 			const url = new URL(redirectToSearchParam);

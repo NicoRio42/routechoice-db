@@ -10,7 +10,7 @@
 	const form = superForm(data.form, {
 		validators: loginFormSchema,
 		taintedMessage: null,
-		onError: ({ result, message }) => {
+		onError: ({ result }) => {
 			if ( result.status === 503) {
 				showCloudflareWorkerCpuErrorMessage = true
 			}
@@ -21,7 +21,9 @@
 </script>
 
 <form method="POST" use:enhance novalidate>
-	<h1>Login</h1>
+	<h1 class="mb-4 mt0 sm:mt-4">Login</h1>
+
+	<p>Routechoice DB is only available for the French Orienteering Team.</p>
 
 	<EmailField {form} field="email" label="Email" />
 

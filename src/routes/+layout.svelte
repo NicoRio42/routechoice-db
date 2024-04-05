@@ -1,9 +1,10 @@
 <script>
 	import { navigating } from '$app/stores';
-	import Notifications from '$lib/components/Notifications.svelte';
 	import NavBar from '$lib/components/NavBar.svelte';
+	import Notifications from '$lib/components/Notifications.svelte';
 
 	import './global.css';
+	// Do not remove this comment, it is there to prevent the formatter to change the order of the style sheets
 	import 'uno.css';
 
 	export let data;
