@@ -18,7 +18,7 @@
 	}
 </script>
 
-<Notifications></Notifications>
+<Notifications />
 
 <div class="relative flex flex-col h-100%">
 	{#if $navigating !== null && $navigating.to?.route.id !== '/(protected)/events/[eventId]/(viewer)' && !tooFast}
