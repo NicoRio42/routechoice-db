@@ -8,7 +8,7 @@
 	>
 		<div class="flex flex-col gap-4 items-center justify-center px-4 text-center">
 			<h1 class="text-center text-10">
-				The Sprint Orienteering Analysis platform 
+				The Sprint Orienteering Analysis platform
 			</h1>
 		
 			<p class="text-5">
@@ -24,7 +24,7 @@
 					href="/events/11dcad47-62d4-4de5-afc7-34492f729eb9"
 					class="!flex outline w-full sm:w-fit items-center justify-center gap-2 text-nowrap"
 				>
-					See demo
+					See the demo
 				</a>
 		
 				<a
@@ -52,7 +52,10 @@
 						<YellowStar class="h5 w5 text-yellow" />
 					</div>
 
-					“Some nice words on Routechoice DB and Nicolas Rio from Charly ;)”
+					“Thanks to Routechoice DB, our analysis are deeper and quicker, helping us to extract more benefits
+					from our training. Its developper Nicolas Rio is super reactive to our requests, and even proactive
+					with suggestions to keep it as the best tool available in the orienteering world.”
+
 					<footer>
 						<cite>— Charly Boichut | French Orienteering Team Head Coach</cite>
 					</footer>
