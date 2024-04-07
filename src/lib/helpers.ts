@@ -22,8 +22,8 @@ import type {
 export function extractLiveProviderAndEventIdFromUrl(
 	url: string
 ): [keyof typeof GPS_PROVIDERS, string] {
-	const provider = Object.entries(GPS_PROVIDERS).find(([providerId, { url: providerUrl }]) =>
-		url.includes(providerUrl)
+	const provider = Object.entries(GPS_PROVIDERS).find(([providerId, { urls: providerUrls }]) =>
+		providerUrls.some((u) => url.includes(u))
 	);
 
 	if (provider === undefined) throw new Error('Could not find provider from provided url.');

@@ -5,8 +5,8 @@ export const ORIENTEERING_API_BASE_URL = 'https://orienteering-api.pages.dev';
 export const TWO_D_RERUN_URL = 'http://loggator2.worldofo.com/loadwinsplits.php';
 export const CLOUDINARY_CLOUD_NAME = 'dosqlwgkf';
 
-export const GPS_PROVIDERS: Record<string, { url: string; apiBaseUrl: string }> = {
-	loggator: { url: 'loggator.com', apiBaseUrl: 'http://events.loggator.com/api' },
-	tractrac: { url: 'tractrac.com', apiBaseUrl: '' },
-	'gps-seuranta': { url: 'tulospalvelu.fi', apiBaseUrl: '' }
+export const GPS_PROVIDERS: Record<string, { urls: string[]; apiBaseUrl: string }> = {
+	loggator: { urls: ['loggator.com', 'log.gl'], apiBaseUrl: 'http://events.loggator.com/api' },
+	tractrac: { urls: ['tractrac.com'], apiBaseUrl: '' },
+	'gps-seuranta': { urls: ['tulospalvelu.fi'], apiBaseUrl: '' }
 } as const;
