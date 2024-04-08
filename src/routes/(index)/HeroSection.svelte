@@ -7,7 +7,7 @@
 		class="md:items-initial md:justify-center flex flex-col md:flex-row items-center gap-4 p4 max-w-300"
 	>
 		<div class="flex flex-col gap-4 items-center justify-center px-4 text-center">
-			<h1 class="text-center text-10">
+			<h1 class="text-center text-10 mb-4 2xl:mb-8">
 				The Sprint Orienteering Analysis platform
 			</h1>
 		
@@ -40,7 +40,7 @@
 
 			<div class="flex items-center justify-center gap4">
 				<div class="shrink-0">
-					<enhanced:img src="./charly.jpeg" alt="Portrait de Chary Boichut" class="h-20 w-20 rounded-full" />
+					<enhanced:img src="./charly.jpeg" alt="Portrait de Chary Boichut" class="h-20 w-20 sm:h30 sm:w30 rounded-full" />
 				</div>
 
 				<blockquote>
