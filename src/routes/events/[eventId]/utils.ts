@@ -25,10 +25,26 @@ export function computeFitBoxAndAngleFromLegNumber(
 		return computeFitBoxAndAngleFromCourseMap(eventMap);
 	}
 
-	const minLat = Math.min(startControl.latitude, finishControl.latitude);
-	const maxLat = Math.max(startControl.latitude, finishControl.latitude);
-	const minLon = Math.min(startControl.longitude, finishControl.longitude);
-	const maxLon = Math.max(startControl.longitude, finishControl.longitude);
+	const routechoicesLatitudes = leg.routechoices.flatMap((r) => r.latitudes.split(';').map(Number));
+
+	const routechoicesLongitudes = leg.routechoices.flatMap((r) =>
+		r.longitudes.split(';').map(Number)
+	);
+
+	const minLat = Math.min(startControl.latitude, finishControl.latitude, ...routechoicesLatitudes);
+	const maxLat = Math.max(startControl.latitude, finishControl.latitude, ...routechoicesLatitudes);
+
+	const minLon = Math.min(
+		startControl.longitude,
+		finishControl.longitude,
+		...routechoicesLongitudes
+	);
+
+	const maxLon = Math.max(
+		startControl.longitude,
+		finishControl.longitude,
+		...routechoicesLongitudes
+	);
 
 	const extend = transformExtent([minLon, minLat, maxLon, maxLat], 'EPSG:4326', 'EPSG:3857');
 
