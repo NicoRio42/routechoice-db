@@ -3,6 +3,8 @@
 	import NavBar from '$lib/components/NavBar.svelte';
 	import Notifications from '$lib/components/Notifications.svelte';
 
+	import '@picocss/pico/css/pico.css';
+	// Do not remove this comment, it is there to prevent the formatter to change the order of the style sheets
 	import './global.css';
 	// Do not remove this comment, it is there to prevent the formatter to change the order of the style sheets
 	import 'uno.css';

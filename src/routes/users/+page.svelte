@@ -25,7 +25,7 @@
 				name="search"
 				placeholder="Search in first name, last name"
 				value={$page.url.searchParams.get('search')}
-				class="important:mb0 important:rounded-[var(--border-radius)]"
+				class="!mb0 !rounded-[var(--pico-border-radius)]"
 			>
 
 			<button type="submit" class="outline w-fit flex items-center gap-1 p2 ml-auto my4">

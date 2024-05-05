@@ -103,6 +103,6 @@
 	.error-message {
 		color: rgba(198, 40, 40, 0.999);
 		font-size: smaller;
-		margin-top: calc(var(--spacing) * -1);
+		margin-top: calc(var(--pico-spacing) * -1);
 	}
 </style>

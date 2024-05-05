@@ -1,5 +1,5 @@
 <div
-	class="flex items-center gap-1 p-1 rounded-10 border border-solid border-[var(--table-border-color)] w-min"
+	class="flex items-center gap-1 p-1 rounded-10 border border-solid border-table-border-color w-min"
 >
 	<button
 		class="btn-unset flex justify-center items-center dark"

@@ -35,14 +35,14 @@
 	}
 </script>
 
-<nav class="container-fluid border-b-2 border-b-solid border-b-[var(--table-border-color)]">
+<nav class="container-fluid border-b-2 border-b-solid border-b-table-border-color">
 	<ul class="logo-list min-w-0 grow !mr0">
 		<li class="link-list-item">
 			<a
-				class="flex items-center gap-2 sm:gap-4 p-0 text-5 text-[var(--primary)] whitespace-nowrap"
+				class="flex items-center gap-2 sm:gap-4 p-0 text-5 text-primary whitespace-nowrap"
 				href={$page.url.pathname ==="/events" ? "/" : "/events" }
 			>
-				<div class="bg-[var(--primary)] w-12 h-12 flex justify-center items-center">
+				<div class="bg-primary w-12 h-12 flex justify-center items-center">
 					<i class="i-carbon-3d-curve-auto-colon block w-8 h-8 text-white"></i>
 				</div>
 
@@ -61,7 +61,7 @@
 		{#if $eventStore !== null}
 			{@const splittimesBaseUrl = dev ? SPLITTIMES_BASE_URL_DEV : SPLITTIMES_BASE_URL}
 
-			<li class="m-0 sm:ml-4 sm:pl-4 pl-2 py-1 sm:border-l-1 sm:border-l-solid sm:border-l-[var(--table-border-color)] whitespace-nowrap text-ellipsis overflow-hidden min-w-0">
+			<li class="m-0 sm:ml-4 sm:pl-4 pl-2 py-1 sm:border-l-1 sm:border-l-solid sm:border-l-table-border-color whitespace-nowrap text-ellipsis overflow-hidden min-w-0">
 				{$eventStore.name}
 			</li>
 
@@ -70,7 +70,7 @@
 					href="{splittimesBaseUrl}/{dev ? 'routechoice-db-dev' : 'routechoice-db'}/{$eventStore.id}/classes/1/table"
 					target="_blank"
 					rel="noreferrer"
-					class="text-[var(--h1-color)]"
+					class="text-h1-color"
 				>
 					<i class="i-carbon-table-shortcut w-5 h-5 inline-block mt1" />
 				</a>
@@ -110,7 +110,7 @@
 				</li>
 			{:else}
 				<li class="py-0 large">
-					<details role="list" dir="rtl">
+					<details  role="list" dir="rtl" class="dropdown" >
 						<summary aria-haspopup="listbox"> {user.firstName} {user.lastName} </summary>
 						<ul>
 							<li class="option-item">
@@ -132,7 +132,7 @@
 			</li>
 		</ul>
 
-		<details role="list" dir="rtl" class="hamburger-menu">
+		<details  role="list" dir="rtl" class="hamburger-menu dropdown">
 			<summary aria-haspopup="listbox"> <i class="i-carbon-menu w-8 h-8" /> </summary>
 
 			<ul>
@@ -189,10 +189,10 @@
 	}
 
 	.logo-list {
-		margin-left: calc(var(--nav-element-spacing-horizontal) * -2);
+		margin-left: calc(var(--pico-nav-element-spacing-horizontal) * -2);
 	}
 	.link-list-item {
-		padding: calc(var(--nav-element-spacing-vertical) / 2) var(--nav-element-spacing-horizontal);
+		padding: calc(var(--pico-nav-element-spacing-vertical) / 2) var(--pico-nav-element-spacing-horizontal);
 	}
 
 	.hamburger-menu {

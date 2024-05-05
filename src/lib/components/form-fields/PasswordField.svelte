@@ -76,6 +76,6 @@
 
 <style>
 	input[aria-invalid].password-input {
-		padding-right: calc(var(--form-element-spacing-horizontal) + 3rem) !important;
+		padding-right: calc(var(--pico-form-element-spacing-horizontal) + 3rem) !important;
 	}
 </style>

@@ -139,7 +139,7 @@
 		position: sticky;
 		top: 0;
 		z-index: 1;
-		background-color: var(--background-color);
+		background-color: var(--pico-background-color);
 	}
 
 	.tooltip-container,
@@ -156,7 +156,7 @@
 	}
 
 	td[data-tooltip] {
-		border-bottom: var(--border-width) solid var(--table-border-color);
+		border-bottom: var(--pico-border-width) solid var(--pico-table-border-color);
 	}
 
 	.tooltip {
@@ -208,7 +208,7 @@
 	.pen-button {
 		margin: 0;
 		padding: 0;
-		color: var(--h1-color);
+		color: var(--pico-h1-color);
 		background-color: transparent;
 		border: none;
 		box-shadow: none;

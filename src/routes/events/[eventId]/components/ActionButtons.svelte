@@ -100,7 +100,7 @@
 <style>
 	.control-bar {
 		position: fixed;
-		bottom: var(--form-element-spacing-vertical);
+		bottom: var(--pico-form-element-spacing-vertical);
 		left: 50%;
 		transform: translate(-50%);
 		display: flex;
@@ -127,7 +127,7 @@
 	}
 
 	#leg-select {
-		padding-right: var(--form-element-spacing-horizontal);
+		padding-right: var(--pico-form-element-spacing-horizontal);
 		background-position: center right 0.375rem;
 	}
 

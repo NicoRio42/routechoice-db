@@ -45,7 +45,7 @@
 			<SearchField
 				{form}
 				field="search"
-				class="important:mb0 important:rounded-[var(--border-radius)]"
+				class="!mb0 !rounded-[var(--pico-border-radius)]"
 				label="Search"
 				placeholder="Search in names"
 			/>

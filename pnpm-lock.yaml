@@ -11,6 +11,9 @@ dependencies:
   '@lucia-auth/adapter-sqlite':
     specifier: ^2.0.0
     version: 2.0.0(@libsql/client@0.3.1)(lucia@2.0.0)
+  '@picocss/pico':
+    specifier: ^2.0.6
+    version: 2.0.6
   drizzle-orm:
     specifier: ^0.27.2
     version: 0.27.2(@libsql/client@0.3.1)(@types/better-sqlite3@7.6.4)
@@ -1233,6 +1236,11 @@ packages:
 
   /@petamoriken/float16@3.8.1:
     resolution: {integrity: sha512-oj3dU9kuMy8AqrreIboVh3KCJGSQO5T+dJ8JQFl369961jTWvPLP1GIlLy0FVoWehXLoI9BXygu/yzuNiIHBlg==}
+    dev: false
+
+  /@picocss/pico@2.0.6:
+    resolution: {integrity: sha512-/d8qsykowelD6g8k8JYgmCagOIulCPHMEc2NC4u7OjmpQLmtSetLhEbt0j1n3fPNJVcrT84dRp0RfJBn3wJROA==}
+    engines: {node: '>=18.19.0'}
     dev: false
 
   /@polka/url@1.0.0-next.21:

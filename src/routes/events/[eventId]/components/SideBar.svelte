@@ -80,11 +80,11 @@
 		top: 0;
 		bottom: 0;
 		left: 0;
-		background-color: var(--background-color);
+		background-color: var(--pico-background-color);
 		width: 23rem;
 		resize: horizontal;
 		overflow-x: auto;
-		border-right: 1px solid var(--table-border-color);
+		border-right: 1px solid var(--pico-table-border-color);
 		z-index: 1;
 	}
 
