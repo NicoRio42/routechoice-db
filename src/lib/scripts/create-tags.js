@@ -1,8 +1,9 @@
-import BetterSqlite3 from "better-sqlite3";
-import { drizzle } from 'drizzle-orm/better-sqlite3';
-import { sqliteTable, text } from "drizzle-orm/sqlite-core";
+import { drizzle } from 'drizzle-orm/libsql';
+import { createClient } from '@libsql/client';
+import { sqliteTable, text } from 'drizzle-orm/sqlite-core';
 
-const db = drizzle(BetterSqlite3("sqlite.db"));
+
+const db = drizzle(createClient({ url: 'file:sqlite.db' }));
 
 const colors = [
     '#cc7d24',
@@ -45,9 +46,9 @@ export const TAGS = [
 ];
 
 const tagTable = sqliteTable('tag', {
-    id: text('id').primaryKey(),
-    name: text('name').notNull().unique(),
-    color: text('color').notNull().unique()
+	id: text('id').primaryKey(),
+	name: text('name').notNull().unique(),
+	color: text('color').notNull().unique()
 });
 
 db.insert(tagTable).values(TAGS).run()

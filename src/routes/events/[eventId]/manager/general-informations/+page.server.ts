@@ -85,6 +85,6 @@ export const actions = {
 			.values(form.data.tags.map((t) => ({ fkEvent: eventId, fkTag: t })))
 			.run();
 
-		throw redirect(302, '/');
+		throw redirect(302, '/events');
 	}
 };
