@@ -29,7 +29,9 @@
 
 	<PasswordField {form} field="password" label="Password" />
 
-	<button type="submit" aria-busy={$delayed}>Login</button>
+	<div class="flex justify-end">
+		<button type="submit" aria-busy={$delayed}>Login</button>
+	</div>
 
 	<p><a href="/reset-password">Reset password</a></p>
 

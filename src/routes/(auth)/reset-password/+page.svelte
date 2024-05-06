@@ -18,7 +18,9 @@
 
 	<EmailField {form} field="email" label="Email" />
 
-	<button type="submit" aria-busy={$delayed}>Send email</button>
+	<div class="flex justify-end">
+		<button type="submit" aria-busy={$delayed}>Send email</button>
+	</div>
 
 	{#if $message}
 		<p>{$message}</p>

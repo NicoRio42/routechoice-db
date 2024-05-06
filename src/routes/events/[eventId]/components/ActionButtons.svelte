@@ -47,7 +47,11 @@
 	<button class="rounded-full flex items-center justify-center w-12 h-12 m-0 p-0"
 		on:click={() => (showRoutechoices = !showRoutechoices)}
 	>
-		<i class="i-carbon-view inline-block w-5 h-5" />
+		<i
+			class:i-carbon-view={!showRoutechoices}
+			class:i-carbon-view-off={showRoutechoices}
+			class="inline-block w-5 h-5"
+		/>
 	</button>
 
 	<a
