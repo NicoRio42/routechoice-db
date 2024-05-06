@@ -15,7 +15,9 @@
 		<input type="file" name="twoDRerunExport" />
 	</label>
 
-	<button type="submit">Import course and routechoices</button>
+	<div class="flex justify-end">
+		<button type="submit">Import course and routechoices</button>
+	</div>
 
 	{#if data.displayError}		
 		<p class="error">An error occured</p>

@@ -12,7 +12,7 @@
 	}
 </script>
 
-<h1>Runners / GPS tracks / User correspondence</h1>
+<h1 class="mt-8 mx-auto mb-4">Runners / GPS tracks / User correspondence</h1>
 
 <p class="container">
 	&#62;
@@ -88,18 +88,8 @@
 		</tbody>
 	</table>
 
-	<button type="submit" class="submit">Save split times</button>
+	<div class="flex justify-end mb-8 px-8">
+		<button type="submit" class="submit">Save split times</button>
+	</div>
 </form>
 
-<style>
-	h1 {
-		margin: 2rem auto 1rem;
-	}
-
-	.submit {
-		width: fit-content;
-		padding-left: 2rem;
-		padding-right: 2rem;
-		margin: auto;
-	}
-</style>

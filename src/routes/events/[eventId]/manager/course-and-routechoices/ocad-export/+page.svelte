@@ -87,8 +87,10 @@
 			<p class="error-message">Invalid file extension</p>
 		{/if}
 	</label>
-
-	<button aria-busy={loading} disabled={loading} type="submit">Upload</button>
+	
+	<div class="flex justify-end">
+		<button aria-busy={loading} disabled={loading} type="submit">Upload</button>
+	</div>
 </form>
 
 <style>

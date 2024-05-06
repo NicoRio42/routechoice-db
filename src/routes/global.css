@@ -19,6 +19,10 @@ form {
 	padding-right: 1rem;
 }
 
+form button[type='submit'] {
+	width: fit-content;
+}
+
 .error {
 	color: var(--pico-form-element-invalid-border-color);
 	margin-bottom: 0;

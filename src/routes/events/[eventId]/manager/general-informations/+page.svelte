@@ -19,7 +19,9 @@
 
 	<TagsSelect allTags={data.tags} {form} field="tags" label="Tags" />
 
-	<button type="submit" aria-busy={$delayed} class="w-fit ml-auto">Submit</button>
+	<div class="flex justify-end">
+		<button type="submit" aria-busy={$delayed} class="w-fit ml-auto">Submit</button>
+	</div>
 
 	{#each $errors._errors ?? [] as globalError}
 		<p>

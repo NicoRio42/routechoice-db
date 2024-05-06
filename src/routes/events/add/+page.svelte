@@ -42,6 +42,7 @@
 			$formStore.name = event.event.name;
 		}
 
+		// TODO: Fix this
 		$formStore.startTime = formatDateTimeForDateTimeInput(new Date(event.event.start_date));
 		$formStore.publishTime = formatDateTimeForDateTimeInput(new Date(event.event.publish_date));
 		$formStore.finishTime = formatDateTimeForDateTimeInput(new Date(event.event.end_date));
@@ -75,7 +76,9 @@
 
 	<DateTimeField {form} field="finishTime" label="Finish time" />
 
-	<button type="submit" class="w-fit ml-auto" aria-busy={$delayed}>Add new event</button>
+	<div class="flex justify-end">
+		<button type="submit" class="w-fit ml-auto" aria-busy={$delayed}>Add new event</button>
+	</div>
 
 	{#each $errors._errors ?? [] as globalError}
 		<p>

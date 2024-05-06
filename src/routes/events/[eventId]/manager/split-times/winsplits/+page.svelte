@@ -98,7 +98,9 @@
 			{/each}
 		</SelectField>
 
-		<button type="submit" aria-busy={$delayed}> Load splits </button>
+		<div class="flex justify-end">
+			<button type="submit" aria-busy={$delayed}> Load splits </button>
+		</div>
 
 		{#if $errors._errors !== undefined && $errors._errors.length !== 0}
 			<ul class="list-none">
