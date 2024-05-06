@@ -39,7 +39,7 @@
 	<ul class="logo-list min-w-0 grow !mr0">
 		<li class="link-list-item">
 			<a
-				class="flex items-center gap-2 sm:gap-4 p-0 text-5 text-primary whitespace-nowrap"
+				class="flex items-center gap-2 sm:gap-4 p-0 text-5 text-primary whitespace-nowrap decoration-none"
 				href={$page.url.pathname ==="/events" ? "/" : "/events" }
 			>
 				<div class="bg-primary w-12 h-12 flex justify-center items-center">
@@ -194,6 +194,7 @@
 	.logo-list {
 		margin-left: calc(var(--pico-nav-element-spacing-horizontal) * -2);
 	}
+
 	.link-list-item {
 		padding: calc(var(--pico-nav-element-spacing-vertical) / 2) var(--pico-nav-element-spacing-horizontal);
 	}

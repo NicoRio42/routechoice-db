@@ -12,7 +12,7 @@
 		<div class="flex items-center justify-between">
 			<h1 class="my-0">Users</h1>
 			
-			<a href="/users/add" role="button" class="flex items-center gap-1 p2">
+			<a href="/users/add" role="button" class="!flex items-center gap-1 p2">
 				<i class="i-carbon-add inline-block w6 h6"></i>
 
 				New
@@ -36,7 +36,7 @@
 		</form>
 	</header>
 
-	<figure class="mt-6">
+	<figure class="mt-6 overflow-x-auto">
 		<table>
 			<thead>
 				<tr>

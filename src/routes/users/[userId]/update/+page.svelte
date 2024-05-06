@@ -25,7 +25,9 @@
 
 	<CheckboxField {form} field="isAdmin" label="Admin" />
 
-	<button type="submit" aria-busy={$delayed}>Update</button>
+	<div class="flex justify-end">
+		<button type="submit" aria-busy={$delayed}>Update</button>
+	</div>
 
 	{#each $errors._errors ?? [] as globalError}
 		<p>

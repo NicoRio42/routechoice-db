@@ -22,7 +22,7 @@
 	<a href={`/events/${data.event.id}/manager/split-times`}>Split times</a>
 </p>
 
-<form method="post" use:enhance class="container">
+<form method="post" use:enhance class="container overflow-x-auto">
 	<table>
 		<thead>
 			<tr>
