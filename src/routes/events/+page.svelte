@@ -26,7 +26,7 @@
 			<h1 class="mt-4 mb-6">Events</h1>
 			
 			{#if data.user.role === RolesEnum.Enum.admin}
-				<a href="events/add" role="button" class="flex items-center gap-1 p2">
+				<a href="events/add" role="button" class="!flex items-center gap-1 p2">
 					<i class="i-carbon-add inline-block w6 h6"></i>
 
 					New
@@ -51,14 +51,14 @@
 			/>
 		</form>
 
-		<button type="submit" form="filter-form" class="outline w-fit flex items-center gap-1 p2 ml-auto my4">
+		<button type="submit" form="filter-form" class="outline !w-fit flex items-center gap-1 p2 ml-auto my4">
 			<i class="i-carbon-filter inline-block w6 h6"></i>
 			
 			Filter
 		</button>
 	</header>
 	
-	<figure class="mt-4">
+	<figure class="mt-4 overflow-auto">
 		<table>
 			<thead>
 				<tr>

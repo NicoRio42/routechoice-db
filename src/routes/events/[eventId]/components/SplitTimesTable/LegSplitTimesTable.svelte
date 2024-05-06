@@ -87,9 +87,9 @@
 						value={runner.id}
 						checked={selectedRunners.includes(runner.id)}
 						on:change={(e) => handleShowTrackCheckboxChange(e, runner.id)}
-						style:--border-color={runner.track.color}
-						style:--primary={runner.track.color}
-						style:--form-element-focus-color={addAlpha(runner.track.color, 0.13)}
+						style:--pico-border-color={runner.track.color}
+						style:--pico-primary-background={runner.track.color}
+						style:--pico-form-element-focus-color={addAlpha(runner.track.color, 0.13)}
 					/>
 				</td>
 			{/if}
@@ -142,75 +142,11 @@
 		background-color: var(--pico-background-color);
 	}
 
-	.tooltip-container,
-	.tooltip {
-		white-space: nowrap;
-	}
-
-	.tooltip-container {
-		position: relative;
-	}
-
 	[data-tooltip]:not(td) {
 		border-bottom: none;
 	}
 
 	td[data-tooltip] {
 		border-bottom: var(--pico-border-width) solid var(--pico-table-border-color);
-	}
-
-	.tooltip {
-		z-index: 1;
-		display: inline-block;
-		position: absolute;
-		left: 10%;
-		top: 100%;
-		color: #fff;
-		background-color: #616161;
-		padding-left: 8px;
-		padding-right: 8px;
-		text-align: center;
-		border-radius: 4px;
-		visibility: hidden;
-		opacity: 0;
-		transition: visibility 0s, opacity 0.5s linear;
-	}
-
-	.tooltip-top {
-		top: auto;
-		bottom: 100%;
-	}
-
-	.first {
-		color: #f44336;
-	}
-
-	.second {
-		color: #4caf50;
-	}
-
-	.third {
-		color: #2196f3;
-	}
-
-	table tr td.mistake {
-		background-color: #ffdddd;
-	}
-
-	.right {
-		text-align: end;
-	}
-
-	.pen-td {
-		padding: 0;
-	}
-
-	.pen-button {
-		margin: 0;
-		padding: 0;
-		color: var(--pico-h1-color);
-		background-color: transparent;
-		border: none;
-		box-shadow: none;
 	}
 </style>

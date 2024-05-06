@@ -44,20 +44,22 @@
 
 	<button class="large btn" on:click={() => (isAutoAnalysisMode = !isAutoAnalysisMode)}>AA</button> -->
 
-	<button class="btn" on:click={() => (showRoutechoices = !showRoutechoices)}>
-		<i class="i-carbon-view" />
+	<button class="rounded-full flex items-center justify-center w-12 h-12 m-0 p-0"
+		on:click={() => (showRoutechoices = !showRoutechoices)}
+	>
+		<i class="i-carbon-view inline-block w-5 h-5" />
 	</button>
 
 	<a
 		role="button"
-		class="btn"
+		class="rounded-full !flex items-center justify-center w-12 h-12 m-0 p-0"
 		href={addSearchParamsToURL($page.url, 'legNumber', getPreviousLegNumber().toString())}
 		data-sveltekit-replacestate
 	>
-		<i class="i-carbon-chevron-left" />
+		<i class="i-carbon-chevron-left inline-block w-5 h-5" />
 	</a>
 
-	<form class="m0" data-sveltekit-replacestate>
+	<form class="m-0" data-sveltekit-replacestate>
 		<select
 			name="legNumber"
 			id="leg-select"
@@ -78,22 +80,22 @@
 
 	<a
 		role="button"
-		class="btn"
+		class="rounded-full !flex items-center justify-center w-12 h-12 m-0  p-0"
 		href={addSearchParamsToURL($page.url, 'legNumber', getNextLegNumber().toString())}
 		data-sveltekit-replacestate
 	>
-		<i class="i-carbon-chevron-right" />
+		<i class="i-carbon-chevron-right inline-block w-5 h-5" />
 	</a>
 
 	<a
 		role="button"
-		class="btn"
+		class="rounded-full !flex items-center justify-center w-12 h-12 m-0  p-0"
 		href={$page.url.searchParams.has('hideSideBar')
 			? deleteSearchParamsToURL($page.url, 'hideSideBar')
 			: addSearchParamsToURL($page.url, 'hideSideBar', '')}
 		data-sveltekit-replacestate
 	>
-		<i class="i-carbon-chart-column" />
+		<i class="i-carbon-chart-column inline-block w-5 h-5" />
 	</a>
 </div>
 
@@ -110,19 +112,8 @@
 	}
 
 	select {
-		background-color: white;
 		width: 5rem;
 		border-radius: 0.5rem;
-		margin-bottom: 0;
-	}
-
-	.btn {
-		width: 3rem;
-		height: 3rem;
-		border-radius: 50%;
-		display: flex;
-		justify-content: center;
-		align-items: center;
 		margin-bottom: 0;
 	}
 

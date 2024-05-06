@@ -110,9 +110,10 @@
 				</li>
 			{:else}
 				<li class="py-0 large">
-					<details  role="list" dir="rtl" class="dropdown" >
+					<details  role="list" class="dropdown" >
 						<summary aria-haspopup="listbox"> {user.firstName} {user.lastName} </summary>
-						<ul>
+						
+						<ul dir="rtl">
 							<li class="option-item">
 								<form action="/logout" method="post" use:enhance>
 									<button type="submit">Logout</button>
@@ -132,10 +133,12 @@
 			</li>
 		</ul>
 
-		<details  role="list" dir="rtl" class="hamburger-menu dropdown">
-			<summary aria-haspopup="listbox"> <i class="i-carbon-menu w-8 h-8" /> </summary>
+		<details  role="list" class="hamburger-menu dropdown">
+			<summary aria-haspopup="listbox" class="!bg-transparent mt-0.5">
+				<i class="i-carbon-menu block w-8 h-8" />
+			</summary>
 
-			<ul>
+			<ul dir="rtl">
 				{#if user !== null}
 					<li class="option-item">
 						<strong>

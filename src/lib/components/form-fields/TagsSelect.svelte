@@ -31,12 +31,12 @@
 	onDestroy(unsub);
 </script>
 
-<label class="mb-8">
+<label class="mb-8 !w-full">
 	{#if label !== undefined}
 		{label}
 	{/if}
 
-	<details role="list">
+	<details role="list" class="dropdown w-full">
 		<summary aria-haspopup="listbox" class="overflow-hidden nowrap">
 			{#each selectedTags as tag}
 				<span style:background-color={tag.color} class="mr-1 px-1 rounded text-white">

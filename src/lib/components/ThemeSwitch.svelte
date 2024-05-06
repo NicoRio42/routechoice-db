@@ -1,55 +1,43 @@
-<div
-	class="flex items-center gap-1 p-1 rounded-10 border border-solid border-table-border-color w-min"
+<button
+	class="btn-unset moon flex justify-center items-center p-1 rounded-full border border-solid border-table-border-color"
+	type="button"
+	on:click={() => document.documentElement.dataset.theme = "dark"}
 >
-	<button
-		class="btn-unset flex justify-center items-center dark"
-		type="button"
-		onclick="this.closest('html').dataset.theme = 'dark'"
-	>
-		<i class="i-carbon-moon" />
-	</button>
+	<i class="i-carbon-moon w-5 h-5 block " />
+</button>
 
-	<button
-		class="btn-unset flex justify-center items-center light"
-		type="button"
-		onclick="this.closest('html').dataset.theme = 'light'"
-	>
-		<i class="i-carbon-light" />
-	</button>
-</div>
+<button
+	class="btn-unset sun hidden justify-center items-center p-1 rounded-full border border-solid border-table-border-color"
+	type="button"
+	on:click={() => document.documentElement.dataset.theme = "light"}
+>
+	<i class="i-carbon-light w-5 h-5 block " />
+</button>
 
 <style>
-	.light {
-		color: rgb(187, 198, 206);
-	}
-
-	.dark {
-		color: rgb(65, 84, 98);
-	}
-
 	@media (prefers-color-scheme: dark) {
-		.light {
-			color: rgb(187, 198, 206);
+		.moon {
+			display: none;
 		}
 
-		.dark {
-			color: rgb(65, 84, 98);
+		.sun {
+			display: flex;
 		}
 	}
 
-	:global(html[data-theme='light']) .light {
-		color: rgb(187, 198, 206);
+	:global(html[data-theme='light']) .moon {
+			display: flex;
 	}
 
-	:global(html[data-theme='light']) .dark {
-		color: rgb(65, 84, 98);
+	:global(html[data-theme='light']) .sun {
+			display: none;
 	}
 
-	:global(html[data-theme='dark']) .light {
-		color: rgb(187, 198, 206);
+	:global(html[data-theme='dark']) .moon {
+			display: none;
 	}
 
-	:global(html[data-theme='dark']) .dark {
-		color: rgb(65, 84, 98);
+	:global(html[data-theme='dark']) .sun {
+			display: flex;
 	}
 </style>
