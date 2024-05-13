@@ -72,7 +72,7 @@ function createNewAuth(client: Client) {
 		}),
 		env: dev ? 'DEV' : 'PROD',
 		middleware: sveltekit(),
-		transformDatabaseUser: (userData: schema.UserColumnsNames) => ({
+		transformDatabaseUser: (userData: any) => ({
 			id: userData.id,
 			firstName: userData.first_name,
 			lastName: userData.last_name,

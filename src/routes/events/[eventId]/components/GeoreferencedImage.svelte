@@ -33,7 +33,6 @@
 			imageProjection,
 			(coords: number[]) => {
 				const [lon, lat] = transform(coords, 'EPSG:3857', 'EPSG:4326');
-
 				const [x, y] = coordinatesConverter.latLongToXY([lat, lon]);
 
 				return [x, mapCalibration[1].point.y - y];
@@ -52,6 +51,7 @@
 			imageExtent,
 			imageLoadFunction: (img: ImageWrapper, src: string) => {
 				const imageElemnt = cachedImages[eventMap.url];
+
 				if (imageElemnt === undefined) {
 					(img.getImage() as HTMLImageElement).src = src;
 					return;

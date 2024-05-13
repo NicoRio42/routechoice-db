@@ -71,13 +71,13 @@ export const actions = {
 			eventTags.every((t) => form.data.tags.includes(t));
 
 		if (tagsAreUnchanged) {
-			throw redirect(302, '/');
+			throw redirect(302, '/events');
 		}
 
 		await locals.db.delete(assoEventTagTable).where(eq(assoEventTagTable.fkEvent, eventId)).run();
 
 		if (form.data.tags.length === 0) {
-			throw redirect(302, '/');
+			throw redirect(302, '/events');
 		}
 
 		await locals.db
