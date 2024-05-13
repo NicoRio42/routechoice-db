@@ -5,9 +5,6 @@ settings:
   excludeLinksFromLockfile: false
 
 dependencies:
-  '7':
-    specifier: ^0.0.1
-    version: 0.0.1
   '@libsql/client':
     specifier: ^0.3.1
     version: 0.3.1
@@ -90,10 +87,6 @@ devDependencies:
     version: 3.0.0
 
 packages:
-
-  /7@0.0.1:
-    resolution: {integrity: sha512-o9Q7is0K/9DsIRFke4wkUu3f9mVNC+n1wZHG71FAo1U1vhsj7WrUpRfHHrMR11o7jC22xH/6jd5KND/8rhDRlQ==}
-    dev: false
 
   /@ampproject/remapping@2.2.1:
     resolution: {integrity: sha512-lFMjJTrFL3j7L9yBxwYfCq2k6qqwHyzuUl/XBnif78PWTJYyL/dfowQHWE3sp6U6ZzqWiiIZnpTMO96zhkjwtg==}
