@@ -9,8 +9,7 @@
 		"skipLibCheck": true,
 		"sourceMap": true,
 		"strict": true,
-		"module": "NodeNext",
-		"moduleResolution": "nodenext",
+		"moduleResolution": "Bundler",
 		"outDir": "out"
 	}
 	// Path aliases are handled by https://kit.svelte.dev/docs/configuration#alias
