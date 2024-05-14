@@ -7,11 +7,11 @@ import {
 	runnerLeg as runnerLegTable,
 	runner as runnerTable
 } from '$lib/server/db/schema.js';
-import { parseIofXmlSplitTimesFile } from '@orienteering-js/split-times';
 import { error } from '@sveltejs/kit';
 import { eq, or } from 'drizzle-orm';
 import type { LibSQLDatabase } from 'drizzle-orm/libsql';
 import { DOMParser } from 'linkedom';
+import { parseIofXmlSplitTimesFile } from 'orienteering-js/split-times';
 
 export async function parseAndInsertSplitTimesFromIofXml3File(
 	splitTimesRaw: string,
@@ -96,7 +96,7 @@ export async function parseAndInsertSplitTimesFromIofXml3File(
 			rank: runner.rank,
 			time: runner.time,
 			timeBehind: runner.timeBehind,
-			timeOffset: 0,
+			timeOffset: runner.timeOffset,
 			totalTimeLost: runner.totalTimeLost
 		});
 
