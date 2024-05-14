@@ -2,11 +2,12 @@
 	import TagsSelect from "$lib/components/form-fields/TagsSelect.svelte";
 	import TextField from "$lib/components/form-fields/TextField.svelte";
 	import { superForm } from "sveltekit-superforms/client";
+	import { generalInformationsSchema } from './schema';
 
 	export let data;
 
 	const form = superForm(data.form, {
-		taintedMessage: null
+		taintedMessage: null, validators: generalInformationsSchema
 	});
 
 	const { delayed, enhance, errors } = form;

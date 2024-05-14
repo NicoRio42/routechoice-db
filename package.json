@@ -23,7 +23,7 @@
 		"@iconify-json/carbon": "^1.1.17",
 		"@sveltejs/adapter-cloudflare": "^2.3.1",
 		"@sveltejs/enhanced-img": "^0.2.0",
-		"@sveltejs/kit": "^1.22.3",
+		"@sveltejs/kit": "^1.30.4",
 		"@unocss/extractor-svelte": "^0.52.4",
 		"@unocss/preset-icons": "^0.52.4",
 		"drizzle-kit": "^0.21.1",
@@ -42,6 +42,7 @@
 	"dependencies": {
 		"@libsql/client": "^0.3.1",
 		"@lucia-auth/adapter-drizzle": "^1.0.7",
+		"@orienteering-js/split-times": "npm:@jsr/orienteering-js__split-times@^0.2.0",
 		"@picocss/pico": "^2.0.6",
 		"drizzle-orm": "^0.30.10",
 		"linkedom": "^0.14.26",
