@@ -1,17 +1,16 @@
 import { RolesEnum } from '$lib/models/enums/roles.enum.js';
-import { user as userDBShema } from '$lib/server/db/schema.js';
-import { redirect } from '@sveltejs/kit';
+import { redirectIfNotAdmin } from '$lib/server/auth/helpers.js';
+import { db } from '$lib/server/db/db.js';
+import { key as keyTable, user as userDBShema } from '$lib/server/db/schema.js';
+import { error, redirect } from '@sveltejs/kit';
 import { and, eq } from 'drizzle-orm';
 import { setError, superValidate } from 'sveltekit-superforms/server';
 import { userFormSchema } from '../userFormSchema.js';
-import { redirectIfNotAdmin } from '$lib/server/auth/helpers.js';
+import { generateId } from 'lucia';
+import { sendPasswordResetEmail } from '$lib/server/email.js';
 
 export async function load({ locals }) {
-	const session = await locals.authRequest.validate();
-	if (!session) throw redirect(302, '/login');
-	const { user: connectedUser } = session;
-
-	redirectIfNotAdmin(connectedUser);
+	redirectIfNotAdmin(locals.user);
 
 	const form = await superValidate(userFormSchema);
 	return { form };
@@ -19,15 +18,8 @@ export async function load({ locals }) {
 
 export const actions = {
 	default: async ({ request, locals }) => {
-		const session = await locals.authRequest.validate();
-		if (!session) throw redirect(302, '/login');
-		const { user: connectedUser } = session;
-
-		if (!connectedUser || connectedUser.role !== RolesEnum.Enum.admin) {
-			throw redirect(302, '/login');
-		}
-
-		redirectIfNotAdmin(connectedUser);
+		if (locals.user === null) throw error(401);
+		if (locals.user.role !== 'admin') throw error(403);
 
 		const form = await superValidate(request, userFormSchema);
 
@@ -35,7 +27,7 @@ export const actions = {
 			return setError(form, '', 'An error occured');
 		}
 
-		const existingUser = await locals.db
+		const existingUser = await db
 			.select()
 			.from(userDBShema)
 			.where(
@@ -50,7 +42,7 @@ export const actions = {
 			return setError(form, '', 'First name and last name conbination allready exists');
 		}
 
-		const existingEmail = await locals.db
+		const existingEmail = await db
 			.select()
 			.from(userDBShema)
 			.where(eq(userDBShema.email, form.data.email))
@@ -60,21 +52,26 @@ export const actions = {
 			return setError(form, 'email', 'Email allready linked to an account');
 		}
 
-		await locals.auth.createUser({
-			key: {
-				providerId: 'email',
-				providerUserId: form.data.email,
-				password: crypto.randomUUID()
-			},
-			attributes: {
-				first_name: form.data.firstName,
-				last_name: form.data.lastName,
+		const id = generateId(15);
+
+		await db
+			.insert(userDBShema)
+			.values({
+				id,
+				firstName: form.data.firstName,
+				lastName: form.data.lastName,
 				email: form.data.email,
-				role: form.data.isAdmin ? RolesEnum.Enum.admin : RolesEnum.Enum.default,
-				email_verified: 0,
-				password_expired: 1
-			}
-		});
+				role: form.data.isAdmin ? RolesEnum.Enum.admin : RolesEnum.Enum.default
+			})
+			.run();
+
+		await db.insert(keyTable).values({ userId: id }).run();
+
+		await sendPasswordResetEmail(
+			id,
+			form.data.email,
+			`${form.data.firstName} ${form.data.lastName}`
+		);
 
 		throw redirect(302, '/users');
 	}

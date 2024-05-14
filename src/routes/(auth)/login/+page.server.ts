@@ -1,37 +1,43 @@
 import { redirect } from '@sveltejs/kit';
 import { loginFormSchema } from './schema.js';
 import { setError, superValidate } from 'sveltekit-superforms/server';
-import { user as userTable } from '$lib/server/db/schema.js';
+import { key as keyTable, user as userTable } from '$lib/server/db/schema.js';
 import { eq } from 'drizzle-orm';
-import { LuciaError } from 'lucia';
+import { db } from '$lib/server/db/db.js';
+import { validateScryptHash } from '$lib/server/auth/crypto.js';
+import { auth } from '$lib/server/auth/auth.js';
 
 export const load = async ({ locals }) => {
-	const session = await locals.authRequest.validate();
-	if (session) throw redirect(302, '/');
+	if (locals.user !== null) throw redirect(302, '/events');
 
 	const form = await superValidate(loginFormSchema);
 	return { form };
 };
 
 export const actions = {
-	default: async ({ request, locals, url }) => {
+	default: async ({ request, cookies, url, locals }) => {
+		if (locals.user !== null) throw redirect(302, '/events');
+
 		const form = await superValidate(request, loginFormSchema);
+		const { email, password } = form.data;
 
 		if (!form.valid) {
 			return setError(form, '', 'An error occured');
 		}
 
-		const user = await locals.db
+		const queryResult = await db
 			.select()
 			.from(userTable)
-			.where(eq(userTable.email, form.data.email))
+			.innerJoin(keyTable, eq(keyTable.userId, userTable.id))
+			.where(eq(userTable.email, email))
 			.get();
 
-		if (user === undefined) {
+		if (queryResult === undefined) {
 			return setError(form, '', "This account doesn't exist");
 		}
+		const { auth_user: existingUser, auth_key: key } = queryResult;
 
-		if (user.passwordExpired) {
+		if (existingUser.passwordExpired || key.hashedPassword === null) {
 			return setError(
 				form,
 				'',
@@ -39,26 +45,16 @@ export const actions = {
 			);
 		}
 
-		try {
-			console.debug('[LOGIN DEFAULT ACTION] starting login');
-			const key = await locals.auth.useKey('email', form.data.email, form.data.password);
-			console.debug('[LOGIN DEFAULT ACTION] Key found');
-			const session = await locals.auth.createSession({ userId: key.userId, attributes: {} });
-			console.debug('[LOGIN DEFAULT ACTION] Session found');
-			locals.authRequest.setSession(session);
-			console.debug('[LOGIN DEFAULT ACTION] Session set');
-		} catch (e) {
-			console.error(e);
+		const isPasswordMatching = await validateScryptHash(password, key.hashedPassword);
+		if (!isPasswordMatching) return setError(form, '', 'Incorrect email or password');
 
-			if (
-				e instanceof LuciaError &&
-				(e.message === 'AUTH_INVALID_KEY_ID' || e.message === 'AUTH_INVALID_PASSWORD')
-			) {
-				return setError(form, '', 'Incorrect email or password');
-			}
+		const session = await auth.createSession(existingUser.id, {});
+		const sessionCookie = auth.createSessionCookie(session.id);
 
-			return setError(form, '', 'An unknown error occurred');
-		}
+		cookies.set(sessionCookie.name, sessionCookie.value, {
+			path: '.',
+			...sessionCookie.attributes
+		});
 
 		const redirectToSearchParam = url.searchParams.get('redirectTo');
 

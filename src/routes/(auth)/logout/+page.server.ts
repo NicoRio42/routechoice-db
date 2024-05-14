@@ -1,10 +1,15 @@
-import { fail } from '@sveltejs/kit';
+import { auth } from '$lib/server/auth/auth.js';
+import { fail, redirect } from '@sveltejs/kit';
 
 export const actions = {
-	default: async ({ locals }) => {
-		const session = await locals.authRequest.validate();
-		if (!session) return fail(401);
-		await locals.auth.invalidateSession(session.sessionId);
-		locals.authRequest.setSession(null);
+	default: async ({ locals, cookies }) => {
+		if (!locals.session) return fail(401);
+		await auth.invalidateSession(locals.session.id);
+		const sessionCookie = auth.createBlankSessionCookie();
+		cookies.set(sessionCookie.name, sessionCookie.value, {
+			path: '.',
+			...sessionCookie.attributes
+		});
+		redirect(302, '/login');
 	}
 };

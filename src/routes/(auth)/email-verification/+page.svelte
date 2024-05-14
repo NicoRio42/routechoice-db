@@ -1,11 +1,44 @@
-<script lang="ts">
+<script>
+	import { enhance } from '$app/forms';
+
 	export let data;
+	export let form;
 </script>
 
-<form method="POST">
-	<button>Re-send verification email</button>
+<article class="max-w-120 mx-auto mt-0 sm:mt-8">
+	<h1>Confirmation de l'adresse email</h1>
 
-	{#if data.sent}
-		<p>Email has been sent, check your emails</p>
+	<p>Un code de confirmation a été envoyé à l'adresse email : {data.email}</p>
+
+	<form action="?/verifyCode" method="post" use:enhance>
+		<fieldset role="group">
+			<input
+				type="text"
+				name="code"
+				aria-invalid={form?.wrongCode || form?.codeExpired ? 'true' : undefined}
+			/>
+
+			<input type="submit" value="Vérifier" />
+		</fieldset>
+
+		{#if form?.wrongCode}
+			<small>Code de confirmation incorrect</small>
+		{/if}
+
+		{#if form?.codeExpired}
+			<small>Code de confirmation expiré</small>
+		{/if}
+	</form>
+
+	{#if form?.wrongCode || form?.codeExpired || form?.codeResent}
+		<form action="?/sendNewVerificationCode" method="post" use:enhance>
+			<button type="submit" class="outline !w-fit">
+				Renvoyer un code
+
+				{#if form?.codeResent}
+					<i class="i-carbon-check h-4 w-4"></i>
+				{/if}
+			</button>
+		</form>
 	{/if}
-</form>
+</article>

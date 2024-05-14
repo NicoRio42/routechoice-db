@@ -1,9 +1,17 @@
-import { sqliteTable, text, integer, customType, primaryKey, real } from 'drizzle-orm/sqlite-core';
-import { relations, type InferModel } from 'drizzle-orm';
+import { relations } from 'drizzle-orm';
+import { integer, primaryKey, real, sqliteTable, text } from 'drizzle-orm/sqlite-core';
 import { RolesEnum } from '../../models/enums/roles.enum.js';
 import { RunnerStatusEnum } from '../../models/enums/runner-status.enum.js';
+import { generateId } from 'lucia';
+import { TimeSpan, createDate } from 'oslo';
+import { alphabet, generateRandomString } from 'oslo/crypto';
 // import { RolesEnum } from '../../models/enums/roles.enum';
 // import { RunnerStatusEnum } from '../../models/enums/runner-status.enum';
+
+const id = text('id')
+	.primaryKey()
+	.notNull()
+	.$defaultFn(() => generateId(15));
 
 export const event = sqliteTable('event', {
 	id: text('id').primaryKey(),
@@ -232,7 +240,7 @@ export const user = sqliteTable('auth_user', {
 	lastName: text('last_name').notNull(),
 	email: text('email').notNull(),
 	emailVerified: integer('email_verified', { mode: 'boolean' }).default(false).notNull(),
-	passwordExpired: integer('password_expired', { mode: 'boolean' }).default(false).notNull(),
+	passwordExpired: integer('password_expired', { mode: 'boolean' }).default(true).notNull(),
 	role: text('role', { enum: [RolesEnum.Enum.admin, RolesEnum.Enum.default] })
 		.default(RolesEnum.Enum.default)
 		.notNull()
@@ -241,34 +249,45 @@ export const user = sqliteTable('auth_user', {
 export type User = typeof user.$inferSelect;
 
 export const session = sqliteTable('auth_session', {
-	id: text('id').primaryKey(),
+	id: text('id').primaryKey().notNull(),
 	userId: text('user_id')
 		.notNull()
 		.references(() => user.id, { onDelete: 'cascade' }),
-	activeExpires: integer('active_expires').notNull(),
-	idleExpires: integer('idle_expires').notNull()
+	expiresAt: integer('expires_at').notNull()
 });
 
 export const key = sqliteTable('auth_key', {
-	id: text('id').primaryKey(),
+	id,
 	userId: text('user_id')
 		.notNull()
 		.references(() => user.id, { onDelete: 'cascade' }),
 	hashedPassword: text('hashed_password')
 });
 
-export const emailVerificationToken = sqliteTable('email_verification_token', {
-	id: text('id').primaryKey(),
-	userId: text('user_id')
+const expiresAt = integer('expires_at', { mode: 'timestamp' })
+	.notNull()
+	.$defaultFn(() => createDate(new TimeSpan(15, 'm')));
+
+export const emailVerificationCodeTable = sqliteTable('email_verification', {
+	id,
+	code: text('code')
 		.notNull()
+		.$defaultFn(() => generateRandomString(8, alphabet('0-9'))),
+	fkUser: text('fk_user')
+		.notNull()
+		.unique()
 		.references(() => user.id, { onDelete: 'cascade' }),
-	expires: integer('expires')
+	expiresAt
 });
 
-export const passwordResetToken = sqliteTable('password_reset_token', {
-	id: text('id').primaryKey(),
-	userId: text('user_id')
+export const passwordResetTokenTable = sqliteTable('password_reset', {
+	id: text('id')
+		.primaryKey()
 		.notNull()
+		.$defaultFn(() => generateId(40)),
+	fkUser: text('fk_user')
+		.notNull()
+		.unique()
 		.references(() => user.id, { onDelete: 'cascade' }),
-	expires: integer('expires')
+	expiresAt
 });

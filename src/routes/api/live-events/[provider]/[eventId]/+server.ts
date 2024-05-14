@@ -3,11 +3,8 @@ import { redirectIfNotAdmin } from '$lib/server/auth/helpers.js';
 import { error, redirect } from '@sveltejs/kit';
 
 export async function GET({ fetch, params: { provider, eventId }, locals }) {
-	const session = await locals.authRequest.validate();
-	if (!session) throw redirect(302, '/login');
-	const { user } = session;
-
-	redirectIfNotAdmin(user);
+	if (locals.user === null) throw error(401);
+	if (locals.user.role !== 'admin') throw error(403);
 
 	const gpsProvider = GPS_PROVIDERS[provider];
 	if (gpsProvider === undefined) throw error(404, 'Not found');

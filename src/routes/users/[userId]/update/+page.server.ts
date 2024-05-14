@@ -1,19 +1,19 @@
 import { RolesEnum } from '$lib/models/enums/roles.enum.js';
-import { redirectIfNotAdminOrNotCurrentUser } from '$lib/server/auth/helpers.js';
+import {
+	redirectIfNotAdmin,
+	redirectIfNotAdminOrNotCurrentUser
+} from '$lib/server/auth/helpers.js';
 import { user as userTable } from '$lib/server/db/schema.js';
 import { error, redirect } from '@sveltejs/kit';
 import { and, eq, ne } from 'drizzle-orm';
 import { setError, superValidate } from 'sveltekit-superforms/server';
 import { userFormSchema } from '../../userFormSchema.js';
+import { db } from '$lib/server/db/db.js';
 
 export async function load({ locals, params: { userId } }) {
-	const session = await locals.authRequest.validate();
-	if (!session) throw redirect(302, '/login');
-	const { user: connectedUser } = session;
+	redirectIfNotAdmin(locals.user);
 
-	redirectIfNotAdminOrNotCurrentUser(connectedUser, userId);
-
-	const user = await locals.db.select().from(userTable).where(eq(userTable.id, userId)).get();
+	const user = await db.select().from(userTable).where(eq(userTable.id, userId)).get();
 
 	if (!user) {
 		throw error(404);
@@ -34,13 +34,10 @@ export async function load({ locals, params: { userId } }) {
 
 export const actions = {
 	default: async ({ params: { userId }, locals, request }) => {
-		const session = await locals.authRequest.validate();
-		if (!session) throw redirect(302, '/login');
-		const { user: connectedUser } = session;
+		if (locals.user === null) throw error(401);
+		if (locals.user.role !== 'admin') throw error(403);
 
-		redirectIfNotAdminOrNotCurrentUser(connectedUser, userId);
-
-		const user = await locals.db.select().from(userTable).where(eq(userTable.id, userId)).get();
+		const user = await db.select().from(userTable).where(eq(userTable.id, userId)).get();
 
 		if (!user) {
 			throw error(404);
@@ -52,7 +49,7 @@ export const actions = {
 			return setError(form, '', 'An error occured');
 		}
 
-		const existingUserName = await locals.db
+		const existingUserName = await db
 			.select()
 			.from(userTable)
 			.where(
@@ -68,7 +65,7 @@ export const actions = {
 			return setError(form, '', 'First name and last name conbination allready exists');
 		}
 
-		const existingEmail = await locals.db
+		const existingEmail = await db
 			.select()
 			.from(userTable)
 			.where(and(eq(userTable.email, form.data.email), ne(userTable.id, userId)))
@@ -93,11 +90,15 @@ export const actions = {
 			// 	role: form.data.isAdmin ? RolesEnum.Enum.admin : RolesEnum.Enum.default
 			// });
 		} else {
-			await locals.auth.updateUserAttributes(userId, {
-				first_name: form.data.firstName,
-				last_name: form.data.lastName,
-				role: form.data.isAdmin ? RolesEnum.Enum.admin : RolesEnum.Enum.default
-			});
+			await db
+				.update(userTable)
+				.set({
+					firstName: form.data.firstName,
+					lastName: form.data.lastName,
+					role: form.data.isAdmin ? 'admin' : 'default'
+				})
+				.where(eq(userTable.id, userId))
+				.run();
 		}
 
 		throw redirect(302, '/users');

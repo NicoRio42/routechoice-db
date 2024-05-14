@@ -1,16 +1,18 @@
 import { redirectIfNotAdmin } from '$lib/server/auth/helpers.js';
-import { fail, redirect } from '@sveltejs/kit';
+import { db } from '$lib/server/db/db.js';
+import { error, fail, redirect } from '@sveltejs/kit';
 import { DOMParser } from 'linkedom';
 import { parseGPXRoutechoicesOCADExport, parseIOFXML3CourseOCADExport } from 'orienteering-js/ocad';
 import { insertControlPointsLegsRoutechoicesAndRoutechoicesStatistics } from '../helpers.js';
 
+export async function load({ locals }) {
+	redirectIfNotAdmin(locals.user);
+}
+
 export const actions = {
 	default: async ({ locals, request, params: { eventId } }) => {
-		const session = await locals.authRequest.validate();
-		if (!session) throw redirect(302, '/login');
-		const { user } = session;
-
-		redirectIfNotAdmin(user);
+		if (locals.user === null) throw error(401);
+		if (locals.user.role !== 'admin') throw error(403);
 
 		const formData = await request.formData();
 
@@ -45,7 +47,7 @@ export const actions = {
 		await insertControlPointsLegsRoutechoicesAndRoutechoicesStatistics(
 			controls,
 			legsWithRoutechoices,
-			locals.db,
+			db,
 			eventId
 		);
 

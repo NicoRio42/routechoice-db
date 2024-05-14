@@ -1,10 +1,11 @@
 import { sortLegs, sortRunnersAndRunnersLegs } from '$lib/helpers.js';
+import { db } from '$lib/server/db/db.js';
 import { event as eventTable } from '$lib/server/db/schema.js';
 import { error, json } from '@sveltejs/kit';
 import { eq } from 'drizzle-orm';
 
-export async function GET({ params: { eventId }, locals }) {
-	const event = await locals.db.query.event.findFirst({
+export async function GET({ params: { eventId } }) {
+	const event = await db.query.event.findFirst({
 		where: eq(eventTable.id, eventId),
 		with: {
 			runners: { with: { legs: true } },

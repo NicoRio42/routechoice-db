@@ -1,7 +1,7 @@
 <script lang="ts">
 	import EmailField from '$lib/components/form-fields/EmailField.svelte';
 	import { superForm } from 'sveltekit-superforms/client';
-	import { resetPasswordEmailSchema } from './schema.js';
+	import { resetPasswordEmailSchema } from './schema';
 
 	export let data;
 

@@ -25,7 +25,7 @@
 		<div class="flex items-center justify-between">
 			<h1 class="mt-4 mb-6">Events</h1>
 			
-			{#if data.user.role === RolesEnum.Enum.admin}
+			{#if data.user?.role === 'admin'}
 				<a href="events/add" role="button" class="!flex items-center gap-1 p2">
 					<i class="i-carbon-add inline-block w6 h6"></i>
 
@@ -68,7 +68,7 @@
 					<th>Tags</th>
 					<th />
 
-					{#if data.user.role === RolesEnum.Enum.admin}
+					{#if data.user?.role === 'admin'}
 						<th />
 						<th />
 					{/if}
@@ -113,7 +113,7 @@
 							</a>
 						</td>
 
-						{#if data.user.role === RolesEnum.Enum.admin}
+						{#if data.user?.role === 'admin'}
 							<td class="text-right">
 								<a href="/events/{event.id}/manager">
 									<i class="i-carbon-settings-adjust w-5 h-5 block" />

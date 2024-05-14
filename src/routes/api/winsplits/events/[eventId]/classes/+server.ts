@@ -1,14 +1,10 @@
 import { TWO_D_RERUN_URL } from '$lib/constants.js';
-import { redirectIfNotAdmin } from '$lib/server/auth/helpers.js';
-import { json, redirect } from '@sveltejs/kit';
+import { error, json } from '@sveltejs/kit';
 import { DOMParser } from 'linkedom';
 
 export async function GET({ params: { eventId }, locals }) {
-	const session = await locals.authRequest.validate();
-	if (!session) throw redirect(302, '/login');
-	const { user } = session;
-
-	redirectIfNotAdmin(user);
+	if (locals.user === null) throw error(401);
+	if (locals.user.role !== 'admin') throw error(403);
 
 	const response = await fetch(`${TWO_D_RERUN_URL}?id=${eventId}`);
 	const classesText = await response.text();

@@ -4,14 +4,13 @@ import {
 	sortLegs,
 	sortRunnersAndRunnersLegs
 } from '$lib/helpers.js';
+import { db } from '$lib/server/db/db.js';
 import { event as eventTable } from '$lib/server/db/schema.js';
 import { error, redirect } from '@sveltejs/kit';
 import { eq } from 'drizzle-orm';
 
 export async function load({ params: { eventId }, locals, fetch }) {
-	const session = await locals.authRequest.validate();
-
-	const event = await locals.db.query.event.findFirst({
+	const event = await db.query.event.findFirst({
 		where: eq(eventTable.id, eventId),
 		with: {
 			liveEvents: true,
@@ -38,7 +37,7 @@ export async function load({ params: { eventId }, locals, fetch }) {
 			)
 		},
 		eventMap: getEventMap(event.liveEvents[0], fetch),
-		user: session?.user ?? null,
+		user: locals.user,
 		promises: { tracks: getTracksFromLiveEvents(eventWithSortedLegs.liveEvents, fetch) }
 	};
 }

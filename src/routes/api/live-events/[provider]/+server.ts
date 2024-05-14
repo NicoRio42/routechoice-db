@@ -1,17 +1,13 @@
 import { LOGGATOR_POLE_FRANCE_BASIC_AUTH } from '$env/static/private';
 import { GPS_PROVIDERS } from '$lib/constants.js';
-import { redirectIfNotAdmin } from '$lib/server/auth/helpers.js';
-import { error, json, redirect, text } from '@sveltejs/kit';
+import { error, json } from '@sveltejs/kit';
 import { DOMParser } from 'linkedom';
 
 const parser = new DOMParser();
 
 export async function GET({ fetch, params: { provider }, locals }) {
-	const session = await locals.authRequest.validate();
-	if (!session) throw redirect(302, '/login');
-	const { user } = session;
-
-	redirectIfNotAdmin(user);
+	if (locals.user === null) throw error(401);
+	if (locals.user.role !== 'admin') throw error(403);
 
 	if (import.meta.env.MODE === 'dev-offline') return json([]);
 

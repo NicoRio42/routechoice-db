@@ -7,11 +7,7 @@ import { parseAndInsertSplitTimesFromIofXml3File } from '../helpers.js';
 import { reThrowRedirectsAndErrors } from '$lib/server/sveltekit-helpers.js';
 
 export async function load({ locals }) {
-	const session = await locals.authRequest.validate();
-	if (!session) throw redirect(302, '/login');
-	const { user } = session;
-
-	redirectIfNotAdmin(user);
+	redirectIfNotAdmin(locals.user);
 
 	const form = await superValidate(splitTimesFromWinsplitsSchema);
 	return { form };
@@ -19,9 +15,8 @@ export async function load({ locals }) {
 
 export const actions = {
 	default: async ({ locals, request, params: { eventId } }) => {
-		const session = await locals.authRequest.validate();
-		if (!session) throw redirect(302, '/login');
-		redirectIfNotAdmin(session.user);
+		if (locals.user === null) throw error(401);
+		if (locals.user.role !== 'admin') throw error(403);
 
 		const formData = await request.formData();
 		const form = await superValidate(formData, splitTimesFromWinsplitsSchema);

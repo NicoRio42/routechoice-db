@@ -1,53 +1,95 @@
-import { fail, redirect } from '@sveltejs/kit';
-import { setError, superValidate } from 'sveltekit-superforms/server';
+import { error, fail, redirect } from '@sveltejs/kit';
+import { superValidate } from 'sveltekit-superforms/server';
 import { resetPasswordSchema } from './schema.js';
-import { validatePasswordResetToken } from '$lib/server/auth/tokens.js';
+import {
+	key as keyTable,
+	passwordResetTokenTable,
+	user as userTable
+} from '$lib/server/db/schema.js';
+import { eq } from 'drizzle-orm';
+import { isWithinExpirationDate } from 'oslo';
+import { db } from '$lib/server/db/db.js';
+import { auth } from '$lib/server/auth/auth.js';
+import { generateScryptHash } from '$lib/server/auth/crypto.js';
 
-export async function load() {
+export async function load({ params }) {
+	const verificationToken = params.token;
+
+	const passwordResetToken = await db
+		.select()
+		.from(passwordResetTokenTable)
+		.where(eq(passwordResetTokenTable.id, verificationToken))
+		.get();
+
+	if (passwordResetToken === undefined) {
+		throw error(400);
+	}
+
+	if (!isWithinExpirationDate(passwordResetToken.expiresAt)) {
+		await db
+			.delete(passwordResetTokenTable)
+			.where(eq(passwordResetTokenTable.id, verificationToken))
+			.run();
+
+		throw error(400);
+	}
+
 	const form = await superValidate(resetPasswordSchema);
+
 	return { form };
 }
 
 export const actions = {
-	default: async ({ request, locals, params }) => {
+	default: async ({ request, params, cookies }) => {
 		const form = await superValidate(request, resetPasswordSchema);
 
-		if (!form.valid) {
-			return fail(400, { form });
+		if (!form.valid) return fail(400, { form });
+
+		const { password } = form.data;
+		const verificationToken = params.token;
+
+		const passwordResetToken = await db
+			.select()
+			.from(passwordResetTokenTable)
+			.where(eq(passwordResetTokenTable.id, verificationToken))
+			.get();
+
+		if (passwordResetToken === undefined) {
+			return fail(400);
 		}
 
-		try {
-			const userId = await validatePasswordResetToken(params.token ?? '', locals.db);
+		if (!isWithinExpirationDate(passwordResetToken.expiresAt)) {
+			await db
+				.delete(passwordResetTokenTable)
+				.where(eq(passwordResetTokenTable.id, verificationToken))
+				.run();
 
-			if (userId === null) {
-				throw redirect(302, '/login');
-			}
-
-			let user = await locals.auth.getUser(userId);
-
-			if (!user.emailVerified) {
-				user = await locals.auth.updateUserAttributes(user.id, {
-					email_verified: 1
-				});
-			}
-
-			if (user.passwordExpired) {
-				user = await locals.auth.updateUserAttributes(user.id, {
-					password_expired: 0
-				});
-			}
-
-			await locals.auth.invalidateAllUserSessions(user.id);
-			await locals.auth.updateKeyPassword('email', user.email, form.data.password);
-
-			const session = await locals.auth.createSession({ userId: user.id, attributes: {} });
-			locals.authRequest.setSession(session);
-		} catch (e) {
-			console.error(e);
-
-			return setError(form, '', 'An error occured');
+			return fail(400);
 		}
 
-		throw redirect(302, '/');
+		await auth.invalidateUserSessions(passwordResetToken.fkUser);
+		const hashedPassword = await generateScryptHash(password);
+
+		await db
+			.update(keyTable)
+			.set({ hashedPassword })
+			.where(eq(keyTable.userId, passwordResetToken.fkUser))
+			.run();
+
+		await db
+			.update(userTable)
+			.set({ emailVerified: true, passwordExpired: false })
+			.where(eq(userTable.id, passwordResetToken.fkUser))
+			.run();
+
+		const session = await auth.createSession(passwordResetToken.fkUser, {});
+		const sessionCookie = auth.createSessionCookie(session.id);
+
+		cookies.set(sessionCookie.name, sessionCookie.value, {
+			path: '.',
+			...sessionCookie.attributes
+		});
+
+		throw redirect(302, '/events');
 	}
 };

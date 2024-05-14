@@ -1,4 +1,5 @@
 import { redirectIfNotLogedIn } from '$lib/server/auth/helpers.js';
+import { db } from '$lib/server/db/db.js';
 import {
 	assoEventTag,
 	assoEventTag as assoEventTagTable,
@@ -6,7 +7,6 @@ import {
 	tag as tagTable,
 	type Event
 } from '$lib/server/db/schema.js';
-import { redirect } from '@sveltejs/kit';
 import { and, desc, eq, inArray, like, type SQL } from 'drizzle-orm';
 import { superValidate } from 'sveltekit-superforms/server';
 import { filterEventFormSchema } from './schema.js';
@@ -14,17 +14,13 @@ import { filterEventFormSchema } from './schema.js';
 const PAGE_SIZE = 20;
 
 export async function load({ url, locals }) {
-	const session = await locals.authRequest.validate();
-	if (!session) throw redirect(302, '/login');
-	const { user } = session;
-
-	redirectIfNotLogedIn(user);
+	redirectIfNotLogedIn(locals.user);
 
 	const form = await superValidate(url.searchParams, filterEventFormSchema);
 	const pageNumber = form.data.pageNumber;
-	const tags = locals.db.select().from(tagTable).all();
+	const tags = db.select().from(tagTable).all();
 
-	let filteredEventsSelect = locals.db
+	let filteredEventsSelect = db
 		.select()
 		.from(eventTable)
 		.orderBy(desc(eventTable.startTime))
@@ -37,7 +33,7 @@ export async function load({ url, locals }) {
 		whereClauses.push(
 			inArray(
 				eventTable.id,
-				locals.db
+				db
 					.select({ id: eventTable.id })
 					.from(eventTable)
 					.innerJoin(assoEventTagTable, eq(assoEventTag.fkEvent, eventTable.id))
@@ -50,15 +46,16 @@ export async function load({ url, locals }) {
 		whereClauses.push(like(eventTable.name, `%${form.data.search}%`));
 	}
 
-	if (whereClauses.length === 1) {
-		filteredEventsSelect = filteredEventsSelect.where(whereClauses[0]);
-	} else if (whereClauses.length !== 0) {
-		filteredEventsSelect = filteredEventsSelect.where(and(...whereClauses));
-	}
+	const filteredEventsSelectWithWhereClauses =
+		whereClauses.length === 0
+			? filteredEventsSelect
+			: whereClauses.length === 1
+			? filteredEventsSelect.where(whereClauses[0])
+			: filteredEventsSelect.where(and(...whereClauses));
 
-	const filteredEventsWith = locals.db.$with('filtered_event').as(filteredEventsSelect);
+	const filteredEventsWith = db.$with('filtered_event').as(filteredEventsSelectWithWhereClauses);
 
-	const eventRaw = await locals.db
+	const eventRaw = await db
 		.with(filteredEventsWith)
 		.select()
 		.from(filteredEventsWith)
@@ -90,5 +87,5 @@ export async function load({ url, locals }) {
 		events.pop();
 	}
 
-	return { events, user, tags, form, pageNumber, isLastPage };
+	return { events, user: locals.user, tags, form, pageNumber, isLastPage };
 }

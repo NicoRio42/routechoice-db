@@ -7,6 +7,7 @@ import {
 	runnerLeg as runnerLegTable,
 	runner as runnerTable
 } from '$lib/server/db/schema.js';
+import { error } from '@sveltejs/kit';
 import { eq, or } from 'drizzle-orm';
 import type { LibSQLDatabase } from 'drizzle-orm/libsql';
 import { DOMParser } from 'linkedom';
@@ -22,6 +23,8 @@ export async function parseAndInsertSplitTimesFromIofXml3File(
 	const parser = new DOMParser();
 	const splitTimesDoc = parser.parseFromString(splitTimesRaw, 'text/xml');
 	const event = await db.select().from(eventTable).where(eq(eventTable.id, eventId)).get();
+
+	if (event === undefined) throw error(404);
 
 	const [runners, runnersError] = parseIofXmlSplitTimesFile(
 		splitTimesDoc as any as XMLDocument,

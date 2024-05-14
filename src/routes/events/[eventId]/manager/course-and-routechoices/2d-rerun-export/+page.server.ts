@@ -1,30 +1,24 @@
 import { redirectIfNotAdmin } from '$lib/server/auth/helpers.js';
+import { db } from '$lib/server/db/db.js';
+import { reThrowRedirectsAndErrors } from '$lib/server/sveltekit-helpers.js';
 import { getCoordinatesConverterFromTwoDRerunCourseExport } from '$lib/two-d-rerun.js';
-import { fail, redirect } from '@sveltejs/kit';
+import { error, fail, redirect } from '@sveltejs/kit';
 import { twoDRerunCourseExportSchema } from 'orienteering-js/models';
 import { parseTwoDRerunCourseAndRoutechoicesExport } from 'orienteering-js/two-d-rerun';
 import { insertControlPointsLegsRoutechoicesAndRoutechoicesStatistics } from '../helpers.js';
-import { reThrowRedirectsAndErrors } from '$lib/server/sveltekit-helpers.js';
 
 export async function load({ locals }) {
-	const session = await locals.authRequest.validate();
-	if (!session) throw redirect(302, '/login');
-	const { user } = session;
-
-	redirectIfNotAdmin(user);
+	redirectIfNotAdmin(locals.user);
 
 	return { displayError: false };
 }
 
 export const actions = {
 	default: async ({ request, locals, params: { eventId } }) => {
+		if (locals.user === null) throw error(401);
+		if (locals.user.role !== 'admin') throw error(403);
+
 		try {
-			const session = await locals.authRequest.validate();
-			if (!session) throw redirect(302, '/login');
-			const { user } = session;
-
-			redirectIfNotAdmin(user);
-
 			const formData = await request.formData();
 			const file = formData.get('twoDRerunExport');
 
@@ -43,7 +37,7 @@ export const actions = {
 			await insertControlPointsLegsRoutechoicesAndRoutechoicesStatistics(
 				controls,
 				legs,
-				locals.db,
+				db,
 				eventId
 			);
 

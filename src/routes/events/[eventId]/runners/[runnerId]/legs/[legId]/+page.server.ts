@@ -4,7 +4,7 @@ import {
 	parseRoutechoicesTracksInLegs,
 	sortLegs
 } from '$lib/helpers.js';
-import { redirectIfNotAdminOrNotCurrentUser } from '$lib/server/auth/helpers.js';
+import { db } from '$lib/server/db/db.js';
 import {
 	leg as legFromDatabase,
 	liveEvent as liveEventFromDatabase,
@@ -12,7 +12,7 @@ import {
 	runner as runnerFromDatabase,
 	runnerLeg as runnerLegFromDatabase
 } from '$lib/server/db/schema.js';
-import { fail, redirect } from '@sveltejs/kit';
+import { error, fail, redirect } from '@sveltejs/kit';
 import { eq, inArray } from 'drizzle-orm';
 
 export const actions = {
@@ -22,29 +22,27 @@ export const actions = {
 		locals,
 		fetch
 	}) => {
-		const session = await locals.authRequest.validate();
-		if (!session) throw redirect(302, '/login');
-		const { user } = session;
-
-		const runner = await locals.db
+		const runner = await db
 			.select()
 			.from(runnerFromDatabase)
 			.where(eq(runnerFromDatabase.id, runnerId))
 			.get();
 
-		redirectIfNotAdminOrNotCurrentUser(user, runner.fkUser ?? '');
+		if (runner === undefined) throw error(404);
 
-		const runnerLeg = await locals.db
+		const runnerLeg = await db
 			.select()
 			.from(runnerLegFromDatabase)
 			.where(eq(runnerLegFromDatabase.id, runnerLegId))
 			.get();
 
+		if (runnerLeg === undefined) throw error(404);
+
 		if (runnerLeg.fkRunner !== runnerId) {
 			return fail(400);
 		}
 
-		if (runner.fkUser !== user.id && user.role !== 'admin') {
+		if (runner.fkUser !== locals.user?.id && locals.user?.role !== 'admin') {
 			return fail(403);
 		}
 
@@ -55,24 +53,24 @@ export const actions = {
 			return fail(400);
 		}
 
-		await locals.db
+		await db
 			.update(runnerLegFromDatabase)
 			.set({ fkManualRoutechoice: newRoutechoiceId })
 			.where(eq(runnerLegFromDatabase.id, runnerLegId))
 			.run();
 
-		const runners = await locals.db.query.runner.findMany({
+		const runners = await db.query.runner.findMany({
 			where: eq(runnerFromDatabase.fkEvent, eventId),
 			with: { legs: true }
 		});
 
-		const liveEvents = await locals.db
+		const liveEvents = await db
 			.select()
 			.from(liveEventFromDatabase)
 			.where(eq(liveEventFromDatabase.fkEvent, eventId))
 			.all();
 
-		const legs = await locals.db.query.leg.findMany({
+		const legs = await db.query.leg.findMany({
 			where: eq(legFromDatabase.fkEvent, eventId),
 			with: { routechoices: true }
 		});
@@ -106,14 +104,13 @@ export const actions = {
 			.filter((_, index) => index === legIndex)
 			.flatMap((leg) => leg.routechoices.map((rc) => rc.id));
 
-		locals.db
-			.update(routechoiceStatisticsTable)
+		db.update(routechoiceStatisticsTable)
 			.set({ bestTime: 0, numberOfRunners: 0 })
 			.where(inArray(routechoiceStatisticsTable.fkRoutechoice, legRoutechoicesIds))
 			.run();
 
 		for (const { bestTime, numberOfRunners, fkRoutechoice } of routechoicesStatistics) {
-			await locals.db
+			await db
 				.update(routechoiceStatisticsTable)
 				.set({ bestTime, numberOfRunners })
 				.where(eq(routechoiceStatisticsTable.fkRoutechoice, fkRoutechoice))

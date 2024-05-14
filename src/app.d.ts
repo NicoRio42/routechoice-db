@@ -8,10 +8,8 @@ import { type Client } from '@libsql/client/web';
 declare global {
 	namespace App {
 		interface Locals {
-			authRequest: import('lucia').AuthRequest<Lucia.Auth>;
-			db: LibSQLDatabase<typeof schema>;
-			auth: Lucia.Auth;
-			libsqlClient: Client;
+			user: import('lucia').User | null;
+			session: import('lucia').Session | null;
 		}
 	}
 }

@@ -1,15 +1,12 @@
 import { sortLegs } from '$lib/helpers.js';
 import { redirectIfNotAdmin } from '$lib/server/auth/helpers.js';
+import { db } from '$lib/server/db/db.js';
 import { controlPoint as controlPointTable, leg as legTable } from '$lib/server/db/schema.js';
-import { redirect } from '@sveltejs/kit';
+import { error, redirect } from '@sveltejs/kit';
 import { eq } from 'drizzle-orm';
 
-export async function load({ params: { eventId }, locals: { db, authRequest } }) {
-	const session = await authRequest.validate();
-	if (!session) throw redirect(302, '/login');
-	const { user } = session;
-
-	redirectIfNotAdmin(user);
+export async function load({ params: { eventId }, locals }) {
+	redirectIfNotAdmin(locals.user);
 
 	const legs = await db.query.leg.findMany({
 		with: { startControlPoint: true, finishControlPoint: true },
@@ -22,16 +19,9 @@ export async function load({ params: { eventId }, locals: { db, authRequest } })
 }
 
 export const actions = {
-	deleteControlPoint: async ({
-		url: { searchParams },
-		locals: { db, authRequest },
-		params: { eventId }
-	}) => {
-		const session = await authRequest.validate();
-		if (!session) throw redirect(302, '/login');
-		const { user } = session;
-
-		redirectIfNotAdmin(user);
+	deleteControlPoint: async ({ url: { searchParams }, locals, params: { eventId } }) => {
+		if (locals.user === null) throw error(401);
+		if (locals.user.role !== 'admin') throw error(403);
 
 		const controlPointId = searchParams.get('controlPointId');
 

@@ -1,42 +1,79 @@
-import { generateEmailVerificationToken } from '$lib/server/auth/tokens.js';
-import { sendEmailVerificationEmail } from '$lib/server/email.js';
+import { auth } from '$lib/server/auth/auth.js';
+import { db } from '$lib/server/db/db.js';
+import { emailVerificationCodeTable, user as userTable } from '$lib/server/db/schema.js';
+import { sendVerificationCodeEmail } from '$lib/server/email.js';
 import { fail, redirect } from '@sveltejs/kit';
+import { eq } from 'drizzle-orm';
+import { isWithinExpirationDate } from 'oslo';
 
 export async function load({ locals }) {
-	const session = await locals.authRequest.validate();
+	if (!locals.user) throw redirect(302, '/login');
+	if (locals.user.emailVerified) throw redirect(302, '/events');
 
-	if (!session) {
-		throw redirect(302, '/login');
-	}
-
-	if (session.user.emailVerified) {
-		throw redirect(302, '/');
-	}
-
-	return { sent: false };
+	return { email: locals.user.email };
 }
 
 export const actions = {
-	default: async ({ locals, fetch }) => {
-		const session = await locals.authRequest.validate();
+	verifyCode: async ({ locals, request, cookies }) => {
+		if (!locals.user) throw redirect(302, '/login');
+		if (locals.user.emailVerified) throw redirect(302, '/events');
 
-		if (!session) {
-			throw redirect(302, '/login');
+		const formdata = await request.formData();
+		const code = formdata.get('code');
+
+		if (code === null || code instanceof File) return fail(400);
+
+		const verificationCode = await db
+			.select()
+			.from(emailVerificationCodeTable)
+			.where(eq(emailVerificationCodeTable.fkUser, locals.user.id))
+			.get();
+
+		if (verificationCode !== undefined) {
+			await db
+				.delete(emailVerificationCodeTable)
+				.where(eq(emailVerificationCodeTable.fkUser, locals.user.id))
+				.run();
+		} else {
+			return { wrongCode: false, codeExpired: true, codeResent: false };
 		}
 
-		if (session.user.emailVerified) {
-			throw redirect(302, '/');
+		if (!isWithinExpirationDate(verificationCode.expiresAt)) {
+			return { wrongCode: false, codeExpired: true, codeResent: false };
 		}
 
-		const token = await generateEmailVerificationToken(session.user.userId, locals.db);
+		if (code !== verificationCode.code) {
+			return { wrongCode: true, codeExpired: false, codeResent: false };
+		}
 
-		await sendEmailVerificationEmail(
-			session.user.email,
-			`${session.user.firstName} ${session.user.lastName}`,
-			token,
-			fetch
+		auth.invalidateUserSessions(locals.user.id);
+
+		await db
+			.update(userTable)
+			.set({ emailVerified: true })
+			.where(eq(userTable.id, locals.user.id))
+			.run();
+
+		const session = await auth.createSession(locals.user.id, {});
+		const sessionCookie = auth.createSessionCookie(session.id);
+
+		cookies.set(sessionCookie.name, sessionCookie.value, {
+			path: '.',
+			...sessionCookie.attributes
+		});
+
+		throw redirect(302, '/events');
+	},
+	sendNewVerificationCode: async ({ locals }) => {
+		if (!locals.user) throw redirect(302, '/login');
+		if (locals.user.emailVerified) throw redirect(302, '/events');
+
+		sendVerificationCodeEmail(
+			locals.user.id,
+			locals.user.email,
+			`${locals.user.firstName} ${locals.user.lastName}`
 		);
 
-		return { sent: true };
+		return { wrongCode: false, codeExpired: false, codeResent: true };
 	}
 };

@@ -1,20 +1,16 @@
 import { redirectIfNotAdmin } from '$lib/server/auth/helpers.js';
+import { db } from '$lib/server/db/db.js';
 import { user as userTable } from '$lib/server/db/schema.js';
-import { redirect } from '@sveltejs/kit';
 import { asc, like, or } from 'drizzle-orm';
 
 const PAGE_SIZE = 20;
 
 export async function load({ locals, url }) {
-	const session = await locals.authRequest.validate();
-	if (!session) throw redirect(302, '/login');
-	const { user: connectedUser } = session;
-
-	redirectIfNotAdmin(connectedUser);
+	redirectIfNotAdmin(locals.user);
 
 	const pageNumber = getPageNumberFromSearchParams(url.searchParams);
 
-	let selectClause = locals.db
+	let selectClause = db
 		.select({
 			id: userTable.id,
 			firstName: userTable.firstName,
@@ -31,13 +27,14 @@ export async function load({ locals, url }) {
 
 	const search = url.searchParams.get('search');
 
-	if (search !== null && search !== '') {
-		selectClause = selectClause.where(
-			or(like(userTable.firstName, `%${search}%`), like(userTable.lastName, `%${search}%`))
-		);
-	}
+	const selectClauseWithWhere =
+		search !== null && search !== ''
+			? selectClause.where(
+					or(like(userTable.firstName, `%${search}%`), like(userTable.lastName, `%${search}%`))
+			  )
+			: selectClause;
 
-	const users = await selectClause.all();
+	const users = await selectClauseWithWhere.all();
 
 	const isLastPage = users.length !== PAGE_SIZE + 1;
 

@@ -1,14 +1,14 @@
-import { redirectIfNotAdminOrNotCurrentUser } from '$lib/server/auth/helpers.js';
-import { redirect } from '@sveltejs/kit';
+import { db } from '$lib/server/db/db.js';
+import { user as userTable } from '$lib/server/db/schema.js';
+import { error, redirect } from '@sveltejs/kit';
+import { eq } from 'drizzle-orm';
 
 export const actions = {
 	default: async ({ locals, params: { userId } }) => {
-		const session = await locals.authRequest.validate();
-		if (!session) throw redirect(302, '/login');
-		const { user } = session;
-		redirectIfNotAdminOrNotCurrentUser(user, userId);
+		if (locals.user === null) throw error(401);
+		if (locals.user.role !== 'admin') throw error(403);
 
-		await locals.auth.deleteUser(userId);
+		await db.delete(userTable).where(eq(userTable.id, userId)).run();
 		throw redirect(302, '/users');
 	}
 };

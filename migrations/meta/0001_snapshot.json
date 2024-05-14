@@ -1,8 +1,6 @@
 {
-  "version": "5",
+  "version": "6",
   "dialect": "sqlite",
-  "id": "015f01fd-7b81-4691-a4e4-900518c625e5",
-  "prevId": "05a43992-d800-4f30-b952-cff03b5a70bb",
   "tables": {
     "asso_event_tag": {
       "name": "asso_event_tag",
@@ -27,28 +25,28 @@
         "asso_event_tag_fk_event_event_id_fk": {
           "name": "asso_event_tag_fk_event_event_id_fk",
           "tableFrom": "asso_event_tag",
-          "tableTo": "event",
           "columnsFrom": [
             "fk_event"
           ],
+          "tableTo": "event",
           "columnsTo": [
             "id"
           ],
-          "onDelete": "cascade",
-          "onUpdate": "no action"
+          "onUpdate": "no action",
+          "onDelete": "cascade"
         },
         "asso_event_tag_fk_tag_tag_id_fk": {
           "name": "asso_event_tag_fk_tag_tag_id_fk",
           "tableFrom": "asso_event_tag",
-          "tableTo": "tag",
           "columnsFrom": [
             "fk_tag"
           ],
+          "tableTo": "tag",
           "columnsTo": [
             "id"
           ],
-          "onDelete": "cascade",
-          "onUpdate": "no action"
+          "onUpdate": "no action",
+          "onDelete": "cascade"
         }
       },
       "compositePrimaryKeys": {
@@ -105,15 +103,15 @@
         "control_point_fk_event_event_id_fk": {
           "name": "control_point_fk_event_event_id_fk",
           "tableFrom": "control_point",
-          "tableTo": "event",
           "columnsFrom": [
             "fk_event"
           ],
+          "tableTo": "event",
           "columnsTo": [
             "id"
           ],
-          "onDelete": "cascade",
-          "onUpdate": "no action"
+          "onUpdate": "no action",
+          "onDelete": "cascade"
         }
       },
       "compositePrimaryKeys": {},
@@ -149,15 +147,15 @@
         "email_verification_token_user_id_auth_user_id_fk": {
           "name": "email_verification_token_user_id_auth_user_id_fk",
           "tableFrom": "email_verification_token",
-          "tableTo": "auth_user",
           "columnsFrom": [
             "user_id"
           ],
+          "tableTo": "auth_user",
           "columnsTo": [
             "id"
           ],
-          "onDelete": "cascade",
-          "onUpdate": "no action"
+          "onUpdate": "no action",
+          "onDelete": "cascade"
         }
       },
       "compositePrimaryKeys": {},
@@ -237,15 +235,15 @@
         "auth_key_user_id_auth_user_id_fk": {
           "name": "auth_key_user_id_auth_user_id_fk",
           "tableFrom": "auth_key",
-          "tableTo": "auth_user",
           "columnsFrom": [
             "user_id"
           ],
+          "tableTo": "auth_user",
           "columnsTo": [
             "id"
           ],
-          "onDelete": "cascade",
-          "onUpdate": "no action"
+          "onUpdate": "no action",
+          "onDelete": "cascade"
         }
       },
       "compositePrimaryKeys": {},
@@ -288,41 +286,41 @@
         "leg_fk_event_event_id_fk": {
           "name": "leg_fk_event_event_id_fk",
           "tableFrom": "leg",
-          "tableTo": "event",
           "columnsFrom": [
             "fk_event"
           ],
+          "tableTo": "event",
           "columnsTo": [
             "id"
           ],
-          "onDelete": "cascade",
-          "onUpdate": "no action"
+          "onUpdate": "no action",
+          "onDelete": "cascade"
         },
         "leg_fk_start_control_point_control_point_id_fk": {
           "name": "leg_fk_start_control_point_control_point_id_fk",
           "tableFrom": "leg",
-          "tableTo": "control_point",
           "columnsFrom": [
             "fk_start_control_point"
           ],
+          "tableTo": "control_point",
           "columnsTo": [
             "id"
           ],
-          "onDelete": "cascade",
-          "onUpdate": "no action"
+          "onUpdate": "no action",
+          "onDelete": "cascade"
         },
         "leg_fk_finish_control_point_control_point_id_fk": {
           "name": "leg_fk_finish_control_point_control_point_id_fk",
           "tableFrom": "leg",
-          "tableTo": "control_point",
           "columnsFrom": [
             "fk_finish_control_point"
           ],
+          "tableTo": "control_point",
           "columnsTo": [
             "id"
           ],
-          "onDelete": "cascade",
-          "onUpdate": "no action"
+          "onUpdate": "no action",
+          "onDelete": "cascade"
         }
       },
       "compositePrimaryKeys": {},
@@ -372,15 +370,15 @@
         "live_event_fk_event_event_id_fk": {
           "name": "live_event_fk_event_event_id_fk",
           "tableFrom": "live_event",
-          "tableTo": "event",
           "columnsFrom": [
             "fk_event"
           ],
+          "tableTo": "event",
           "columnsTo": [
             "id"
           ],
-          "onDelete": "cascade",
-          "onUpdate": "no action"
+          "onUpdate": "no action",
+          "onDelete": "cascade"
         }
       },
       "compositePrimaryKeys": {},
@@ -416,15 +414,15 @@
         "password_reset_token_user_id_auth_user_id_fk": {
           "name": "password_reset_token_user_id_auth_user_id_fk",
           "tableFrom": "password_reset_token",
-          "tableTo": "auth_user",
           "columnsFrom": [
             "user_id"
           ],
+          "tableTo": "auth_user",
           "columnsTo": [
             "id"
           ],
-          "onDelete": "cascade",
-          "onUpdate": "no action"
+          "onUpdate": "no action",
+          "onDelete": "cascade"
         }
       },
       "compositePrimaryKeys": {},
@@ -488,15 +486,15 @@
         "routechoice_fk_leg_leg_id_fk": {
           "name": "routechoice_fk_leg_leg_id_fk",
           "tableFrom": "routechoice",
-          "tableTo": "leg",
           "columnsFrom": [
             "fk_leg"
           ],
+          "tableTo": "leg",
           "columnsTo": [
             "id"
           ],
-          "onDelete": "cascade",
-          "onUpdate": "no action"
+          "onUpdate": "no action",
+          "onDelete": "cascade"
         }
       },
       "compositePrimaryKeys": {},
@@ -541,15 +539,15 @@
         "routechoice_statistics_fk_routchoice_routechoice_id_fk": {
           "name": "routechoice_statistics_fk_routchoice_routechoice_id_fk",
           "tableFrom": "routechoice_statistics",
-          "tableTo": "routechoice",
           "columnsFrom": [
             "fk_routchoice"
           ],
+          "tableTo": "routechoice",
           "columnsTo": [
             "id"
           ],
-          "onDelete": "cascade",
-          "onUpdate": "no action"
+          "onUpdate": "no action",
+          "onDelete": "cascade"
         }
       },
       "compositePrimaryKeys": {},
@@ -664,41 +662,41 @@
         "runner_fk_event_event_id_fk": {
           "name": "runner_fk_event_event_id_fk",
           "tableFrom": "runner",
-          "tableTo": "event",
           "columnsFrom": [
             "fk_event"
           ],
+          "tableTo": "event",
           "columnsTo": [
             "id"
           ],
-          "onDelete": "cascade",
-          "onUpdate": "no action"
+          "onUpdate": "no action",
+          "onDelete": "cascade"
         },
         "runner_fk_user_auth_user_id_fk": {
           "name": "runner_fk_user_auth_user_id_fk",
           "tableFrom": "runner",
-          "tableTo": "auth_user",
           "columnsFrom": [
             "fk_user"
           ],
+          "tableTo": "auth_user",
           "columnsTo": [
             "id"
           ],
-          "onDelete": "set null",
-          "onUpdate": "no action"
+          "onUpdate": "no action",
+          "onDelete": "set null"
         },
         "runner_fk_live_event_live_event_id_fk": {
           "name": "runner_fk_live_event_live_event_id_fk",
           "tableFrom": "runner",
-          "tableTo": "live_event",
           "columnsFrom": [
             "fk_live_event"
           ],
+          "tableTo": "live_event",
           "columnsTo": [
             "id"
           ],
-          "onDelete": "set null",
-          "onUpdate": "no action"
+          "onUpdate": "no action",
+          "onDelete": "set null"
         }
       },
       "compositePrimaryKeys": {},
@@ -811,54 +809,54 @@
         "runner_leg_fk_detected_routechoice_routechoice_id_fk": {
           "name": "runner_leg_fk_detected_routechoice_routechoice_id_fk",
           "tableFrom": "runner_leg",
-          "tableTo": "routechoice",
           "columnsFrom": [
             "fk_detected_routechoice"
           ],
+          "tableTo": "routechoice",
           "columnsTo": [
             "id"
           ],
-          "onDelete": "set null",
-          "onUpdate": "no action"
+          "onUpdate": "no action",
+          "onDelete": "set null"
         },
         "runner_leg_fk_manual_routechoice_routechoice_id_fk": {
           "name": "runner_leg_fk_manual_routechoice_routechoice_id_fk",
           "tableFrom": "runner_leg",
-          "tableTo": "routechoice",
           "columnsFrom": [
             "fk_manual_routechoice"
           ],
+          "tableTo": "routechoice",
           "columnsTo": [
             "id"
           ],
-          "onDelete": "set null",
-          "onUpdate": "no action"
+          "onUpdate": "no action",
+          "onDelete": "set null"
         },
         "runner_leg_fk_leg_leg_id_fk": {
           "name": "runner_leg_fk_leg_leg_id_fk",
           "tableFrom": "runner_leg",
-          "tableTo": "leg",
           "columnsFrom": [
             "fk_leg"
           ],
+          "tableTo": "leg",
           "columnsTo": [
             "id"
           ],
-          "onDelete": "cascade",
-          "onUpdate": "no action"
+          "onUpdate": "no action",
+          "onDelete": "cascade"
         },
         "runner_leg_fk_runner_runner_id_fk": {
           "name": "runner_leg_fk_runner_runner_id_fk",
           "tableFrom": "runner_leg",
-          "tableTo": "runner",
           "columnsFrom": [
             "fk_runner"
           ],
+          "tableTo": "runner",
           "columnsTo": [
             "id"
           ],
-          "onDelete": "cascade",
-          "onUpdate": "no action"
+          "onUpdate": "no action",
+          "onDelete": "cascade"
         }
       },
       "compositePrimaryKeys": {},
@@ -901,15 +899,15 @@
         "auth_session_user_id_auth_user_id_fk": {
           "name": "auth_session_user_id_auth_user_id_fk",
           "tableFrom": "auth_session",
-          "tableTo": "auth_user",
           "columnsFrom": [
             "user_id"
           ],
+          "tableTo": "auth_user",
           "columnsTo": [
             "id"
           ],
-          "onDelete": "cascade",
-          "onUpdate": "no action"
+          "onUpdate": "no action",
+          "onDelete": "cascade"
         }
       },
       "compositePrimaryKeys": {},
@@ -1024,8 +1022,9 @@
   },
   "enums": {},
   "_meta": {
-    "schemas": {},
     "tables": {},
     "columns": {}
-  }
+  },
+  "id": "015f01fd-7b81-4691-a4e4-900518c625e5",
+  "prevId": "05a43992-d800-4f30-b952-cff03b5a70bb"
 }
