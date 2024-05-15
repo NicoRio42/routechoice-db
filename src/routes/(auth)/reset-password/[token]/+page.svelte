@@ -1,12 +1,13 @@
 <script lang="ts">
-	import { superForm } from 'sveltekit-superforms/client';
+	import { superForm } from 'sveltekit-superforms';
+	import { zodClient } from 'sveltekit-superforms/adapters';
 	import { resetPasswordSchema } from './schema';
 	import PasswordField from '$lib/components/form-fields/PasswordField.svelte';
 
 	export let data;
 
 	const form = superForm(data.form, {
-		validators: resetPasswordSchema
+		validators: zodClient(resetPasswordSchema)
 	});
 
 	const { errors, delayed, enhance } = form;

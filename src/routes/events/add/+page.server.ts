@@ -8,14 +8,15 @@ import {
 } from '$lib/server/db/schema.js';
 import { reThrowRedirectsAndErrors } from '$lib/server/sveltekit-helpers.js';
 import { error, fail, redirect } from '@sveltejs/kit';
-import { setError, superValidate } from 'sveltekit-superforms/server';
+import { setError, superValidate } from 'sveltekit-superforms';
+import { zod } from 'sveltekit-superforms/adapters';
 import { addEventSchema } from './schema.js';
 
 export async function load({ locals }) {
 	redirectIfNotAdmin(locals.user);
 
-	const form = await superValidate(addEventSchema);
-	const tags = db.select().from(tagTable).all();
+	const form = await superValidate(zod(addEventSchema));
+	const tags = await db.select().from(tagTable).all();
 
 	return { form, tags };
 }
@@ -25,7 +26,7 @@ export const actions = {
 		if (locals.user === null) throw error(401);
 		if (locals.user.role !== 'admin') throw error(403);
 
-		const form = await superValidate(request, addEventSchema);
+		const form = await superValidate(request, zod(addEventSchema));
 		if (!form.valid) return fail(400, { form });
 
 		const filteredTags = form.data.tags.filter(
@@ -40,9 +41,9 @@ export const actions = {
 				.values({
 					id: eventId,
 					name: form.data.name,
-					startTime: new Date(form.data.startTime),
-					publishTime: new Date(form.data.publishTime),
-					finishTime: new Date(form.data.finishTime)
+					startTime: form.data.startTime,
+					publishTime: form.data.publishTime,
+					finishTime: form.data.finishTime
 				})
 				.run();
 

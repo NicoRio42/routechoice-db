@@ -11,6 +11,7 @@
 	<p>Un code de confirmation a été envoyé à l'adresse email : {data.email}</p>
 
 	<form action="?/verifyCode" method="post" use:enhance>
+		<!-- svelte-ignore a11y-no-redundant-roles -->
 		<fieldset role="group">
 			<input
 				type="text"

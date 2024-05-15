@@ -1,14 +1,13 @@
-<script lang="ts">
+<script lang="ts" context="module">
+	type T = Record<string, unknown>;
+</script>
+
+<script lang="ts" generics="T extends Record<string, unknown>">
+	import { formFieldProxy, type SuperForm, type FormPathLeaves } from 'sveltekit-superforms';
 	import { onDestroy } from 'svelte';
-	import type { UnwrapEffects } from 'sveltekit-superforms';
-	import type { SuperForm } from 'sveltekit-superforms/client';
-	import { formFieldProxy } from 'sveltekit-superforms/client';
-	import type { AnyZodObject, z } from 'zod';
 
-	type T = $$Generic<AnyZodObject>;
-
-	export let form: SuperForm<UnwrapEffects<T>, unknown>;
-	export let field: keyof z.infer<T>;
+	export let form: SuperForm<T>;
+	export let field: FormPathLeaves<T>;
 	export let label: string | undefined = undefined;
 
 	let errorsHaveBeenshownOnce = false;

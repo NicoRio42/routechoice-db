@@ -1,15 +1,15 @@
 <script lang="ts">
-	import { timezones } from '$lib/components/form-fields/timezones.js';
-	import { superForm } from 'sveltekit-superforms/client';
-	import { splitTimesFromLocalFile } from './schema.js';
 	import FileField from '$lib/components/form-fields/FileField.svelte';
 	import SelectField from '$lib/components/form-fields/SelectField.svelte';
+	import { timezones } from '$lib/components/form-fields/timezones.js';
+	import { superForm } from 'sveltekit-superforms';
+	import { zodClient } from 'sveltekit-superforms/adapters';
+	import { splitTimesFromLocalFile } from './schema.js';
 
 	export let data;
 
 	const form = superForm(data.form, {
-		validators: splitTimesFromLocalFile,
-		taintedMessage: null
+		validators: zodClient(splitTimesFromLocalFile)
 	});
 
 	const { delayed, enhance, form: formStore, errors } = form;
@@ -19,9 +19,7 @@
 
 	let classNames: string[] = [];
 
-	$formStore.timezone = (
-		timezones.find((tz) => tz.name === 'Europe/Brussels') ?? timezones[0]
-	).offset;
+	$formStore.timezone = (timezones.find((tz) => tz.offset === '+01:00') ?? timezones[0]).offset;
 
 	function extractClassesAndGuessTimeZoneFromXmlFile(event: CustomEvent<FileList | null>) {
 		if (event.detail === null) return;
@@ -49,8 +47,8 @@
 
 			if (classNames.length === 0) {
 				classNames = Array.from(xmlDoc.querySelectorAll('ClassResult ClassShortName')).map(
-				(cl) => cl.textContent?.trim() ?? ''
-			);
+					(cl) => cl.textContent?.trim() ?? ''
+				);
 			}
 
 			if (classNames.length > 0) $formStore.className = classNames[0];
@@ -74,7 +72,7 @@
 </script>
 
 <main class="container max-w-2xl">
-	<h1 class="mt-4 md:mt-15 mb-2" >Load split times from local IOF XML 3.0 file</h1>
+	<h1 class="mt-4 md:mt-15 mb-2">Load split times from local IOF XML 3.0 file</h1>
 
 	<h3 class="font-normal">(IOF XML 2 support is experimental)</h3>
 
@@ -112,7 +110,7 @@
 		<div class="flex justify-end">
 			<button type="submit" aria-busy={$delayed}> Load splits </button>
 		</div>
-		
+
 		{#if $errors._errors !== undefined && $errors._errors.length !== 0}
 			<ul class="list-none">
 				{#each $errors._errors as error}

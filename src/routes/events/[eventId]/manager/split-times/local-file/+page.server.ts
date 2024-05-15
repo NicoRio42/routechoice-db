@@ -1,6 +1,7 @@
 import { redirectIfNotAdmin } from '$lib/server/auth/helpers.js';
 import { error, fail, redirect } from '@sveltejs/kit';
-import { setError, superValidate } from 'sveltekit-superforms/server';
+import { setError, superValidate } from 'sveltekit-superforms';
+import { zod } from 'sveltekit-superforms/adapters';
 import { parseAndInsertSplitTimesFromIofXml3File } from '../helpers.js';
 import { splitTimesFromLocalFile } from './schema.js';
 import { db } from '$lib/server/db/db.js';
@@ -8,7 +9,7 @@ import { db } from '$lib/server/db/db.js';
 export async function load({ locals }) {
 	redirectIfNotAdmin(locals.user);
 
-	const form = await superValidate(splitTimesFromLocalFile);
+	const form = await superValidate(zod(splitTimesFromLocalFile));
 	return { form };
 }
 
@@ -18,7 +19,7 @@ export const actions = {
 		if (locals.user.role !== 'admin') throw error(403);
 
 		const formData = await request.formData();
-		const form = await superValidate(formData, splitTimesFromLocalFile);
+		const form = await superValidate(formData, zod(splitTimesFromLocalFile));
 		if (!form.valid) return fail(400, { form });
 
 		const splitTimesFile = formData.get('file');

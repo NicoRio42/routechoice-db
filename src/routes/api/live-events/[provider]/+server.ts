@@ -24,7 +24,7 @@ export async function GET({ fetch, params: { provider }, locals }) {
 
 	const links = doc.querySelectorAll('tbody td:first-child + td a');
 
-	const events = Array.from(links).map((link) => {
+	const events = [...links].map((link) => {
 		const url = link.getAttribute('href');
 		const name = link.textContent.trim();
 		return { url, name };

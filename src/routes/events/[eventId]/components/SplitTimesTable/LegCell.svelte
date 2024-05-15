@@ -93,7 +93,7 @@
 			var(--pico-background-color)
 		);
 	}
-	
+
 	.tooltip-container {
 		position: relative;
 	}
@@ -119,17 +119,8 @@
 		border-radius: 4px;
 		visibility: hidden;
 		opacity: 0;
-		transition: visibility 0s, opacity 0.25s linear;
-	}
-
-	.tooltip-right {
-		top: 50%;
-		transform: translateY(-50%);
-		left: 100%;
-	}
-
-	.tooltip-top {
-		top: unset;
-		bottom: 100%;
+		transition:
+			visibility 0s,
+			opacity 0.25s linear;
 	}
 </style>

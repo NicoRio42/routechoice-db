@@ -1,19 +1,24 @@
-<script lang="ts">
+<script lang="ts" context="module">
+	type T = Record<string, unknown>;
+</script>
+
+<script lang="ts" generics="T extends Record<string, unknown>">
 	import { onDestroy } from 'svelte';
-	import type { UnwrapEffects } from 'sveltekit-superforms';
-	import type { SuperForm } from 'sveltekit-superforms/client';
-	import { formFieldProxy } from 'sveltekit-superforms/client';
-	import type { AnyZodObject, z } from 'zod';
+	import {
+		formFieldProxy,
+		type SuperForm,
+		type FormPathLeaves,
+		dateProxy
+	} from 'sveltekit-superforms';
 
-	type T = $$Generic<AnyZodObject>;
-
-	export let form: SuperForm<UnwrapEffects<T>, unknown>;
-	export let field: keyof z.infer<T>;
+	export let form: SuperForm<T>;
+	export let field: FormPathLeaves<T>;
 	export let label: string | undefined = undefined;
 
 	let errorsHaveBeenshownOnce = false;
 
-	const { value, errors } = formFieldProxy(form, field);
+	const { errors } = formFieldProxy(form, field);
+	const proxyDate = dateProxy(form, field, { format: 'datetime-utc' });
 
 	const unsub = errors.subscribe((errs) => {
 		if (!errorsHaveBeenshownOnce) errorsHaveBeenshownOnce = errs !== undefined && errs.length !== 0;
@@ -30,7 +35,7 @@
 	<input
 		name={String(field)}
 		type="datetime-local"
-		bind:value={$value}
+		bind:value={$proxyDate}
 		data-invalid={$errors}
 		aria-invalid={errorsHaveBeenshownOnce ? $errors !== undefined && $errors.length !== 0 : null}
 		{...$$restProps}

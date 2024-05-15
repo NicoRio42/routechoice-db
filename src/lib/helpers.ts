@@ -43,13 +43,27 @@ export function extractLiveProviderAndEventIdFromUrl(
 }
 
 export function formatDateForDateInput(date: Date): string {
-	return `${date.getFullYear().toString()}-${(date.getMonth() + 1)
-		.toString()
-		.padStart(2, '0')}-${date.getDate().toString().padStart(2, '0')}`;
+	return (
+		date.getFullYear().toString() +
+		'-' +
+		(date.getMonth() + 1).toString().padStart(2, '0') +
+		'-' +
+		date.getDate().toString().padStart(2, '0')
+	);
+}
+
+export function formatTimeForDateInput(date: Date): string {
+	return (
+		date.getHours().toString().padStart(2, '0') +
+		':' +
+		date.getMinutes().toString().padStart(2, '0') +
+		':' +
+		date.getSeconds().toString().padStart(2, '0')
+	);
 }
 
 export function formatDateTimeForDateTimeInput(date: Date): string {
-	return `${formatDateForDateInput(date)}T${date.toLocaleTimeString()}`;
+	return `${formatDateForDateInput(date)}T${formatTimeForDateInput(date)}`;
 }
 
 type Fetch = typeof fetch;
@@ -170,6 +184,7 @@ export function sortRunnersAndRunnersLegs(
 		});
 }
 
+// TODO: fix the typing of this function
 export function sortLegs(
 	legs: LegWithRoutechoices[],
 	sortRoutechoices = true

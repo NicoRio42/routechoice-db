@@ -13,7 +13,7 @@ export async function GET({ params: { eventId }, locals }) {
 	const xmlDoc = parser.parseFromString(classesText, 'text/xml');
 	const eventTags = xmlDoc.querySelectorAll('Class');
 
-	const classes = Array.from(eventTags).map((eventTag) => {
+	const classes = [...eventTags].map((eventTag) => {
 		const idTag = eventTag.querySelector('Id');
 		const nameTag = eventTag.querySelector('Name');
 

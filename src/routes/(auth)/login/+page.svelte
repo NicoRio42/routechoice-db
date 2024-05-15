@@ -1,18 +1,18 @@
 <script lang="ts">
 	import EmailField from '$lib/components/form-fields/EmailField.svelte';
 	import PasswordField from '$lib/components/form-fields/PasswordField.svelte';
-	import { superForm } from 'sveltekit-superforms/client';
+	import { superForm } from 'sveltekit-superforms';
+	import { zodClient } from 'sveltekit-superforms/adapters';
 	import { loginFormSchema } from './schema';
 
 	export let data;
-	let showCloudflareWorkerCpuErrorMessage = false
+	let showCloudflareWorkerCpuErrorMessage = false;
 
 	const form = superForm(data.form, {
-		validators: loginFormSchema,
-		taintedMessage: null,
+		validators: zodClient(loginFormSchema),
 		onError: ({ result }) => {
-			if ( result.status === 503) {
-				showCloudflareWorkerCpuErrorMessage = true
+			if (result.status === 503) {
+				showCloudflareWorkerCpuErrorMessage = true;
 			}
 		}
 	});
@@ -40,12 +40,10 @@
 			<small class="error">{globalError}</small>
 		</p>
 	{/each}
-	
+
 	{#if showCloudflareWorkerCpuErrorMessage}
 		<p>
-			<small class="error">
-				Server error, please try login later.
-			</small>
+			<small class="error"> Server error, please try login later. </small>
 		</p>
 	{/if}
 </form>

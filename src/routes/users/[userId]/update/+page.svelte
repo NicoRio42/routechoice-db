@@ -1,16 +1,13 @@
 <script>
 	import CheckboxField from '$lib/components/form-fields/CheckboxField.svelte';
 	import TextField from '$lib/components/form-fields/TextField.svelte';
-	import { superForm } from 'sveltekit-superforms/client';
+	import { superForm } from 'sveltekit-superforms';
+	import { zodClient } from 'sveltekit-superforms/adapters';
 	import { userFormSchema } from '../../userFormSchema';
 
 	export let data;
 
-	const form = superForm(data.form, {
-		validators: userFormSchema,
-		taintedMessage: null
-	});
-
+	const form = superForm(data.form, { validators: zodClient(userFormSchema) });
 	const { delayed, enhance, errors } = form;
 </script>
 

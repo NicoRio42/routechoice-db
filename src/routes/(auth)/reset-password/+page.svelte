@@ -1,13 +1,13 @@
 <script lang="ts">
 	import EmailField from '$lib/components/form-fields/EmailField.svelte';
-	import { superForm } from 'sveltekit-superforms/client';
+	import { superForm } from 'sveltekit-superforms';
+	import { zodClient } from 'sveltekit-superforms/adapters';
 	import { resetPasswordEmailSchema } from './schema';
 
 	export let data;
 
 	const form = superForm(data.form, {
-		validators: resetPasswordEmailSchema,
-		taintedMessage: null
+		validators: zodClient(resetPasswordEmailSchema)
 	});
 
 	const { delayed, enhance, message } = form;

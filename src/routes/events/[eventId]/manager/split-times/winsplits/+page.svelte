@@ -1,48 +1,44 @@
 <script lang="ts">
-	import SelectField from '$lib/components/form-fields/SelectField.svelte';
 	import DateField from '$lib/components/form-fields/DateField.svelte';
-	import { superForm } from 'sveltekit-superforms/client';
-	import { splitTimesFromWinsplitsSchema } from './schema.js';
+	import SelectField from '$lib/components/form-fields/SelectField.svelte';
 	import { timezones } from '$lib/components/form-fields/timezones.js';
 	import { onMount } from 'svelte';
+	import { superForm } from 'sveltekit-superforms';
+	import { zodClient } from 'sveltekit-superforms/adapters';
+	import { splitTimesFromWinsplitsSchema } from './schema.js';
 
-    export let data;
+	export let data;
 
 	const form = superForm(data.form, {
-		validators: splitTimesFromWinsplitsSchema,
-		taintedMessage: null
+		validators: zodClient(splitTimesFromWinsplitsSchema)
 	});
 
 	const { delayed, enhance, form: formStore, errors } = form;
 
-	type WinsplitObject = {id: string, description: string}
-	let events: WinsplitObject[] = []
-	let classes: WinsplitObject[] = []
+	type WinsplitObject = { id: string; description: string };
+	let events: WinsplitObject[] = [];
+	let classes: WinsplitObject[] = [];
 	let eventsAreLoading = false;
 	let classesAreLoading = false;
 
-	$formStore.date = data.event.startTime.toISOString().split('T')[0]
+	$formStore.date = data.event.startTime.toISOString().split('T')[0];
 
-	$formStore.timezone = (
-		timezones.find((tz) => tz.name === 'Europe/Brussels') ?? timezones[0]
-	).offset;
+	$formStore.timezone = (timezones.find((tz) => tz.offset === '+01:00') ?? timezones[0]).offset;
 
 	async function handleDateChange() {
 		eventsAreLoading = true;
 
 		try {
-			events = await (await fetch(`/api/winsplits/events?date=${$formStore.date}`) ).json()
+			events = await (await fetch(`/api/winsplits/events?date=${$formStore.date}`)).json();
 			eventsAreLoading = false;
 
 			const date = new Date($formStore.date);
 			const timeZoneOffset = date.getTimezoneOffset();
 
-			const foundTimeZone = timezones.find(
-				(tz) => tz.offsetInSeconds === -timeZoneOffset
-			)?.offset;
+			const foundTimeZone = timezones.find((tz) => tz.offsetInSeconds === -timeZoneOffset)?.offset;
 
 			if (foundTimeZone !== undefined) $formStore.timezone = foundTimeZone;
-		} catch(e) {
+		} catch (e) {
 			console.error(e);
 			eventsAreLoading = false;
 		}
@@ -54,9 +50,9 @@
 		classesAreLoading = true;
 
 		try {
-			classes = await (await fetch(`/api/winsplits/events/${$formStore.eventId}/classes`) ).json()
+			classes = await (await fetch(`/api/winsplits/events/${$formStore.eventId}/classes`)).json();
 			classesAreLoading = false;
-		} catch(e) {
+		} catch (e) {
 			console.error(e);
 			classesAreLoading = false;
 		}
@@ -80,21 +76,27 @@
 	<form class="mt-15" method="post" use:enhance>
 		<DateField {form} field="date" label="Date" on:change={handleDateChange}></DateField>
 
-		<SelectField {form} field="eventId" label="Event" loading={eventsAreLoading} on:change={handleEventChange}>
-			{#each events as {id, description} (id)}
+		<SelectField
+			{form}
+			field="eventId"
+			label="Event"
+			loading={eventsAreLoading}
+			on:change={handleEventChange}
+		>
+			{#each events as { id, description } (id)}
 				<option value={id}>{description}</option>
 			{/each}
 		</SelectField>
 
 		<SelectField {form} field="classId" label="Class" loading={classesAreLoading}>
-			{#each classes as {id, description} (id)}
+			{#each classes as { id, description } (id)}
 				<option value={id}>{description}</option>
 			{/each}
 		</SelectField>
 
 		<SelectField {form} field="timezone" label="Time zone">
 			{#each timezones as timezone}
-				<option value={timezone.offset}>{timezone.name} {timezone.offset}</option>
+				<option value={timezone.offset}>{timezone.offset}</option>
 			{/each}
 		</SelectField>
 

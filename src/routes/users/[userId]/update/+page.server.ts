@@ -1,14 +1,12 @@
 import { RolesEnum } from '$lib/models/enums/roles.enum.js';
-import {
-	redirectIfNotAdmin,
-	redirectIfNotAdminOrNotCurrentUser
-} from '$lib/server/auth/helpers.js';
+import { redirectIfNotAdmin } from '$lib/server/auth/helpers.js';
+import { db } from '$lib/server/db/db.js';
 import { user as userTable } from '$lib/server/db/schema.js';
 import { error, redirect } from '@sveltejs/kit';
 import { and, eq, ne } from 'drizzle-orm';
-import { setError, superValidate } from 'sveltekit-superforms/server';
+import { setError, superValidate } from 'sveltekit-superforms';
+import { zod } from 'sveltekit-superforms/adapters';
 import { userFormSchema } from '../../userFormSchema.js';
-import { db } from '$lib/server/db/db.js';
 
 export async function load({ locals, params: { userId } }) {
 	redirectIfNotAdmin(locals.user);
@@ -26,7 +24,7 @@ export async function load({ locals, params: { userId } }) {
 			email: user.email,
 			isAdmin: user.role === RolesEnum.Enum.admin
 		},
-		userFormSchema
+		zod(userFormSchema)
 	);
 
 	return { form };
@@ -43,7 +41,7 @@ export const actions = {
 			throw error(404);
 		}
 
-		const form = await superValidate(request, userFormSchema);
+		const form = await superValidate(request, zod(userFormSchema));
 
 		if (!form.valid) {
 			return setError(form, '', 'An error occured');

@@ -7,7 +7,8 @@ import {
 } from '$lib/server/db/schema.js';
 import { error, redirect } from '@sveltejs/kit';
 import { eq } from 'drizzle-orm';
-import { setError, superValidate } from 'sveltekit-superforms/server';
+import { setError, superValidate } from 'sveltekit-superforms';
+import { zod } from 'sveltekit-superforms/adapters';
 import { generalInformationsSchema } from './schema.js';
 
 export async function load({ locals, params: { eventId } }) {
@@ -27,10 +28,10 @@ export async function load({ locals, params: { eventId } }) {
 			name: event.name,
 			tags: event.tags.map((tag) => tag.fkTag).filter((t): t is string => t !== null)
 		},
-		generalInformationsSchema
+		zod(generalInformationsSchema)
 	);
 
-	const tags = db.select().from(tagTable).all();
+	const tags = await db.select().from(tagTable).all();
 
 	return { form, tags };
 }
@@ -40,7 +41,7 @@ export const actions = {
 		if (locals.user === null) throw error(401);
 		if (locals.user.role !== 'admin') throw error(403);
 
-		const form = await superValidate(request, generalInformationsSchema);
+		const form = await superValidate(request, zod(generalInformationsSchema));
 		if (!form.valid) return setError(form, 'An error occured while changing event informations');
 
 		const event = await db.query.event.findFirst({

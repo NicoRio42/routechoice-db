@@ -1,7 +1,8 @@
 {
-	"name": "sveltekit-todo-auth",
+	"name": "routechoice-db",
 	"version": "0.0.1",
 	"private": true,
+	"type": "module",
 	"scripts": {
 		"dev": "vite dev",
 		"dev:production": "vite dev --mode production",
@@ -20,36 +21,34 @@
 		"drizzle:up": "drizzle-kit up"
 	},
 	"devDependencies": {
-		"@iconify-json/carbon": "^1.1.17",
-		"@sveltejs/adapter-cloudflare": "^2.3.1",
+		"@iconify-json/carbon": "^1.1.33",
+		"@sveltejs/adapter-cloudflare": "^4.4.0",
 		"@sveltejs/enhanced-img": "^0.2.0",
-		"@sveltejs/kit": "^1.30.4",
-		"@unocss/extractor-svelte": "^0.52.4",
-		"@unocss/preset-icons": "^0.52.4",
+		"@sveltejs/kit": "^2.5.8",
+		"@sveltejs/vite-plugin-svelte": "^3.1.0",
+		"@unocss/extractor-svelte": "^0.60.2",
 		"drizzle-kit": "^0.21.1",
-		"prettier": "^2.8.8",
-		"prettier-plugin-svelte": "^3.0.2",
-		"svelte": "^4.1.1",
+		"prettier": "^3.2.5",
+		"prettier-plugin-svelte": "^3.2.3",
+		"svelte": "^4.2.17",
 		"svelte-check": "^3.4.6",
-		"sveltekit-superforms": "^1.5.1",
-		"tslib": "^2.5.0",
-		"typescript": "^5.0.4",
-		"unocss": "^0.52.4",
-		"vite": "^5.2.11",
-		"wrangler": "^3.0.0"
+		"sveltekit-superforms": "^2.13.1",
+		"tslib": "^2.6.2",
+		"typescript": "^5.4.5",
+		"unocss": "^0.60.2",
+		"vite": "^5.2.11"
 	},
-	"type": "module",
 	"dependencies": {
-		"@libsql/client": "^0.3.1",
+		"@libsql/client": "^0.6.0",
 		"@lucia-auth/adapter-drizzle": "^1.0.7",
 		"@orienteering-js/split-times": "npm:@jsr/orienteering-js__split-times@^0.2.0",
 		"@picocss/pico": "^2.0.6",
 		"drizzle-orm": "^0.30.10",
-		"linkedom": "^0.14.26",
+		"linkedom": "^0.18.0",
 		"lucia": "^3.2.0",
 		"ol": "^7.5.2",
 		"orienteering-js": "^0.0.29",
 		"oslo": "^1.2.0",
-		"zod": "^3.21.4"
+		"zod": "^3.23.8"
 	}
 }

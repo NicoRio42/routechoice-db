@@ -2,17 +2,18 @@ import { RolesEnum } from '$lib/models/enums/roles.enum.js';
 import { redirectIfNotAdmin } from '$lib/server/auth/helpers.js';
 import { db } from '$lib/server/db/db.js';
 import { key as keyTable, user as userDBShema } from '$lib/server/db/schema.js';
+import { sendPasswordResetEmail } from '$lib/server/email.js';
 import { error, redirect } from '@sveltejs/kit';
 import { and, eq } from 'drizzle-orm';
-import { setError, superValidate } from 'sveltekit-superforms/server';
-import { userFormSchema } from '../userFormSchema.js';
 import { generateId } from 'lucia';
-import { sendPasswordResetEmail } from '$lib/server/email.js';
+import { setError, superValidate } from 'sveltekit-superforms';
+import { zod } from 'sveltekit-superforms/adapters';
+import { userFormSchema } from '../userFormSchema.js';
 
 export async function load({ locals }) {
 	redirectIfNotAdmin(locals.user);
 
-	const form = await superValidate(userFormSchema);
+	const form = await superValidate(zod(userFormSchema));
 	return { form };
 }
 
@@ -21,7 +22,7 @@ export const actions = {
 		if (locals.user === null) throw error(401);
 		if (locals.user.role !== 'admin') throw error(403);
 
-		const form = await superValidate(request, userFormSchema);
+		const form = await superValidate(request, zod(userFormSchema));
 
 		if (!form.valid) {
 			return setError(form, '', 'An error occured');

@@ -18,7 +18,8 @@ import { error, fail, redirect } from '@sveltejs/kit';
 import { eq, inArray } from 'drizzle-orm';
 import { transform } from 'ol/proj.js';
 import { getLineStringLength } from 'orienteering-js/utils';
-import { superValidate } from 'sveltekit-superforms/server';
+import { superValidate } from 'sveltekit-superforms';
+import { zod } from 'sveltekit-superforms/adapters';
 import { newRoutechoiceSchema } from './schema.js';
 
 export const actions = {
@@ -26,7 +27,7 @@ export const actions = {
 		if (locals.user === null) throw error(401);
 		if (locals.user.role !== 'admin') throw error(403);
 
-		const form = await superValidate(request, newRoutechoiceSchema);
+		const form = await superValidate(request, zod(newRoutechoiceSchema));
 		if (!form.valid) return fail(400, { form });
 
 		const mercatorCoordinates = form.data.track.map((point) =>

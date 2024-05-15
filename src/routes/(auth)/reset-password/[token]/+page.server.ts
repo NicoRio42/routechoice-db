@@ -1,5 +1,6 @@
 import { error, fail, redirect } from '@sveltejs/kit';
-import { superValidate } from 'sveltekit-superforms/server';
+import { superValidate } from 'sveltekit-superforms';
+import { zod } from 'sveltekit-superforms/adapters';
 import { resetPasswordSchema } from './schema.js';
 import {
 	key as keyTable,
@@ -34,14 +35,14 @@ export async function load({ params }) {
 		throw error(400);
 	}
 
-	const form = await superValidate(resetPasswordSchema);
+	const form = await superValidate(zod(resetPasswordSchema));
 
 	return { form };
 }
 
 export const actions = {
 	default: async ({ request, params, cookies }) => {
-		const form = await superValidate(request, resetPasswordSchema);
+		const form = await superValidate(request, zod(resetPasswordSchema));
 
 		if (!form.valid) return fail(400, { form });
 

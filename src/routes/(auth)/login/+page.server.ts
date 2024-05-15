@@ -1,16 +1,17 @@
-import { redirect } from '@sveltejs/kit';
-import { loginFormSchema } from './schema.js';
-import { setError, superValidate } from 'sveltekit-superforms/server';
-import { key as keyTable, user as userTable } from '$lib/server/db/schema.js';
-import { eq } from 'drizzle-orm';
-import { db } from '$lib/server/db/db.js';
-import { validateScryptHash } from '$lib/server/auth/crypto.js';
 import { auth } from '$lib/server/auth/auth.js';
+import { validateScryptHash } from '$lib/server/auth/crypto.js';
+import { db } from '$lib/server/db/db.js';
+import { key as keyTable, user as userTable } from '$lib/server/db/schema.js';
+import { redirect } from '@sveltejs/kit';
+import { eq } from 'drizzle-orm';
+import { setError, superValidate } from 'sveltekit-superforms';
+import { zod } from 'sveltekit-superforms/adapters';
+import { loginFormSchema } from './schema.js';
 
 export const load = async ({ locals }) => {
 	if (locals.user !== null) throw redirect(302, '/events');
 
-	const form = await superValidate(loginFormSchema);
+	const form = await superValidate(zod(loginFormSchema));
 	return { form };
 };
 
@@ -18,7 +19,7 @@ export const actions = {
 	default: async ({ request, cookies, url, locals }) => {
 		if (locals.user !== null) throw redirect(302, '/events');
 
-		const form = await superValidate(request, loginFormSchema);
+		const form = await superValidate(request, zod(loginFormSchema));
 		const { email, password } = form.data;
 
 		if (!form.valid) {

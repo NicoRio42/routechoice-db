@@ -3,17 +3,18 @@ import { user as userFromDBSchema } from '$lib/server/db/schema.js';
 import { sendPasswordResetEmail } from '$lib/server/email.js';
 import { fail } from '@sveltejs/kit';
 import { eq } from 'drizzle-orm';
-import { message, superValidate } from 'sveltekit-superforms/server';
+import { message, superValidate } from 'sveltekit-superforms';
+import { zod } from 'sveltekit-superforms/adapters';
 import { resetPasswordEmailSchema } from './schema.js';
 
 export async function load() {
-	const form = await superValidate(resetPasswordEmailSchema);
+	const form = await superValidate(zod(resetPasswordEmailSchema));
 	return { form };
 }
 
 export const actions = {
 	default: async ({ request }) => {
-		const form = await superValidate(request, resetPasswordEmailSchema);
+		const form = await superValidate(request, zod(resetPasswordEmailSchema));
 
 		if (!form.valid) {
 			return fail(400, { form });

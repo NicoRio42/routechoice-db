@@ -1,15 +1,17 @@
-import { redirectIfNotAdmin } from '$lib/server/auth/helpers.js';
-import { fail, redirect } from '@sveltejs/kit';
-import { splitTimesFromWinsplitsSchema } from './schema.js';
-import { setError, superValidate } from 'sveltekit-superforms/server';
 import { TWO_D_RERUN_URL } from '$lib/constants.js';
-import { parseAndInsertSplitTimesFromIofXml3File } from '../helpers.js';
+import { redirectIfNotAdmin } from '$lib/server/auth/helpers.js';
+import { db } from '$lib/server/db/db.js';
 import { reThrowRedirectsAndErrors } from '$lib/server/sveltekit-helpers.js';
+import { error, fail, redirect } from '@sveltejs/kit';
+import { setError, superValidate } from 'sveltekit-superforms';
+import { zod } from 'sveltekit-superforms/adapters';
+import { parseAndInsertSplitTimesFromIofXml3File } from '../helpers.js';
+import { splitTimesFromWinsplitsSchema } from './schema.js';
 
 export async function load({ locals }) {
 	redirectIfNotAdmin(locals.user);
 
-	const form = await superValidate(splitTimesFromWinsplitsSchema);
+	const form = await superValidate(zod(splitTimesFromWinsplitsSchema));
 	return { form };
 }
 
@@ -19,7 +21,7 @@ export const actions = {
 		if (locals.user.role !== 'admin') throw error(403);
 
 		const formData = await request.formData();
-		const form = await superValidate(formData, splitTimesFromWinsplitsSchema);
+		const form = await superValidate(formData, zod(splitTimesFromWinsplitsSchema));
 		if (!form.valid) return fail(400, { form });
 
 		try {
@@ -34,14 +36,14 @@ export const actions = {
 				form.data.classId,
 				form.data.timezone,
 				eventId,
-				locals.db
+				db
 			);
 
 			throw redirect(302, `/events/${eventId}/manager/split-times/runners-attribution`);
 		} catch (e) {
 			reThrowRedirectsAndErrors(e);
 			console.error(e);
-			return setError(form, null, `Problem with split times parsing: ${e}`);
+			return setError(form, '', `Problem with split times parsing: ${e}`);
 		}
 	}
 };

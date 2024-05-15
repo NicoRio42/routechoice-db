@@ -8,7 +8,8 @@ import {
 	type Event
 } from '$lib/server/db/schema.js';
 import { and, desc, eq, inArray, like, type SQL } from 'drizzle-orm';
-import { superValidate } from 'sveltekit-superforms/server';
+import { superValidate } from 'sveltekit-superforms';
+import { zod } from 'sveltekit-superforms/adapters';
 import { filterEventFormSchema } from './schema.js';
 
 const PAGE_SIZE = 20;
@@ -16,9 +17,9 @@ const PAGE_SIZE = 20;
 export async function load({ url, locals }) {
 	redirectIfNotLogedIn(locals.user);
 
-	const form = await superValidate(url.searchParams, filterEventFormSchema);
+	const form = await superValidate(url.searchParams, zod(filterEventFormSchema));
 	const pageNumber = form.data.pageNumber;
-	const tags = db.select().from(tagTable).all();
+	const tags = await db.select().from(tagTable).all();
 
 	let filteredEventsSelect = db
 		.select()
@@ -50,8 +51,8 @@ export async function load({ url, locals }) {
 		whereClauses.length === 0
 			? filteredEventsSelect
 			: whereClauses.length === 1
-			? filteredEventsSelect.where(whereClauses[0])
-			: filteredEventsSelect.where(and(...whereClauses));
+				? filteredEventsSelect.where(whereClauses[0])
+				: filteredEventsSelect.where(and(...whereClauses));
 
 	const filteredEventsWith = db.$with('filtered_event').as(filteredEventsSelectWithWhereClauses);
 

@@ -1,31 +1,26 @@
 <script lang="ts">
-	import { superForm } from 'sveltekit-superforms/client';
-	import { addEventSchema } from './schema.js';
+	import { browser } from '$app/environment';
+	import DateTimeField from '$lib/components/form-fields/DateTimeField.svelte';
+	import TagsSelect from '$lib/components/form-fields/TagsSelect.svelte';
 	import TextField from '$lib/components/form-fields/TextField.svelte';
 	import UrlField from '$lib/components/form-fields/UrlField.svelte';
-	import DateTimeField from '$lib/components/form-fields/DateTimeField.svelte';
-	import { browser } from '$app/environment';
-	import {
-		extractLiveProviderAndEventIdFromUrl,
-		formatDateTimeForDateTimeInput
-	} from '$lib/helpers.js';
+	import { extractLiveProviderAndEventIdFromUrl } from '$lib/helpers.js';
 	import { loggatorEventSchema } from 'orienteering-js/models';
-	import TagsSelect from '$lib/components/form-fields/TagsSelect.svelte';
 	import { onMount } from 'svelte';
+	import { zodClient } from 'sveltekit-superforms/adapters';
+	import { superForm } from 'sveltekit-superforms/client';
+	import { addEventSchema } from './schema.js';
 
 	export let data;
 
-	const form = superForm(data.form, {
-		taintedMessage: null
-	});
+	const form = superForm(data.form, { validators: zodClient(addEventSchema) });
 
 	const { delayed, enhance, form: formStore, errors } = form;
-	$formStore.timeZoneOffset = new Date().getTimezoneOffset();
 
 	$: if (browser) fetchEvent($formStore.liveProviderUrl);
 
 	let previousEventUrl: string;
-	let recentEvents: {url: string, name: string}[] = [];
+	let recentEvents: { url: string; name: string }[] = [];
 
 	async function fetchEvent(eventUrl: string) {
 		if (eventUrl === '' || eventUrl === previousEventUrl) return;
@@ -38,19 +33,18 @@
 
 		const event = loggatorEventSchema.parse(await response.json());
 
-		if ($formStore.name === "" || $formStore.name === undefined || $formStore.name === null) {
+		if ($formStore.name === '' || $formStore.name === undefined || $formStore.name === null) {
 			$formStore.name = event.event.name;
 		}
 
-		// TODO: Fix this
-		$formStore.startTime = formatDateTimeForDateTimeInput(new Date(event.event.start_date));
-		$formStore.publishTime = formatDateTimeForDateTimeInput(new Date(event.event.publish_date));
-		$formStore.finishTime = formatDateTimeForDateTimeInput(new Date(event.event.end_date));
+		$formStore.startTime = new Date(event.event.start_date);
+		$formStore.publishTime = new Date(event.event.publish_date);
+		$formStore.finishTime = new Date(event.event.end_date);
 	}
 
 	onMount(async () => {
-		recentEvents = await ((await fetch("/api/live-events/loggator")).json())
-	})
+		recentEvents = await (await fetch('/api/live-events/loggator')).json();
+	});
 </script>
 
 <form method="POST" use:enhance novalidate class="pb-8 pt-4">
@@ -59,14 +53,12 @@
 	<UrlField {form} field="liveProviderUrl" label="Live provider URL" list="recent-events" />
 
 	<datalist id="recent-events">
-		{#each recentEvents as {url, name} }
+		{#each recentEvents as { url, name }}
 			<option value={url}>{name}</option>
 		{/each}
 	</datalist>
 
 	<TextField {form} field="name" label="Name" />
-
-	<input name="timeZoneOffset" type="hidden" bind:value={$formStore.timeZoneOffset} />
 
 	<TagsSelect allTags={data.tags} {form} field="tags" label="Tags" />
 

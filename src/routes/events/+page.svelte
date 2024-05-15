@@ -6,13 +6,14 @@
 	import SearchField from '$lib/components/form-fields/SearchField.svelte';
 	import TagsSelect from '$lib/components/form-fields/TagsSelect.svelte';
 	import { SPLITTIMES_BASE_URL, SPLITTIMES_BASE_URL_DEV } from '$lib/constants.js';
-	import { RolesEnum } from '$lib/models/enums/roles.enum.js';
-	import { superForm } from 'sveltekit-superforms/client';
+	import { superForm } from 'sveltekit-superforms';
+	import { zodClient } from 'sveltekit-superforms/adapters';
+	import { filterEventFormSchema } from './schema';
 
 	export let data;
 
 	const form = superForm(data.form, {
-		taintedMessage: null
+		validators: zodClient(filterEventFormSchema)
 	});
 </script>
 
@@ -24,7 +25,7 @@
 	<header class="max-w-150 mx-auto">
 		<div class="flex items-center justify-between">
 			<h1 class="mt-4 mb-6">Events</h1>
-			
+
 			{#if data.user?.role === 'admin'}
 				<a href="events/add" role="button" class="!flex items-center gap-1 p2">
 					<i class="i-carbon-add inline-block w6 h6"></i>
@@ -35,12 +36,7 @@
 		</div>
 
 		<form id="filter-form" method="get" class="m-0 p-0 mt-4 max-w-100% filter-form">
-			<TagsSelect
-				{form}
-				allTags={data.tags}
-				field="tags"
-				label="Tags"
-			/>
+			<TagsSelect {form} allTags={data.tags} field="tags" label="Tags" />
 
 			<SearchField
 				{form}
@@ -51,13 +47,17 @@
 			/>
 		</form>
 
-		<button type="submit" form="filter-form" class="outline !w-fit flex items-center gap-1 p2 ml-auto my4">
+		<button
+			type="submit"
+			form="filter-form"
+			class="outline !w-fit flex items-center gap-1 p2 ml-auto my4"
+		>
 			<i class="i-carbon-filter inline-block w6 h6"></i>
-			
+
 			Filter
 		</button>
 	</header>
-	
+
 	<figure class="mt-4 overflow-auto">
 		<table>
 			<thead>
@@ -105,7 +105,9 @@
 
 						<td class="text-right">
 							<a
-								href="{splittimesBaseUrl}/{dev ? 'routechoice-db-dev' : 'routechoice-db'}/{event.id}/classes/1/table"
+								href="{splittimesBaseUrl}/{dev
+									? 'routechoice-db-dev'
+									: 'routechoice-db'}/{event.id}/classes/1/table"
 								target="_blank"
 								rel="noreferrer"
 							>
@@ -125,7 +127,8 @@
 									action="/events/{event.id}/delete"
 									method="post"
 									use:confirmSubmit={'Are you sure to delete this event?'}
-									use:enhance class="m-0 p-0"
+									use:enhance
+									class="m-0 p-0"
 								>
 									<button type="submit" class="btn-unset">
 										<i class="i-carbon-trash-can w-5 h-5 block" />
@@ -150,7 +153,7 @@
 	.filter-form :global(label) {
 		margin-bottom: 0.5rem;
 	}
-	
+
 	.filter-form :global(details) {
 		margin-bottom: 0;
 	}
