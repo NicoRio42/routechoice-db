@@ -121,27 +121,6 @@ export async function parseAndInsertSplitTimesFromIofXml3File(
 		}
 	}
 
-	// Slicing arrays to prevent SQLITE_ERROR: too many SQL variables
-	const slicedRunnersInserts = sliceArray(runnersToInsert, 100).map((runnersSlice) => {
-		return db.insert(runnerTable).values(runnersSlice);
-	});
-
-	const slicedRunnersLegsInserts = sliceArray(runnersLegsToInsert, 100).map((runnersLegsSlice) => {
-		return db.insert(runnerLegTable).values(runnersLegsSlice);
-	});
-
-	// Remove when batch function infered typing is fixed
-	// @ts-ignore
-	await db.batch([...slicedRunnersInserts, ...slicedRunnersLegsInserts]);
-}
-
-function sliceArray<T>(array: T[], length: number): T[][] {
-	if (length === 0) return [array];
-	const chunks: T[][] = [];
-
-	for (let i = 0; i < array.length; i += length) {
-		chunks.push(array.slice(i, i + length));
-	}
-
-	return chunks;
+	await db.insert(runnerTable).values(runnersToInsert).run();
+	await db.insert(runnerLegTable).values(runnersLegsToInsert).run();
 }
