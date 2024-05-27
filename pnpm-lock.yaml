@@ -12,8 +12,8 @@ dependencies:
     specifier: ^1.0.7
     version: 1.0.7(lucia@3.2.0)
   '@orienteering-js/gps':
-    specifier: npm:@jsr/orienteering-js__gps@^0.1.6
-    version: /@jsr/orienteering-js__gps@0.1.6
+    specifier: npm:@jsr/orienteering-js__gps@^0.1.8
+    version: /@jsr/orienteering-js__gps@0.1.8
   '@orienteering-js/split-times':
     specifier: npm:@jsr/orienteering-js__split-times@^0.2.0
     version: /@jsr/orienteering-js__split-times@0.2.0
@@ -1908,8 +1908,8 @@ packages:
       '@jridgewell/sourcemap-codec': 1.4.15
     dev: true
 
-  /@jsr/orienteering-js__gps@0.1.6:
-    resolution: {integrity: sha512-m0rNxJL1M1OHPWo7dPJWkA2Tg1pkmR8lJECRJXoOxDzb7ERQDU3oW1CewP8JO29vJGOuIud/L/72+t3DsbmpVQ==, tarball: https://npm.jsr.io/~/11/@jsr/orienteering-js__gps/0.1.6.tgz}
+  /@jsr/orienteering-js__gps@0.1.8:
+    resolution: {integrity: sha512-CO4iEVe8VAzFrW7E2P+YMBWfUO35TreUad62/z8I0JIcKFfJFFqIXUuAsg/cnBuBK8weB9tIE49FYbqr/cVXNw==, tarball: https://npm.jsr.io/~/11/@jsr/orienteering-js__gps/0.1.8.tgz}
     dev: false
 
   /@jsr/orienteering-js__split-times@0.2.0:
