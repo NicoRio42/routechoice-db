@@ -6,7 +6,7 @@ import { drizzle } from 'drizzle-orm/libsql';
 
 const config =
 	!dev || import.meta.env.MODE === 'production'
-		? { url: 'libsql://routechoice-db-routechoice-db.turso.io', authToken: TURSO_DB_TOKEN }
+		? { url: 'https://routechoice-db-routechoice-db.turso.io', authToken: TURSO_DB_TOKEN }
 		: { url: 'file:sqlite.db' };
 
 export const libsqlClient = dev
