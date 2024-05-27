@@ -197,9 +197,10 @@ export const runnersRelations = relations(runner, ({ one, many }) => ({
 }));
 
 export type Runner = typeof runner.$inferSelect;
+export type RunnerInsert = typeof runner.$inferInsert;
 
 export const runnerLeg = sqliteTable('runner_leg', {
-	id: text('id').primaryKey(),
+	id,
 	fkDetectedRoutechoice: text('fk_detected_routechoice').references(() => routechoice.id, {
 		onDelete: 'set null'
 	}),
@@ -224,6 +225,7 @@ export const runnerLeg = sqliteTable('runner_leg', {
 });
 
 export type RunnerLeg = typeof runnerLeg.$inferSelect;
+export type RunnerLegInsert = typeof runnerLeg.$inferInsert;
 
 export const runnerLegsRelations = relations(runnerLeg, ({ one }) => ({
 	event: one(runner, {

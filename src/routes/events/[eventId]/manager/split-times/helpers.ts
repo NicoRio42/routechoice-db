@@ -1,5 +1,5 @@
 import type * as schema from '$lib/server/db/schema.js';
-import type { Runner, RunnerLeg } from '$lib/server/db/schema.js';
+import type { RunnerInsert, RunnerLegInsert } from '$lib/server/db/schema.js';
 import {
 	controlPoint as controlPointTable,
 	event as eventTable,
@@ -81,9 +81,8 @@ export async function parseAndInsertSplitTimesFromIofXml3File(
 			});
 	});
 
-	const runnersToInsert: Omit<Runner, 'fkUser' | 'fkLiveEvent' | 'trackingDeviceId'>[] = [];
-	const runnersLegsToInsert: Omit<RunnerLeg, 'fkDetectedRoutechoice' | 'fkManualRoutechoice'>[] =
-		[];
+	const runnersToInsert: RunnerInsert[] = [];
+	const runnersLegsToInsert: RunnerLegInsert[] = [];
 
 	for (const runner of runners) {
 		runnersToInsert.push({
@@ -107,7 +106,6 @@ export async function parseAndInsertSplitTimesFromIofXml3File(
 			const leg = legs[runnerLegIndex];
 
 			runnersLegsToInsert.push({
-				id: crypto.randomUUID(),
 				fkRunner: runner.id,
 				fkLeg: leg.id,
 				timeOverall: runnerLeg.timeOverall,
@@ -123,6 +121,27 @@ export async function parseAndInsertSplitTimesFromIofXml3File(
 		}
 	}
 
-	await db.insert(runnerTable).values(runnersToInsert).run();
-	await db.insert(runnerLegTable).values(runnersLegsToInsert).run();
+	// Slicing arrays to prevent SQLITE_ERROR: too many SQL variables
+	const slicedRunnersInserts = sliceArray(runnersToInsert, 100).map((runnersSlice) => {
+		return db.insert(runnerTable).values(runnersSlice);
+	});
+
+	const slicedRunnersLegsInserts = sliceArray(runnersLegsToInsert, 100).map((runnersLegsSlice) => {
+		return db.insert(runnerLegTable).values(runnersLegsSlice);
+	});
+
+	// Remove when batch function infered typing is fixed
+	// @ts-ignore
+	await db.batch([...slicedRunnersInserts, ...slicedRunnersLegsInserts]);
+}
+
+function sliceArray<T>(array: T[], length: number): T[][] {
+	if (length === 0) return [array];
+	const chunks: T[][] = [];
+
+	for (let i = 0; i < array.length; i += length) {
+		chunks.push(array.slice(i, i + length));
+	}
+
+	return chunks;
 }

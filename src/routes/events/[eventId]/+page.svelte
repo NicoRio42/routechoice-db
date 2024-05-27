@@ -19,16 +19,13 @@
 	import SideBar from './components/SideBar.svelte';
 	import VectorLayer from './components/VectorLayer.svelte';
 	import './styles.css';
-	import {
-		computeFitBoxAndAngleFromLegNumber,
-		getLegNumberFromSearchParams
-	} from './utils.js';
-	import { mapIsLoading } from "./stores/map-loading.store.js"
+	import { computeFitBoxAndAngleFromLegNumber, getLegNumberFromSearchParams } from './utils.js';
+	import { mapIsLoading } from './stores/map-loading.store.js';
 	import { pushNotification } from '$lib/components/Notifications.svelte';
 
 	export let data;
 
-	$eventStore = {name: data.event.name, id: data.event.id}
+	$eventStore = { name: data.event.name, id: data.event.id };
 	$mapIsLoading = true;
 
 	let angle: number;
@@ -63,20 +60,23 @@
 	const event = writable<Event>();
 	$: event.set(data.event);
 	setContext('event', event);
-	
+
 	onMount(() => {
-		data.promises.tracks.then(tracks => {
-			data.event.runners = data.event.runners.map((runner) => {
-				const track = tracks.find((t) =>
-					t.trackingDeviceId === runner.trackingDeviceId && t.fkLiveEvent === runner.fkLiveEvent
-				);
-					
-				return { ...runner, track: track === undefined ? null : track.track };
+		data.promises.tracks
+			.then((tracks) => {
+				data.event.runners = data.event.runners.map((runner) => {
+					const track = tracks.find(
+						(t) =>
+							t.trackingDeviceId === runner.trackingDeviceId && t.fkLiveEvent === runner.fkLiveEvent
+					);
+
+					return { ...runner, track: track === undefined ? null : track.track };
+				});
 			})
-		}).catch(() => {
-			pushNotification("Could not load GPS tracks from Loggator.", "error", 5)
-		})	
-	})
+			.catch(() => {
+				pushNotification('Could not load GPS', 'error', 5);
+			});
+	});
 
 	async function handleDrawEnd(e: CustomEvent<DrawEvent>): Promise<void> {
 		currentDrawnRoutechoice = e.detail.feature.getGeometry() as LineString;
@@ -85,15 +85,15 @@
 
 	async function handleRunnerTimeOffsetChange(event: CustomEvent<string>): Promise<void> {}
 
-	onDestroy(() => $eventStore = null)
+	onDestroy(() => ($eventStore = null));
 </script>
 
 <svelte:head>
-	<meta property="og:title" content="Routechoice DB | {data.event.name}">
+	<meta property="og:title" content="Routechoice DB | {data.event.name}" />
 	<meta property="og:type" content="website" />
-	<meta property="og:image" content={data.eventMap.url}>
-	<meta property="og:url" content={$page.url.href.split('?')[0]}>
-	<meta name="twitter:card" content="summary_large_image">
+	<meta property="og:image" content={data.eventMap.url} />
+	<meta property="og:url" content={$page.url.href.split('?')[0]} />
+	<meta name="twitter:card" content="summary_large_image" />
 </svelte:head>
 
 {#if data.event.legs.length !== 0}
@@ -101,23 +101,26 @@
 		routechoices={data.event.legs[legNumber - 1].routechoices}
 		eventId={data.event.id}
 		bind:show={showManageRoutechoicesDialog}
-		on:startDrawingNewRoutechoice={() => isDrawingNewRoutechoice = true}
+		on:startDrawingNewRoutechoice={() => (isDrawingNewRoutechoice = true)}
 	/>
 {/if}
-	
+
 <div class="wrapper">
 	{#if $mapIsLoading}
-		<article class="absolute z-1 bg-transparent top-40% left-50% -translate-x-50% -translate-y-50% backdrop-blur rounded-xl" aria-busy="true">
+		<article
+			class="absolute z-1 bg-transparent top-40% left-50% -translate-x-50% -translate-y-50% backdrop-blur rounded-xl"
+			aria-busy="true"
+		>
 			Map is loading
 		</article>
 	{/if}
 
 	{#if data.event.legs.length !== 0 && data.user?.role === RolesEnum.Enum.admin}
 		<button
-			on:click={() => showManageRoutechoicesDialog = !showManageRoutechoicesDialog}
+			on:click={() => (showManageRoutechoicesDialog = !showManageRoutechoicesDialog)}
 			class="hidden btn-unset absolute top-25 right-2 z-1 bg-white text-black w-6 h-6 sm:flex items-center justify-center"
 		>
-			{#if showManageRoutechoicesDialog }
+			{#if showManageRoutechoicesDialog}
 				<i class="block i-carbon-edit-off"></i>
 			{:else}
 				<i class="block i-carbon-edit"></i>

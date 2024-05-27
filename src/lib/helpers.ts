@@ -18,7 +18,7 @@ import type {
 	RoutechoiceStatistics,
 	RunnerLeg
 } from './server/db/schema.js';
-import { parseInit, parseData } from '@orienteering-js/gps/gpsseuranta';
+import { parseData, parseInit } from '@orienteering-js/gps/gpsseuranta';
 import { routesColors } from 'orienteering-js/ocad';
 
 export function extractLiveProviderAndEventIdFromUrl(
@@ -117,7 +117,7 @@ export async function getTracksFromLiveEvents(
 			);
 		}
 
-		if (liveEvent.liveProvider === 'gpsseuranta') {
+		if (liveEvent.liveProvider === 'gps-seuranta') {
 			const gpsProvider = GPS_PROVIDERS['gps-seuranta'];
 			const dataUrl = `${gpsProvider.apiBaseUrl}/${eventId}/data.lst`;
 			const data = await fetch(dataUrl).then((r) => r.text());
@@ -198,6 +198,61 @@ export async function getEventMap(liveEvent: LiveEvent, fetch: Fetch): Promise<C
 	}
 
 	throw new Error('Only Loggator is available in routechoice DB for the moment');
+}
+
+export async function getCompetitorsFromLiveEvent(
+	liveEvent: LiveEvent,
+	fetch: Fetch
+): Promise<
+	{
+		deviceId: string;
+		name: string;
+	}[]
+> {
+	const [_, eventId] = extractLiveProviderAndEventIdFromUrl(liveEvent.url);
+
+	if (liveEvent.liveProvider === 'loggator') {
+		const gpsProvider = GPS_PROVIDERS.loggator;
+		const eventUrl = `${gpsProvider.apiBaseUrl}/events/${eventId}`;
+
+		const eventResponse =
+			import.meta.env.MODE === 'dev-offline'
+				? await fetch('http://localhost:5173/20220622meylan.json')
+				: await fetch(eventUrl);
+
+		if (!eventResponse.ok) {
+			throw new Error(`Failed to load loggator event with id ${eventId}`);
+		}
+
+		const loggatorEvent = loggatorEventSchema.parse(await eventResponse.json());
+
+		return loggatorEvent.competitors
+			.map((competitor) => ({ deviceId: competitor.device_id.toString(), name: competitor.name }))
+			.sort((a, b) => a.name.localeCompare(b.name));
+	}
+
+	if (liveEvent.liveProvider === 'gps-seuranta') {
+		const gpsProvider = GPS_PROVIDERS['gps-seuranta'];
+		const initUrl = `${gpsProvider.apiBaseUrl}/${eventId}/init.txt`;
+		const init = await fetch(initUrl).then((r) => r.text());
+		const [_, competitors] = parseInit(init);
+
+		return competitors
+			.map((competitor) => ({
+				deviceId: competitor.id,
+				name: filterCompetitorName(competitor.name)
+			}))
+			.sort((a, b) => a.name.localeCompare(b.name));
+	}
+
+	throw new Error('Only Loggator is available in routechoice DB for the moment');
+}
+
+function filterCompetitorName(name: string): string {
+	return name
+		.split(' ')
+		.filter((n) => !/[0-9]/.test(n) && !n.includes('(') && !n.includes(')'))
+		.join(' ');
 }
 
 // TODO: fix the typing of this function

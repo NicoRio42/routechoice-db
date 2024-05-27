@@ -2,6 +2,7 @@ import { GPS_PROVIDERS } from '$lib/constants.js';
 import {
 	createRoutechoiceStatistics,
 	extractLiveProviderAndEventIdFromUrl,
+	getCompetitorsFromLiveEvent,
 	getRunnersWithTracksAndSortedLegs,
 	parseRoutechoicesTracksInLegs,
 	sortLegs
@@ -44,29 +45,7 @@ export async function load({ params: { eventId }, locals, fetch }) {
 		.map((u) => ({ ...u, name: `${u.firstName} ${u.lastName}` }))
 		.sort((a, b) => a.name.localeCompare(b.name));
 
-	let competitors: {
-		deviceId: number;
-		name: string;
-	}[];
-
-	const [provider, liveEventId] = extractLiveProviderAndEventIdFromUrl(liveEvent.url);
-	const gpsProvider = GPS_PROVIDERS[provider];
-	const loggatorEventUrl = `${gpsProvider.apiBaseUrl}/events/${liveEventId}`;
-
-	try {
-		const response =
-			import.meta.env.MODE === 'dev-offline'
-				? await fetch('http://localhost:5173/20220622meylan.json')
-				: await fetch(loggatorEventUrl);
-
-		const loggatorEvent = loggatorEventSchema.parse(await response.json());
-		competitors = loggatorEvent.competitors
-			.map((c) => ({ deviceId: c.device_id, name: c.name }))
-			.sort((a, b) => a.name.localeCompare(b.name));
-	} catch (e) {
-		console.error(e);
-		throw error(500);
-	}
+	let competitors = await getCompetitorsFromLiveEvent(liveEvent, fetch);
 
 	const runners = await db
 		.select({
@@ -97,7 +76,7 @@ export async function load({ params: { eventId }, locals, fetch }) {
 		const runnersWithAttributedUsersAndCompetitors = matchRunnersByName(
 			runnersWithAttributedUsers,
 			'trackingDeviceId',
-			competitors.map((c) => ({ key: c.deviceId.toString(), name: c.name }))
+			competitors.map((c) => ({ key: c.deviceId, name: c.name }))
 		);
 
 		runners.forEach((runner) => {
