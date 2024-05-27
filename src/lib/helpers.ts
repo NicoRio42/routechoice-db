@@ -142,7 +142,7 @@ export async function getTracksFromLiveEvents(
 }
 
 export async function getEventMap(liveEvent: LiveEvent, fetch: Fetch): Promise<CourseMap> {
-	const [provider, eventId] = extractLiveProviderAndEventIdFromUrl(liveEvent.url);
+	const [_, eventId] = extractLiveProviderAndEventIdFromUrl(liveEvent.url);
 
 	if (liveEvent.liveProvider === 'loggator') {
 		const gpsProvider = GPS_PROVIDERS.loggator;
