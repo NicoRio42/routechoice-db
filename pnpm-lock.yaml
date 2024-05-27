@@ -23,6 +23,9 @@ dependencies:
   drizzle-orm:
     specifier: ^0.30.10
     version: 0.30.10(@libsql/client@0.6.0)
+  libsql-stateless-easy:
+    specifier: ^1.6.8
+    version: 1.6.8
   linkedom:
     specifier: ^0.18.0
     version: 0.18.0
@@ -4190,6 +4193,16 @@ packages:
 
   /lerc@3.0.0:
     resolution: {integrity: sha512-Rm4J/WaHhRa93nCN2mwWDZFoRVF18G1f47C+kvQWyHGEZxFpTUi73p7lMVSAndyxGt6lJ2/CFbOcf9ra5p8aww==}
+    dev: false
+
+  /libsql-stateless-easy@1.6.8:
+    resolution: {integrity: sha512-hqqHJ+hEU8R4jLuvZElJsE00OGoN1/FmkMeMkjc+CVZy5p70V9Akxp5G7CAOGy+l/VTzLPCRpnXgx0COdUpTbw==}
+    dependencies:
+      libsql-stateless: 2.8.4
+    dev: false
+
+  /libsql-stateless@2.8.4:
+    resolution: {integrity: sha512-LD2mMLefkTsfVWDpBzaFMYY6ZC6GEXrdNRRKEG/Y8tXGpds1JCqEvUpYhziVae884bbsEG/zeiKTLogoD5dM+g==}
     dev: false
 
   /libsql@0.3.18:

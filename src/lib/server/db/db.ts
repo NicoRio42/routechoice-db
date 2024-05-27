@@ -1,7 +1,7 @@
 import { dev } from '$app/environment';
 import { TURSO_DB_TOKEN } from '$env/static/private';
 import * as schema from '$lib/server/db/schema.js';
-import { createClient as createClientWeb } from '@libsql/client/web';
+import { createClient as createClientWeb } from 'libsql-stateless-easy';
 import { drizzle } from 'drizzle-orm/libsql';
 
 const config =

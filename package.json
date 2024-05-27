@@ -45,6 +45,7 @@
 		"@orienteering-js/split-times": "npm:@jsr/orienteering-js__split-times@^0.2.0",
 		"@picocss/pico": "^2.0.6",
 		"drizzle-orm": "^0.30.10",
+		"libsql-stateless-easy": "^1.6.8",
 		"linkedom": "^0.18.0",
 		"lucia": "^3.2.0",
 		"ol": "^7.5.2",
