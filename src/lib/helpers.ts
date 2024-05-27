@@ -18,6 +18,8 @@ import type {
 	RoutechoiceStatistics,
 	RunnerLeg
 } from './server/db/schema.js';
+import { parseInit, parseData } from '@orienteering-js/gps/gpsseuranta';
+import { routesColors } from 'orienteering-js/ocad';
 
 export function extractLiveProviderAndEventIdFromUrl(
 	url: string
@@ -34,9 +36,16 @@ export function extractLiveProviderAndEventIdFromUrl(
 			.map((s) => s.trim())
 			.filter((s) => s !== '')
 			.at(-1);
+
 		if (eventId === undefined) throw new Error('Could not extract eventId from provided url.');
 
 		return ['loggator', eventId];
+	}
+
+	if (provider[0] === 'gps-seuranta') {
+		const eventId = url.split('tulospalvelu.fi/gps/')[1].split('/')[0];
+		if (eventId === undefined) throw new Error('Could not extract eventId from provided url.');
+		return ['gps-seuranta', eventId];
 	}
 
 	throw new Error('Provider not supported');
@@ -75,8 +84,9 @@ export async function getTracksFromLiveEvents(
 	const tracks: { fkLiveEvent: string; trackingDeviceId: string; track: RunnerTrack }[] = [];
 
 	for (const liveEvent of liveEvents) {
+		const [provider, eventId] = extractLiveProviderAndEventIdFromUrl(liveEvent.url);
+
 		if (liveEvent.liveProvider === 'loggator') {
-			const [provider, eventId] = extractLiveProviderAndEventIdFromUrl(liveEvent.url);
 			const gpsProvider = GPS_PROVIDERS.loggator;
 			const eventUrl = `${gpsProvider.apiBaseUrl}/events/${eventId}`;
 			const pointsUrl = `${eventUrl}/points`;
@@ -106,14 +116,35 @@ export async function getTracksFromLiveEvents(
 				}))
 			);
 		}
+
+		if (liveEvent.liveProvider === 'gpsseuranta') {
+			const gpsProvider = GPS_PROVIDERS['gps-seuranta'];
+			const dataUrl = `${gpsProvider.apiBaseUrl}/${eventId}/data.lst`;
+			const data = await fetch(dataUrl).then((r) => r.text());
+			const competitorsRoutesMap = parseData(data);
+
+			tracks.push(
+				...Object.entries(competitorsRoutesMap).map(([trackingDeviceId, track], index) => ({
+					trackingDeviceId,
+					track: {
+						lons: track.longitudes,
+						lats: track.latitudes,
+						times: track.times,
+						color: routesColors[index]
+					},
+					fkLiveEvent: liveEvent.id
+				}))
+			);
+		}
 	}
 
 	return tracks;
 }
 
 export async function getEventMap(liveEvent: LiveEvent, fetch: Fetch): Promise<CourseMap> {
+	const [provider, eventId] = extractLiveProviderAndEventIdFromUrl(liveEvent.url);
+
 	if (liveEvent.liveProvider === 'loggator') {
-		const [provider, eventId] = extractLiveProviderAndEventIdFromUrl(liveEvent.url);
 		const gpsProvider = GPS_PROVIDERS.loggator;
 		const eventUrl = `${gpsProvider.apiBaseUrl}/events/${eventId}`;
 
@@ -157,9 +188,19 @@ export async function getEventMap(liveEvent: LiveEvent, fetch: Fetch): Promise<C
 		};
 	}
 
+	if (liveEvent.liveProvider === 'gps-seuranta') {
+		const gpsProvider = GPS_PROVIDERS['gps-seuranta'];
+		const initUrl = `${gpsProvider.apiBaseUrl}/${eventId}/init.txt`;
+		const init = await fetch(initUrl).then((r) => r.text());
+		const [calibration] = parseInit(init);
+
+		return { url: `${gpsProvider.apiBaseUrl}/${eventId}/map`, calibration };
+	}
+
 	throw new Error('Only Loggator is available in routechoice DB for the moment');
 }
 
+// TODO: fix the typing of this function
 export function sortRunnersAndRunnersLegs(
 	runners: RunnerWithNullableLegsAndTrack[],
 	legs: LegWithRoutechoices[]

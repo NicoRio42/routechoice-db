@@ -26,6 +26,7 @@
 		if (eventUrl === '' || eventUrl === previousEventUrl) return;
 		previousEventUrl = eventUrl;
 		const [provider, eventId] = extractLiveProviderAndEventIdFromUrl(eventUrl);
+		if (provider !== 'loggator') return;
 		const url = `/api/live-events/${provider}/${eventId}`;
 		const response = await fetch(url);
 

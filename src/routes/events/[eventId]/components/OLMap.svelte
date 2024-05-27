@@ -26,7 +26,7 @@
 
 		map = new Map({
 			target: 'mapviewer',
-			view,
+			view
 		});
 
 		map.addInteraction(new DoubleClickZoom());

@@ -17,7 +17,10 @@ export async function getMapCallibrationByFetchingMapImageIfNeeded(
 		(cal) => cal.point.x === -1 || cal.point.y === -1
 	);
 
-	if (!isNeededToFetchMapImage) return Promise.resolve(courseMap.calibration);
+	if (!isNeededToFetchMapImage) {
+		mapIsLoading.set(false);
+		return Promise.resolve(courseMap.calibration);
+	}
 
 	return new Promise<MapCalibration>((resolve, reject) => {
 		const image = new Image();

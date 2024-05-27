@@ -8,5 +8,5 @@ export const CLOUDINARY_CLOUD_NAME = 'dosqlwgkf';
 export const GPS_PROVIDERS: Record<string, { urls: string[]; apiBaseUrl: string }> = {
 	loggator: { urls: ['loggator.com', 'log.gl'], apiBaseUrl: 'http://events.loggator.com/api' },
 	tractrac: { urls: ['tractrac.com'], apiBaseUrl: '' },
-	'gps-seuranta': { urls: ['tulospalvelu.fi'], apiBaseUrl: '' }
+	'gps-seuranta': { urls: ['tulospalvelu.fi'], apiBaseUrl: 'https://www.tulospalvelu.fi/gps' }
 } as const;

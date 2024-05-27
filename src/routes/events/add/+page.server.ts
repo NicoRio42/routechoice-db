@@ -1,3 +1,4 @@
+import { extractLiveProviderAndEventIdFromUrl } from '$lib/helpers.js';
 import { redirectIfNotAdmin } from '$lib/server/auth/helpers.js';
 import { db } from '$lib/server/db/db.js';
 import {
@@ -8,6 +9,7 @@ import {
 } from '$lib/server/db/schema.js';
 import { reThrowRedirectsAndErrors } from '$lib/server/sveltekit-helpers.js';
 import { error, fail, redirect } from '@sveltejs/kit';
+import { generateId } from 'lucia';
 import { setError, superValidate } from 'sveltekit-superforms';
 import { zod } from 'sveltekit-superforms/adapters';
 import { addEventSchema } from './schema.js';
@@ -33,9 +35,18 @@ export const actions = {
 			(tag) => tag.trim() !== '' && tag !== null && tag !== undefined
 		);
 
-		const eventId = crypto.randomUUID();
+		let liveProvider: string;
 
 		try {
+			[liveProvider] = extractLiveProviderAndEventIdFromUrl(form.data.liveProviderUrl);
+		} catch (e) {
+			console.error(e);
+			return setError(form, '', 'An error occured');
+		}
+
+		try {
+			const eventId = generateId(15);
+
 			await db
 				.insert(eventTable)
 				.values({
@@ -50,9 +61,8 @@ export const actions = {
 			await db
 				.insert(liveEventTable)
 				.values({
-					id: crypto.randomUUID(),
 					fkEvent: eventId,
-					liveProvider: 'loggator',
+					liveProvider,
 					url: form.data.liveProviderUrl,
 					isPrimary: true
 				})

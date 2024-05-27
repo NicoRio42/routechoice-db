@@ -14,7 +14,7 @@ const id = text('id')
 	.$defaultFn(() => generateId(15));
 
 export const event = sqliteTable('event', {
-	id: text('id').primaryKey(),
+	id,
 	name: text('name').notNull(),
 	startTime: integer('start_time', { mode: 'timestamp' }).notNull(),
 	finishTime: integer('finish_time', { mode: 'timestamp' }).notNull(),
@@ -32,7 +32,7 @@ export const eventsRelations = relations(event, ({ many }) => ({
 export type Event = typeof event.$inferSelect;
 
 export const liveEvent = sqliteTable('live_event', {
-	id: text('id').primaryKey(),
+	id,
 	fkEvent: text('fk_event')
 		.notNull()
 		.references(() => event.id, { onDelete: 'cascade' }),
