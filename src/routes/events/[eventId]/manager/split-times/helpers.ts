@@ -121,6 +121,20 @@ export async function parseAndInsertSplitTimesFromIofXml3File(
 		}
 	}
 
-	await db.insert(runnerTable).values(runnersToInsert).run();
-	await db.insert(runnerLegTable).values(runnersLegsToInsert).run();
+	const slicedRunnersLegsInserts = sliceArray(runnersLegsToInsert, 100).map((runnersLegsSlice) => {
+		return db.insert(runnerLegTable).values(runnersLegsSlice);
+	});
+
+	await db.batch([db.insert(runnerTable).values(runnersToInsert), ...slicedRunnersLegsInserts]);
+}
+
+function sliceArray<T>(array: T[], length: number): T[][] {
+	if (length === 0) return [array];
+	const chunks: T[][] = [];
+
+	for (let i = 0; i < array.length; i += length) {
+		chunks.push(array.slice(i, i + length));
+	}
+
+	return chunks;
 }
