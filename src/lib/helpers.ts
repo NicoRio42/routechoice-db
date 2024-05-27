@@ -84,7 +84,7 @@ export async function getTracksFromLiveEvents(
 	const tracks: { fkLiveEvent: string; trackingDeviceId: string; track: RunnerTrack }[] = [];
 
 	for (const liveEvent of liveEvents) {
-		const [provider, eventId] = extractLiveProviderAndEventIdFromUrl(liveEvent.url);
+		const [_, eventId] = extractLiveProviderAndEventIdFromUrl(liveEvent.url);
 
 		if (liveEvent.liveProvider === 'loggator') {
 			const gpsProvider = GPS_PROVIDERS.loggator;
