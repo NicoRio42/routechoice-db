@@ -41,7 +41,7 @@
 
 	{#if showDropdown}
 		<ul
-			class="p-4 m-0 mt-1 rounded shadow-2xl bg-background-color"
+			class="p-4 m-0 mt-1 rounded shadow-2xl bg-background-color flex flex-col gap-2"
 			transition:fade={{ duration: 125 }}
 		>
 			<li class="list-none">
