@@ -124,12 +124,14 @@
 
 							<td class="text-right">
 								<form
-									action="/events/{event.id}/delete"
+									action="?/deleteEvent"
 									method="post"
 									use:confirmSubmit={'Are you sure to delete this event?'}
 									use:enhance
 									class="m-0 p-0"
 								>
+									<input type="hidden" name="eventId" value={event.id} />
+
 									<button type="submit" class="btn-unset">
 										<i class="i-carbon-trash-can w-5 h-5 block" />
 									</button>

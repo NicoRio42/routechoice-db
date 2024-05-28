@@ -11,6 +11,7 @@ import { and, desc, eq, inArray, like, type SQL } from 'drizzle-orm';
 import { superValidate } from 'sveltekit-superforms';
 import { zod } from 'sveltekit-superforms/adapters';
 import { filterEventFormSchema } from './schema.js';
+import { error, redirect } from '@sveltejs/kit';
 
 const PAGE_SIZE = 20;
 
@@ -90,3 +91,18 @@ export async function load({ url, locals }) {
 
 	return { events, user: locals.user, tags, form, pageNumber, isLastPage };
 }
+
+export const actions = {
+	deleteEvent: async ({ locals, request }) => {
+		if (locals.user === null) throw error(401);
+		if (locals.user.role !== 'admin') throw error(403);
+
+		const formData = await request.formData();
+		const eventId = formData.get('eventId');
+		if (typeof eventId !== 'string') throw error(400);
+
+		await db.delete(eventTable).where(eq(eventTable.id, eventId)).run();
+
+		throw redirect(302, '/events');
+	}
+};
