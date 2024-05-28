@@ -79,7 +79,8 @@ type Fetch = typeof fetch;
 
 export async function getTracksFromLiveEvents(
 	liveEvents: LiveEvent[],
-	fetch: Fetch
+	providedFetch = fetch,
+	proxyRequests = false
 ): Promise<{ fkLiveEvent: string; trackingDeviceId: string; track: RunnerTrack }[]> {
 	const tracks: { fkLiveEvent: string; trackingDeviceId: string; track: RunnerTrack }[] = [];
 
@@ -88,13 +89,15 @@ export async function getTracksFromLiveEvents(
 
 		if (liveEvent.liveProvider === 'loggator') {
 			const gpsProvider = GPS_PROVIDERS.loggator;
-			const eventUrl = `${gpsProvider.apiBaseUrl}/events/${eventId}`;
-			const pointsUrl = `${eventUrl}/points`;
+			const pointsUrl = gpsProvider.getEventPointsUrl(eventId);
+			const proxiedUrl = proxyRequests
+				? `/api/proxy?urlToProxy=${encodeURI(pointsUrl)}`
+				: pointsUrl;
 
 			const pointsResponse =
 				import.meta.env.MODE === 'dev-offline'
 					? await fetch('http://localhost:5173/points.json')
-					: await fetch(pointsUrl);
+					: await fetch(proxiedUrl);
 
 			if (!pointsResponse.ok) {
 				console.error(
@@ -119,8 +122,10 @@ export async function getTracksFromLiveEvents(
 
 		if (liveEvent.liveProvider === 'gps-seuranta') {
 			const gpsProvider = GPS_PROVIDERS['gps-seuranta'];
-			const dataUrl = `${gpsProvider.apiBaseUrl}/${eventId}/data.lst`;
-			const data = await fetch(dataUrl).then((r) => r.text());
+			const dataUrl = gpsProvider.getEventPointsUrl(eventId);
+			const proxiedUrl = proxyRequests ? `/api/proxy?urlToProxy=${encodeURI(dataUrl)}` : dataUrl;
+
+			const data = await fetch(proxiedUrl).then((r) => r.text());
 			const competitorsRoutesMap = parseData(data);
 
 			tracks.push(

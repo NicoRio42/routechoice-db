@@ -1,6 +1,5 @@
 import { GPS_PROVIDERS } from '$lib/constants.js';
-import { redirectIfNotAdmin } from '$lib/server/auth/helpers.js';
-import { error, redirect } from '@sveltejs/kit';
+import { error } from '@sveltejs/kit';
 
 export async function GET({ fetch, params: { provider, eventId }, locals }) {
 	if (locals.user === null) throw error(401);

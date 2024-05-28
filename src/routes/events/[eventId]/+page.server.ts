@@ -37,7 +37,6 @@ export async function load({ params: { eventId }, locals, fetch }) {
 			)
 		},
 		eventMap: await getEventMap(event.liveEvents[0], fetch),
-		user: locals.user,
-		promises: { tracks: getTracksFromLiveEvents(eventWithSortedLegs.liveEvents, fetch) }
+		user: locals.user
 	};
 }

@@ -22,6 +22,7 @@
 	import { computeFitBoxAndAngleFromLegNumber, getLegNumberFromSearchParams } from './utils.js';
 	import { mapIsLoading } from './stores/map-loading.store.js';
 	import { pushNotification } from '$lib/components/Notifications.svelte';
+	import { getTracksFromLiveEvents } from '$lib/helpers';
 
 	export let data;
 
@@ -62,7 +63,7 @@
 	setContext('event', event);
 
 	onMount(() => {
-		data.promises.tracks
+		getTracksFromLiveEvents(data.event.liveEvents, fetch, true)
 			.then((tracks) => {
 				data.event.runners = data.event.runners.map((runner) => {
 					const track = tracks.find(
