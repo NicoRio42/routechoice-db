@@ -18,20 +18,24 @@
 
 		if (!('share' in navigator)) {
 			if (!('clipboard' in navigator)) {
-				pushNotification("Your browser do not allow direct url sharing. Please copy the url manually.", "warn", 5)
+				pushNotification(
+					'Your browser do not allow direct url sharing. Please copy the url manually.',
+					'warn',
+					5
+				);
 				return;
 			}
 
 			window.navigator.clipboard.writeText(urlToShare);
-			pushNotification("Link copied to clipboard", "info", 5)
+			pushNotification('Link copied to clipboard', 'info', 5);
 			return;
 		}
 
 		await window.navigator.share({
-			title: "Routechoice DB",
+			title: 'Routechoice DB',
 			text: $eventStore.name,
 			url: urlToShare
-		})
+		});
 	}
 </script>
 
@@ -40,7 +44,7 @@
 		<li class="link-list-item">
 			<a
 				class="flex items-center gap-2 sm:gap-4 p-0 text-5 text-primary whitespace-nowrap decoration-none"
-				href={$page.url.pathname ==="/events" ? "/" : "/events" }
+				href={$page.url.pathname === '/events' ? '/' : '/events'}
 			>
 				<div class="bg-primary w-12 h-12 flex justify-center items-center">
 					<i class="i-carbon-3d-curve-auto-colon block w-8 h-8 text-white"></i>
@@ -61,20 +65,13 @@
 		{#if $eventStore !== null}
 			{@const splittimesBaseUrl = dev ? SPLITTIMES_BASE_URL_DEV : SPLITTIMES_BASE_URL}
 
-			<li class="m-0 sm:ml-4 sm:pl-4 pl-2 py-1 sm:border-l-1 sm:border-l-solid sm:border-l-table-border-color whitespace-nowrap text-ellipsis overflow-hidden min-w-0">
+			<li
+				class="m-0 sm:ml-4 sm:pl-4 pl-2 py-1 sm:border-l-1 sm:border-l-solid sm:border-l-table-border-color whitespace-nowrap text-ellipsis overflow-hidden min-w-0"
+			>
 				{$eventStore.name}
 			</li>
 
 			<li class="p-0 flex items-center gap2 sm:mr2">
-				<a
-					href="{splittimesBaseUrl}/{dev ? 'routechoice-db-dev' : 'routechoice-db'}/{$eventStore.id}/classes/1/table"
-					target="_blank"
-					rel="noreferrer"
-					class="text-h1-color"
-				>
-					<i class="i-carbon-table-shortcut w-5 h-5 inline-block mt1" />
-				</a>
-
 				<button class="btn-unset" type="button" on:click={handleShare}>
 					<i class="i-carbon-share w-5 h-5 inline-block mt1"></i>
 				</button>
@@ -93,8 +90,8 @@
 					<a
 						href="https://docs.google.com/document/d/1bL9xlAb3Aw2Ga-Dk5r925952SeWGsHUR/edit?usp=sharing&ouid=108799233450859256284&rtpof=true&sd=true"
 						target="_blank"
-						rel="noreferrer"
-					>Help</a>
+						rel="noreferrer">Help</a
+					>
 				</li>
 			{/if}
 
@@ -110,9 +107,9 @@
 				</li>
 			{:else}
 				<li class="py-0 large">
-					<details  role="list" class="dropdown" >
+					<details role="list" class="dropdown">
 						<summary aria-haspopup="listbox"> {user.firstName} {user.lastName} </summary>
-						
+
 						<ul dir="rtl">
 							<li class="option-item">
 								<form action="/logout" method="post" use:enhance>
@@ -133,7 +130,7 @@
 			</li>
 		</ul>
 
-		<details  role="list" class="hamburger-menu dropdown">
+		<details role="list" class="hamburger-menu dropdown">
 			<summary aria-haspopup="listbox" class="!bg-transparent mt-0.5">
 				<i class="i-carbon-menu block w-8 h-8" />
 			</summary>
@@ -196,7 +193,8 @@
 	}
 
 	.link-list-item {
-		padding: calc(var(--pico-nav-element-spacing-vertical) / 2) var(--pico-nav-element-spacing-horizontal);
+		padding: calc(var(--pico-nav-element-spacing-vertical) / 2)
+			var(--pico-nav-element-spacing-horizontal);
 	}
 
 	.hamburger-menu {

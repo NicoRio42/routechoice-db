@@ -66,7 +66,6 @@
 					<th>Start time</th>
 					<th>Publish time</th>
 					<th>Tags</th>
-					<th />
 
 					{#if data.user?.role === 'admin'}
 						<th />
@@ -101,18 +100,6 @@
 									</span>
 								{/if}
 							{/each}
-						</td>
-
-						<td class="text-right">
-							<a
-								href="{splittimesBaseUrl}/{dev
-									? 'routechoice-db-dev'
-									: 'routechoice-db'}/{event.id}/classes/1/table"
-								target="_blank"
-								rel="noreferrer"
-							>
-								<i class="i-carbon-table-shortcut w-5 h-5 block" />
-							</a>
 						</td>
 
 						{#if data.user?.role === 'admin'}
