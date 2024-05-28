@@ -1,11 +1,9 @@
 <script lang="ts">
-	import { dev } from '$app/environment';
 	import { enhance } from '$app/forms';
 	import { confirmSubmit } from '$lib/actions/confirm-submit.js';
 	import Paginator from '$lib/components/Paginator.svelte';
 	import SearchField from '$lib/components/form-fields/SearchField.svelte';
 	import TagsSelect from '$lib/components/form-fields/TagsSelect.svelte';
-	import { SPLITTIMES_BASE_URL, SPLITTIMES_BASE_URL_DEV } from '$lib/constants.js';
 	import { superForm } from 'sveltekit-superforms';
 	import { zodClient } from 'sveltekit-superforms/adapters';
 	import { filterEventFormSchema } from './schema';
@@ -76,8 +74,6 @@
 
 			<tbody>
 				{#each data.events as event (event.id)}
-					{@const splittimesBaseUrl = dev ? SPLITTIMES_BASE_URL_DEV : SPLITTIMES_BASE_URL}
-
 					<tr>
 						<td>
 							<a href="/events/{event.id}/map">{event.name}</a>

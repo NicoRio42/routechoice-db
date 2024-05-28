@@ -5,7 +5,7 @@
 	import type { RunnerWithNullableLegsAndTrack } from '$lib/models/runner.model';
 	import { secondsToPrettyTime } from '$lib/utils/split-times';
 	import { onMount } from 'svelte';
-	import EnlargeToggle from './components/EnlargeToggle.svelte';
+	import EnlargeToggle from '../components/EnlargeToggle.svelte';
 	import LegCell from './components/LegCell.svelte';
 	import RunnerSelect from './components/RunnerSelect.svelte';
 

@@ -1,14 +1,11 @@
 <script lang="ts">
 	import { page } from '$app/stores';
-	import { pushNotification } from '$lib/components/Notifications.svelte';
-	import { getTracksFromLiveEvents } from '$lib/helpers';
 	import type { EventWithLiveEventsRunnersLegsAndControlPoints as Event } from '$lib/models/event.model.js';
-	import { eventStore } from '$lib/stores/event-store.js';
 	import { mapIsLoading } from '$lib/stores/map-loading.store';
 	import type { User } from 'lucia';
 	import type { LineString } from 'ol/geom.js';
 	import type { DrawEvent } from 'ol/interaction/Draw.js';
-	import { onDestroy, onMount, setContext } from 'svelte';
+	import { onMount, setContext } from 'svelte';
 	import { writable } from 'svelte/store';
 	import ActionButtons from './components/ActionButtons.svelte';
 	import AddRoutechoiceDialog from './components/AddRoutechoiceDialog.svelte';
@@ -22,11 +19,12 @@
 	import VectorLayer from './components/VectorLayer.svelte';
 	import { computeFitBoxAndAngleFromLegNumber, getLegNumberFromSearchParams } from './utils.js';
 
+	import { pushNotification } from '$lib/components/Notifications.svelte';
+	import { getTracksFromLiveEvents } from '$lib/helpers';
 	import './styles.css';
 
 	export let data;
 
-	$eventStore = { name: data.event.name, id: data.event.id };
 	$mapIsLoading = true;
 
 	let angle: number;
@@ -81,8 +79,6 @@
 	}
 
 	async function handleRunnerTimeOffsetChange(event: CustomEvent<string>): Promise<void> {}
-
-	onDestroy(() => ($eventStore = null));
 </script>
 
 <svelte:head>
