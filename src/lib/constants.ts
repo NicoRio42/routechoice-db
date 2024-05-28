@@ -15,7 +15,7 @@ type GpsProvider = {
 export const GPS_PROVIDERS: Record<string, GpsProvider> = {
 	loggator: {
 		urls: ['loggator.com', 'log.gl'],
-		apiBaseUrl: 'http://events.loggator.com/api',
+		apiBaseUrl: 'https://events.loggator.com/api',
 		getEventDataUrl: (eventId) => `https://events.loggator.com/api/events/${eventId}`,
 		getEventPointsUrl: (eventId) => `https://events.loggator.com/api/events/${eventId}/points.json`
 	},

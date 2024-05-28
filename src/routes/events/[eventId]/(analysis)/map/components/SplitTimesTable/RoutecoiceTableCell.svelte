@@ -1,7 +1,6 @@
 <script lang="ts">
 	import { enhance } from '$app/forms';
 	import { RolesEnum } from '$lib/models/enums/roles.enum.js';
-	import type { EventWithLiveEventsRunnersLegsAndControlPoints } from '$lib/models/event.model.js';
 	import type { RunnerWithNullableLegs as Runner } from '$lib/models/runner.model.js';
 	import type { Routechoice } from '$lib/server/db/schema.js';
 	import type { User } from 'lucia';
@@ -12,17 +11,14 @@
 	export let runner: Runner;
 
 	const user = getContext<Writable<User | null>>('user');
-	const event = getContext<Writable<EventWithLiveEventsRunnersLegsAndControlPoints>>('event');
 
-	$: manualRouteChoice = routechoices.find(
-		(rc) => runner.legs[0]?.fkManualRoutechoice === rc.id
-	)
+	$: manualRouteChoice = routechoices.find((rc) => runner.legs[0]?.fkManualRoutechoice === rc.id);
 
 	$: detectedRouteChoice = routechoices.find(
 		(rc) => runner.legs[0]?.fkDetectedRoutechoice === rc.id
-	)
+	);
 
-	$: selectedRoutechoice = manualRouteChoice ?? detectedRouteChoice ?? null
+	$: selectedRoutechoice = manualRouteChoice ?? detectedRouteChoice ?? null;
 
 	async function handleChange(
 		event: Event & {
@@ -44,12 +40,10 @@
 <td class="text-right">
 	{#if runner.legs !== null && runner.legs[0] !== null}
 		{#if $user !== null && ($user.role === RolesEnum.Enum.admin || runner.fkUser === $user.id)}
-			<form
-				method="post"
-				action="/events/{$event.id}/runners/{runner.id}/legs/{runner.legs[0].id}?/updateRoutechoice"
-				class="contents"
-				use:enhance
-			>
+			<form method="post" action="?/updateRoutechoice" class="contents" use:enhance>
+				<input type="hidden" name="runnerId" value={runner.id} />
+				<input type="hidden" name="runnerLegId" value={runner.legs[0].id} />
+
 				<select
 					class="routechoice-select"
 					name="routechoiceId"

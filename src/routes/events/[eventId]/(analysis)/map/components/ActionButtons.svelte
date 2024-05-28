@@ -1,7 +1,7 @@
 <script lang="ts">
 	import { page } from '$app/stores';
+	import { addSearchParamsToURL, deleteSearchParamsToURL } from '$lib/helpers';
 	import type { Leg } from '$lib/server/db/schema.js';
-	import { addSearchParamsToURL, deleteSearchParamsToURL } from '../utils.js';
 
 	export let legNumber: number;
 	export let legs: Leg[];
@@ -44,7 +44,8 @@
 
 	<button class="large btn" on:click={() => (isAutoAnalysisMode = !isAutoAnalysisMode)}>AA</button> -->
 
-	<button class="rounded-full flex items-center justify-center w-12 h-12 m-0 p-0"
+	<button
+		class="rounded-full flex items-center justify-center w-12 h-12 m-0 p-0"
 		on:click={() => (showRoutechoices = !showRoutechoices)}
 	>
 		<i
@@ -84,7 +85,7 @@
 
 	<a
 		role="button"
-		class="rounded-full !flex items-center justify-center w-12 h-12 m-0  p-0"
+		class="rounded-full !flex items-center justify-center w-12 h-12 m-0 p-0"
 		href={addSearchParamsToURL($page.url, 'legNumber', getNextLegNumber().toString())}
 		data-sveltekit-replacestate
 	>
@@ -93,7 +94,7 @@
 
 	<a
 		role="button"
-		class="rounded-full !flex items-center justify-center w-12 h-12 m-0  p-0"
+		class="rounded-full !flex items-center justify-center w-12 h-12 m-0 p-0"
 		href={$page.url.searchParams.has('hideSideBar')
 			? deleteSearchParamsToURL($page.url, 'hideSideBar')
 			: addSearchParamsToURL($page.url, 'hideSideBar', '')}
@@ -112,7 +113,7 @@
 		display: flex;
 		justify-content: center;
 		gap: 0.5rem;
-		z-index: 1;
+		z-index: 2;
 	}
 
 	select {

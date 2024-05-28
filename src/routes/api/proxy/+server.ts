@@ -1,8 +1,10 @@
-import { error } from '@sveltejs/kit';
+import { error, text } from '@sveltejs/kit';
 
-export function GET({ url, fetch }) {
+export async function GET({ url, fetch }) {
 	const urlToProxy = url.searchParams.get('urlToProxy');
 	if (urlToProxy === null) throw error(404);
 
-	return fetch(urlToProxy);
+	// Awaiting the response because of decoding issues
+	const response = await fetch(urlToProxy).then((r) => r.text());
+	return text(response);
 }

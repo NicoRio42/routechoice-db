@@ -1,13 +1,15 @@
 <script lang="ts">
 	import { page } from '$app/stores';
-	import { RolesEnum } from '$lib/models/enums/roles.enum.js';
+	import { pushNotification } from '$lib/components/Notifications.svelte';
+	import { getTracksFromLiveEvents } from '$lib/helpers';
 	import type { EventWithLiveEventsRunnersLegsAndControlPoints as Event } from '$lib/models/event.model.js';
+	import { eventStore } from '$lib/stores/event-store.js';
+	import { mapIsLoading } from '$lib/stores/map-loading.store';
 	import type { User } from 'lucia';
 	import type { LineString } from 'ol/geom.js';
 	import type { DrawEvent } from 'ol/interaction/Draw.js';
 	import { onDestroy, onMount, setContext } from 'svelte';
 	import { writable } from 'svelte/store';
-	import { eventStore } from '$lib/stores/event-store.js';
 	import ActionButtons from './components/ActionButtons.svelte';
 	import AddRoutechoiceDialog from './components/AddRoutechoiceDialog.svelte';
 	import Draw from './components/Draw.svelte';
@@ -18,11 +20,9 @@
 	import RunnerRoute from './components/RunnerRoute.svelte';
 	import SideBar from './components/SideBar.svelte';
 	import VectorLayer from './components/VectorLayer.svelte';
-	import './styles.css';
 	import { computeFitBoxAndAngleFromLegNumber, getLegNumberFromSearchParams } from './utils.js';
-	import { mapIsLoading } from './stores/map-loading.store.js';
-	import { pushNotification } from '$lib/components/Notifications.svelte';
-	import { getTracksFromLiveEvents } from '$lib/helpers';
+
+	import './styles.css';
 
 	export let data;
 
@@ -57,10 +57,6 @@
 	const user = writable<User | null>();
 	$: user.set(data.user);
 	setContext('user', user);
-
-	const event = writable<Event>();
-	$: event.set(data.event);
-	setContext('event', event);
 
 	onMount(() => {
 		getTracksFromLiveEvents(data.event.liveEvents, fetch, true)
@@ -100,7 +96,6 @@
 {#if data.event.legs.length !== 0}
 	<ManageRoutechoicesDialog
 		routechoices={data.event.legs[legNumber - 1].routechoices}
-		eventId={data.event.id}
 		bind:show={showManageRoutechoicesDialog}
 		on:startDrawingNewRoutechoice={() => (isDrawingNewRoutechoice = true)}
 	/>
@@ -116,7 +111,7 @@
 		</article>
 	{/if}
 
-	{#if data.event.legs.length !== 0 && data.user?.role === RolesEnum.Enum.admin}
+	{#if data.event.legs.length !== 0 && data.user?.role === 'admin'}
 		<button
 			on:click={() => (showManageRoutechoicesDialog = !showManageRoutechoicesDialog)}
 			class="hidden btn-unset absolute top-25 right-2 z-1 bg-white text-black w-6 h-6 sm:flex items-center justify-center"

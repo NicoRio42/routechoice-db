@@ -1,5 +1,5 @@
 <script lang="ts">
-	import { secondsToPrettyTime } from './utils.js';
+	import { secondsToPrettyTime } from '$lib/utils/split-times';
 
 	export let time: number;
 	export let rank: number | null;
@@ -19,10 +19,7 @@
 	}
 </script>
 
-<div
-	class:bold={rank !== null && rank <= 3}
-	class="wrapper {getTextColor(rank ?? 0)}"
->
+<div class:bold={rank !== null && rank <= 3} class="wrapper {getTextColor(rank ?? 0)}">
 	{secondsToPrettyTime(time)}
 
 	{#if rank !== null}

@@ -1,7 +1,7 @@
 <script lang="ts">
-	import { secondsToPrettyTime } from './utils.js';
-	import TimeRank from './TimeRank.svelte';
 	import type { RunnerLeg } from '$lib/server/db/schema.js';
+	import { secondsToPrettyTime } from '$lib/utils/split-times';
+	import TimeRank from './TimeRank.svelte';
 
 	export let runnerLeg: RunnerLeg | null;
 	export let isLastSplit = false;

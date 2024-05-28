@@ -1,7 +1,3 @@
-/**
- * @param seconds Time in seconds
- * @returns Time string in HH:MM:SS format
- */
 export const secondsToPrettyTime = (seconds: number) => {
 	// Convert seconds in number format to string in HH:MM:SS string format
 	const hours = Math.trunc(seconds / 3600);

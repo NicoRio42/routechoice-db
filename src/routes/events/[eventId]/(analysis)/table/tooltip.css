@@ -1,0 +1,40 @@
+.tooltip-container {
+	position: relative;
+}
+
+.tooltip-container:hover .tooltip,
+.tooltip-container:active .tooltip {
+	visibility: visible;
+	opacity: 1;
+}
+
+.tooltip {
+	z-index: 2;
+	display: inline-block;
+	position: absolute;
+	left: 50%;
+	transform: translateX(-50%);
+	top: 100%;
+	color: #fff;
+	background-color: #616161;
+	padding-left: 8px;
+	padding-right: 8px;
+	text-align: center;
+	border-radius: 4px;
+	visibility: hidden;
+	opacity: 0;
+	transition:
+		visibility 0s,
+		opacity 0.25s linear;
+}
+
+.tooltip-right {
+	top: 50%;
+	transform: translateY(-50%);
+	left: 100%;
+}
+
+.tooltip-top {
+	top: unset;
+	bottom: 100%;
+}

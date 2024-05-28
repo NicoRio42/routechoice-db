@@ -1,6 +1,5 @@
-import { transform, transformExtent } from 'ol/proj.js';
-import { ModesEnum } from './models/modes.enum.js';
 import type { EventWithLiveEventsRunnersLegsAndControlPoints } from '$lib/models/event.model.js';
+import { transform, transformExtent } from 'ol/proj.js';
 import type { CourseMap } from 'orienteering-js/models';
 
 export function computeFitBoxAndAngleFromLegNumber(
@@ -97,13 +96,6 @@ function computeFitBoxAndAngleFromCourseMap(
 	return [extend as [number, number, number, number], 0];
 }
 
-export function getModeFromSearchParams(searchParams: URLSearchParams): ModesEnum {
-	const modeFromParams = searchParams.get('mode');
-	if (modeFromParams === ModesEnum.DRAW) return ModesEnum.DRAW;
-
-	return ModesEnum.ANALYSIS;
-}
-
 export function getLegNumberFromSearchParams(searchParams: URLSearchParams): number {
 	const legNumberFromParams = searchParams.get('legNumber');
 	if (legNumberFromParams === null) return 1;
@@ -111,16 +103,4 @@ export function getLegNumberFromSearchParams(searchParams: URLSearchParams): num
 	if (isNaN(parsedLegNumber)) return 1;
 
 	return parsedLegNumber;
-}
-
-export function addSearchParamsToURL(url: URL, name: string, value: string): string {
-	const newURL = new URL(url);
-	newURL.searchParams.set(name, value);
-	return newURL.toString();
-}
-
-export function deleteSearchParamsToURL(url: URL, name: string): string {
-	const newURL = new URL(url);
-	newURL.searchParams.delete(name);
-	return newURL.toString();
 }

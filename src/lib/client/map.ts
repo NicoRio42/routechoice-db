@@ -1,7 +1,7 @@
 import { browser } from '$app/environment';
-import type { CourseMap, MapCalibration } from 'orienteering-js/models';
-import { mapIsLoading } from '../../routes/events/[eventId]/stores/map-loading.store.js';
 import { CLOUDINARY_CLOUD_NAME } from '$lib/constants.js';
+import { mapIsLoading } from '$lib/stores/map-loading.store';
+import type { CourseMap, MapCalibration } from 'orienteering-js/models';
 
 export const cachedImages: Record<string, HTMLImageElement> = {};
 const IOS_CANVAS_MAX_PIXELS = 16777216;

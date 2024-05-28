@@ -81,7 +81,7 @@
 
 					<tr>
 						<td>
-							<a href="/events/{event.id}">{event.name}</a>
+							<a href="/events/{event.id}/map">{event.name}</a>
 						</td>
 
 						<td>{new Date(event.startTime).toLocaleString()}</td>

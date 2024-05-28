@@ -445,3 +445,15 @@ export function addAlpha(color: string, opacity: number) {
 	const _opacity = Math.round(Math.min(Math.max(opacity || 1, 0), 1) * 255);
 	return color.slice(0, 7) + _opacity.toString(16).toUpperCase();
 }
+
+export function addSearchParamsToURL(url: URL, name: string, value: string): string {
+	const newURL = new URL(url);
+	newURL.searchParams.set(name, value);
+	return newURL.toString();
+}
+
+export function deleteSearchParamsToURL(url: URL, name: string): string {
+	const newURL = new URL(url);
+	newURL.searchParams.delete(name);
+	return newURL.toString();
+}

@@ -85,7 +85,7 @@
 		resize: horizontal;
 		overflow-x: auto;
 		border-right: 1px solid var(--pico-table-border-color);
-		z-index: 1;
+		z-index: 2;
 	}
 
 	.main-wrapper {

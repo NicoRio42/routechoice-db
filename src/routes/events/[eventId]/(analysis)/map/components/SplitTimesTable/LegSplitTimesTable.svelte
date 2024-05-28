@@ -4,9 +4,9 @@
 	import { RolesEnum } from '$lib/models/enums/roles.enum.js';
 	import type { RunnerWithNullableLegsAndTrack } from '$lib/models/runner.model.js';
 	import type { Routechoice } from '$lib/server/db/schema.js';
+	import { fullNameToShortName } from '$lib/utils/split-times';
 	import LegCell from './LegCell.svelte';
 	import RoutechoiceTableCell from './RoutecoiceTableCell.svelte';
-	import { fullNameToShortName } from './utils.js';
 
 	export let selectedRunners: string[];
 	export let sortedRunnersWithOneLeg: RunnerWithNullableLegsAndTrack[];

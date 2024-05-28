@@ -1,9 +1,4 @@
-import {
-	getEventMap,
-	getTracksFromLiveEvents,
-	sortLegs,
-	sortRunnersAndRunnersLegs
-} from '$lib/helpers.js';
+import { getEventMap, sortLegs, sortRunnersAndRunnersLegs } from '$lib/helpers.js';
 import { db } from '$lib/server/db/db.js';
 import { event as eventTable } from '$lib/server/db/schema.js';
 import { error, redirect } from '@sveltejs/kit';

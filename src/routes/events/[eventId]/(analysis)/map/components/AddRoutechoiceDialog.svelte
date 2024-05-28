@@ -1,16 +1,12 @@
 <script lang="ts">
-	import type { EventWithLiveEventsRunnersLegsAndControlPoints } from '$lib/models/event.model.js';
 	import type { LegWithRoutechoices } from '$lib/models/leg.model.js';
 	import type { LineString } from 'ol/geom.js';
 	import { names, routesColors } from 'orienteering-js/ocad';
-	import { createEventDispatcher, getContext } from 'svelte';
-	import type { Writable } from 'svelte/store';
+	import { createEventDispatcher } from 'svelte';
 	import { fade } from 'svelte/transition';
 
 	export let leg: LegWithRoutechoices;
 	export let currentDrawnRoutechoice: LineString;
-
-	const event = getContext<Writable<EventWithLiveEventsRunnersLegsAndControlPoints>>('event');
 
 	let name: string;
 	let color: string;
@@ -39,7 +35,9 @@
 
 <dialog open transition:fade>
 	<article>
-		<form method="post" action="/events/{$event.id}/legs/{leg.id}/routechoices?/add" class="min-w-75">
+		<form method="post" action="?/addRoutechoice" class="min-w-75">
+			<input type="hidden" name="legId" value={leg.id} />
+
 			<label for="name">
 				Name
 
@@ -63,7 +61,7 @@
 			/>
 
 			<button type="submit">Add Routechoice</button>
-			
+
 			<button type="button" class="outline" on:click={() => dispatchCancel('cancel')}>
 				Cancel
 			</button>

@@ -243,6 +243,6 @@ export const actions = {
 
 		await libsqlClient.batch(statements);
 
-		throw redirect(302, `/events/${eventId}`);
+		throw redirect(302, `/events/${eventId}/map`);
 	}
 };
