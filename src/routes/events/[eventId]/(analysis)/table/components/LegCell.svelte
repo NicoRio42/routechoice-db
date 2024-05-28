@@ -11,7 +11,7 @@
 		if (runnerLeg === null || runnerLeg.timeLoss === 0) return '0%';
 		if (runnerLeg.timeLoss > 60) return '100%';
 		if (runnerLeg.timeLoss < 20) return '20%';
-		return `${(runnerLeg.timeLoss * 100) / 60}%`;
+		return `${Math.round((runnerLeg.timeLoss * 100) / 60)}%`;
 	}
 </script>
 
@@ -66,7 +66,7 @@
 		background-color: color-mix(
 			in srgb,
 			hsl(0, 54%, 70%) var(--mistake-opacity),
-			var(--background-color)
+			var(--pico-background-color)
 		);
 	}
 
@@ -75,7 +75,7 @@
 			background-color: color-mix(
 				in srgb,
 				hsl(0, 41%, 39%) var(--mistake-opacity),
-				var(--background-color)
+				var(--pico-background-color)
 			);
 		}
 	}
@@ -84,7 +84,7 @@
 		background-color: color-mix(
 			in srgb,
 			hsl(0, 54%, 70%) var(--mistake-opacity),
-			var(--background-color)
+			var(--pico-background-color)
 		);
 	}
 
@@ -92,7 +92,7 @@
 		background-color: color-mix(
 			in srgb,
 			hsl(0, 41%, 39%) var(--mistake-opacity),
-			var(--background-color)
+			var(--pico-background-color)
 		);
 	}
 
