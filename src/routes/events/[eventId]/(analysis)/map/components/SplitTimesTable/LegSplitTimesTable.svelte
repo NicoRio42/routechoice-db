@@ -49,7 +49,9 @@
 
 			<th class="sticky-header text-end">Time</th>
 
-			<th class="sticky-header right">RC</th>
+			{#if legRoutechoices.length !== 0}
+				<th class="sticky-header right">RC</th>
+			{/if}
 
 			<th class="sticky-header text-center"
 				><input
@@ -71,10 +73,8 @@
 
 			<LegCell {runnerLeg} {isLastSplit}></LegCell>
 
-			{#if legRoutechoices.length > 0}
+			{#if legRoutechoices.length !== 0}
 				<RoutechoiceTableCell routechoices={legRoutechoices} {runner} />
-			{:else}
-				<td />
 			{/if}
 
 			{#if runner.track !== null}

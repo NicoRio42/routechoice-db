@@ -82,14 +82,18 @@
 	}
 </script>
 
-<h3>Fastest time</h3>
+{#if legRoutechoices.length === 0}
+	<p class="text-center text-6 mt-8">No routechoice</p>
+{:else}
+	<h3>Fastest time</h3>
 
-<Graph data={fasestTimeGraphData} suffix={' s'} />
+	<Graph data={fasestTimeGraphData} suffix={' s'} />
 
-<h3>Average of first 25%</h3>
+	<h3>Average of first 25%</h3>
 
-<Graph data={firstQuarterTimeAverageGraphData} suffix={' s'} />
+	<Graph data={firstQuarterTimeAverageGraphData} suffix={' s'} />
 
-<h3>Runners per routechoice</h3>
+	<h3>Runners per routechoice</h3>
 
-<Graph data={runnerNumberGraphData} />
+	<Graph data={runnerNumberGraphData} />
+{/if}
