@@ -48,6 +48,21 @@ label {
 	}
 }
 
+[data-theme='light'],
+:root:not([data-theme='dark']) {
+	--pico-table-row-stripped-background-color: #f9fafa;
+}
+
+@media only screen and (prefers-color-scheme: dark) {
+	:root:not([data-theme]) {
+		--pico-table-row-stripped-background-color: #161b23;
+	}
+}
+
+[data-theme='dark'] {
+	--pico-table-row-stripped-background-color: #161b23;
+}
+
 .btn-unset {
 	margin: 0;
 	padding: 0;

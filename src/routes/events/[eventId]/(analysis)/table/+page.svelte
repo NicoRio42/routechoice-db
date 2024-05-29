@@ -58,7 +58,7 @@
 {/if}
 
 <figure class="wrapper overflow-auto grow z-1">
-	<table role="grid">
+	<table class="striped">
 		<thead>
 			<tr>
 				<th class="sticky-top sticky-left compact-toggle name-th z-index-1">
@@ -126,7 +126,7 @@
 				</tr>
 			{/each}
 
-			<tr class="relative">
+			<tr class="relative bg-background-color">
 				<td class="sticky-left sticky-bottom selected-runner-td z-index-1 px-1">
 					<a
 						href={addSearchParamsToURL($page.url, 'showRunnerSelect', 'true')}
@@ -193,13 +193,11 @@
 	}
 
 	table {
-		font-size: 1rem;
+		font-size: 0.875rem;
 	}
 
-	@media (max-width: 768px) {
-		table {
-			font-size: 0.875rem;
-		}
+	table :global(td) {
+		padding: calc(var(--pico-spacing) / 2);
 	}
 
 	.center {
