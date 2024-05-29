@@ -1,7 +1,8 @@
 <script lang="ts">
 	import type { RunnerLeg } from '$lib/server/db/schema.js';
 	import { secondsToPrettyTime } from '$lib/utils/split-times';
-	import TimeRank from './TimeRank.svelte';
+	import TimeRank from '../../../components/TimeRank.svelte';
+	import CompactTimeRank from './CompactTimeRank.svelte';
 
 	export let runnerLeg: RunnerLeg | null;
 	export let isLastSplit = false;
@@ -21,7 +22,7 @@
 	{#if runnerLeg}
 		<div class="nowrap tooltip-container">
 			{#if runnerLeg?.time}
-				<TimeRank time={runnerLeg.time} rank={runnerLeg?.rankSplit} {isLastSplit} />
+				<CompactTimeRank time={runnerLeg.time} rank={runnerLeg?.rankSplit} {isLastSplit} />
 			{/if}
 
 			{#if runnerLeg.timeBehindSplit || runnerLeg.timeLoss}
@@ -41,9 +42,9 @@
 			{/if}
 		</div>
 
-		<div class="nowrap tooltip-container">
+		<div class="nowrap tooltip-container text-right">
 			{#if runnerLeg.timeOverall}
-				<TimeRank time={runnerLeg.timeOverall} rank={runnerLeg.rankOverall} />
+				<small>{secondsToPrettyTime(runnerLeg.timeOverall)}&nbsp;({runnerLeg.rankOverall})</small>
 			{/if}
 
 			{#if runnerLeg.timeBehindOverall}

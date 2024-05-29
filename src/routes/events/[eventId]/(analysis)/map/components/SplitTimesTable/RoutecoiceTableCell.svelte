@@ -37,36 +37,34 @@
 	}
 </script>
 
-<td class="text-right">
-	{#if runner.legs !== null && runner.legs[0] !== null}
-		{#if $user !== null && ($user.role === RolesEnum.Enum.admin || runner.fkUser === $user.id)}
-			<form method="post" action="?/updateRoutechoice" class="contents" use:enhance>
-				<input type="hidden" name="runnerId" value={runner.id} />
-				<input type="hidden" name="runnerLegId" value={runner.legs[0].id} />
+{#if runner.legs !== null && runner.legs[0] !== null}
+	{#if $user !== null && ($user.role === RolesEnum.Enum.admin || runner.fkUser === $user.id)}
+		<form method="post" action="?/updateRoutechoice" class="contents" use:enhance>
+			<input type="hidden" name="runnerId" value={runner.id} />
+			<input type="hidden" name="runnerLegId" value={runner.legs[0].id} />
 
-				<select
-					class="routechoice-select"
-					name="routechoiceId"
-					style:color={selectedRoutechoice?.color}
-					value={selectedRoutechoice?.id ?? null}
-					on:change={handleChange}
-				>
-					<option value={null} />
+			<select
+				class="routechoice-select"
+				name="routechoiceId"
+				style:color={selectedRoutechoice?.color}
+				value={selectedRoutechoice?.id ?? null}
+				on:change={handleChange}
+			>
+				<option value={null} />
 
-					{#each routechoices as routechoice}
-						<option style:color={routechoice.color} value={routechoice.id}>
-							{routechoice.name}
-						</option>
-					{/each}
-				</select>
-			</form>
-		{:else if manualRouteChoice !== undefined}
-			<strong style:color={manualRouteChoice.color}>{manualRouteChoice.name}</strong>
-		{:else if detectedRouteChoice !== undefined}
-			<strong style:color={detectedRouteChoice.color}>{detectedRouteChoice.name}</strong>
-		{/if}
+				{#each routechoices as routechoice}
+					<option style:color={routechoice.color} value={routechoice.id}>
+						{routechoice.name}
+					</option>
+				{/each}
+			</select>
+		</form>
+	{:else if manualRouteChoice !== undefined}
+		<strong style:color={manualRouteChoice.color}>{manualRouteChoice.name}</strong>
+	{:else if detectedRouteChoice !== undefined}
+		<strong style:color={detectedRouteChoice.color}>{detectedRouteChoice.name}</strong>
 	{/if}
-</td>
+{/if}
 
 <style>
 	select.routechoice-select {

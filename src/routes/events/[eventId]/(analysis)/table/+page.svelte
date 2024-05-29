@@ -82,7 +82,7 @@
 		<tbody>
 			{#each runners as runner (runner.id)}
 				<tr>
-					<td class="sticky-left z-index-1">
+					<td class="sticky-left z-index-1 !px-1 md:!px-2">
 						<div class="name-td-content">
 							{#if runner.rank}
 								{runner.rank}
@@ -126,17 +126,13 @@
 				</tr>
 			{/each}
 
-			<tr class="relative bg-background-color">
+			<tr class="relative">
 				<td class="sticky-left sticky-bottom selected-runner-td z-index-1 px-1">
 					<a
 						href={addSearchParamsToURL($page.url, 'showRunnerSelect', 'true')}
 						role="button"
 						class="outline !flex !w-full items-center justify-between py0 px1 text-3.5 min-h-10"
 					>
-						{#if selectedRunner?.rank}
-							{selectedRunner.rank}
-						{/if}
-
 						<div class=" grow text-left">
 							{#if compact}
 								<span class="my-2 nowrap">

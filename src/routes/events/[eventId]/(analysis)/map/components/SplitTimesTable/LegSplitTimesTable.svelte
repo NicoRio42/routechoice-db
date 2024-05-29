@@ -5,6 +5,8 @@
 	import type { RunnerWithNullableLegsAndTrack } from '$lib/models/runner.model.js';
 	import type { Routechoice } from '$lib/server/db/schema.js';
 	import { fullNameToShortName } from '$lib/utils/split-times';
+	import GreenJersey from '../../../components/GreenJersey.svelte';
+	import Medal from '../../../components/Medal.svelte';
 	import LegCell from './LegCell.svelte';
 	import RoutechoiceTableCell from './RoutecoiceTableCell.svelte';
 
@@ -42,9 +44,11 @@
 	}
 </script>
 
-<table>
+<table class="striped">
 	<thead>
 		<tr>
+			<th class="sticky-header"></th>
+
 			<th class="sticky-header">Runners</th>
 
 			<th class="sticky-header text-end">Time</th>
@@ -63,35 +67,52 @@
 		</tr>
 	</thead>
 
-	{#each sortedRunnersWithOneLeg as runner (runner.id)}
-		{@const runnerLeg = runner.legs[0]}
+	<tbody>
+		{#each sortedRunnersWithOneLeg as runner (runner.id)}
+			{@const runnerLeg = runner.legs[0]}
 
-		<tr>
-			<td data-tooltip={`${runner.firstName} ${runner.lastName}`}>
-				{fullNameToShortName(runner.firstName, runner.lastName)}
-			</td>
-
-			<LegCell {runnerLeg} {isLastSplit}></LegCell>
-
-			{#if legRoutechoices.length !== 0}
-				<RoutechoiceTableCell routechoices={legRoutechoices} {runner} />
-			{/if}
-
-			{#if runner.track !== null}
-				<td class="text-center">
-					<input
-						type="checkbox"
-						value={runner.id}
-						checked={selectedRunners.includes(runner.id)}
-						on:change={(e) => handleShowTrackCheckboxChange(e, runner.id)}
-						style:--pico-border-color={runner.track.color}
-						style:--pico-primary-background={runner.track.color}
-						style:--pico-form-element-focus-color={addAlpha(runner.track.color, 0.13)}
-					/>
+			<tr>
+				<td class="!p-0">
+					{#if runnerLeg?.rankSplit}
+						<div class="flex justify-center items-center">
+							{#if runnerLeg.rankSplit > 3}
+								{runnerLeg.rankSplit}
+							{:else if isLastSplit && runnerLeg.rankSplit === 1}
+								<GreenJersey />
+							{:else}
+								<Medal rank={runnerLeg.rankSplit} />
+							{/if}
+						</div>
+					{/if}
 				</td>
-			{/if}
 
-			<!-- {#if runner.track !== null && $isUserAdminStore && false}
+				<td data-tooltip={`${runner.firstName} ${runner.lastName}`}>
+					{fullNameToShortName(runner.firstName, runner.lastName)}
+				</td>
+
+				<LegCell {runnerLeg} {isLastSplit}></LegCell>
+
+				<td class="text-right">
+					{#if legRoutechoices.length !== 0}
+						<RoutechoiceTableCell routechoices={legRoutechoices} {runner} />
+					{/if}
+				</td>
+
+				<td class="text-center">
+					{#if runner.track !== null}
+						<input
+							type="checkbox"
+							value={runner.id}
+							checked={selectedRunners.includes(runner.id)}
+							on:change={(e) => handleShowTrackCheckboxChange(e, runner.id)}
+							style:--pico-border-color={runner.track.color}
+							style:--pico-primary-background={runner.track.color}
+							style:--pico-form-element-focus-color={addAlpha(runner.track.color, 0.13)}
+						/>
+					{/if}
+				</td>
+
+				<!-- {#if runner.track !== null && $isUserAdminStore && false}
 				<td class="pen-td">
 					<button
 						on:click={() => dispatch('changeRunnerTimeOffset', runner.id)}
@@ -100,31 +121,31 @@
 					>
 				</td>
 			{/if} -->
-		</tr>
-	{:else}
-		<tr>
-			<td colspan="4" class="text-8 text-center border-none">
-				{#if $page.data.event.legs.length === 0}
-					<p class="mt-8">No course yet.</p>
+			</tr>
+		{:else}
+			<tr>
+				<td colspan="4" class="text-8 text-center border-none">
+					{#if $page.data.event.legs.length === 0}
+						<p class="mt-8">No course yet.</p>
 
-					{#if $page.data.user?.role === RolesEnum.Enum.admin}
-						<a href="/events/{$page.data.event.id}/manager/course-and-routechoices" class="text-6"
-							>Add course and routechoices</a
-						>
-					{/if}
-				{:else}
-					<p class="mt-8">No split times yet.</p>
+						{#if $page.data.user?.role === RolesEnum.Enum.admin}
+							<a href="/events/{$page.data.event.id}/manager/course-and-routechoices" class="text-6"
+								>Add course and routechoices</a
+							>
+						{/if}
+					{:else}
+						<p class="mt-8">No split times yet.</p>
 
-					{#if $page.data.user?.role === RolesEnum.Enum.admin}
-						<a href="/events/{$page.data.event.id}/manager/split-times" class="text-6"
-							>Add split times</a
-						>
+						{#if $page.data.user?.role === RolesEnum.Enum.admin}
+							<a href="/events/{$page.data.event.id}/manager/split-times" class="text-6"
+								>Add split times</a
+							>
+						{/if}
 					{/if}
-				{/if}
-			</td>
-		</tr>
-	{/each}
-	<tbody />
+				</td>
+			</tr>
+		{/each}
+	</tbody>
 </table>
 
 <style>
