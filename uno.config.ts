@@ -9,7 +9,8 @@ export default defineConfig({
 			primary: 'var(--pico-primary)',
 			tableBorderColor: 'var(--pico-table-border-color)',
 			backgroundColor: 'var(--pico-background-color)',
-			h1Color: 'var(--pico-h1-color)'
+			h1Color: 'var(--pico-h1-color)',
+			'pico-dropdown-hover-background-color': 'var(--pico-dropdown-hover-background-color)'
 		}
 	}
 });

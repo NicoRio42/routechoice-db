@@ -17,7 +17,7 @@
 </script>
 
 <div
-	class="absolute top-13 left-50% -translate-x-50% z-2"
+	class="absolute top-14 left-50% -translate-x-50% z-2"
 	use:clickOutside={() => (showDropdown = false)}
 >
 	<div class="bg-background-color rounded">
@@ -41,25 +41,37 @@
 
 	{#if showDropdown}
 		<ul
-			class="p-4 m-0 mt-1 rounded shadow-2xl bg-background-color flex flex-col gap-2"
+			class="pl-0 py-2 m-0 mt-1 rounded shadow-2xl bg-background-color"
 			transition:fade={{ duration: 125 }}
 		>
-			<li class="list-none">
-				<a class="decoration-none" href="/events/{$page.params.eventId}/map">Map</a>
+			<li class="list-none m-0">
+				<a
+					class="block decoration-none w-full px-4 py-1.5 hover:bg-pico-dropdown-hover-background-color"
+					href="/events/{$page.params.eventId}/map">Map</a
+				>
 			</li>
 
-			<li class="list-none">
-				<a class="decoration-none" href="/events/{$page.params.eventId}/table">Split times</a>
+			<li class="list-none m-0">
+				<a
+					class="block decoration-none w-full px-4 py-1.5 hover:bg-pico-dropdown-hover-background-color"
+					href="/events/{$page.params.eventId}/table">Split times</a
+				>
 			</li>
 
-			<li class="list-none">
-				<a class="decoration-none" href="/events/{$page.params.eventId}/leader-graph">
+			<li class="list-none m-0">
+				<a
+					class="block decoration-none w-full px-4 py-1.5 hover:bg-pico-dropdown-hover-background-color"
+					href="/events/{$page.params.eventId}/leader-graph"
+				>
 					Leader graph
 				</a>
 			</li>
 
-			<li class="list-none">
-				<a class="decoration-none" href="/events/{$page.params.eventId}/superman-graph">
+			<li class="list-none m-0">
+				<a
+					class="block decoration-none w-full px-4 py-1.5 hover:bg-pico-dropdown-hover-background-color"
+					href="/events/{$page.params.eventId}/superman-graph"
+				>
 					Superman graph
 				</a>
 			</li>
