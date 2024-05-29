@@ -108,7 +108,7 @@
 	}
 
 	.graph-section {
-		padding: 1rem 0.25rem 0 1.5rem;
+		padding: 1rem 1rem 0;
 	}
 
 	.toggle-sidebar {

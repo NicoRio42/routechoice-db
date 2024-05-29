@@ -1,6 +1,7 @@
 <script lang="ts">
 	import { Map, View } from 'ol';
 	import DoubleClickZoom from 'ol/interaction/DoubleClickZoom.js';
+	import DblClickDragZoom from 'ol/interaction/DblClickDragZoom.js';
 	import 'ol/ol.css';
 	import { onDestroy, onMount, setContext } from 'svelte';
 
@@ -26,10 +27,12 @@
 
 		map = new Map({
 			target: 'mapviewer',
-			view
+			view,
+			controls: []
 		});
 
 		map.addInteraction(new DoubleClickZoom());
+		map.addInteraction(new DblClickDragZoom({ delta: -0.01 }));
 
 		view.fit(fitBox, { padding });
 	});

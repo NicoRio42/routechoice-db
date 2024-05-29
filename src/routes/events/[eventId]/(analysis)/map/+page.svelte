@@ -110,7 +110,7 @@
 	{#if data.event.legs.length !== 0 && data.user?.role === 'admin'}
 		<button
 			on:click={() => (showManageRoutechoicesDialog = !showManageRoutechoicesDialog)}
-			class="hidden btn-unset absolute top-25 right-2 z-1 bg-white text-black w-6 h-6 sm:flex items-center justify-center"
+			class="flex btn-unset absolute top-2 right-2 z-1 bg-white text-black w-6 h-6 items-center justify-center"
 		>
 			{#if showManageRoutechoicesDialog}
 				<i class="block i-carbon-edit-off"></i>
