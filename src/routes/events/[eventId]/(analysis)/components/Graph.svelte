@@ -146,9 +146,11 @@
 				/>
 			{/each}
 
-			{#each selectedRunners as runner, runnerIndex (runner.id)}
+			{#each selectedRunners as runner (runner.id)}
+				{@const selectedRunnerIndex = validRunners.findIndex((r) => r.id === runner.id)}
+
 				<Polyline
-					color={routesColors[runnerIndex] ?? 'black'}
+					color={routesColors[selectedRunnerIndex] ?? 'black'}
 					points={getCoordsFromRunner(runner)}
 				/>
 			{/each}
