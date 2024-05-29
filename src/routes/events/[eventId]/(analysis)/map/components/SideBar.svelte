@@ -50,32 +50,32 @@
 <!-- <SummaryPanel {legRoutechoices} {sortedRunnersWithOneLeg} /> -->
 
 <aside class:toggle-sidebar={!hideSideBar}>
-	<div class="main-wrapper">
-		<Toggle bind:isFirstValueSelected={isInSplitMode} firstLabel={'Splits'} secondLabel={'Graph'} />
+	<Toggle bind:isFirstValueSelected={isInSplitMode} firstLabel={'Splits'} secondLabel={'Graph'} />
 
-		<section style:display={isInSplitMode ? 'none' : 'block'} class="routechoices-graph">
-			<LegStatistics {legRoutechoices} {sortedRunnersWithOneLeg} />
-		</section>
+	<div class="w-full overflow-x-hidden">
+		<div class="main-wrapper" class:-translate-x-50%={!isInSplitMode}>
+			<section class="graph-section">
+				<LegSplitTimesTable
+					{sortedRunnersWithOneLeg}
+					{legRoutechoices}
+					isLastSplit={legNumber === legs.length}
+					bind:selectedRunners
+					on:routechoiceChange
+					on:changeRunnerTimeOffset
+				/>
+			</section>
 
-		<section
-			style:display={isInSplitMode ? 'block' : 'none'}
-			class="leg-split-times-table-container"
-		>
-			<LegSplitTimesTable
-				{sortedRunnersWithOneLeg}
-				{legRoutechoices}
-				isLastSplit={legNumber === legs.length}
-				bind:selectedRunners
-				on:routechoiceChange
-				on:changeRunnerTimeOffset
-			/>
-		</section>
+			<section class="splits-section">
+				<LegStatistics {legRoutechoices} {sortedRunnersWithOneLeg} />
+			</section>
+		</div>
 	</div>
 </aside>
 
 <style>
 	aside {
 		display: flex;
+		flex-direction: column;
 		transform: translateX(-100%);
 		position: absolute;
 		top: 0;
@@ -88,13 +88,28 @@
 		border-right: 1px solid var(--pico-table-border-color);
 		z-index: 2;
 		transition: transform 0.25s;
+		padding-top: 0.5rem;
 	}
 
 	.main-wrapper {
 		flex-grow: 1;
+		overflow-x: hidden;
+		width: 200%;
+		height: 100%;
 		display: flex;
-		flex-direction: column;
-		padding: 1rem 0 1rem;
+		transition: transform 0.25s;
+	}
+
+	.splits-section,
+	.graph-section {
+		overflow-y: auto;
+		width: 100%;
+		flex-grow: 1;
+		margin: 0;
+	}
+
+	.graph-section {
+		padding: 0 0.5rem;
 	}
 
 	.toggle-sidebar {
@@ -102,24 +117,11 @@
 		transition: transform 0.25s;
 	}
 
-	.leg-split-times-table-container {
-		flex: 1 1 auto;
-		overflow-y: auto;
-		margin: 0;
-	}
-
-	.routechoices-graph {
-		overflow-y: auto;
-		padding-left: 0.5rem;
-		margin-bottom: 0;
-	}
-
 	@media screen and (max-width: 768px) {
 		aside {
 			width: 100% !important;
 			right: 0;
 			padding-bottom: 5rem;
-			flex-direction: column;
 			transform: translateX(0);
 		}
 
