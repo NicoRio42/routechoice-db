@@ -92,19 +92,18 @@
 	}
 
 	.main-wrapper {
-		flex-grow: 1;
 		overflow-x: hidden;
 		width: 200%;
 		height: 100%;
-		display: flex;
+		display: grid;
+		grid-template-columns: 1fr 1fr;
 		transition: transform 0.25s;
 	}
 
 	.splits-section,
 	.graph-section {
 		overflow-y: auto;
-		width: 100%;
-		flex-grow: 1;
+
 		margin: 0;
 	}
 

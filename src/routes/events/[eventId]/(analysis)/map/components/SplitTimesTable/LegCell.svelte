@@ -17,7 +17,7 @@
 
 <td
 	style:--mistake-opacity={computeMistakeOpacity()}
-	class:mistake={runnerLeg !== null && runnerLeg.timeLoss !== 0}
+	class:mistake={runnerLeg !== null && runnerLeg.timeLoss >= 20}
 >
 	{#if runnerLeg}
 		<div class="nowrap tooltip-container">

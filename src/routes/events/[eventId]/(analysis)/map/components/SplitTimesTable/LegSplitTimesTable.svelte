@@ -92,11 +92,9 @@
 
 				<LegCell {runnerLeg} {isLastSplit}></LegCell>
 
-				<td class="text-right">
-					{#if legRoutechoices.length !== 0}
-						<RoutechoiceTableCell routechoices={legRoutechoices} {runner} />
-					{/if}
-				</td>
+				{#if legRoutechoices.length !== 0}
+					<RoutechoiceTableCell routechoices={legRoutechoices} {runner} />
+				{/if}
 
 				<td class="text-center">
 					{#if runner.track !== null}
