@@ -54,7 +54,7 @@
 
 	<div class="w-full overflow-x-hidden">
 		<div class="main-wrapper" class:-translate-x-50%={!isInSplitMode}>
-			<section class="graph-section">
+			<section class="splits-section">
 				<LegSplitTimesTable
 					{sortedRunnersWithOneLeg}
 					{legRoutechoices}
@@ -65,7 +65,7 @@
 				/>
 			</section>
 
-			<section class="splits-section">
+			<section class="graph-section">
 				<LegStatistics {legRoutechoices} {sortedRunnersWithOneLeg} />
 			</section>
 		</div>
@@ -109,7 +109,7 @@
 	}
 
 	.graph-section {
-		padding: 0 0.5rem;
+		padding: 1rem 0.25rem 0 1.5rem;
 	}
 
 	.toggle-sidebar {
