@@ -38,7 +38,7 @@
 </script>
 
 <nav
-	class="container-fluid border-b-2 border-b-solid border-b-table-border-color [view-transition-name:top-nav]"
+	class="container-fluid border-b-2 border-b-solid border-b-table-border-color z-2 [view-transition-name:top-nav]"
 >
 	<ul class="logo-list min-w-0 grow !mr0">
 		<li class="link-list-item">
