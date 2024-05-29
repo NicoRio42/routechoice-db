@@ -1,13 +1,11 @@
 <script lang="ts">
-	import { RolesEnum } from '$lib/models/enums/roles.enum.js';
-	import type { User } from 'lucia';
-	import ThemeSwitch from './ThemeSwitch.svelte';
 	import { enhance } from '$app/forms';
 	import { page } from '$app/stores';
+	import { RolesEnum } from '$lib/models/enums/roles.enum.js';
 	import { eventStore } from '$lib/stores/event-store.js';
-	import { dev } from '$app/environment';
-	import { SPLITTIMES_BASE_URL, SPLITTIMES_BASE_URL_DEV } from '$lib/constants.js';
+	import type { User } from 'lucia';
 	import { pushNotification } from './Notifications.svelte';
+	import ThemeSwitch from './ThemeSwitch.svelte';
 
 	export let user: User | null;
 
@@ -39,7 +37,9 @@
 	}
 </script>
 
-<nav class="container-fluid border-b-2 border-b-solid border-b-table-border-color">
+<nav
+	class="container-fluid border-b-2 border-b-solid border-b-table-border-color [view-transition-name:top-nav]"
+>
 	<ul class="logo-list min-w-0 grow !mr0">
 		<li class="link-list-item">
 			<a
@@ -63,8 +63,6 @@
 		</li>
 
 		{#if $eventStore !== null}
-			{@const splittimesBaseUrl = dev ? SPLITTIMES_BASE_URL_DEV : SPLITTIMES_BASE_URL}
-
 			<li
 				class="m-0 sm:ml-4 sm:pl-4 pl-2 py-1 sm:border-l-1 sm:border-l-solid sm:border-l-table-border-color whitespace-nowrap text-ellipsis overflow-hidden min-w-0"
 			>

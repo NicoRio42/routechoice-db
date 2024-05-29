@@ -75,7 +75,8 @@
 
 <style>
 	aside {
-		display: none;
+		display: flex;
+		transform: translateX(-100%);
 		position: absolute;
 		top: 0;
 		bottom: 0;
@@ -86,6 +87,7 @@
 		overflow-x: auto;
 		border-right: 1px solid var(--pico-table-border-color);
 		z-index: 2;
+		transition: transform 0.25s;
 	}
 
 	.main-wrapper {
@@ -96,7 +98,8 @@
 	}
 
 	.toggle-sidebar {
-		display: flex;
+		transform: translateX(0);
+		transition: transform 0.25s;
 	}
 
 	.leg-split-times-table-container {
@@ -116,12 +119,12 @@
 			width: 100% !important;
 			right: 0;
 			padding-bottom: 5rem;
-			display: flex;
 			flex-direction: column;
+			transform: translateX(0);
 		}
 
 		.toggle-sidebar {
-			display: none;
+			transform: translateX(-100%);
 		}
 	}
 </style>

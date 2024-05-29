@@ -17,7 +17,7 @@
 </script>
 
 <div
-	class="absolute top-14 left-50% -translate-x-50% z-2"
+	class="absolute top-14 left-50% -translate-x-50% z-2 [view-transition-name:analysis-dropdown]"
 	use:clickOutside={() => (showDropdown = false)}
 >
 	<div class="bg-background-color rounded">
