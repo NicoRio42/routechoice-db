@@ -10,10 +10,10 @@
 	import { cachedImages, getMapCallibrationByFetchingMapImageIfNeeded } from '$lib/client/map.js';
 
 	export let eventMap: CourseMap;
+	export let imageLayer: ImageLayer<Static>;
 
 	const getMap = getContext<() => Map>('map');
 	let map: Map;
-	let imageLayer: ImageLayer<Static>;
 
 	onMount(async () => {
 		const mapCalibration = await getMapCallibrationByFetchingMapImageIfNeeded(eventMap);
@@ -43,7 +43,7 @@
 			}
 		);
 
-		const imageLayer = new ImageLayer({ zIndex: 1 });
+		imageLayer = new ImageLayer({ zIndex: 1 });
 
 		const staticImage = new Static({
 			url: eventMap.url,
