@@ -18,7 +18,7 @@
 	let errorsHaveBeenshownOnce = false;
 
 	const { errors } = formFieldProxy(form, field);
-	const proxyDate = dateProxy(form, field, { format: 'datetime-utc' });
+	const proxyDate = dateProxy(form, field, { format: 'datetime-local' });
 
 	const unsub = errors.subscribe((errs) => {
 		if (!errorsHaveBeenshownOnce) errorsHaveBeenshownOnce = errs !== undefined && errs.length !== 0;
