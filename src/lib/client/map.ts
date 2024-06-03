@@ -6,23 +6,20 @@ import type { CourseMap, MapCalibration } from 'orienteering-js/models';
 export const cachedImages: Record<string, HTMLImageElement> = {};
 const IOS_CANVAS_MAX_PIXELS = 16777216;
 
+type CalibrationWidthHeight = { calibration: MapCalibration; width: number; height: number };
+
 export async function getMapCallibrationByFetchingMapImageIfNeeded(
 	courseMap: CourseMap
-): Promise<MapCalibration> {
+): Promise<CalibrationWidthHeight> {
 	if (!browser) {
 		throw new Error('This function is not inteded to run on the server');
 	}
 
-	const isNeededToFetchMapImage = courseMap.calibration.some(
+	const isLoggatorIncompleteMapCallibration = courseMap.calibration.some(
 		(cal) => cal.point.x === -1 || cal.point.y === -1
 	);
 
-	if (!isNeededToFetchMapImage) {
-		mapIsLoading.set(false);
-		return Promise.resolve(courseMap.calibration);
-	}
-
-	return new Promise<MapCalibration>((resolve, reject) => {
+	return new Promise<CalibrationWidthHeight>((resolve, reject) => {
 		const image = new Image();
 
 		image.onload = () => {
@@ -38,58 +35,70 @@ export async function getMapCallibrationByFetchingMapImageIfNeeded(
 
 				mapIsLoading.set(false);
 
-				resolve([
-					{
-						gps: {
-							lat: courseMap.calibration[0].gps.lat,
-							lon: courseMap.calibration[0].gps.lon
-						},
-						point: { x: 1, y: 1 }
-					},
-					{
-						gps: {
-							lat: courseMap.calibration[1].gps.lat,
-							lon: courseMap.calibration[1].gps.lon
-						},
-						point: { x: 1, y: height }
-					},
-					{
-						gps: {
-							lat: courseMap.calibration[2].gps.lat,
-							lon: courseMap.calibration[2].gps.lon
-						},
-						point: { x: width, y: 1 }
-					}
-				]);
+				resolve({
+					calibration: isLoggatorIncompleteMapCallibration
+						? [
+								{
+									gps: {
+										lat: courseMap.calibration[0].gps.lat,
+										lon: courseMap.calibration[0].gps.lon
+									},
+									point: { x: 1, y: 1 }
+								},
+								{
+									gps: {
+										lat: courseMap.calibration[1].gps.lat,
+										lon: courseMap.calibration[1].gps.lon
+									},
+									point: { x: 1, y: height }
+								},
+								{
+									gps: {
+										lat: courseMap.calibration[2].gps.lat,
+										lon: courseMap.calibration[2].gps.lon
+									},
+									point: { x: width, y: 1 }
+								}
+							]
+						: courseMap.calibration,
+					width,
+					height
+				});
 
 				return;
 			}
 
 			mapIsLoading.set(false);
 
-			resolve([
-				{
-					gps: {
-						lat: courseMap.calibration[0].gps.lat,
-						lon: courseMap.calibration[0].gps.lon
-					},
-					point: { x: 1, y: 1 }
-				},
-				{
-					gps: {
-						lat: courseMap.calibration[1].gps.lat,
-						lon: courseMap.calibration[1].gps.lon
-					},
-					point: { x: 1, y: image.naturalHeight }
-				},
-				{
-					gps: {
-						lat: courseMap.calibration[2].gps.lat,
-						lon: courseMap.calibration[2].gps.lon
-					},
-					point: { x: image.naturalWidth, y: 1 }
-				}
-			]);
+			resolve({
+				calibration: isLoggatorIncompleteMapCallibration
+					? [
+							{
+								gps: {
+									lat: courseMap.calibration[0].gps.lat,
+									lon: courseMap.calibration[0].gps.lon
+								},
+								point: { x: 1, y: 1 }
+							},
+							{
+								gps: {
+									lat: courseMap.calibration[1].gps.lat,
+									lon: courseMap.calibration[1].gps.lon
+								},
+								point: { x: 1, y: image.naturalHeight }
+							},
+							{
+								gps: {
+									lat: courseMap.calibration[2].gps.lat,
+									lon: courseMap.calibration[2].gps.lon
+								},
+								point: { x: image.naturalWidth, y: 1 }
+							}
+						]
+					: courseMap.calibration,
+				width: image.naturalWidth,
+				height: image.naturalHeight
+			});
 		};
 
 		image.onerror = () => reject('Failed to load map image');

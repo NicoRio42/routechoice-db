@@ -122,7 +122,10 @@
 			</tr>
 		{:else}
 			<tr>
-				<td colspan="4" class="text-8 text-center border-none">
+				<td
+					colspan={legRoutechoices.length === 0 ? 4 : 5}
+					class="text-8 text-center border-none !bg-background-color"
+				>
 					{#if $page.data.event.legs.length === 0}
 						<p class="mt-8">No course yet.</p>
 

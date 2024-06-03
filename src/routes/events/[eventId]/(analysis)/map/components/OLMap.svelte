@@ -1,7 +1,7 @@
 <script lang="ts">
 	import { Map, View } from 'ol';
-	import DoubleClickZoom from 'ol/interaction/DoubleClickZoom.js';
 	import DblClickDragZoom from 'ol/interaction/DblClickDragZoom.js';
+	import DoubleClickZoom from 'ol/interaction/DoubleClickZoom.js';
 	import 'ol/ol.css';
 	import { onDestroy, onMount, setContext } from 'svelte';
 

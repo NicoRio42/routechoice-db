@@ -1,3 +1,4 @@
+import { dev } from '$app/environment';
 import type * as schema from '$lib/server/db/schema.js';
 import type { RunnerInsert, RunnerLegInsert } from '$lib/server/db/schema.js';
 import {
@@ -119,6 +120,12 @@ export async function parseAndInsertSplitTimesFromIofXml3File(
 				routechoiceTimeLoss: 0
 			});
 		}
+	}
+
+	if (dev) {
+		await db.insert(runnerTable).values(runnersToInsert);
+		await db.insert(runnerLegTable).values(runnersLegsToInsert);
+		return;
 	}
 
 	const slicedRunnersLegsInserts = sliceArray(runnersLegsToInsert, 100).map((runnersLegsSlice) => {

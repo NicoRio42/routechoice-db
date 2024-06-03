@@ -16,11 +16,13 @@
 	let imageLayer: ImageLayer<Static>;
 
 	onMount(async () => {
-		const mapCalibration = await getMapCallibrationByFetchingMapImageIfNeeded(eventMap);
-		const coordinatesConverter = new CoordinatesConverter(mapCalibration);
+		const { calibration, width, height } =
+			await getMapCallibrationByFetchingMapImageIfNeeded(eventMap);
+
+		const coordinatesConverter = new CoordinatesConverter(calibration);
 		map = getMap();
 
-		const imageExtent = [1, 1, mapCalibration[2].point.x, mapCalibration[1].point.y];
+		const imageExtent = [1, 1, width, height];
 
 		const imageProjection = new Projection({
 			code: 'georef-image',
@@ -35,10 +37,10 @@
 				const [lon, lat] = transform(coords, 'EPSG:3857', 'EPSG:4326');
 				const [x, y] = coordinatesConverter.latLongToXY([lat, lon]);
 
-				return [x, mapCalibration[1].point.y - y];
+				return [x, height - y];
 			},
 			([x, y]: number[]) => {
-				const [lat, lon] = coordinatesConverter.xYToLatLong([x, mapCalibration[1].point.y - y]);
+				const [lat, lon] = coordinatesConverter.xYToLatLong([x, height - y]);
 				return transform([lon, lat], 'EPSG:4326', 'EPSG:3857');
 			}
 		);

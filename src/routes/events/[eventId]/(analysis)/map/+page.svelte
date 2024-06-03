@@ -155,9 +155,6 @@
 				{/each}
 			{/if}
 
-			<!-- 	{#if isAutoAnalysisMode}
-				<AutoAnalysis {selectedRunners} {legNumber} runners={courseData.runners} />
-			{:else} -->
 			{#each data.event.runners as runner (runner.id)}
 				{@const show = selectedRunners.includes(runner.id)}
 				{@const runnerLeg = runner.legs.find(
