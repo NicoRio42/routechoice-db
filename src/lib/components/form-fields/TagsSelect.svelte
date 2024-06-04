@@ -4,7 +4,7 @@
 
 <script lang="ts" generics="T extends Record<string, unknown>">
 	import { addAlpha } from '$lib/helpers.js';
-	import type { Tag } from '$lib/server/db/schema.js';
+	import type { Tag } from '$lib/server/db/models.js';
 	import { onDestroy } from 'svelte';
 	import { arrayProxy, type FormPathArrays, type SuperForm } from 'sveltekit-superforms';
 

@@ -1,6 +1,6 @@
 <script lang="ts">
 	import { secondsToPrettyTime } from '$lib/utils/split-times';
-	import type { RunnerLeg } from '$lib/server/db/schema';
+	import type { RunnerLeg } from '$lib/server/db/models';
 	import TimeRank from '../../components/TimeRank.svelte';
 
 	export let runnerLeg: RunnerLeg | null;

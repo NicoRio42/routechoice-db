@@ -3,7 +3,7 @@
 	import { addAlpha } from '$lib/helpers.js';
 	import { RolesEnum } from '$lib/models/enums/roles.enum.js';
 	import type { RunnerWithNullableLegsAndTrack } from '$lib/models/runner.model.js';
-	import type { Routechoice } from '$lib/server/db/schema.js';
+	import type { Routechoice } from '$lib/server/db/models.js';
 	import { fullNameToShortName } from '$lib/utils/split-times';
 	import GreenJersey from '../../../components/GreenJersey.svelte';
 	import Medal from '../../../components/Medal.svelte';

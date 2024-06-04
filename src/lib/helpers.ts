@@ -17,7 +17,7 @@ import type {
 	Routechoice,
 	RoutechoiceStatistics,
 	RunnerLeg
-} from './server/db/schema.js';
+} from './server/db/models.js';
 import { parseData, parseInit } from '@orienteering-js/gps/gpsseuranta';
 import { routesColors } from 'orienteering-js/ocad';
 

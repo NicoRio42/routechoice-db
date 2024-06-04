@@ -1,6 +1,5 @@
 // See https://kit.svelte.dev/docs/types#app
 
-import type * as schema from '$lib/server/db/schema.js';
 import type { LibSQLDatabase } from 'drizzle-orm/libsql';
 import { type Client } from '@libsql/client/web';
 
@@ -30,7 +29,7 @@ declare global {
 			email: string;
 			email_verified: number;
 			password_expired: number;
-			role: RolesEnum;
+			role: 'default' | 'admin';
 		};
 		type UserAttributes = {
 			firstName: string;
@@ -38,7 +37,7 @@ declare global {
 			email: string;
 			emaiVerified: number;
 			passwordExpired: number;
-			role: RolesEnum;
+			role: 'default' | 'admin';
 		};
 		// eslint-disable-next-line @typescript-eslint/ban-types
 		type DatabaseSessionAttributes = {};

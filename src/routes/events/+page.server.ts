@@ -1,17 +1,17 @@
 import { redirectIfNotLogedIn } from '$lib/server/auth/helpers.js';
 import { db } from '$lib/server/db/db.js';
+import type { Event } from '$lib/server/db/models.js';
 import {
 	assoEventTag,
 	assoEventTag as assoEventTagTable,
 	event as eventTable,
-	tag as tagTable,
-	type Event
+	tag as tagTable
 } from '$lib/server/db/schema.js';
+import { error, redirect } from '@sveltejs/kit';
 import { and, desc, eq, inArray, like, type SQL } from 'drizzle-orm';
 import { superValidate } from 'sveltekit-superforms';
 import { zod } from 'sveltekit-superforms/adapters';
 import { filterEventFormSchema } from './schema.js';
-import { error, redirect } from '@sveltejs/kit';
 
 const PAGE_SIZE = 20;
 

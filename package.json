@@ -16,8 +16,8 @@
 		"format": "prettier --plugin-search-dir . --write .",
 		"migrations": "drizzle-kit generate",
 		"studio": "drizzle-kit studio",
-		"migrate": "node scripts/migrate.js",
-		"migrate:prod": "node --env-file=.env scripts/migrate-prod.js",
+		"migrate": "node src/scripts/migrate.js",
+		"migrate:prod": "node --env-file=.env src/scripts/migrate-prod.js",
 		"drizzle:up": "drizzle-kit up"
 	},
 	"devDependencies": {

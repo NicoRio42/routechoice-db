@@ -1,15 +1,14 @@
-import type { LibSQLDatabase } from 'drizzle-orm/libsql';
-import type { Control, Leg as OrienteeringJsLeg } from 'orienteering-js/models';
 import type * as schema from '$lib/server/db/schema.js';
 import {
 	controlPoint as controlPointTable,
-	routechoice as routechoiceTable,
 	leg as legTable,
 	routechoiceStatistics as routechoiceStatisticsTable,
-	type Leg,
-	type Routechoice,
-	type RoutechoiceStatistics
+	routechoice as routechoiceTable
 } from '$lib/server/db/schema.js';
+import type { LibSQLDatabase } from 'drizzle-orm/libsql';
+import type { Control, Leg as OrienteeringJsLeg } from 'orienteering-js/models';
+
+import { type Leg, type Routechoice, type RoutechoiceStatistics } from '$lib/server/db/models.js';
 
 export async function insertControlPointsLegsRoutechoicesAndRoutechoicesStatistics(
 	controlPoints: Control[],

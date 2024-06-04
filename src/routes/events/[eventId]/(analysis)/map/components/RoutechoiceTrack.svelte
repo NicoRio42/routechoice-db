@@ -1,7 +1,7 @@
 <script lang="ts">
 	import LineString from './LineString.svelte';
 	import { transform } from 'ol/proj.js';
-	import type { Routechoice } from '$lib/server/db/schema.js';
+	import type { Routechoice } from '$lib/server/db/models.js';
 	import { addAlpha } from '$lib/helpers.js';
 
 	export let routechoice: Routechoice;

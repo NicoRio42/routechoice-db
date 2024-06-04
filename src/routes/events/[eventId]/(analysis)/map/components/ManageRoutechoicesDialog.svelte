@@ -1,7 +1,7 @@
 <script lang="ts">
 	import { enhance } from '$app/forms';
 	import { confirmSubmit } from '$lib/actions/confirm-submit.js';
-	import type { Routechoice } from '$lib/server/db/schema.js';
+	import type { Routechoice } from '$lib/server/db/models.js';
 	import { createEventDispatcher } from 'svelte';
 	import { fade } from 'svelte/transition';
 

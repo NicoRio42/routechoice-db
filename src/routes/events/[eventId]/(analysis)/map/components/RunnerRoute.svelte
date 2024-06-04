@@ -1,5 +1,5 @@
 <script lang="ts">
-	import type { RunnerLeg } from '$lib/server/db/schema.js';
+	import type { RunnerLeg } from '$lib/server/db/models.js';
 	import type { RunnerTrack } from 'orienteering-js/models';
 	import LineString from './LineString.svelte';
 	import { cropTrackFromLegNumber } from './utils.js';

@@ -1,6 +1,6 @@
 import { dev } from '$app/environment';
 import type * as schema from '$lib/server/db/schema.js';
-import type { RunnerInsert, RunnerLegInsert } from '$lib/server/db/schema.js';
+import type { RunnerInsert, RunnerLegInsert } from '$lib/server/db/models.js';
 import {
 	controlPoint as controlPointTable,
 	event as eventTable,

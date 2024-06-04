@@ -2,7 +2,7 @@
 	import { enhance } from '$app/forms';
 	import { RolesEnum } from '$lib/models/enums/roles.enum.js';
 	import type { RunnerWithNullableLegs as Runner } from '$lib/models/runner.model.js';
-	import type { Routechoice } from '$lib/server/db/schema.js';
+	import type { Routechoice } from '$lib/server/db/models.js';
 	import type { User } from 'lucia';
 	import { getContext } from 'svelte';
 	import type { Writable } from 'svelte/store';

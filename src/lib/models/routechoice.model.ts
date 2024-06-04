@@ -1,4 +1,4 @@
-import type { Routechoice, RoutechoiceStatistics } from '$lib/server/db/schema.js';
+import type { Routechoice, RoutechoiceStatistics } from '$lib/server/db/models.js';
 
 export type RoutechoiceWithStatistics = Routechoice & { statistics: RoutechoiceStatistics };
 

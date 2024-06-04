@@ -1,12 +1,8 @@
 import { relations } from 'drizzle-orm';
 import { integer, primaryKey, real, sqliteTable, text } from 'drizzle-orm/sqlite-core';
-import { RolesEnum } from '../../models/enums/roles.enum.js';
-import { RunnerStatusEnum } from '../../models/enums/runner-status.enum.js';
 import { generateId } from 'lucia';
 import { TimeSpan, createDate } from 'oslo';
 import { alphabet, generateRandomString } from 'oslo/crypto';
-// import { RolesEnum } from '../../models/enums/roles.enum';
-// import { RunnerStatusEnum } from '../../models/enums/runner-status.enum';
 
 const id = text('id')
 	.primaryKey()
@@ -29,8 +25,6 @@ export const eventsRelations = relations(event, ({ many }) => ({
 	tags: many(assoEventTag)
 }));
 
-export type Event = typeof event.$inferSelect;
-
 export const liveEvent = sqliteTable('live_event', {
 	id,
 	fkEvent: text('fk_event')
@@ -40,8 +34,6 @@ export const liveEvent = sqliteTable('live_event', {
 	url: text('url').notNull(),
 	isPrimary: integer('is_primary', { mode: 'boolean' }).notNull()
 });
-
-export type LiveEvent = typeof liveEvent.$inferSelect;
 
 export const liveEventsRelations = relations(liveEvent, ({ one }) => ({
 	event: one(event, {
@@ -55,8 +47,6 @@ export const tag = sqliteTable('tag', {
 	name: text('name').notNull().unique(),
 	color: text('color').notNull().unique()
 });
-
-export type Tag = typeof tag.$inferSelect;
 
 export const assoEventTag = sqliteTable(
 	'asso_event_tag',
@@ -87,8 +77,6 @@ export const leg = sqliteTable('leg', {
 		.references(() => controlPoint.id, { onDelete: 'cascade' })
 });
 
-export type Leg = typeof leg.$inferSelect;
-
 export const legsRelations = relations(leg, ({ one, many }) => ({
 	event: one(event, {
 		fields: [leg.fkEvent],
@@ -115,8 +103,6 @@ export const controlPoint = sqliteTable('control_point', {
 	latitude: real('latitude').notNull()
 });
 
-export type ControlPoint = typeof controlPoint.$inferSelect;
-
 export const controlPointsRelations = relations(controlPoint, ({ one }) => ({
 	event: one(event, {
 		fields: [controlPoint.fkEvent],
@@ -135,8 +121,6 @@ export const routechoice = sqliteTable('routechoice', {
 	latitudes: text('latitudes').notNull(),
 	length: integer('length').notNull()
 });
-
-export type Routechoice = typeof routechoice.$inferSelect;
 
 export const routechoicesRelations = relations(routechoice, ({ one }) => ({
 	event: one(leg, {
@@ -165,8 +149,6 @@ export const routechoiceStatisticsRelations = relations(routechoiceStatistics, (
 	})
 }));
 
-export type RoutechoiceStatistics = typeof routechoiceStatistics.$inferSelect;
-
 export const runner = sqliteTable('runner', {
 	id: text('id').primaryKey(),
 	fkEvent: text('fk_event')
@@ -175,9 +157,7 @@ export const runner = sqliteTable('runner', {
 	fkUser: text('fk_user').references(() => user.id, { onDelete: 'set null' }), // unique
 	fkLiveEvent: text('fk_live_event').references(() => liveEvent.id, { onDelete: 'set null' }), // unique
 	trackingDeviceId: text('tracking_device_id'),
-	status: text('status', {
-		enum: [RunnerStatusEnum.Enum.ok, RunnerStatusEnum.Enum['not-ok']]
-	}).notNull(),
+	status: text('status', { enum: ['ok', 'not-ok'] }).notNull(),
 	firstName: text('first_name').notNull(),
 	lastName: text('last_name').notNull(),
 	startTime: integer('start_time', { mode: 'timestamp' }).notNull(),
@@ -195,9 +175,6 @@ export const runnersRelations = relations(runner, ({ one, many }) => ({
 	}),
 	legs: many(runnerLeg)
 }));
-
-export type Runner = typeof runner.$inferSelect;
-export type RunnerInsert = typeof runner.$inferInsert;
 
 export const runnerLeg = sqliteTable('runner_leg', {
 	id,
@@ -224,9 +201,6 @@ export const runnerLeg = sqliteTable('runner_leg', {
 	routechoiceTimeLoss: integer('routechoice_time_loss').notNull()
 });
 
-export type RunnerLeg = typeof runnerLeg.$inferSelect;
-export type RunnerLegInsert = typeof runnerLeg.$inferInsert;
-
 export const runnerLegsRelations = relations(runnerLeg, ({ one }) => ({
 	event: one(runner, {
 		fields: [runnerLeg.fkRunner],
@@ -243,12 +217,10 @@ export const user = sqliteTable('auth_user', {
 	email: text('email').notNull(),
 	emailVerified: integer('email_verified', { mode: 'boolean' }).default(false).notNull(),
 	passwordExpired: integer('password_expired', { mode: 'boolean' }).default(true).notNull(),
-	role: text('role', { enum: [RolesEnum.Enum.admin, RolesEnum.Enum.default] })
-		.default(RolesEnum.Enum.default)
+	role: text('role', { enum: ['admin', 'default'] })
+		.default('default')
 		.notNull()
 });
-
-export type User = typeof user.$inferSelect;
 
 export const session = sqliteTable('auth_session', {
 	id: text('id').primaryKey().notNull(),

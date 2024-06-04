@@ -1,7 +1,7 @@
 <script lang="ts">
 	import { page } from '$app/stores';
 	import { addSearchParamsToURL, deleteSearchParamsToURL } from '$lib/helpers';
-	import type { Leg } from '$lib/server/db/schema.js';
+	import type { Leg } from '$lib/server/db/models.js';
 
 	export let legNumber: number;
 	export let legs: Leg[];
