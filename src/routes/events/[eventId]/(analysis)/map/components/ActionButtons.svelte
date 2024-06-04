@@ -6,10 +6,8 @@
 	export let legNumber: number;
 	export let legs: Leg[];
 	export let showRoutechoices: boolean;
-	export let isAutoAnalysisMode: boolean;
 
 	const numberOfLegs = legs.length;
-	let showMapButtons = false;
 
 	function getPreviousLegNumber() {
 		return legNumber !== 1 ? legNumber - 1 : legNumber;
@@ -21,29 +19,6 @@
 </script>
 
 <div class="control-bar">
-	<!-- <button
-		class="map-buttons-toggler mobile btn"
-		on:click={() => (showMapButtons = !showMapButtons)}
-	>
-		<i class="i-carbon-overflow-menu-horizontal" />
-	</button>
-
-	<button
-		class="map-button mobile btn"
-		on:click={() => (isAutoAnalysisMode = !isAutoAnalysisMode)}
-		style:transform={showMapButtons ? 'translateY(-230%)' : 'translateY(0)'}>AA</button
-	>
-
-	<button
-		class="map-button mobile btn"
-		on:click={() => (showRoutechoices = !showRoutechoices)}
-		style:transform={showMapButtons ? 'translateY(-115%)' : 'translateY(0)'}
-	>
-		<i class="i-carbon-view" />
-	</button>
-
-	<button class="large btn" on:click={() => (isAutoAnalysisMode = !isAutoAnalysisMode)}>AA</button> -->
-
 	<button
 		class="rounded-full flex items-center justify-center w-12 h-12 m-0 p-0"
 		on:click={() => (showRoutechoices = !showRoutechoices)}
@@ -127,47 +102,10 @@
 		background-position: center right 0.375rem;
 	}
 
-	.map-buttons-toggler {
-		z-index: 2;
-	}
-
-	.map-button {
-		position: absolute;
-		top: 0;
-		left: 0;
-		z-index: 1;
-		transform: translateY(0);
-		transition: transform 0.25s;
-	}
-
-	.mobile {
-		display: inherit;
-	}
-
-	.large {
-		display: none;
-	}
-
 	@media screen and (min-width: 500px) {
 		.control-bar {
 			/* transform: translate(calc(-50% - 1.75rem)); */
 			transform: translate(-50%);
-		}
-
-		.map-buttons-toggler {
-			display: none;
-		}
-
-		.map-button {
-			transform: translateX(calc(-1 * calc(100% + 0.5rem)));
-		}
-
-		.mobile {
-			display: none;
-		}
-
-		.large {
-			display: inherit;
 		}
 	}
 </style>

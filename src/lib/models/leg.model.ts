@@ -1,8 +1,8 @@
-import type { Leg as LegFromDatabase } from '../server/db/models.js';
-import type { RoutechoiceWithParsedTrack, RoutechoiceWithStatistics } from './routechoice.model.js';
+import type { Leg, Routechoice } from '../server/db/models.js';
+import type { RoutechoiceWithParsedTrack } from './routechoice.model.js';
 
-export type LegWithRoutechoices = LegFromDatabase & { routechoices: RoutechoiceWithStatistics[] };
+export type LegWithRoutechoices = Leg & { routechoices: Routechoice[] };
 
-export type LegWithRoutechoiceWithParsedTrack = LegFromDatabase & {
+export type LegWithRoutechoiceWithParsedTrack = Leg & {
 	routechoices: RoutechoiceWithParsedTrack[];
 };

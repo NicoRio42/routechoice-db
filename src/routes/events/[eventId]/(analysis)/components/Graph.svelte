@@ -1,11 +1,10 @@
 <script lang="ts">
-	import Polyline from '../components/Polyline.svelte';
 	import { clickOutside } from '$lib/actions/click-outside.js';
-	import type { RunnerWithNullableLegsAndTrack } from '$lib/models/runner.model';
-	import EnlargeToggle from './EnlargeToggle.svelte';
 	import { addAlpha } from '$lib/helpers';
-	import { secondsToPrettyTime } from '$lib/utils/split-times';
+	import type { RunnerWithNullableLegsAndTrack } from '$lib/models/runner.model';
 	import { routesColors } from 'orienteering-js/ocad';
+	import Polyline from '../components/Polyline.svelte';
+	import EnlargeToggle from './EnlargeToggle.svelte';
 
 	export let runners: RunnerWithNullableLegsAndTrack[];
 	export let runnerLegKey: 'timeBehindSuperman' | 'timeBehindOverall';
@@ -34,19 +33,6 @@
 				return [supermanOrLeader[index], value];
 			})
 		);
-	}
-
-	function getSortedSelectedRunners() {
-		return [...selectedRunners].sort((r1, r2) => {
-			const leg1 = r1.legs[hoveredLegIndex];
-			const leg2 = r2.legs[hoveredLegIndex];
-
-			if (!leg1 && !leg2) return 0;
-			if (!leg1) return 1;
-			if (!leg2) return -1;
-			const key = runnerLegKey === 'timeBehindOverall' ? 'rankOverall' : 'rankSplit';
-			return leg1[key]! - leg2[key]!;
-		});
 	}
 
 	function getSupermanOverallTimes(runners: RunnerWithNullableLegsAndTrack[]): number[] {
@@ -161,49 +147,6 @@
 				<p class="x-label" style:left={(leg / maxX) * 100 + '%'}>{index + 1}</p>
 			{/if}
 		{/each}
-
-		<!-- {#if displayPanel}
-			{@const sortedSelectedRunners = getSortedSelectedRunners()}
-
-			<article
-				class="leg-panel"
-				style:left={hoveredLegIndex < supermanOrLeader.length / 2
-					? (supermanOrLeader[hoveredLegIndex] / maxX) * 100 + '%'
-					: 'unset'}
-				style:right={hoveredLegIndex >= supermanOrLeader.length / 2
-					? (1 - supermanOrLeader[hoveredLegIndex - 1] / maxX) * 100 + '%'
-					: 'unset'}
-				on:click|stopPropagation
-			>
-				<p class="leg-panel-head bg-pico-card-background-color">
-					Leg: {hoveredLegIndex + 1}
-
-					<button
-						type="button"
-						class="raw-btn close-button text-pico-h1-color"
-						on:click={() => (displayPanel = false)}
-					>
-						<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 384 512"
-							><path
-								d="M342.6 150.6c12.5-12.5 12.5-32.8 0-45.3s-32.8-12.5-45.3 0L192 210.7 86.6 105.4c-12.5-12.5-32.8-12.5-45.3 0s-12.5 32.8 0 45.3L146.7 256 41.4 361.4c-12.5 12.5-12.5 32.8 0 45.3s32.8 12.5 45.3 0L192 301.3 297.4 406.6c12.5 12.5 32.8 12.5 45.3 0s12.5-32.8 0-45.3L237.3 256 342.6 150.6z"
-							/></svg
-						>
-					</button>
-				</p>
-
-				{#each sortedSelectedRunners as runner (runner.id)}
-					{@const leg = runner.legs[hoveredLegIndex]}
-
-					{#if leg !== null && leg !== undefined}
-						<p class="leg-panel-line" style:color={routesColors[runnerIndex] ?? 'black'}>
-							{runner.lastName}
-
-							{secondsToPrettyTime(leg[runnerLegKey] ?? 0)}
-						</p>
-					{/if}
-				{/each}
-			</article>
-		{/if} -->
 	</div>
 </figure>
 
@@ -251,46 +194,6 @@
 		margin: 0;
 		transform: translateX(-50%);
 		font-size: 0.75rem;
-	}
-
-	.leg-panel {
-		position: absolute;
-		top: 0;
-		left: 0;
-		padding: 0 0.5rem 0.5rem 0.5rem;
-		margin: 0;
-		max-height: 100%;
-		overflow: auto;
-	}
-
-	.leg-panel-head {
-		margin: 0;
-		padding: 0.5rem 0;
-		position: sticky;
-		top: 0;
-		display: flex;
-		justify-content: space-between;
-	}
-
-	.close-button {
-		width: fit-content;
-		background-color: transparent;
-		box-shadow: none;
-		border: none;
-		margin: 0;
-		padding: 0;
-		display: flex;
-		justify-content: center;
-		align-items: center;
-	}
-
-	.close-button svg {
-		width: 1rem;
-		height: 1rem;
-	}
-
-	.leg-panel-line {
-		margin: 0;
 	}
 
 	@media (max-width: 768px) {

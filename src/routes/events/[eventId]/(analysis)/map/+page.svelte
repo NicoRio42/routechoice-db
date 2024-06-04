@@ -31,7 +31,6 @@
 	let fitBox: [number, number, number, number];
 	let selectedRunners: string[] = [];
 	let showRoutechoices = true;
-	let isAutoAnalysisMode = false;
 	let currentDrawnRoutechoice: null | LineString = null;
 	let showAddRoutechoiceDialog = false;
 	let showManageRoutechoicesDialog = false;
@@ -174,7 +173,7 @@
 		</VectorLayer>
 	</OlMap>
 
-	<ActionButtons {legNumber} bind:showRoutechoices legs={data.event.legs} bind:isAutoAnalysisMode />
+	<ActionButtons {legNumber} bind:showRoutechoices legs={data.event.legs} />
 </div>
 
 <style>

@@ -54,7 +54,7 @@ export const assoEventTag = sqliteTable(
 		fkEvent: text('fk_event').references(() => event.id, { onDelete: 'cascade' }),
 		fkTag: text('fk_tag').references(() => tag.id, { onDelete: 'cascade' })
 	},
-	(table) => ({ pk: primaryKey(table.fkEvent, table.fkTag) })
+	(table) => ({ pk: primaryKey({ columns: [table.fkEvent, table.fkTag] }) })
 );
 
 export const assoEventTagsRelations = relations(assoEventTag, ({ one }) => ({
@@ -65,7 +65,7 @@ export const assoEventTagsRelations = relations(assoEventTag, ({ one }) => ({
 }));
 
 export const leg = sqliteTable('leg', {
-	id: text('id').primaryKey(),
+	id,
 	fkEvent: text('fk_event')
 		.notNull()
 		.references(() => event.id, { onDelete: 'cascade' }),
@@ -94,7 +94,7 @@ export const legsRelations = relations(leg, ({ one, many }) => ({
 }));
 
 export const controlPoint = sqliteTable('control_point', {
-	id: text('id').primaryKey(),
+	id,
 	fkEvent: text('fk_event')
 		.notNull()
 		.references(() => event.id, { onDelete: 'cascade' }),
@@ -111,7 +111,7 @@ export const controlPointsRelations = relations(controlPoint, ({ one }) => ({
 }));
 
 export const routechoice = sqliteTable('routechoice', {
-	id: text('id').primaryKey(),
+	id,
 	name: text('name').notNull(),
 	color: text('color').notNull(),
 	fkLeg: text('fk_leg')
@@ -119,33 +119,14 @@ export const routechoice = sqliteTable('routechoice', {
 		.references(() => leg.id, { onDelete: 'cascade' }),
 	longitudes: text('longitudes').notNull(),
 	latitudes: text('latitudes').notNull(),
-	length: integer('length').notNull()
+	length: integer('length').notNull(),
+	elevation: integer('elevation')
 });
 
 export const routechoicesRelations = relations(routechoice, ({ one }) => ({
 	event: one(leg, {
 		fields: [routechoice.fkLeg],
 		references: [leg.id]
-	}),
-	statistics: one(routechoiceStatistics, {
-		fields: [routechoice.id],
-		references: [routechoiceStatistics.fkRoutechoice]
-	})
-}));
-
-export const routechoiceStatistics = sqliteTable('routechoice_statistics', {
-	id: text('id').primaryKey(),
-	fkRoutechoice: text('fk_routchoice')
-		.notNull()
-		.references(() => routechoice.id, { onDelete: 'cascade' }),
-	numberOfRunners: integer('number_of_runners').notNull().default(0),
-	bestTime: integer('best_time').notNull().default(0)
-});
-
-export const routechoiceStatisticsRelations = relations(routechoiceStatistics, ({ one }) => ({
-	routechoice: one(routechoice, {
-		fields: [routechoiceStatistics.fkRoutechoice],
-		references: [routechoice.id]
 	})
 }));
 

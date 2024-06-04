@@ -1,8 +1,8 @@
 <script lang="ts">
 	import { page } from '$app/stores';
 	import type { LegWithRoutechoices } from '$lib/models/leg.model.js';
-	import type { RoutechoiceWithStatistics } from '$lib/models/routechoice.model.js';
 	import type { RunnerWithNullableLegsAndTrack } from '$lib/models/runner.model.js';
+	import type { Routechoice } from '$lib/server/db/models';
 	import LegStatistics from './LegStatistics/LegStatistics.svelte';
 	import LegSplitTimesTable from './SplitTimesTable/LegSplitTimesTable.svelte';
 	import Toggle from './Toggle.svelte';
@@ -14,7 +14,7 @@
 
 	let isInSplitMode = true;
 	let sortedRunnersWithOneLeg: RunnerWithNullableLegsAndTrack[] = [];
-	let legRoutechoices: RoutechoiceWithStatistics[] = [];
+	let legRoutechoices: Routechoice[] = [];
 
 	$: hideSideBar = $page.url.searchParams.has('hideSideBar');
 

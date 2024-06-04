@@ -1,11 +1,11 @@
 <script lang="ts">
+	import type { RunnerWithNullableLegsAndTrack } from '$lib/models/runner.model.js';
+	import type { Routechoice } from '$lib/server/db/models';
 	import Graph from './Graph.svelte';
 	import type { GraphItem } from './models/graph-item.js';
-	import type { RoutechoiceWithStatistics } from '$lib/models/routechoice.model.js';
-	import type { RunnerWithNullableLegsAndTrack } from '$lib/models/runner.model.js';
 
 	export let sortedRunnersWithOneLeg: RunnerWithNullableLegsAndTrack[];
-	export let legRoutechoices: RoutechoiceWithStatistics[];
+	export let legRoutechoices: Routechoice[];
 
 	let fasestTimeGraphData: GraphItem[] = [];
 	let firstQuarterTimeAverageGraphData: GraphItem[] = [];

@@ -1,6 +1,6 @@
 import { RolesEnum } from '$lib/models/enums/roles.enum.js';
 import { redirect } from '@sveltejs/kit';
-import type { User } from '../db/schema.js';
+import type { User } from '../db/models.js';
 
 export function redirectIfNotLogedIn(user: User | null) {
 	if (user === null) {

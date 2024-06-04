@@ -1,83 +1,71 @@
+import { ROUTES_COLORS } from '$lib/constants';
+import { type LegInsert, type RoutechoiceInsert } from '$lib/server/db/models.js';
 import type * as schema from '$lib/server/db/schema.js';
 import {
 	controlPoint as controlPointTable,
 	leg as legTable,
-	routechoiceStatistics as routechoiceStatisticsTable,
 	routechoice as routechoiceTable
 } from '$lib/server/db/schema.js';
+import type { ControlPoint, Leg as OrienteeringJsLeg } from '@orienteering-js/course';
 import type { LibSQLDatabase } from 'drizzle-orm/libsql';
-import type { Control, Leg as OrienteeringJsLeg } from 'orienteering-js/models';
+import { generateId } from 'lucia';
 
-import { type Leg, type Routechoice, type RoutechoiceStatistics } from '$lib/server/db/models.js';
+const ROUTECHOICE_NAMES = 'ABCDEFGHIJKLMNOPQRSTUVWXYZ';
 
-export async function insertControlPointsLegsRoutechoicesAndRoutechoicesStatistics(
-	controlPoints: Control[],
+export async function insertControlPointsLegsAndRoutechoices(
+	controlPoints: ControlPoint[],
 	legs: OrienteeringJsLeg[],
 	db: LibSQLDatabase<typeof schema>,
 	eventId: string
 ): Promise<void> {
-	const legsMap: Record<string, [string, string]> = {};
-
-	legs.forEach((leg) => {
-		const startControl = controlPoints.find((c) => c.code === leg.startControlCode);
-		const finishControl = controlPoints.find((c) => c.code === leg.finishControlCode);
-
-		if (startControl === undefined || finishControl === undefined)
-			throw new Error('Control point not found');
-
-		legsMap[leg.id] = [startControl.id, finishControl.id];
-	});
-
 	const controlPointsToInsert = controlPoints.map((control) => ({
-		id: control.id,
 		fkEvent: eventId,
 		code: control.code,
 		latitude: control.lat,
 		longitude: control.lon
 	}));
 
-	await db.insert(controlPointTable).values(controlPointsToInsert).run();
+	const insertedControlPoints = await db
+		.insert(controlPointTable)
+		.values(controlPointsToInsert)
+		.returning();
 
-	const legsToInsert: Leg[] = [];
-	const routechoicesToInsert: Routechoice[] = [];
-	const routechoicesStatisticsToInsert: Omit<
-		RoutechoiceStatistics,
-		'numberOfRunners' | 'bestTime'
-	>[] = [];
+	const legsToInsert: LegInsert[] = [];
+	const routechoicesToInsert: RoutechoiceInsert[] = [];
 
 	for (const lg of legs) {
-		const [fkStartControlPoint, fkFinishControlPoint] = legsMap[lg.id];
+		const startControl = insertedControlPoints.find((c) => c.code === lg.startControlCode);
+		const finishControl = insertedControlPoints.find((c) => c.code === lg.finishControlCode);
 
-		if (fkStartControlPoint === undefined || fkFinishControlPoint === undefined) {
+		if (startControl === undefined || finishControl === undefined) {
 			throw new Error('Control point not found');
 		}
 
+		const legId = generateId(15);
+
 		legsToInsert.push({
-			id: lg.id,
+			id: legId,
 			fkEvent: eventId,
-			fkFinishControlPoint,
-			fkStartControlPoint
+			fkStartControlPoint: startControl.id,
+			fkFinishControlPoint: finishControl.id
 		});
 
-		for (const rc of lg.routechoices) {
+		lg.routechoices.forEach((rc, routechoiceIndex) => {
 			const latitudes = rc.track.map((pt) => pt[0]).join(';');
 			const longitudes = rc.track.map((pt) => pt[1]).join(';');
 
 			routechoicesToInsert.push({
-				color: rc.color,
-				fkLeg: lg.id,
-				id: rc.id,
+				color: ROUTES_COLORS[routechoiceIndex % ROUTES_COLORS.length],
+				fkLeg: legId,
 				latitudes,
 				longitudes,
 				length: rc.length,
-				name: rc.name
+				elevation: rc.elevation,
+				name: ROUTECHOICE_NAMES[routechoiceIndex % ROUTECHOICE_NAMES.length]
 			});
-
-			routechoicesStatisticsToInsert.push({ id: crypto.randomUUID(), fkRoutechoice: rc.id });
-		}
+		});
 	}
 
 	await db.insert(legTable).values(legsToInsert).run();
 	await db.insert(routechoiceTable).values(routechoicesToInsert).run();
-	await db.insert(routechoiceStatisticsTable).values(routechoicesStatisticsToInsert).run();
 }

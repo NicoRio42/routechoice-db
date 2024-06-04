@@ -1,11 +1,13 @@
 import { redirectIfNotAdmin } from '$lib/server/auth/helpers.js';
 import { db } from '$lib/server/db/db.js';
 import { reThrowRedirectsAndErrors } from '$lib/server/sveltekit-helpers.js';
-import { getCoordinatesConverterFromTwoDRerunCourseExport } from '$lib/two-d-rerun.js';
 import { error, fail, redirect } from '@sveltejs/kit';
-import { twoDRerunCourseExportSchema } from 'orienteering-js/models';
-import { parseTwoDRerunCourseAndRoutechoicesExport } from 'orienteering-js/two-d-rerun';
-import { insertControlPointsLegsRoutechoicesAndRoutechoicesStatistics } from '../helpers.js';
+import {
+	twoDRerunCourseExportSchema,
+	getCoordinatesConverterFromTwoDRerunCourseExport,
+	parseTwoDRerunCourseAndRoutechoicesExport
+} from '@orienteering-js/course';
+import { insertControlPointsLegsAndRoutechoices } from '../helpers.js';
 
 export async function load({ locals }) {
 	redirectIfNotAdmin(locals.user);
@@ -34,12 +36,7 @@ export const actions = {
 				coordinatesConverter
 			);
 
-			await insertControlPointsLegsRoutechoicesAndRoutechoicesStatistics(
-				controls,
-				legs,
-				db,
-				eventId
-			);
+			await insertControlPointsLegsAndRoutechoices(controls, legs, db, eventId);
 
 			throw redirect(302, `/events/${eventId}/manager/split-times`);
 		} catch (e) {

@@ -1,28 +1,25 @@
 import {
-	createRoutechoiceStatistics,
 	getRunnersWithTracksAndSortedLegs,
 	parseRoutechoicesTracksInLegs,
-	sortLegs
+	sortLegsAndRoutechoices
 } from '$lib/helpers.js';
+import { detectRunnersRoutechoicesForASingleLeg } from '$lib/routechoice-detector.js';
 import { db } from '$lib/server/db/db.js';
 import {
-	leg as legTable,
 	event as eventTable,
+	leg as legTable,
 	liveEvent as liveEventFromDatabase,
-	routechoiceStatistics as routechoiceStatisticsTable,
-	runner as runnerFromDatabase,
-	runnerLeg as runnerLegFromDatabase,
 	routechoice as routechoiceTable,
-	runnerLeg as runnerLegTable
+	runnerLeg as runnerLegTable,
+	runner as runnerTable
 } from '$lib/server/db/schema.js';
 import { error, fail, redirect } from '@sveltejs/kit';
-import { and, eq, inArray } from 'drizzle-orm';
-import { newRoutechoiceSchema } from './routechoice.schema.js';
-import { superValidate } from 'sveltekit-superforms';
-import { zod } from 'sveltekit-superforms/adapters';
+import { and, eq } from 'drizzle-orm';
 import { transform } from 'ol/proj.js';
 import { getLineStringLength } from 'orienteering-js/utils';
-import { detectRunnersRoutechoicesForASingleLeg } from '$lib/routechoice-detector.js';
+import { superValidate } from 'sveltekit-superforms';
+import { zod } from 'sveltekit-superforms/adapters';
+import { newRoutechoiceSchema } from './routechoice.schema.js';
 
 export const actions = {
 	addRoutechoice: async ({ request, params: { eventId }, locals, fetch }) => {
@@ -56,13 +53,8 @@ export const actions = {
 			})
 			.run();
 
-		await db
-			.insert(routechoiceStatisticsTable)
-			.values({ fkRoutechoice: routechoiceId, id: crypto.randomUUID() })
-			.run();
-
 		const runners = await db.query.runner.findMany({
-			where: eq(runnerFromDatabase.fkEvent, eventId),
+			where: eq(runnerTable.fkEvent, eventId),
 			with: { legs: true }
 		});
 
@@ -77,7 +69,7 @@ export const actions = {
 			with: { routechoices: true }
 		});
 
-		const sortedLegs = sortLegs(legs);
+		const sortedLegs = sortLegsAndRoutechoices(legs);
 		const sortedLegsWithRoutechoicesWithParsedTracks = parseRoutechoicesTracksInLegs(sortedLegs);
 
 		const runnersWithTracksAndSortedLegs = await getRunnersWithTracksAndSortedLegs(
@@ -115,132 +107,51 @@ export const actions = {
 				.run();
 		}
 
-		const routechoicesStatistics = createRoutechoiceStatistics(
-			runnersWithDetectedRoutechoices,
-			legIndex
-		);
-
-		// TODO refactor routechoice statistics update
-
-		db.update(routechoiceStatisticsTable)
-			.set({ bestTime: 0, numberOfRunners: 0 })
-			.where(
-				inArray(
-					routechoiceStatisticsTable.fkRoutechoice,
-					leg.routechoices.map((rc) => rc.id)
-				)
-			)
-			.run();
-
-		for (const { bestTime, numberOfRunners, fkRoutechoice } of routechoicesStatistics) {
-			await db
-				.update(routechoiceStatisticsTable)
-				.set({ bestTime, numberOfRunners })
-				.where(eq(routechoiceStatisticsTable.fkRoutechoice, fkRoutechoice))
-				.run();
-		}
-
 		throw redirect(302, `/events/${eventId}/map?legNumber=${legIndex + 1}`);
 	},
-	updateRoutechoice: async ({ request, params: { eventId }, locals, fetch }) => {
+	updateRoutechoice: async ({ request, params: { eventId }, locals }) => {
+		if (locals.user === null) throw error(401);
+
 		const formData = await request.formData();
 		const runnerId = formData.get('runnerId');
 		if (typeof runnerId !== 'string') throw error(400);
 		const runnerLegId = formData.get('runnerLegId');
 		if (typeof runnerLegId !== 'string') throw error(400);
-
-		const runner = await db
-			.select()
-			.from(runnerFromDatabase)
-			.where(eq(runnerFromDatabase.id, runnerId))
-			.get();
-
-		if (runner === undefined) throw error(404);
-
-		const runnerLeg = await db
-			.select()
-			.from(runnerLegFromDatabase)
-			.where(eq(runnerLegFromDatabase.id, runnerLegId))
-			.get();
-
-		if (runnerLeg === undefined) throw error(404);
-
-		if (runnerLeg.fkRunner !== runnerId) {
-			return fail(400);
-		}
-
-		if (runner.fkUser !== locals.user?.id && locals.user?.role !== 'admin') {
-			return fail(403);
-		}
-
 		const newRoutechoiceId = formData.get('routechoiceId');
+		if (typeof newRoutechoiceId !== 'string') return error(400);
 
-		if (newRoutechoiceId === null || newRoutechoiceId instanceof File) {
-			return fail(400);
+		const queryResult = await db
+			.select()
+			.from(runnerLegTable)
+			.innerJoin(runnerTable, eq(runnerTable.id, runnerLegTable.fkRunner))
+			.where(and(eq(runnerLegTable.id, runnerLegId), eq(runnerTable.id, runnerId)))
+			.get();
+
+		if (queryResult === undefined) throw error(404);
+		const { runner_leg: runnerLeg, runner } = queryResult;
+		if (runnerLeg.fkRunner !== runnerId) return error(400);
+
+		if (runner.fkUser !== locals.user.id && locals.user.role !== 'admin') {
+			return error(403);
 		}
 
 		await db
-			.update(runnerLegFromDatabase)
+			.update(runnerLegTable)
 			.set({ fkManualRoutechoice: newRoutechoiceId })
-			.where(eq(runnerLegFromDatabase.id, runnerLegId))
+			.where(eq(runnerLegTable.id, runnerLegId))
 			.run();
-
-		const runners = await db.query.runner.findMany({
-			where: eq(runnerFromDatabase.fkEvent, eventId),
-			with: { legs: true }
-		});
-
-		const liveEvents = await db
-			.select()
-			.from(liveEventFromDatabase)
-			.where(eq(liveEventFromDatabase.fkEvent, eventId))
-			.all();
 
 		const legs = await db.query.leg.findMany({
 			where: eq(legTable.fkEvent, eventId),
 			with: { routechoices: true }
 		});
 
-		const sortedLegs = sortLegs(legs);
-		const sortedLegsWithRoutechoicesWithParsedTracks = parseRoutechoicesTracksInLegs(sortedLegs);
+		const sortedLegs = sortLegsAndRoutechoices(legs);
 
-		const runnersWithTracksAndSortedLegs = await getRunnersWithTracksAndSortedLegs(
-			sortedLegs,
-			liveEvents,
-			runners,
-			fetch
-		);
-
-		const legIndex = sortedLegsWithRoutechoicesWithParsedTracks.findIndex(
-			(leg) => leg.id === runnerLeg.fkLeg
-		);
+		const legIndex = sortedLegs.findIndex((leg) => leg.id === runnerLeg.fkLeg);
 
 		if (legIndex === -1) {
-			return fail(400);
-		}
-
-		const routechoicesStatistics = createRoutechoiceStatistics(
-			runnersWithTracksAndSortedLegs,
-			legIndex
-		);
-
-		// TODO refactor routechoice statistics update
-
-		const legRoutechoicesIds = legs
-			.filter((_, index) => index === legIndex)
-			.flatMap((leg) => leg.routechoices.map((rc) => rc.id));
-
-		db.update(routechoiceStatisticsTable)
-			.set({ bestTime: 0, numberOfRunners: 0 })
-			.where(inArray(routechoiceStatisticsTable.fkRoutechoice, legRoutechoicesIds))
-			.run();
-
-		for (const { bestTime, numberOfRunners, fkRoutechoice } of routechoicesStatistics) {
-			await db
-				.update(routechoiceStatisticsTable)
-				.set({ bestTime, numberOfRunners })
-				.where(eq(routechoiceStatisticsTable.fkRoutechoice, fkRoutechoice))
-				.run();
+			return error(400);
 		}
 
 		throw redirect(302, `/events/${eventId}/map?legNumber=${legIndex + 1}`);

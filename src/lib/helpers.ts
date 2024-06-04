@@ -12,12 +12,7 @@ import type {
 	RunnerWithNullableLegs,
 	RunnerWithNullableLegsAndTrack
 } from './models/runner.model.js';
-import type {
-	LiveEvent,
-	Routechoice,
-	RoutechoiceStatistics,
-	RunnerLeg
-} from './server/db/models.js';
+import type { Leg, LiveEvent, Routechoice, RunnerLeg } from './server/db/models.js';
 import { parseData, parseInit } from '@orienteering-js/gps/gpsseuranta';
 import { routesColors } from 'orienteering-js/ocad';
 
@@ -260,11 +255,10 @@ function filterCompetitorName(name: string): string {
 		.join(' ');
 }
 
-// TODO: fix the typing of this function
-export function sortRunnersAndRunnersLegs(
-	runners: RunnerWithNullableLegsAndTrack[],
-	legs: LegWithRoutechoices[]
-): RunnerWithNullableLegsAndTrack[] {
+export function sortRunnersAndRunnersLegs<
+	R extends RunnerWithNullableLegs | RunnerWithNullableLegsAndTrack,
+	L extends LegWithRoutechoices | Leg
+>(runners: R[], legs: L[]): R[] {
 	return runners
 		.map((runner) => {
 			const runnerLegs: (RunnerLeg | null)[] = [];
@@ -285,11 +279,7 @@ export function sortRunnersAndRunnersLegs(
 		});
 }
 
-// TODO: fix the typing of this function
-export function sortLegs(
-	legs: LegWithRoutechoices[],
-	sortRoutechoices = true
-): LegWithRoutechoices[] {
+export function sortLegsAndRoutechoices(legs: LegWithRoutechoices[]): LegWithRoutechoices[] {
 	if (legs.length === 0) return [];
 	const sortedLegs: LegWithRoutechoices[] = [];
 
@@ -310,16 +300,39 @@ export function sortLegs(
 
 		if (nextLeg === undefined) break;
 
-		if (sortRoutechoices) {
-			sortedLegs.push({
-				...nextLeg,
-				routechoices: nextLeg.routechoices.sort((routechoiceA, routechoiceB) =>
-					routechoiceA.name.localeCompare(routechoiceB.name)
-				)
-			});
-		} else {
-			sortedLegs.push(nextLeg);
-		}
+		sortedLegs.push({
+			...nextLeg,
+			routechoices: nextLeg.routechoices.sort((routechoiceA, routechoiceB) =>
+				routechoiceA.name.localeCompare(routechoiceB.name)
+			)
+		});
+	}
+
+	return sortedLegs;
+}
+
+export function sortLegs<T extends LegWithRoutechoices | Leg>(legs: T[]): T[] {
+	if (legs.length === 0) return [];
+	const sortedLegs: T[] = [];
+
+	const firstLeg = legs.find((leg) =>
+		legs.every((otherLeg) => otherLeg.fkFinishControlPoint !== leg.fkStartControlPoint)
+	);
+
+	if (firstLeg === undefined) {
+		throw new Error('Circular course');
+	}
+
+	sortedLegs.push(firstLeg);
+
+	while (sortedLegs.length !== legs.length) {
+		const nextLeg = legs.find(
+			(leg) => leg.fkStartControlPoint === sortedLegs[sortedLegs.length - 1].fkFinishControlPoint
+		);
+
+		if (nextLeg === undefined) break;
+
+		sortedLegs.push(nextLeg);
 	}
 
 	return sortedLegs;
@@ -341,6 +354,7 @@ export function parseRoutechoicesTracksInASingleLeg(
 			name: routechoice.name,
 			color: routechoice.color,
 			length: routechoice.length,
+			elevation: routechoice.elevation,
 			track: parseRoutechoiceTrack(routechoice)
 		}))
 	};
@@ -381,60 +395,6 @@ export async function getRunnersWithTracksAndSortedLegs(
 			})
 		)
 		.then((runners) => sortRunnersAndRunnersLegs(runners, sortedLegs));
-}
-
-/**
- * Create routechoices statistics, only for one leg when legIndex is defined
- * @param runners
- * @param legIndex
- */
-export function createRoutechoiceStatistics(
-	runners: RunnerWithNullableLegs[],
-	legIndex?: number
-): Omit<RoutechoiceStatistics, 'id'>[] {
-	const routechoicesStatistics: Omit<RoutechoiceStatistics, 'id'>[] = [];
-
-	const createOrUpdateRoutechoiceStatisticsFromRunnerLeg = (runnerLeg: RunnerLeg) => {
-		const routechoiceId = runnerLeg.fkManualRoutechoice ?? runnerLeg.fkDetectedRoutechoice ?? null;
-		if (routechoiceId === null) return;
-
-		const statistics = routechoicesStatistics.find(
-			(stats) => stats.fkRoutechoice === routechoiceId
-		);
-
-		if (statistics === undefined) {
-			routechoicesStatistics.push({
-				fkRoutechoice: routechoiceId,
-				bestTime: runnerLeg.time,
-				numberOfRunners: 1
-			});
-
-			return;
-		}
-
-		statistics.numberOfRunners++;
-
-		if (statistics.bestTime > runnerLeg.time) {
-			statistics.bestTime = runnerLeg.time;
-		}
-	};
-
-	// I know, flatMap and filter, but Typescript doesn't infer types from filter
-	for (const runner of runners) {
-		if (legIndex !== undefined) {
-			const runnerLeg = runner.legs[legIndex];
-			if (runnerLeg === null || runnerLeg === undefined) continue;
-			createOrUpdateRoutechoiceStatisticsFromRunnerLeg(runnerLeg);
-			continue;
-		}
-
-		for (const runnerLeg of runner.legs) {
-			if (runnerLeg === null) continue;
-			createOrUpdateRoutechoiceStatisticsFromRunnerLeg(runnerLeg);
-		}
-	}
-
-	return routechoicesStatistics;
 }
 
 export function addAlpha(color: string, opacity: number) {

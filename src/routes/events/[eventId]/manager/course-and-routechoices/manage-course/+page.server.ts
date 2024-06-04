@@ -13,7 +13,7 @@ export async function load({ params: { eventId }, locals }) {
 		where: eq(legTable.fkEvent, eventId)
 	});
 
-	const sortedLegs = sortLegs(legs, false);
+	const sortedLegs = sortLegs(legs);
 
 	return { legs: sortedLegs };
 }

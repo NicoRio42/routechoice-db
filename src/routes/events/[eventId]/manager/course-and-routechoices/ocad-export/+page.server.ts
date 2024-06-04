@@ -2,8 +2,8 @@ import { redirectIfNotAdmin } from '$lib/server/auth/helpers.js';
 import { db } from '$lib/server/db/db.js';
 import { error, fail, redirect } from '@sveltejs/kit';
 import { DOMParser } from 'linkedom';
-import { parseGPXRoutechoicesOCADExport, parseIOFXML3CourseOCADExport } from 'orienteering-js/ocad';
-import { insertControlPointsLegsRoutechoicesAndRoutechoicesStatistics } from '../helpers.js';
+import { parseGPXRoutechoicesOCADExport, parseIOFXML3CourseExport } from '@orienteering-js/course';
+import { insertControlPointsLegsAndRoutechoices } from '../helpers.js';
 
 export async function load({ locals }) {
 	redirectIfNotAdmin(locals.user);
@@ -31,10 +31,7 @@ export const actions = {
 		const parser = new DOMParser();
 		const courseDoc = parser.parseFromString(courseRaw, 'text/xml');
 
-		const [controls, legs] = parseIOFXML3CourseOCADExport(
-			courseDoc as any as XMLDocument,
-			classIndex
-		);
+		const [controls, legs] = parseIOFXML3CourseExport(courseDoc as any as XMLDocument, classIndex);
 
 		const routechoicesRaw = await routechoicesFile.text();
 		const routechoicesDoc = parser.parseFromString(routechoicesRaw, 'text/xml');
@@ -44,12 +41,7 @@ export const actions = {
 			legs
 		);
 
-		await insertControlPointsLegsRoutechoicesAndRoutechoicesStatistics(
-			controls,
-			legsWithRoutechoices,
-			db,
-			eventId
-		);
+		await insertControlPointsLegsAndRoutechoices(controls, legsWithRoutechoices, db, eventId);
 
 		throw redirect(302, `/events/${eventId}/manager/split-times`);
 	}

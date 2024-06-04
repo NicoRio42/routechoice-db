@@ -11,6 +11,9 @@ dependencies:
   '@lucia-auth/adapter-drizzle':
     specifier: ^1.0.7
     version: 1.0.7(lucia@3.2.0)
+  '@orienteering-js/course':
+    specifier: npm:@jsr/orienteering-js__course@^0.3.0
+    version: /@jsr/orienteering-js__course@0.3.0
   '@orienteering-js/gps':
     specifier: npm:@jsr/orienteering-js__gps@^0.1.10
     version: /@jsr/orienteering-js__gps@0.1.10
@@ -417,6 +420,13 @@ packages:
       regenerator-runtime: 0.14.1
     dev: true
     optional: true
+
+  /@babel/runtime@7.24.6:
+    resolution: {integrity: sha512-Ja18XcETdEl5mzzACGd+DKgaGJzPTCow7EglgwTmHdwokzDFYh/MHua6lU6DV/hjF2IaOJ4oX2nqnjG7RElKOw==}
+    engines: {node: '>=6.9.0'}
+    dependencies:
+      regenerator-runtime: 0.14.1
+    dev: false
 
   /@babel/template@7.24.0:
     resolution: {integrity: sha512-Bkf2q8lMB0AFpX0NFEqSbx1OkTHf0f+0j82mkw+ZpzBnkk7e9Ql0891vlfgi+kHwOk8tQjiQHpqh4LaSa0fKEA==}
@@ -1911,8 +1921,21 @@ packages:
       '@jridgewell/sourcemap-codec': 1.4.15
     dev: true
 
+  /@jsr/orienteering-js__course@0.3.0:
+    resolution: {integrity: sha512-6JvbmATZbQzhwhkc8Pa/Y21aRX1P2YwR2BD6TEWmS6jb9tdkBsMQIRLwDB3/AW4ygx9ZyL5/7b8sxPzLEFVAeQ==, tarball: https://npm.jsr.io/~/11/@jsr/orienteering-js__course/0.3.0.tgz}
+    dependencies:
+      '@jsr/orienteering-js__map': 0.1.0
+      zod: 3.23.8
+    dev: false
+
   /@jsr/orienteering-js__gps@0.1.10:
     resolution: {integrity: sha512-Sx0EtkwGUY8xhtLzehucht2nbWClLB4hXrok1Vmo35PK799PdrG9wW9sNEu380rOvb+kYDU1H8VrLGSLKrsMGg==, tarball: https://npm.jsr.io/~/11/@jsr/orienteering-js__gps/0.1.10.tgz}
+    dev: false
+
+  /@jsr/orienteering-js__map@0.1.0:
+    resolution: {integrity: sha512-KkR8jbyB3Vbkx49n5UAtsw52TJBCUxCSlKq40dyxndbt7s9DqX1E0jE+/rV/NCEZv25IbwiNLWJjJZQcAQztgQ==, tarball: https://npm.jsr.io/~/11/@jsr/orienteering-js__map/0.1.0.tgz}
+    dependencies:
+      mathjs: 13.0.0
     dev: false
 
   /@jsr/orienteering-js__split-times@0.2.0:
@@ -3870,6 +3893,10 @@ packages:
     resolution: {integrity: sha512-pwiTgt0Q7t+GHZA4yaLjObx4vXmmdcS0iSJ19o8d/goUGgItX9UZWKWNnLHehxviD8wU2IWRsnR8cD5+yOJP2Q==}
     dev: false
 
+  /fraction.js@4.3.7:
+    resolution: {integrity: sha512-ZsDfxO51wGAXREY55a7la9LScWpwv9RxIrYABrlvOFBlH/ShPnrtsXeuUIfXKKOVicNxQ+o8JTbJvjS4M89yew==}
+    dev: false
+
   /fs-monkey@1.0.6:
     resolution: {integrity: sha512-b1FMfwetIKymC0eioW7mTywihSQE4oLzQn1dB6rZB5fx/3NpNEdAWeCSMB+60/AeT0TCXsxzAlcYVEFCTAksWg==}
     requiresBuild: true
@@ -4312,6 +4339,22 @@ packages:
       typed-function: 4.1.0
     dev: false
 
+  /mathjs@13.0.0:
+    resolution: {integrity: sha512-Jy9/01M5lTRLxlkxnvPmvWq6EFwzq8guIspeQ9p66AY+8Pih3Jf8Us5fSZ9kC8gl7iRNHUQ+SJpitX41aa6agw==}
+    engines: {node: '>= 18'}
+    hasBin: true
+    dependencies:
+      '@babel/runtime': 7.24.6
+      complex.js: 2.1.1
+      decimal.js: 10.4.3
+      escape-latex: 1.2.0
+      fraction.js: 4.3.7
+      javascript-natural-sort: 0.7.1
+      seedrandom: 3.0.5
+      tiny-emitter: 2.1.0
+      typed-function: 4.1.1
+    dev: false
+
   /mdn-data@2.0.30:
     resolution: {integrity: sha512-GaqWWShW4kv/G9IEucWScBx9G1/vsFZZJUO+tD26M8J8z3Kw5RDQjaoZe03YAClgeS/SWPOcb4nkFBTEi5DUEA==}
     dev: true
@@ -4743,8 +4786,6 @@ packages:
   /regenerator-runtime@0.14.1:
     resolution: {integrity: sha512-dYnhHh0nJoMfnkZs6GmmhFknAGRrLznOu5nc9ML+EJxGvrx6H7teuevqVqCuPcPK//3eDrrjQhehXVx9cnkGdw==}
     requiresBuild: true
-    dev: true
-    optional: true
 
   /regexparam@3.0.0:
     resolution: {integrity: sha512-RSYAtP31mvYLkAHrOlh25pCNQ5hWnT106VukGaaFfuJrZFkGRX5GhUAdPqpSDXxOhA2c4akmRuplv1mRqnBn6Q==}
@@ -5279,6 +5320,11 @@ packages:
 
   /typed-function@4.1.0:
     resolution: {integrity: sha512-DGwUl6cioBW5gw2L+6SMupGwH/kZOqivy17E4nsh1JI9fKF87orMmlQx3KISQPmg3sfnOUGlwVkroosvgddrlg==}
+    engines: {node: '>= 14'}
+    dev: false
+
+  /typed-function@4.1.1:
+    resolution: {integrity: sha512-Pq1DVubcvibmm8bYcMowjVnnMwPVMeh0DIdA8ad8NZY2sJgapANJmiigSUwlt+EgXxpfIv8MWrQXTIzkfYZLYQ==}
     engines: {node: '>= 14'}
     dev: false
 

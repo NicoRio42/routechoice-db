@@ -18,7 +18,7 @@ export async function GET({ params: { eventId } }) {
 		throw error(404, 'No event found for this id.');
 	}
 
-	const sortedLegs = sortLegs(event.legs, false);
+	const sortedLegs = sortLegs(event.legs);
 
 	return json({
 		...event,

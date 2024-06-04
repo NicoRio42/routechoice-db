@@ -1,11 +1,8 @@
-import { GPS_PROVIDERS } from '$lib/constants.js';
 import {
-	createRoutechoiceStatistics,
-	extractLiveProviderAndEventIdFromUrl,
 	getCompetitorsFromLiveEvent,
 	getRunnersWithTracksAndSortedLegs,
 	parseRoutechoicesTracksInLegs,
-	sortLegs
+	sortLegsAndRoutechoices
 } from '$lib/helpers.js';
 import { detectRunnersRoutechoices } from '$lib/routechoice-detector.js';
 import { redirectIfNotAdmin } from '$lib/server/auth/helpers.js';
@@ -14,7 +11,6 @@ import {
 	leg as legTable,
 	liveEvent,
 	liveEvent as liveEventTable,
-	routechoiceStatistics as routechoiceStatisticsTable,
 	runnerLeg as runnerLegTable,
 	runner as runnerTable,
 	user as userTable
@@ -22,8 +18,8 @@ import {
 import type { InArgs, InStatement } from '@libsql/client';
 import { error, fail, redirect } from '@sveltejs/kit';
 import { and, eq } from 'drizzle-orm';
-import { loggatorEventSchema } from 'orienteering-js/models';
 import { matchRunnersByName } from './helpers.js';
+import type { BatchItem } from 'drizzle-orm/batch';
 
 export async function load({ params: { eventId }, locals, fetch }) {
 	redirectIfNotAdmin(locals.user);
@@ -184,7 +180,7 @@ export const actions = {
 			with: { routechoices: true }
 		});
 
-		const sortedLegs = sortLegs(legs);
+		const sortedLegs = sortLegsAndRoutechoices(legs);
 		const sortedLegsWithRoutechoicesWithParsedTracks = parseRoutechoicesTracksInLegs(sortedLegs);
 
 		const runnersWithTracksAndSortedLegs = await getRunnersWithTracksAndSortedLegs(
@@ -199,49 +195,36 @@ export const actions = {
 			runnersWithTracksAndSortedLegs
 		);
 
-		const routechoicesStatistics = createRoutechoiceStatistics(runnersWithDetectedRoutechoices);
-
-		// Temporary fix to prevent usuing too many http sub requests
-		// TODO use batch
-		const statements: InStatement[] = [];
+		const statements: BatchItem<'sqlite'>[] = [];
 
 		for (const runner of runnersWithDetectedRoutechoices) {
-			const { sql, params } = db
+			const runnerUpdate = db
 				.update(runnerTable)
 				.set({
 					fkLiveEvent: runner.fkLiveEvent,
 					trackingDeviceId: runner.trackingDeviceId,
 					fkUser: runner.fkUser
 				})
-				.where(eq(runnerTable.id, runner.id))
-				.toSQL();
+				.where(eq(runnerTable.id, runner.id));
 
-			statements.push({ sql, args: params as any as InArgs });
+			statements.push(runnerUpdate);
 
 			for (const runnerLeg of runner.legs) {
 				if (runnerLeg === null || !runnerLeg.fkDetectedRoutechoice) continue;
 
-				const { sql, params } = db
+				const runnerLegUpdate = db
 					.update(runnerLegTable)
 					.set({ fkDetectedRoutechoice: runnerLeg.fkDetectedRoutechoice })
-					.where(eq(runnerLegTable.id, runnerLeg.id))
-					.toSQL();
+					.where(eq(runnerLegTable.id, runnerLeg.id));
 
-				statements.push({ sql, args: params as any as InArgs });
+				statements.push(runnerLegUpdate);
 			}
 		}
 
-		for (const { bestTime, numberOfRunners, fkRoutechoice } of routechoicesStatistics) {
-			const { sql, params } = db
-				.update(routechoiceStatisticsTable)
-				.set({ bestTime, numberOfRunners })
-				.where(eq(routechoiceStatisticsTable.fkRoutechoice, fkRoutechoice))
-				.toSQL();
+		const firstInsert = statements.shift();
+		if (firstInsert === undefined) throw error(400, 'There should be at least one runner');
 
-			statements.push({ sql, args: params as any as InArgs });
-		}
-
-		await libsqlClient.batch(statements);
+		await db.batch([firstInsert, ...statements]);
 
 		throw redirect(302, `/events/${eventId}/map`);
 	}
