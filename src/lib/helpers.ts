@@ -173,21 +173,21 @@ export async function getEventMap(liveEvent: LiveEvent, fetch: Fetch): Promise<C
 						lat: loggatorMap.coordinates.topLeft.lat,
 						lon: loggatorMap.coordinates.topLeft.lng
 					},
-					point: { x: 1, y: 1 }
+					point: { x: 0, y: 0 }
 				},
 				{
 					gps: {
 						lat: loggatorMap.coordinates.bottomLeft.lat,
 						lon: loggatorMap.coordinates.bottomLeft.lng
 					},
-					point: { x: 1, y: -1 }
+					point: { x: 0, y: -1 }
 				},
 				{
 					gps: {
 						lat: loggatorMap.coordinates.topRight.lat,
 						lon: loggatorMap.coordinates.topRight.lng
 					},
-					point: { x: -1, y: 1 }
+					point: { x: -1, y: 0 }
 				}
 			]
 		};

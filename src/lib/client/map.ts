@@ -43,21 +43,21 @@ export async function getMapCallibrationByFetchingMapImageIfNeeded(
 										lat: courseMap.calibration[0].gps.lat,
 										lon: courseMap.calibration[0].gps.lon
 									},
-									point: { x: 1, y: 1 }
+									point: { x: 0, y: 0 }
 								},
 								{
 									gps: {
 										lat: courseMap.calibration[1].gps.lat,
 										lon: courseMap.calibration[1].gps.lon
 									},
-									point: { x: 1, y: height }
+									point: { x: 0, y: height - 1 }
 								},
 								{
 									gps: {
 										lat: courseMap.calibration[2].gps.lat,
 										lon: courseMap.calibration[2].gps.lon
 									},
-									point: { x: width, y: 1 }
+									point: { x: width - 1, y: 0 }
 								}
 							]
 						: courseMap.calibration,
@@ -78,21 +78,21 @@ export async function getMapCallibrationByFetchingMapImageIfNeeded(
 									lat: courseMap.calibration[0].gps.lat,
 									lon: courseMap.calibration[0].gps.lon
 								},
-								point: { x: 1, y: 1 }
+								point: { x: 0, y: 0 }
 							},
 							{
 								gps: {
 									lat: courseMap.calibration[1].gps.lat,
 									lon: courseMap.calibration[1].gps.lon
 								},
-								point: { x: 1, y: image.naturalHeight }
+								point: { x: 0, y: image.naturalHeight - 1 }
 							},
 							{
 								gps: {
 									lat: courseMap.calibration[2].gps.lat,
 									lon: courseMap.calibration[2].gps.lon
 								},
-								point: { x: image.naturalWidth, y: 1 }
+								point: { x: image.naturalWidth - 1, y: 0 }
 							}
 						]
 					: courseMap.calibration,

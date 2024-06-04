@@ -22,7 +22,7 @@
 		const coordinatesConverter = new CoordinatesConverter(calibration);
 		map = getMap();
 
-		const imageExtent = [1, 1, width, height];
+		const imageExtent = [0, 0, width - 1, height - 1];
 
 		const imageProjection = new Projection({
 			code: 'georef-image',
@@ -37,7 +37,7 @@
 				const [lon, lat] = transform(coords, 'EPSG:3857', 'EPSG:4326');
 				const [x, y] = coordinatesConverter.latLongToXY([lat, lon]);
 
-				return [x, height - y];
+				return [x, height - y + 1];
 			},
 			([x, y]: number[]) => {
 				const [lat, lon] = coordinatesConverter.xYToLatLong([x, height - y]);
