@@ -12,8 +12,8 @@ dependencies:
     specifier: ^1.0.7
     version: 1.0.7(lucia@3.2.0)
   '@orienteering-js/course':
-    specifier: npm:@jsr/orienteering-js__course@^0.3.0
-    version: /@jsr/orienteering-js__course@0.3.0
+    specifier: npm:@jsr/orienteering-js__course@^0.3.1
+    version: /@jsr/orienteering-js__course@0.3.1
   '@orienteering-js/gps':
     specifier: npm:@jsr/orienteering-js__gps@^0.1.10
     version: /@jsr/orienteering-js__gps@0.1.10
@@ -412,21 +412,11 @@ packages:
       regenerator-runtime: 0.14.0
     dev: false
 
-  /@babel/runtime@7.24.5:
-    resolution: {integrity: sha512-Nms86NXrsaeU9vbBJKni6gXiEXZ4CVpYVzEjDH9Sb8vmZ3UljyA1GSOJl/6LGPO8EHLuSF9H+IxNXHPX8QHJ4g==}
-    engines: {node: '>=6.9.0'}
-    requiresBuild: true
-    dependencies:
-      regenerator-runtime: 0.14.1
-    dev: true
-    optional: true
-
   /@babel/runtime@7.24.6:
     resolution: {integrity: sha512-Ja18XcETdEl5mzzACGd+DKgaGJzPTCow7EglgwTmHdwokzDFYh/MHua6lU6DV/hjF2IaOJ4oX2nqnjG7RElKOw==}
     engines: {node: '>=6.9.0'}
     dependencies:
       regenerator-runtime: 0.14.1
-    dev: false
 
   /@babel/template@7.24.0:
     resolution: {integrity: sha512-Bkf2q8lMB0AFpX0NFEqSbx1OkTHf0f+0j82mkw+ZpzBnkk7e9Ql0891vlfgi+kHwOk8tQjiQHpqh4LaSa0fKEA==}
@@ -1921,8 +1911,8 @@ packages:
       '@jridgewell/sourcemap-codec': 1.4.15
     dev: true
 
-  /@jsr/orienteering-js__course@0.3.0:
-    resolution: {integrity: sha512-6JvbmATZbQzhwhkc8Pa/Y21aRX1P2YwR2BD6TEWmS6jb9tdkBsMQIRLwDB3/AW4ygx9ZyL5/7b8sxPzLEFVAeQ==, tarball: https://npm.jsr.io/~/11/@jsr/orienteering-js__course/0.3.0.tgz}
+  /@jsr/orienteering-js__course@0.3.1:
+    resolution: {integrity: sha512-m9JlnSeUZrTyxddELLb5cW36WfFnN53dewuCJRIpz6Ktx+wta3igAiQPV+lB2ycVTwpbepwjGIQXApVo/wFM4w==, tarball: https://npm.jsr.io/~/11/@jsr/orienteering-js__course/0.3.1.tgz}
     dependencies:
       '@jsr/orienteering-js__map': 0.1.0
       zod: 3.23.8
@@ -4190,7 +4180,7 @@ packages:
     engines: {node: '>=16'}
     requiresBuild: true
     dependencies:
-      '@babel/runtime': 7.24.5
+      '@babel/runtime': 7.24.6
       ts-algebra: 2.0.0
     dev: true
     optional: true

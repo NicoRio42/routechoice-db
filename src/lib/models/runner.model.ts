@@ -6,3 +6,8 @@ export type RunnerWithNullableLegs = RunnerFromDatabase & {
 };
 
 export type RunnerWithNullableLegsAndTrack = RunnerWithNullableLegs & { track: RunnerTrack | null };
+
+export type RunnerWithLegsAndTracks = RunnerFromDatabase & {
+	track: RunnerTrack;
+	legs: RunnerLeg[];
+};

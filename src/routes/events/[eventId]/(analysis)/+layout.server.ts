@@ -31,8 +31,6 @@ export async function load({ params: { eventId }, locals, fetch }) {
 		eventWithSortedLegs.legs
 	);
 
-	runners[0].track;
-
 	return {
 		event: {
 			...eventWithSortedLegs,

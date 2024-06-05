@@ -4,6 +4,7 @@ export const SPLITTIMES_BASE_URL_DEV = 'http://localhost:5174';
 export const ORIENTEERING_API_BASE_URL = 'https://orienteering-api.pages.dev';
 export const TWO_D_RERUN_URL = 'http://loggator2.worldofo.com/loadwinsplits.php';
 export const CLOUDINARY_CLOUD_NAME = 'dosqlwgkf';
+export const LOCAL_STORAGE_PREFIX = 'ROUTECHOICE_DB';
 
 type GpsProvider = {
 	urls: string[];

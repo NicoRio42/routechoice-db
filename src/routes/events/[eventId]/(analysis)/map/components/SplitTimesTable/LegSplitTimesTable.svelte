@@ -10,7 +10,7 @@
 	import LegCell from './LegCell.svelte';
 	import RoutechoiceTableCell from './RoutecoiceTableCell.svelte';
 
-	export let selectedRunners: string[];
+	export let selectedRunnersIds: string[];
 	export let sortedRunnersWithOneLeg: RunnerWithNullableLegsAndTrack[];
 	export let legRoutechoices: Routechoice[];
 	export let isLastSplit = false;
@@ -21,11 +21,11 @@
 		currentTarget: EventTarget & HTMLInputElement;
 	}): void {
 		if (event.currentTarget.checked) {
-			selectedRunners = sortedRunnersWithOneLeg.filter((r) => r.track !== null).map((r) => r.id);
+			selectedRunnersIds = sortedRunnersWithOneLeg.filter((r) => r.track !== null).map((r) => r.id);
 			return;
 		}
 
-		selectedRunners = [];
+		selectedRunnersIds = [];
 	}
 
 	function handleShowTrackCheckboxChange(
@@ -33,14 +33,15 @@
 		runnerId: string
 	): void {
 		if (event.currentTarget.checked) {
-			if (!selectedRunners.includes(runnerId)) selectedRunners = [...selectedRunners, runnerId];
+			if (!selectedRunnersIds.includes(runnerId))
+				selectedRunnersIds = [...selectedRunnersIds, runnerId];
 		} else {
-			selectedRunners = selectedRunners.filter((id) => id !== runnerId);
+			selectedRunnersIds = selectedRunnersIds.filter((id) => id !== runnerId);
 		}
 
 		iShowAllRunnersTracksChecked = sortedRunnersWithOneLeg
 			.filter((r) => r.track !== null)
-			.every((r) => selectedRunners.includes(r.id));
+			.every((r) => selectedRunnersIds.includes(r.id));
 	}
 </script>
 
@@ -101,7 +102,7 @@
 						<input
 							type="checkbox"
 							value={runner.id}
-							checked={selectedRunners.includes(runner.id)}
+							checked={selectedRunnersIds.includes(runner.id)}
 							on:change={(e) => handleShowTrackCheckboxChange(e, runner.id)}
 							style:--pico-border-color={runner.track.color}
 							style:--pico-primary-background={runner.track.color}
@@ -109,16 +110,6 @@
 						/>
 					{/if}
 				</td>
-
-				<!-- {#if runner.track !== null && $isUserAdminStore && false}
-				<td class="pen-td">
-					<button
-						on:click={() => dispatch('changeRunnerTimeOffset', runner.id)}
-						type="button"
-						class="pen-button"><Pen --width="1rem" --height="1rem" /></button
-					>
-				</td>
-			{/if} -->
 			</tr>
 		{:else}
 			<tr>

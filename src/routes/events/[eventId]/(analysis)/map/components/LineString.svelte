@@ -18,8 +18,21 @@
 
 	let vectorLayer: VectorLayer<VectorSource<Geometry>>, lineFeature: Feature;
 	let line: LineString;
+	let style: Style;
+	let textStyle: Text;
+	let stroke: Stroke;
 
 	$: if (line !== undefined) line.setCoordinates(coords);
+
+	$: if (stroke !== undefined) {
+		stroke.setWidth(width);
+		lineFeature.setStyle(style);
+	}
+
+	$: if (textStyle !== undefined && style !== undefined) {
+		textStyle.setText(text);
+		lineFeature.setStyle(style);
+	}
 
 	const getVectorLayer = getContext<() => VectorLayer<VectorSource<Geometry>>>('vectorLayer');
 
@@ -30,7 +43,7 @@
 		line = new LineString(coords);
 		const font = 'bold 1.25rem/1 Arial';
 
-		const textStyle = new Text({
+		textStyle = new Text({
 			font,
 			text,
 			fill: new Fill({ color }),
@@ -40,8 +53,8 @@
 		});
 
 		lineFeature = new Feature(line);
-		const stroke = new Stroke({ color, width });
-		const style = new Style({ stroke, text: textStyle });
+		stroke = new Stroke({ color, width });
+		style = new Style({ stroke, text: textStyle });
 		lineFeature.setStyle(style);
 
 		vectorSource?.addFeature(lineFeature);

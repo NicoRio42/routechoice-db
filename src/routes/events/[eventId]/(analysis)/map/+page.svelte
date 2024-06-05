@@ -1,6 +1,9 @@
 <script lang="ts">
 	import { page } from '$app/stores';
+	import { pushNotification } from '$lib/components/Notifications.svelte';
+	import { addSearchParamsToURL, getTracksFromLiveEvents } from '$lib/helpers';
 	import type { EventWithLiveEventsRunnersLegsAndControlPoints as Event } from '$lib/models/event.model.js';
+	import type { RunnerWithLegsAndTracks } from '$lib/models/runner.model';
 	import { mapIsLoading } from '$lib/stores/map-loading.store';
 	import type { User } from 'lucia';
 	import type { LineString } from 'ol/geom.js';
@@ -15,13 +18,12 @@
 	import OlMap from './components/OLMap.svelte';
 	import RoutechoiceTrack from './components/RoutechoiceTrack.svelte';
 	import RunnerRoute from './components/RunnerRoute.svelte';
+	import Settings from './components/Settings.svelte';
 	import SideBar from './components/SideBar.svelte';
+	import TracksLabels from './components/TracksLabels.svelte';
 	import VectorLayer from './components/VectorLayer.svelte';
-	import { computeFitBoxAndAngleFromLegNumber, getLegNumberFromSearchParams } from './utils.js';
-
-	import { pushNotification } from '$lib/components/Notifications.svelte';
-	import { getTracksFromLiveEvents } from '$lib/helpers';
 	import './styles.css';
+	import { computeFitBoxAndAngleFromLegNumber, getLegNumberFromSearchParams } from './utils.js';
 
 	export let data;
 
@@ -29,16 +31,28 @@
 
 	let angle: number;
 	let fitBox: [number, number, number, number];
-	let selectedRunners: string[] = [];
-	let showRoutechoices = true;
+	let selectedRunnersIds: string[] = [];
 	let currentDrawnRoutechoice: null | LineString = null;
 	let showAddRoutechoiceDialog = false;
 	let showManageRoutechoicesDialog = false;
 	let isDrawingNewRoutechoice = false;
+	let hoveredRunnerId: string | null = null;
 
-	// $: mode = getModeFromSearchParams($page.url.searchParams);
 	$: legNumber = getLegNumberFromSearchParams($page.url.searchParams);
 	$: legRoutechoices = data.event.legs[legNumber - 1]?.routechoices ?? [];
+	$: showRoutechoices = $page.url.searchParams.has('showRoutechoices');
+
+	$: selectedRunnersWithCurrentLegOnly = data.event.runners
+		.filter(({ id }) => selectedRunnersIds.includes(id))
+		.map((runner) => ({
+			...runner,
+			legs: runner.legs.filter(({ fkLeg }) => data.event.legs[legNumber - 1].id === fkLeg)
+		}))
+		.filter(
+			(runner): runner is RunnerWithLegsAndTracks =>
+				runner.legs.length !== 0 && runner.track !== null
+		)
+		.sort((runner1, runner2) => runner1.legs[0].time - runner2.legs[0].time);
 
 	$: {
 		const [newFitBox, newAngle] = computeFitBoxAndAngleFromLegNumber(
@@ -76,8 +90,6 @@
 		currentDrawnRoutechoice = e.detail.feature.getGeometry() as LineString;
 		showAddRoutechoiceDialog = true;
 	}
-
-	async function handleRunnerTimeOffsetChange(event: CustomEvent<string>): Promise<void> {}
 </script>
 
 <svelte:head>
@@ -96,7 +108,7 @@
 	/>
 {/if}
 
-<div class="wrapper">
+<div class="wrapper overflow-hidden">
 	{#if $mapIsLoading}
 		<article
 			class="absolute z-1 bg-transparent top-40% left-50% -translate-x-50% -translate-y-50% backdrop-blur rounded-xl"
@@ -106,17 +118,32 @@
 		</article>
 	{/if}
 
-	{#if data.event.legs.length !== 0 && data.user?.role === 'admin'}
-		<button
-			on:click={() => (showManageRoutechoicesDialog = !showManageRoutechoicesDialog)}
-			class="flex btn-unset absolute top-2 right-2 z-1 bg-white text-black w-6 h-6 items-center justify-center"
+	<!-- I nead a div because pico overides the background-color css var for outline buttons -->
+	<div class="absolute top-2 right-2 z-1 bg-background-color rounded-md">
+		<a
+			role="button"
+			href={addSearchParamsToURL($page.url, 'showSettings', '')}
+			data-sveltekit-replacestate
+			class="outline !flex items-center justify-center p-2"
 		>
-			{#if showManageRoutechoicesDialog}
-				<i class="block i-carbon-edit-off"></i>
-			{:else}
-				<i class="block i-carbon-edit"></i>
-			{/if}
-		</button>
+			<i class="block i-carbon-settings"></i>
+		</a>
+	</div>
+
+	{#if data.event.legs.length !== 0 && data.user?.role === 'admin'}
+		<!-- I nead a div because pico overides the background-color css var for outline buttons -->
+		<div class="absolute top-12 right-2 z-1 bg-background-color rounded-md">
+			<button
+				on:click={() => (showManageRoutechoicesDialog = !showManageRoutechoicesDialog)}
+				class="outline flex items-center justify-center p-2"
+			>
+				{#if showManageRoutechoicesDialog}
+					<i class="block i-carbon-edit-off"></i>
+				{:else}
+					<i class="block i-carbon-edit"></i>
+				{/if}
+			</button>
+		</div>
 	{/if}
 
 	{#if showAddRoutechoiceDialog && currentDrawnRoutechoice !== null}
@@ -130,14 +157,19 @@
 		/>
 	{/if}
 
-	<!-- <RunnerOffsetEditor bind:courseData /> -->
-
 	<SideBar
-		bind:selectedRunners
+		bind:selectedRunnersIds
 		runners={data.event.runners}
 		legs={data.event.legs}
 		{legNumber}
-		on:changeRunnerTimeOffset={handleRunnerTimeOffsetChange}
+	/>
+
+	<Settings />
+
+	<TracksLabels
+		routechoices={data.event.legs[legNumber - 1].routechoices}
+		{selectedRunnersWithCurrentLegOnly}
+		bind:hoveredRunnerId
 	/>
 
 	<OlMap {isDrawingNewRoutechoice} {angle} {fitBox} padding={[100, 0, 100, 0]}>
@@ -154,26 +186,35 @@
 				{/each}
 			{/if}
 
-			{#each data.event.runners as runner (runner.id)}
-				{@const show = selectedRunners.includes(runner.id)}
-				{@const runnerLeg = runner.legs.find(
-					(leg) => data.event.legs[legNumber - 1].id === leg?.fkLeg
-				)}
+			{#if hoveredRunnerId !== null}
+				{@const hoveredRunner =
+					selectedRunnersWithCurrentLegOnly.find((r) => r.id === hoveredRunnerId) ??
+					selectedRunnersWithCurrentLegOnly[0]}
 
-				{#if show && runner.track !== null && runnerLeg !== undefined && runnerLeg !== null}
-					<RunnerRoute
-						{runnerLeg}
-						name={runner.lastName}
-						track={runner.track}
-						startTime={runner.startTime}
-						timeOffset={runner.timeOffset}
-					/>
-				{/if}
+				<RunnerRoute
+					runnerLeg={hoveredRunner.legs[0]}
+					name={hoveredRunner.lastName}
+					track={hoveredRunner.track}
+					startTime={hoveredRunner.startTime}
+					timeOffset={hoveredRunner.timeOffset}
+					isEmphasized={hoveredRunnerId === hoveredRunner.id}
+				/>
+			{/if}
+
+			{#each selectedRunnersWithCurrentLegOnly.filter((r) => r.id !== hoveredRunnerId) as runner (runner.id)}
+				<RunnerRoute
+					runnerLeg={runner.legs[0]}
+					name={runner.lastName}
+					track={runner.track}
+					startTime={runner.startTime}
+					timeOffset={runner.timeOffset}
+					isEmphasized={hoveredRunnerId === runner.id}
+				/>
 			{/each}
 		</VectorLayer>
 	</OlMap>
 
-	<ActionButtons {legNumber} bind:showRoutechoices legs={data.event.legs} />
+	<ActionButtons {legNumber} legs={data.event.legs} />
 </div>
 
 <style>

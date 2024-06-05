@@ -5,8 +5,8 @@
 
 	export let legNumber: number;
 	export let legs: Leg[];
-	export let showRoutechoices: boolean;
 
+	$: showRoutechoices = $page.url.searchParams.has('showRoutechoices');
 	const numberOfLegs = legs.length;
 
 	function getPreviousLegNumber() {
@@ -19,16 +19,20 @@
 </script>
 
 <div class="control-bar">
-	<button
-		class="rounded-full flex items-center justify-center w-12 h-12 m-0 p-0"
-		on:click={() => (showRoutechoices = !showRoutechoices)}
+	<a
+		role="button"
+		href={showRoutechoices
+			? deleteSearchParamsToURL($page.url, 'showRoutechoices')
+			: addSearchParamsToURL($page.url, 'showRoutechoices', '')}
+		data-sveltekit-replacestate
+		class="rounded-full !flex items-center justify-center w-12 h-12 m-0 p-0"
 	>
 		<i
 			class:i-carbon-view={!showRoutechoices}
 			class:i-carbon-view-off={showRoutechoices}
 			class="inline-block w-5 h-5"
 		/>
-	</button>
+	</a>
 
 	<a
 		role="button"

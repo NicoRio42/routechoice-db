@@ -7,7 +7,7 @@
 	import LegSplitTimesTable from './SplitTimesTable/LegSplitTimesTable.svelte';
 	import Toggle from './Toggle.svelte';
 
-	export let selectedRunners: string[];
+	export let selectedRunnersIds: string[];
 	export let runners: RunnerWithNullableLegsAndTrack[];
 	export let legs: LegWithRoutechoices[];
 	export let legNumber: number;
@@ -59,9 +59,8 @@
 					{sortedRunnersWithOneLeg}
 					{legRoutechoices}
 					isLastSplit={legNumber === legs.length}
-					bind:selectedRunners
+					bind:selectedRunnersIds
 					on:routechoiceChange
-					on:changeRunnerTimeOffset
 				/>
 			</section>
 
