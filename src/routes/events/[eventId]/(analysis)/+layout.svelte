@@ -51,30 +51,32 @@
 				>
 			</li>
 
-			<li class="list-none m-0">
-				<a
-					class="block decoration-none w-full px-4 py-1.5 hover:bg-pico-dropdown-hover-background-color"
-					href="/events/{$page.params.eventId}/table">Split times</a
-				>
-			</li>
+			{#if data.event.runners.length !== 0}
+				<li class="list-none m-0">
+					<a
+						class="block decoration-none w-full px-4 py-1.5 hover:bg-pico-dropdown-hover-background-color"
+						href="/events/{$page.params.eventId}/table">Split times</a
+					>
+				</li>
 
-			<li class="list-none m-0">
-				<a
-					class="block decoration-none w-full px-4 py-1.5 hover:bg-pico-dropdown-hover-background-color"
-					href="/events/{$page.params.eventId}/leader-graph"
-				>
-					Leader graph
-				</a>
-			</li>
+				<li class="list-none m-0">
+					<a
+						class="block decoration-none w-full px-4 py-1.5 hover:bg-pico-dropdown-hover-background-color"
+						href="/events/{$page.params.eventId}/leader-graph"
+					>
+						Leader graph
+					</a>
+				</li>
 
-			<li class="list-none m-0">
-				<a
-					class="block decoration-none w-full px-4 py-1.5 hover:bg-pico-dropdown-hover-background-color"
-					href="/events/{$page.params.eventId}/superman-graph"
-				>
-					Superman graph
-				</a>
-			</li>
+				<li class="list-none m-0">
+					<a
+						class="block decoration-none w-full px-4 py-1.5 hover:bg-pico-dropdown-hover-background-color"
+						href="/events/{$page.params.eventId}/superman-graph"
+					>
+						Superman graph
+					</a>
+				</li>
+			{/if}
 		</ul>
 	{/if}
 </div>

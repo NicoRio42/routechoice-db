@@ -46,7 +46,9 @@
 		.filter(({ id }) => selectedRunnersIds.includes(id))
 		.map((runner) => ({
 			...runner,
-			legs: runner.legs.filter(({ fkLeg }) => data.event.legs[legNumber - 1].id === fkLeg)
+			legs: runner.legs.filter(
+				(runnerLeg) => data.event.legs[legNumber - 1].id === runnerLeg?.fkLeg
+			)
 		}))
 		.filter(
 			(runner): runner is RunnerWithLegsAndTracks =>

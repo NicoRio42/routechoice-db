@@ -21,7 +21,7 @@
 		{#if $settingsStore.routechoicesLabels === 'aside'}
 			<ul class="p-0 m-0 shrink-0 px-2">
 				{#each routechoices as routechoice (routechoice.id)}
-					<li style:color={routechoice.color} class="list-none text-5 font-900 m-0 text-right">
+					<li style:color={routechoice.color} class="list-none text-5 m-0 text-right">
 						{routechoice.name}
 						{Math.round(routechoice.length)}m
 						{#if routechoice.elevation !== null}
@@ -39,7 +39,7 @@
 				{#each selectedRunnersWithCurrentLegOnly as runner (runner.id)}
 					<li
 						style:color={runner.track.color}
-						class="list-none text-5 font-900 m-0 px-2 text-right hover:bg-pico-dropdown-hover-background-color"
+						class="list-none text-5 m-0 px-2 text-right hover:bg-pico-dropdown-hover-background-color"
 						on:mouseenter={() => (hoveredRunnerId = runner.id)}
 						on:mouseleave={() => (hoveredRunnerId = null)}
 					>
