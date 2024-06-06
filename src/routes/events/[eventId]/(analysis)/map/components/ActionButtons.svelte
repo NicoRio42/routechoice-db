@@ -56,7 +56,11 @@
 			name="legNumber"
 			id="leg-select"
 			bind:value={legNumber}
-			on:change={(e) => e.currentTarget.form?.submit()}
+			on:change={(e) => {
+				// To avoid full page reload
+				// @ts-ignore
+				e.currentTarget.nextElementSibling?.click();
+			}}
 		>
 			{#each [...Array(numberOfLegs).keys()] as leg, legIndex}
 				<option value={leg + 1}>
@@ -68,6 +72,8 @@
 				</option>
 			{/each}
 		</select>
+
+		<input type="submit" class="hidden" />
 	</form>
 
 	<a

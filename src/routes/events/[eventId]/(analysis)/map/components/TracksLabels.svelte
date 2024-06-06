@@ -14,7 +14,9 @@
 	$: isSettingsSidebarShown = $page.url.searchParams.has('showSettings');
 
 	$: showRoutechoicesLabels =
-		$settingsStore.routechoicesLabels === 'aside' && $page.url.searchParams.has('showRoutechoices');
+		$settingsStore.routechoicesLabels === 'aside' &&
+		$page.url.searchParams.has('showRoutechoices') &&
+		routechoices.length !== 0;
 
 	$: showRunnersTraksLabels =
 		$settingsStore.runnersLabels === 'aside' && selectedRunnersWithCurrentLegOnly.length !== 0;
