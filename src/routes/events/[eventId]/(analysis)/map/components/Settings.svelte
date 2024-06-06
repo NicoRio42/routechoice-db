@@ -11,7 +11,7 @@
 </script>
 
 <aside
-	class="z-3 absolute top-0 right-0 bottom-0 w-50 border-l-solid border-l-1 border-l-table-border-color
+	class="z-3 absolute top-0 right-0 bottom-0 w-55 border-l-solid border-l-1 border-l-table-border-color
         bg-background-color translate-x-full transition-transform transition-250 p-4"
 	class:!translate-x-0={showSidebar}
 >
@@ -117,6 +117,16 @@
 				value={runnersTracksColorsEnum.Values.time}
 			/>
 			Color by time
+		</label>
+
+		<label>
+			<input
+				type="radio"
+				name="runnersTracksColors"
+				bind:group={runnersTracksColors}
+				value={runnersTracksColorsEnum.Values.routechoice}
+			/>
+			Color by routechoice
 		</label>
 	</fieldset>
 </aside>

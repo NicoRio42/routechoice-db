@@ -3,7 +3,6 @@
 	import { pushNotification } from '$lib/components/Notifications.svelte';
 	import { addSearchParamsToURL, getTracksFromLiveEvents } from '$lib/helpers';
 	import type { EventWithLiveEventsRunnersLegsAndControlPoints as Event } from '$lib/models/event.model.js';
-	import type { RunnerWithLegsAndTracks } from '$lib/models/runner.model';
 	import { mapIsLoading } from '$lib/stores/map-loading.store';
 	import type { User } from 'lucia';
 	import type { LineString } from 'ol/geom.js';
@@ -26,8 +25,8 @@
 	import './styles.css';
 	import {
 		computeFitBoxAndAngleFromLegNumber,
-		getColorFromTime,
-		getLegNumberFromSearchParams
+		getLegNumberFromSearchParams,
+		getSelectedRunnersWithCurrentLegOnlyAndTracks
 	} from './utils.js';
 
 	export let data;
@@ -42,46 +41,18 @@
 	let showManageRoutechoicesDialog = false;
 	let isDrawingNewRoutechoice = false;
 	let hoveredRunnerId: string | null = null;
-	let selectedRunnersWithCurrentLegOnly: RunnerWithLegsAndTracks[];
 
 	$: legNumber = getLegNumberFromSearchParams($page.url.searchParams);
 	$: legRoutechoices = data.event.legs[legNumber - 1]?.routechoices ?? [];
 	$: showRoutechoices = $page.url.searchParams.has('showRoutechoices');
 
 	// TODO Optimize this if it causes perf issues
-	$: {
-		selectedRunnersWithCurrentLegOnly = data.event.runners
-			.filter(({ id }) => selectedRunnersIds.includes(id))
-			.map((runner) => ({
-				...runner,
-				legs: runner.legs.filter(
-					(runnerLeg) => data.event.legs[legNumber - 1].id === runnerLeg?.fkLeg
-				)
-			}))
-			.filter(
-				(runner): runner is RunnerWithLegsAndTracks =>
-					runner.legs.length !== 0 && runner.track !== null
-			)
-			.sort((runner1, runner2) => runner1.legs[0].time - runner2.legs[0].time);
-
-		if (
-			$settingsStore.runnersTracksColors === 'time' &&
-			selectedRunnersWithCurrentLegOnly.length !== 0
-		) {
-			const fastestTime = selectedRunnersWithCurrentLegOnly[0].legs[0].time;
-			const slowestTime =
-				selectedRunnersWithCurrentLegOnly[selectedRunnersWithCurrentLegOnly.length - 1].legs[0]
-					.time;
-
-			selectedRunnersWithCurrentLegOnly = selectedRunnersWithCurrentLegOnly.map((runner) => ({
-				...runner,
-				track: {
-					...runner.track,
-					color: getColorFromTime(runner.legs[0].time, fastestTime, slowestTime)
-				}
-			}));
-		}
-	}
+	$: selectedRunnersWithCurrentLegOnly = getSelectedRunnersWithCurrentLegOnlyAndTracks(
+		data.event.runners,
+		data.event.legs[legNumber - 1],
+		selectedRunnersIds,
+		$settingsStore.runnersTracksColors
+	);
 
 	$: {
 		const [newFitBox, newAngle] = computeFitBoxAndAngleFromLegNumber(

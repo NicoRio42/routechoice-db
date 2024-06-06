@@ -3,7 +3,7 @@ import { createPersistentStore } from '$lib/stores/persistent-store';
 import { z } from 'zod';
 
 export const labelPositionEnum = z.enum(['nextToTrack', 'aside', 'none']);
-export const runnersTracksColorsEnum = z.enum(['time', 'original']);
+export const runnersTracksColorsEnum = z.enum(['time', 'routechoice', 'original']);
 
 const settingsSchema = z.object({
 	routechoicesLabels: labelPositionEnum,
