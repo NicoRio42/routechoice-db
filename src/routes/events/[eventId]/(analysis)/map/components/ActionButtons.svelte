@@ -6,7 +6,7 @@
 	export let legNumber: number;
 	export let legs: Leg[];
 
-	$: showRoutechoices = $page.url.searchParams.has('showRoutechoices');
+	$: showRoutechoices = !$page.url.searchParams.has('hideRoutechoices');
 	const numberOfLegs = legs.length;
 
 	function getPreviousLegNumber() {
@@ -22,8 +22,8 @@
 	<a
 		role="button"
 		href={showRoutechoices
-			? deleteSearchParamsToURL($page.url, 'showRoutechoices')
-			: addSearchParamsToURL($page.url, 'showRoutechoices', '')}
+			? addSearchParamsToURL($page.url, 'hideRoutechoices', '')
+			: deleteSearchParamsToURL($page.url, 'hideRoutechoices')}
 		data-sveltekit-replacestate
 		class="rounded-full !flex items-center justify-center w-12 h-12 m-0 p-0"
 	>

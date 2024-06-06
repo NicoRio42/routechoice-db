@@ -2,7 +2,8 @@
 	import { page } from '$app/stores';
 	import { deleteSearchParamsToURL } from '$lib/helpers';
 	import type { RunnerWithNullableLegsAndTrack } from '$lib/models/runner.model';
-	import { slide } from 'svelte/transition';
+	import { fade } from 'svelte/transition';
+	import { selectedRunnerIdStore } from '../../selected-runner-store';
 
 	export let runners: RunnerWithNullableLegsAndTrack[];
 
@@ -25,8 +26,8 @@
 	$: closeUrl = deleteSearchParamsToURL($page.url, 'showRunnerSelect');
 </script>
 
-<dialog open>
-	<article class="relative" transition:slide>
+<dialog open transition:fade={{ duration: 125 }}>
+	<article class="relative">
 		<a
 			href={closeUrl === '' ? $page.url.pathname : closeUrl}
 			aria-label="Close"
@@ -42,7 +43,11 @@
 		<ul>
 			{#each filteredRunner as runner (runner.id)}
 				<li>
-					<a href="?selectedRunner={runner.id}" data-sveltekit-replacestate>
+					<a
+						href={closeUrl}
+						data-sveltekit-replacestate
+						on:click={() => ($selectedRunnerIdStore = runner.id)}
+					>
 						{runner.firstName}
 						{runner.lastName}
 					</a>

@@ -44,7 +44,7 @@
 
 	$: legNumber = getLegNumberFromSearchParams($page.url.searchParams);
 	$: legRoutechoices = data.event.legs[legNumber - 1]?.routechoices ?? [];
-	$: showRoutechoices = $page.url.searchParams.has('showRoutechoices');
+	$: showRoutechoices = !$page.url.searchParams.has('hideRoutechoices');
 
 	// TODO Optimize this if it causes perf issues
 	$: selectedRunnersWithCurrentLegOnly = getSelectedRunnersWithCurrentLegOnlyAndTracks(

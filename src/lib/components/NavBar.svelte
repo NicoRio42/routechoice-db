@@ -43,17 +43,17 @@
 	<ul class="logo-list min-w-0 grow !mr0">
 		<li class="link-list-item">
 			<a
-				class="flex items-center gap-2 sm:gap-4 p-0 text-5 text-primary whitespace-nowrap decoration-none"
+				class="flex items-center gap-2 md:gap-4 p-0 text-5 text-primary whitespace-nowrap decoration-none"
 				href={$page.url.pathname === '/events' ? '/' : '/events'}
 			>
 				<div class="bg-primary w-12 h-12 flex justify-center items-center">
 					<i class="i-carbon-3d-curve-auto-colon block w-8 h-8 text-white"></i>
 				</div>
 
-				<span class="hidden sm:inline">Routechoice DB</span>
+				<span class="hidden md:inline">Routechoice DB</span>
 
 				{#if $eventStore === null}
-					<div class="sm:hidden flex flex-col items-center leading-none">
+					<div class="md:hidden flex flex-col items-center leading-none">
 						<span class="text-[0.625rem]">Routechoice</span>
 
 						<span class="text-8">DB</span>
@@ -64,12 +64,12 @@
 
 		{#if $eventStore !== null}
 			<li
-				class="m-0 sm:ml-4 sm:pl-4 pl-2 py-1 sm:border-l-1 sm:border-l-solid sm:border-l-table-border-color whitespace-nowrap text-ellipsis overflow-hidden min-w-0"
+				class="m-0 md:ml-4 md:pl-4 pl-2 py-1 md:border-l-1 md:border-l-solid md:border-l-table-border-color whitespace-nowrap text-ellipsis overflow-hidden min-w-0"
 			>
 				{$eventStore.name}
 			</li>
 
-			<li class="p-0 flex items-center gap2 sm:mr2">
+			<li class="p-0 flex items-center gap2 md:mr2">
 				<button class="btn-unset" type="button" on:click={handleShare}>
 					<i class="i-carbon-share w-5 h-5 inline-block mt1"></i>
 				</button>

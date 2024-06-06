@@ -5,7 +5,7 @@ import type { z } from 'zod';
 export function createPersistentStore<S extends z.ZodTypeAny>(
 	key: string,
 	schema: S,
-	defaultValue: z.infer<S>
+	defaultValue?: z.infer<S>
 ): Writable<z.infer<S>> {
 	type T = z.infer<S>;
 

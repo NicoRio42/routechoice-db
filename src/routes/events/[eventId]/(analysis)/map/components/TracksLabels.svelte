@@ -15,7 +15,7 @@
 
 	$: showRoutechoicesLabels =
 		$settingsStore.routechoicesLabels === 'aside' &&
-		$page.url.searchParams.has('showRoutechoices') &&
+		!$page.url.searchParams.has('hideRoutechoices') &&
 		routechoices.length !== 0;
 
 	$: showRunnersTraksLabels =

@@ -62,7 +62,7 @@
 		white-space: nowrap;
 	}
 
-	:global(table tr) td.mistake {
+	:global(table tbody tr) td.mistake {
 		background-color: color-mix(
 			in srgb,
 			hsl(0, 54%, 70%) var(--mistake-opacity),
@@ -71,7 +71,7 @@
 	}
 
 	@media (prefers-color-scheme: dark) {
-		:global(table tr) td.mistake {
+		:global(table tbody tr) td.mistake {
 			background-color: color-mix(
 				in srgb,
 				hsl(0, 41%, 39%) var(--mistake-opacity),

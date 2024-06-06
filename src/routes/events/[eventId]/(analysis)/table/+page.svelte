@@ -1,56 +1,19 @@
 <script lang="ts">
-	import { goto } from '$app/navigation';
 	import { page } from '$app/stores';
 	import { addSearchParamsToURL } from '$lib/helpers';
-	import type { RunnerWithNullableLegsAndTrack } from '$lib/models/runner.model';
 	import { secondsToPrettyTime } from '$lib/utils/split-times';
-	import { onMount } from 'svelte';
 	import EnlargeToggle from '../components/EnlargeToggle.svelte';
+	import { selectedRunnerIdStore } from '../selected-runner-store';
 	import LegCell from './components/LegCell.svelte';
 	import RunnerSelect from './components/RunnerSelect.svelte';
-
 	import './tooltip.css';
 
 	export let data;
 
-	let runners = data.event.runners;
-	let legs = data.event.runners[0].legs;
 	let compact = false;
-	let selectedRunner: RunnerWithNullableLegsAndTrack | undefined;
 
 	$: showRunnerSelect = $page.url.searchParams.get('showRunnerSelect') !== null;
-
-	$: {
-		selectedRunner = runners.find((r) => r.id === $page.url.searchParams.get('selectedRunner'));
-
-		if (selectedRunner !== undefined && 'localStorage' in globalThis) {
-			localStorage.setItem(
-				'selectedRunner',
-				`${selectedRunner.firstName.trim().toLowerCase()}-${selectedRunner.lastName
-					.trim()
-					.toLowerCase()}`
-			);
-		}
-	}
-
-	onMount(() => {
-		if (selectedRunner !== undefined) return;
-		const selectedRunnerFromLocalStorage = localStorage.getItem('selectedRunner');
-		if (selectedRunnerFromLocalStorage === null) return;
-		const [firstName, lastName] = selectedRunnerFromLocalStorage.split('-');
-
-		const correspondingRunner = runners.find(
-			(r) =>
-				(r.firstName.trim().toLowerCase() === firstName &&
-					r.lastName.trim().toLowerCase() === lastName) ||
-				(r.firstName.trim().toLowerCase() === lastName &&
-					r.lastName.trim().toLowerCase() === firstName)
-		);
-
-		if (correspondingRunner === undefined) return;
-
-		goto(`?selectedRunner=${correspondingRunner.id}`);
-	});
+	$: selectedRunner = data.event.runners.find((r) => r.id === $selectedRunnerIdStore) ?? null;
 </script>
 
 {#if showRunnerSelect}
@@ -65,10 +28,10 @@
 					<EnlargeToggle bind:compact />
 				</th>
 
-				{#each legs as _, index}
+				{#each data.event.legs as _, index}
 					<th class="sticky-top center z-index-1">
 						<a href="/events/{$page.params.eventId}/map?legNumber={index + 1}">
-							{#if index === legs.length - 1}
+							{#if index === data.event.legs.length - 1}
 								Finish
 							{:else}
 								{index + 1}
@@ -80,7 +43,7 @@
 		</thead>
 
 		<tbody>
-			{#each runners as runner (runner.id)}
+			{#each data.event.runners as runner (runner.id)}
 				<tr>
 					<td class="sticky-left z-index-1 !px-1 md:!px-2">
 						<div class="name-td-content">
@@ -136,13 +99,13 @@
 						<div class=" grow text-left">
 							{#if compact}
 								<span class="my-2 nowrap">
-									{#if selectedRunner !== undefined}
+									{#if selectedRunner !== null}
 										{selectedRunner.firstName?.at(0)}{selectedRunner.lastName?.at(0)}
 									{:else}
 										SR
 									{/if}
 								</span>
-							{:else if selectedRunner !== undefined}
+							{:else if selectedRunner !== null}
 								<div class="nowrap ml-1">
 									{selectedRunner.firstName?.at(0)}.{selectedRunner.lastName}
 
@@ -161,7 +124,7 @@
 					</a>
 				</td>
 
-				{#if selectedRunner !== undefined}
+				{#if selectedRunner !== null}
 					{#each selectedRunner.legs as runnerLeg, index}
 						<LegCell
 							{runnerLeg}
@@ -170,7 +133,7 @@
 						/>
 					{/each}
 				{:else}
-					{#each legs as _}
+					{#each data.event.legs as _}
 						<td class="sticky-bottom thick-border-top">--</td>
 					{/each}
 				{/if}
