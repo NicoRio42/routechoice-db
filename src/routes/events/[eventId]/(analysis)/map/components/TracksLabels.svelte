@@ -9,6 +9,8 @@
 	export let selectedRunnersWithCurrentLegOnly: RunnerWithLegsAndTracks[];
 	export let hoveredRunnerId: string | null = null;
 
+	let isCollapsed = false;
+
 	$: isSettingsSidebarShown = $page.url.searchParams.has('showSettings');
 
 	$: showRoutechoicesLabels =
@@ -20,9 +22,11 @@
 
 {#if showRoutechoicesLabels || showRunnersTraksLabels}
 	<article
-		class="z-1 absolute right-4 bottom-17 md:bottom-4 transition-transform transition-250 bg-background-color m-0 p-y-1 p-x-0
+		class="z-1 absolute right-4 bottom-17 md:bottom-4 transition-transform transition-250 bg-background-color m-0 py-1 pr-0 pl-4
 			max-h-100 flex flex-col"
-		class:-sm:translate-x-50={isSettingsSidebarShown}
+		class:-translate-x-50={isSettingsSidebarShown && !isCollapsed}
+		class:translate-x-full={isCollapsed && !isSettingsSidebarShown}
+		class:translate-x-[calc(100%-12.5rem)]={isCollapsed && isSettingsSidebarShown}
 	>
 		{#if showRoutechoicesLabels}
 			<ul class="p-0 m-0 shrink-0 px-2">
@@ -57,6 +61,21 @@
 				{/each}
 			</ul>
 		{/if}
+
+		<div
+			class="absolute top-50% -translate-y-50% right-full translate-x-50% rounded-full bg-background-color"
+		>
+			<button
+				type="button"
+				class="rounded-full w-10 h-10 p-0 m-0 flex items-center justify-center outline"
+				on:click={() => (isCollapsed = !isCollapsed)}
+			>
+				<i
+					class="i-carbon-chevron-right block w-5 h-5 transition-transform transition-250"
+					class:rotate-180={isCollapsed}
+				></i>
+			</button>
+		</div>
 	</article>
 {/if}
 

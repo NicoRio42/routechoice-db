@@ -81,7 +81,7 @@
 		bottom: 0;
 		left: 0;
 		background-color: var(--pico-background-color);
-		width: 23rem;
+		width: 25rem;
 		resize: horizontal;
 		overflow-x: auto;
 		border-right: 1px solid var(--pico-table-border-color);
