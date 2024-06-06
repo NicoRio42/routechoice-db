@@ -71,7 +71,7 @@
 <style>
 	select.routechoice-select {
 		margin: 0;
-		max-width: 2rem;
+		min-width: 2rem;
 		padding: 0.125rem 0 0.125rem 0.25rem;
 		background-position: center right 0;
 	}

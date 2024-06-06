@@ -76,7 +76,7 @@
 				{#each data.events as event (event.id)}
 					<tr>
 						<td>
-							<a href="/events/{event.id}/map">{event.name}</a>
+							<a href="/events/{event.id}/map?showRoutechoices">{event.name}</a>
 						</td>
 
 						<td>{new Date(event.startTime).toLocaleString()}</td>

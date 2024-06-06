@@ -10,15 +10,21 @@
 	export let hoveredRunnerId: string | null = null;
 
 	$: isSettingsSidebarShown = $page.url.searchParams.has('showSettings');
+
+	$: showRoutechoicesLabels =
+		$settingsStore.routechoicesLabels === 'aside' && $page.url.searchParams.has('showRoutechoices');
+
+	$: showRunnersTraksLabels =
+		$settingsStore.runnersLabels === 'aside' && selectedRunnersWithCurrentLegOnly.length !== 0;
 </script>
 
-{#if $settingsStore.routechoicesLabels === 'aside' || ($settingsStore.runnersLabels === 'aside' && selectedRunnersWithCurrentLegOnly.length !== 0)}
+{#if showRoutechoicesLabels || showRunnersTraksLabels}
 	<article
 		class="z-1 absolute right-4 bottom-17 md:bottom-4 transition-transform transition-250 bg-background-color m-0 p-y-1 p-x-0
 			max-h-100 flex flex-col"
 		class:-sm:translate-x-50={isSettingsSidebarShown}
 	>
-		{#if $settingsStore.routechoicesLabels === 'aside'}
+		{#if showRoutechoicesLabels}
 			<ul class="p-0 m-0 shrink-0 px-2">
 				{#each routechoices as routechoice (routechoice.id)}
 					<li style:color={routechoice.color} class="list-none text-5 m-0 text-right">
@@ -32,9 +38,11 @@
 			</ul>
 		{/if}
 
-		{#if $settingsStore.runnersLabels === 'aside' && selectedRunnersWithCurrentLegOnly.length !== 0}
+		{#if showRoutechoicesLabels && showRunnersTraksLabels}
 			<hr class="my-2" />
+		{/if}
 
+		{#if showRunnersTraksLabels}
 			<ul class="p-0 m-0 grow-1 overflow-y-auto">
 				{#each selectedRunnersWithCurrentLegOnly as runner (runner.id)}
 					<li

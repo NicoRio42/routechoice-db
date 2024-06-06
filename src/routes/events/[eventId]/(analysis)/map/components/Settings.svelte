@@ -1,16 +1,17 @@
 <script>
 	import { page } from '$app/stores';
 	import { deleteSearchParamsToURL } from '$lib/helpers';
-	import { labelPositionEnum, settingsStore } from '../settings-store';
+	import { labelPositionEnum, runnersTracksColorsEnum, settingsStore } from '../settings-store';
 
 	$: showSidebar = $page.url.searchParams.has('showSettings');
 
 	let routechoicesLabels = $settingsStore.routechoicesLabels;
 	let runnersLabels = $settingsStore.runnersLabels;
+	let runnersTracksColors = $settingsStore.runnersTracksColors;
 </script>
 
 <aside
-	class="z-3 absolute top-0 right-0 bottom-0 w-full sm:w-50 border-l-solid border-l-1 border-l-table-border-color
+	class="z-3 absolute top-0 right-0 bottom-0 w-50 border-l-solid border-l-1 border-l-table-border-color
         bg-background-color translate-x-full transition-transform transition-250 p-4"
 	class:!translate-x-0={showSidebar}
 >
@@ -92,6 +93,30 @@
 				value={labelPositionEnum.Values.none}
 			/>
 			None
+		</label>
+	</fieldset>
+
+	<fieldset on:change={() => ($settingsStore.runnersTracksColors = runnersTracksColors)}>
+		<legend>Tracks colors</legend>
+
+		<label>
+			<input
+				type="radio"
+				name="runnersTracksColors"
+				bind:group={runnersTracksColors}
+				value={runnersTracksColorsEnum.Values.original}
+			/>
+			Original colors
+		</label>
+
+		<label>
+			<input
+				type="radio"
+				name="runnersTracksColors"
+				bind:group={runnersTracksColors}
+				value={runnersTracksColorsEnum.Values.time}
+			/>
+			Color by time
 		</label>
 	</fieldset>
 </aside>

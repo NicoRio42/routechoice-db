@@ -29,6 +29,11 @@
 		lineFeature.setStyle(style);
 	}
 
+	$: if (stroke !== undefined) {
+		stroke.setColor(color);
+		lineFeature.setStyle(style);
+	}
+
 	$: if (textStyle !== undefined && style !== undefined) {
 		textStyle.setText(text);
 		lineFeature.setStyle(style);

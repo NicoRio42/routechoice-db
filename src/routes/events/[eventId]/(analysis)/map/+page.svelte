@@ -22,6 +22,7 @@
 	import SideBar from './components/SideBar.svelte';
 	import TracksLabels from './components/TracksLabels.svelte';
 	import VectorLayer from './components/VectorLayer.svelte';
+	import { settingsStore } from './settings-store';
 	import './styles.css';
 	import { computeFitBoxAndAngleFromLegNumber, getLegNumberFromSearchParams } from './utils.js';
 
@@ -37,24 +38,46 @@
 	let showManageRoutechoicesDialog = false;
 	let isDrawingNewRoutechoice = false;
 	let hoveredRunnerId: string | null = null;
+	let selectedRunnersWithCurrentLegOnly: RunnerWithLegsAndTracks[];
 
 	$: legNumber = getLegNumberFromSearchParams($page.url.searchParams);
 	$: legRoutechoices = data.event.legs[legNumber - 1]?.routechoices ?? [];
 	$: showRoutechoices = $page.url.searchParams.has('showRoutechoices');
 
-	$: selectedRunnersWithCurrentLegOnly = data.event.runners
-		.filter(({ id }) => selectedRunnersIds.includes(id))
-		.map((runner) => ({
-			...runner,
-			legs: runner.legs.filter(
-				(runnerLeg) => data.event.legs[legNumber - 1].id === runnerLeg?.fkLeg
+	// TODO Optimize this if it causes perf issues
+	$: {
+		selectedRunnersWithCurrentLegOnly = data.event.runners
+			.filter(({ id }) => selectedRunnersIds.includes(id))
+			.map((runner) => ({
+				...runner,
+				legs: runner.legs.filter(
+					(runnerLeg) => data.event.legs[legNumber - 1].id === runnerLeg?.fkLeg
+				)
+			}))
+			.filter(
+				(runner): runner is RunnerWithLegsAndTracks =>
+					runner.legs.length !== 0 && runner.track !== null
 			)
-		}))
-		.filter(
-			(runner): runner is RunnerWithLegsAndTracks =>
-				runner.legs.length !== 0 && runner.track !== null
-		)
-		.sort((runner1, runner2) => runner1.legs[0].time - runner2.legs[0].time);
+			.sort((runner1, runner2) => runner1.legs[0].time - runner2.legs[0].time);
+
+		if (
+			$settingsStore.runnersTracksColors === 'time' &&
+			selectedRunnersWithCurrentLegOnly.length !== 0
+		) {
+			const fastestTime = selectedRunnersWithCurrentLegOnly[0].legs[0].time;
+			const slowestTime =
+				selectedRunnersWithCurrentLegOnly[selectedRunnersWithCurrentLegOnly.length - 1].legs[0]
+					.time;
+
+			selectedRunnersWithCurrentLegOnly = selectedRunnersWithCurrentLegOnly.map((runner) => ({
+				...runner,
+				track: {
+					...runner.track,
+					color: getColorFromTime(runner.legs[0].time, fastestTime, slowestTime)
+				}
+			}));
+		}
+	}
 
 	$: {
 		const [newFitBox, newAngle] = computeFitBoxAndAngleFromLegNumber(
@@ -87,6 +110,15 @@
 				pushNotification('Could not load GPS', 'error', 5);
 			});
 	});
+
+	function getColorFromTime(time: number, fastestTime: number, slowestTime: number) {
+		const hue =
+			slowestTime === fastestTime
+				? 120
+				: Math.round((1 - (time - fastestTime) / (slowestTime - fastestTime)) * 120);
+
+		return `hsl(${hue}deg 100% 50%)`;
+	}
 
 	async function handleDrawEnd(e: CustomEvent<DrawEvent>): Promise<void> {
 		currentDrawnRoutechoice = e.detail.feature.getGeometry() as LineString;
