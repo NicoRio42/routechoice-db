@@ -12,13 +12,18 @@ import { error, fail, redirect } from '@sveltejs/kit';
 import { generateId } from 'lucia';
 import { setError, superValidate } from 'sveltekit-superforms';
 import { zod } from 'sveltekit-superforms/adapters';
-import { addEventSchema } from './schema.js';
+import { addEventSchema, partialAddEventObjectSchema } from './schema.js';
 
 export async function load({ locals }) {
 	redirectIfNotAdmin(locals.user);
 
-	const form = await superValidate(zod(addEventSchema));
 	const tags = await db.select().from(tagTable).all();
+	const sprintTag = tags.find((t) => t.name === 'Sprint');
+
+	const form = await superValidate(
+		{ tags: sprintTag !== undefined ? [sprintTag.id] : [] },
+		zod(partialAddEventObjectSchema.partial())
+	);
 
 	return { form, tags };
 }

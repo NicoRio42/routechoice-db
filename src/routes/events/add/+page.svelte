@@ -13,7 +13,9 @@
 
 	export let data;
 
-	const form = superForm(data.form, { validators: zodClient(addEventSchema) });
+	const form = superForm(data.form, {
+		validators: zodClient(addEventSchema)
+	});
 
 	const { delayed, enhance, form: formStore, errors } = form;
 
@@ -22,8 +24,8 @@
 	let previousEventUrl: string;
 	let recentEvents: { url: string; name: string }[] = [];
 
-	async function fetchEvent(eventUrl: string) {
-		if (eventUrl === '' || eventUrl === previousEventUrl) return;
+	async function fetchEvent(eventUrl: string | undefined) {
+		if (eventUrl === undefined || eventUrl === '' || eventUrl === previousEventUrl) return;
 		previousEventUrl = eventUrl;
 		const [provider, eventId] = extractLiveProviderAndEventIdFromUrl(eventUrl);
 		if (provider !== 'loggator') return;
