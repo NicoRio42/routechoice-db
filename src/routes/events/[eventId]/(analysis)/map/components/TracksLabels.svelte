@@ -23,7 +23,7 @@
 {#if showRoutechoicesLabels || showRunnersTraksLabels}
 	<article
 		class="z-1 absolute right-4 bottom-17 md:bottom-4 transition-transform transition-250 bg-background-color m-0 py-1 pr-0 pl-4
-			max-h-100 flex flex-col"
+			max-h-100 flex flex-col rounded-none border-solid border-1 border-table-border-color"
 		class:-translate-x-50={isSettingsSidebarShown && !isCollapsed}
 		class:translate-x-full={isCollapsed && !isSettingsSidebarShown}
 		class:translate-x-[calc(100%-12.5rem)]={isCollapsed && isSettingsSidebarShown}
@@ -67,7 +67,7 @@
 		>
 			<button
 				type="button"
-				class="rounded-full w-10 h-10 p-0 m-0 flex items-center justify-center outline"
+				class="rounded-full w-8 h-8 p-0 m-0 flex items-center justify-center outline"
 				on:click={() => (isCollapsed = !isCollapsed)}
 			>
 				<i
