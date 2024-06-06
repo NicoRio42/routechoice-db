@@ -44,6 +44,14 @@
 	</a>
 
 	<form class="m-0" data-sveltekit-replacestate>
+		{#if showRoutechoices}
+			<input type="hidden" name="showRoutechoices" />
+		{/if}
+
+		{#if $page.url.searchParams.has('hideSideBar')}
+			<input type="hidden" name="hideSideBar" />
+		{/if}
+
 		<select
 			name="legNumber"
 			id="leg-select"
