@@ -11,6 +11,7 @@
 	export let startTime: Date;
 	export let timeOffset: number;
 	export let isEmphasized = false;
+	export let zIndex: number;
 
 	let coords: number[][] = [];
 
@@ -23,6 +24,7 @@
 		color="#fff"
 		width={10}
 		text={$settingsStore.runnersLabels === 'nextToTrack' ? name : undefined}
+		{zIndex}
 	/>
 {/if}
 
@@ -31,4 +33,5 @@
 	color={track.color}
 	width={isEmphasized ? 6 : 5}
 	text={$settingsStore.runnersLabels === 'nextToTrack' ? name : undefined}
+	{zIndex}
 />

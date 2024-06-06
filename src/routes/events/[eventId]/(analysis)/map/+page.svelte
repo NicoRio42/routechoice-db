@@ -24,7 +24,11 @@
 	import VectorLayer from './components/VectorLayer.svelte';
 	import { settingsStore } from './settings-store';
 	import './styles.css';
-	import { computeFitBoxAndAngleFromLegNumber, getLegNumberFromSearchParams } from './utils.js';
+	import {
+		computeFitBoxAndAngleFromLegNumber,
+		getColorFromTime,
+		getLegNumberFromSearchParams
+	} from './utils.js';
 
 	export let data;
 
@@ -110,15 +114,6 @@
 				pushNotification('Could not load GPS', 'error', 5);
 			});
 	});
-
-	function getColorFromTime(time: number, fastestTime: number, slowestTime: number) {
-		const hue =
-			slowestTime === fastestTime
-				? 120
-				: Math.round((1 - (time - fastestTime) / (slowestTime - fastestTime)) * 120);
-
-		return `hsl(${hue}deg 100% 50%)`;
-	}
 
 	async function handleDrawEnd(e: CustomEvent<DrawEvent>): Promise<void> {
 		currentDrawnRoutechoice = e.detail.feature.getGeometry() as LineString;
@@ -232,10 +227,11 @@
 					startTime={hoveredRunner.startTime}
 					timeOffset={hoveredRunner.timeOffset}
 					isEmphasized={hoveredRunnerId === hoveredRunner.id}
+					zIndex={selectedRunnersWithCurrentLegOnly.length}
 				/>
 			{/if}
 
-			{#each selectedRunnersWithCurrentLegOnly.filter((r) => r.id !== hoveredRunnerId) as runner (runner.id)}
+			{#each selectedRunnersWithCurrentLegOnly.filter((r) => r.id !== hoveredRunnerId) as runner, runnerIndex (runner.id)}
 				<RunnerRoute
 					runnerLeg={runner.legs[0]}
 					name={runner.lastName}
@@ -243,6 +239,7 @@
 					startTime={runner.startTime}
 					timeOffset={runner.timeOffset}
 					isEmphasized={hoveredRunnerId === runner.id}
+					zIndex={selectedRunnersWithCurrentLegOnly.length - 1 - runnerIndex}
 				/>
 			{/each}
 		</VectorLayer>

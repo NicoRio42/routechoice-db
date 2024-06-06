@@ -104,3 +104,12 @@ export function getLegNumberFromSearchParams(searchParams: URLSearchParams): num
 
 	return parsedLegNumber;
 }
+
+export function getColorFromTime(time: number, fastestTime: number, slowestTime: number) {
+	const hue =
+		slowestTime === fastestTime
+			? 120
+			: Math.round((1 - (time - fastestTime) / (slowestTime - fastestTime)) * 120);
+
+	return `hsl(${hue}deg 100% 50%)`;
+}

@@ -15,6 +15,7 @@
 	export let coords: Coordinate[];
 	export let width: number;
 	export let text: string | undefined = undefined;
+	export let zIndex = 0;
 
 	let vectorLayer: VectorLayer<VectorSource<Geometry>>, lineFeature: Feature;
 	let line: LineString;
@@ -39,6 +40,11 @@
 		lineFeature.setStyle(style);
 	}
 
+	$: if (style !== undefined) {
+		style.setZIndex(zIndex);
+		lineFeature.setStyle(style);
+	}
+
 	const getVectorLayer = getContext<() => VectorLayer<VectorSource<Geometry>>>('vectorLayer');
 
 	onMount(() => {
@@ -59,7 +65,7 @@
 
 		lineFeature = new Feature(line);
 		stroke = new Stroke({ color, width });
-		style = new Style({ stroke, text: textStyle });
+		style = new Style({ stroke, text: textStyle, zIndex });
 		lineFeature.setStyle(style);
 
 		vectorSource?.addFeature(lineFeature);
