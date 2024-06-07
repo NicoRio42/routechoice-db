@@ -70,7 +70,7 @@
 	setContext('user', user);
 
 	onMount(() => {
-		getTracksFromLiveEvents(data.event.liveEvents, fetch, true)
+		getTracksFromLiveEvents(data.event.liveEvents, { fetch, proxyRequests: true })
 			.then((tracks) => {
 				data.event.runners = data.event.runners.map((runner) => {
 					const track = tracks.find(
@@ -82,7 +82,7 @@
 				});
 			})
 			.catch(() => {
-				pushNotification('Could not load GPS', 'error', 5);
+				pushNotification('Could not load GPS', { type: 'error', delayInSeconds: 5 });
 			});
 	});
 

@@ -74,9 +74,10 @@ type Fetch = typeof fetch;
 
 export async function getTracksFromLiveEvents(
 	liveEvents: LiveEvent[],
-	providedFetch = fetch,
-	proxyRequests = false
+	options?: GetTracksOptions
 ): Promise<{ fkLiveEvent: string; trackingDeviceId: string; track: RunnerTrack }[]> {
+	const providedFetch = options?.fetch ?? fetch;
+	const proxyRequests = options?.proxyRequests ?? false;
 	const tracks: { fkLiveEvent: string; trackingDeviceId: string; track: RunnerTrack }[] = [];
 
 	for (const liveEvent of liveEvents) {
@@ -91,8 +92,8 @@ export async function getTracksFromLiveEvents(
 
 			const pointsResponse =
 				import.meta.env.MODE === 'dev-offline'
-					? await fetch('http://localhost:5173/points.json')
-					: await fetch(proxiedUrl);
+					? await providedFetch('http://localhost:5173/points.json')
+					: await providedFetch(proxiedUrl);
 
 			if (!pointsResponse.ok) {
 				console.error(
@@ -120,7 +121,7 @@ export async function getTracksFromLiveEvents(
 			const dataUrl = gpsProvider.getEventPointsUrl(eventId);
 			const proxiedUrl = proxyRequests ? `/api/proxy?urlToProxy=${encodeURI(dataUrl)}` : dataUrl;
 
-			const data = await fetch(proxiedUrl).then((r) => r.text());
+			const data = await providedFetch(proxiedUrl).then((r) => r.text());
 			const competitorsRoutesMap = parseData(data);
 
 			tracks.push(
@@ -377,13 +378,18 @@ function parseFloatOrThrow(str: string): number {
 	return num;
 }
 
+type GetTracksOptions = {
+	fetch?: Fetch;
+	proxyRequests?: boolean;
+};
+
 export async function getRunnersWithTracksAndSortedLegs(
-	sortedLegs: LegWithRoutechoices[],
+	sortedLegs: (LegWithRoutechoices | LegWithRoutechoiceWithParsedTrack)[],
 	liveEvents: LiveEvent[],
 	runners: RunnerWithNullableLegs[],
-	fetch: Fetch
+	options?: GetTracksOptions
 ) {
-	return getTracksFromLiveEvents(liveEvents, fetch)
+	return getTracksFromLiveEvents(liveEvents, options)
 		.then((tracks) =>
 			runners.map((runner) => {
 				const track = tracks.find(

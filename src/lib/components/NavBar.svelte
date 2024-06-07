@@ -18,14 +18,13 @@
 			if (!('clipboard' in navigator)) {
 				pushNotification(
 					'Your browser do not allow direct url sharing. Please copy the url manually.',
-					'warn',
-					5
+					{ type: 'warn', delayInSeconds: 5 }
 				);
 				return;
 			}
 
 			window.navigator.clipboard.writeText(urlToShare);
-			pushNotification('Link copied to clipboard', 'info', 5);
+			pushNotification('Link copied to clipboard', { type: 'info', delayInSeconds: 5 });
 			return;
 		}
 

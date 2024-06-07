@@ -11,13 +11,16 @@
 		type: NotificationType;
 	};
 
+	type NotificationOptions = {
+		type?: NotificationType;
+		delayInSeconds?: number | null;
+	};
+
 	const notifications = writable<Notification[]>([]);
 
-	export function pushNotification(
-		message: string,
-		type: NotificationType = 'info',
-		delayInSeconds: number | null = null
-	) {
+	export function pushNotification(message: string, options?: NotificationOptions) {
+		const delayInSeconds = options?.delayInSeconds ?? null;
+		const type = options?.type ?? 'info';
 		const id = crypto.randomUUID();
 		notifications.update((notifs) => [...notifs, { id, message, type }]);
 

@@ -76,7 +76,7 @@ export const actions = {
 			sortedLegs,
 			liveEvents,
 			runners,
-			fetch
+			{ fetch }
 		);
 
 		const legIndex = sortedLegsWithRoutechoicesWithParsedTracks.findIndex(

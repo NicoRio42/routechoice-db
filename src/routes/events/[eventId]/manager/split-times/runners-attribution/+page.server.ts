@@ -1,25 +1,19 @@
 import {
 	getCompetitorsFromLiveEvent,
-	getRunnersWithTracksAndSortedLegs,
 	parseRoutechoicesTracksInLegs,
 	sortLegsAndRoutechoices
 } from '$lib/helpers.js';
-import { detectRunnersRoutechoices } from '$lib/routechoice-detector.js';
 import { redirectIfNotAdmin } from '$lib/server/auth/helpers.js';
-import { db, libsqlClient } from '$lib/server/db/db.js';
+import { db } from '$lib/server/db/db.js';
 import {
 	leg as legTable,
-	liveEvent,
 	liveEvent as liveEventTable,
-	runnerLeg as runnerLegTable,
 	runner as runnerTable,
 	user as userTable
 } from '$lib/server/db/schema.js';
-import type { InArgs, InStatement } from '@libsql/client';
-import { error, fail, redirect } from '@sveltejs/kit';
+import { error } from '@sveltejs/kit';
 import { and, eq } from 'drizzle-orm';
 import { matchRunnersByName } from './helpers.js';
-import type { BatchItem } from 'drizzle-orm/batch';
 
 export async function load({ params: { eventId }, locals, fetch }) {
 	redirectIfNotAdmin(locals.user);
@@ -43,26 +37,19 @@ export async function load({ params: { eventId }, locals, fetch }) {
 
 	let competitors = await getCompetitorsFromLiveEvent(liveEvent, fetch);
 
-	const runners = await db
-		.select({
-			id: runnerTable.id,
-			firstName: runnerTable.firstName,
-			lastName: runnerTable.lastName,
-			userId: runnerTable.fkUser,
-			liveEvent: runnerTable.fkLiveEvent,
-			trackingDeviceId: runnerTable.trackingDeviceId
-		})
-		.from(runnerTable)
-		.where(eq(runnerTable.fkEvent, eventId))
-		.all();
+	const runners = await db.query.runner.findMany({
+		where: eq(runnerTable.fkEvent, eventId),
+		with: { legs: true }
+	});
 
-	if (runners.every((r) => r.userId === null && r.trackingDeviceId === null)) {
+	// If no attribution, make initial attribution
+	if (runners.every((r) => r.fkUser === null && r.trackingDeviceId === null)) {
 		const runnersWithAttributedUsers = matchRunnersByName(
 			runners.map((r) => ({
 				id: r.id,
 				firstName: r.firstName,
 				lastName: r.lastName,
-				userId: r.userId,
+				userId: r.fkUser,
 				trackingDeviceId: r.trackingDeviceId
 			})),
 			'userId',
@@ -81,151 +68,27 @@ export async function load({ params: { eventId }, locals, fetch }) {
 			);
 
 			if (attributedRunner === undefined) return;
-			if (attributedRunner.userId !== null) runner.userId = attributedRunner.userId;
+			if (attributedRunner.userId !== null) runner.fkUser = attributedRunner.userId;
 			if (attributedRunner.trackingDeviceId !== null) {
 				runner.trackingDeviceId = attributedRunner.trackingDeviceId;
+				runner.fkLiveEvent = liveEvent.id;
 			}
 		});
 	}
 
-	return { users, competitors, runners, liveEvent };
+	const legs = await db.query.leg.findMany({
+		where: eq(legTable.fkEvent, eventId),
+		with: { routechoices: true }
+	});
+
+	const sortedLegs = sortLegsAndRoutechoices(legs);
+	const sortedLegsWithRoutechoicesWithParsedTracks = parseRoutechoicesTracksInLegs(sortedLegs);
+
+	return {
+		users,
+		competitors,
+		runners,
+		liveEvent,
+		legs: sortedLegsWithRoutechoicesWithParsedTracks
+	};
 }
-
-export const actions = {
-	default: async ({ params: { eventId }, request, locals, fetch }) => {
-		if (locals.user === null) throw error(401);
-		if (locals.user.role !== 'admin') throw error(403);
-
-		const formData = await request.formData();
-
-		const runnersFormData: Record<
-			string,
-			{ liveEvent: string | null; trackingDeviceId: string | null; userId: string | null }
-		> = {};
-
-		for (const [key, value] of formData.entries()) {
-			if (value instanceof File) return fail(400);
-
-			if (key.endsWith('-tracking')) {
-				let liveEvent: string | null = null;
-				let trackingDeviceId: string | null = null;
-
-				if (value !== null && value !== undefined && value !== '')
-					[liveEvent, trackingDeviceId] = value.split('|');
-
-				const runnerId = key.replace('-tracking', '');
-
-				if (runnersFormData[runnerId] === undefined) {
-					runnersFormData[runnerId] = { liveEvent, trackingDeviceId, userId: null };
-				} else {
-					runnersFormData[runnerId] = { ...runnersFormData[runnerId], liveEvent, trackingDeviceId };
-				}
-			}
-
-			if (key.endsWith('-user')) {
-				const runnerId = key.replace('-user', '');
-				const userId = value !== null && value !== undefined && value !== '' ? value : null;
-
-				if (runnersFormData[runnerId] === undefined) {
-					runnersFormData[runnerId] = { liveEvent: null, trackingDeviceId: null, userId };
-				} else {
-					runnersFormData[runnerId] = { ...runnersFormData[runnerId], userId };
-				}
-			}
-		}
-
-		for (const [runnerId, { trackingDeviceId, userId }] of Object.entries(runnersFormData)) {
-			const runnersFormDataClone = { ...runnersFormData };
-			delete runnersFormDataClone[runnerId];
-			const runnersFormDataValues = Object.values(runnersFormDataClone);
-
-			if (
-				trackingDeviceId !== null &&
-				runnersFormDataValues.some((r) => r.trackingDeviceId === trackingDeviceId)
-			) {
-				return fail(400, { error: { runnerId, code: 'SAME_TRACKING_DEVICE_ID' } } as const);
-			}
-
-			if (userId !== null && runnersFormDataValues.some((r) => r.userId === userId)) {
-				return fail(400, { error: { runnerId, code: 'SAME_USER_ID' } } as const);
-			}
-		}
-
-		const runners = await db.query.runner.findMany({
-			where: eq(runnerTable.fkEvent, eventId),
-			with: { legs: true }
-		});
-
-		const runnersWithLiveEventAndtrackingDeviceId = runners.map((runner) => {
-			const runnerFormData = runnersFormData[runner.id];
-			if (runnerFormData === undefined) return runner;
-			const { liveEvent, trackingDeviceId, userId } = runnerFormData;
-
-			return {
-				...runner,
-				fkLiveEvent: liveEvent,
-				trackingDeviceId,
-				fkUser: userId
-			};
-		});
-
-		const liveEvents = await db
-			.select()
-			.from(liveEvent)
-			.where(eq(liveEvent.fkEvent, eventId))
-			.all();
-
-		const legs = await db.query.leg.findMany({
-			where: eq(legTable.fkEvent, eventId),
-			with: { routechoices: true }
-		});
-
-		const sortedLegs = sortLegsAndRoutechoices(legs);
-		const sortedLegsWithRoutechoicesWithParsedTracks = parseRoutechoicesTracksInLegs(sortedLegs);
-
-		const runnersWithTracksAndSortedLegs = await getRunnersWithTracksAndSortedLegs(
-			sortedLegs,
-			liveEvents,
-			runnersWithLiveEventAndtrackingDeviceId,
-			fetch
-		);
-
-		const runnersWithDetectedRoutechoices = detectRunnersRoutechoices(
-			sortedLegsWithRoutechoicesWithParsedTracks,
-			runnersWithTracksAndSortedLegs
-		);
-
-		const statements: BatchItem<'sqlite'>[] = [];
-
-		for (const runner of runnersWithDetectedRoutechoices) {
-			const runnerUpdate = db
-				.update(runnerTable)
-				.set({
-					fkLiveEvent: runner.fkLiveEvent,
-					trackingDeviceId: runner.trackingDeviceId,
-					fkUser: runner.fkUser
-				})
-				.where(eq(runnerTable.id, runner.id));
-
-			statements.push(runnerUpdate);
-
-			for (const runnerLeg of runner.legs) {
-				if (runnerLeg === null || !runnerLeg.fkDetectedRoutechoice) continue;
-
-				const runnerLegUpdate = db
-					.update(runnerLegTable)
-					.set({ fkDetectedRoutechoice: runnerLeg.fkDetectedRoutechoice })
-					.where(eq(runnerLegTable.id, runnerLeg.id));
-
-				statements.push(runnerLegUpdate);
-			}
-		}
-
-		const firstInsert = statements.shift();
-		if (firstInsert === undefined) throw error(400, 'There should be at least one runner');
-
-		await db.batch([firstInsert, ...statements]);
-
-		throw redirect(302, `/events/${eventId}/map`);
-	}
-};
