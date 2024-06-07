@@ -24,14 +24,14 @@
 
 {#if showRoutechoicesLabels || showRunnersTraksLabels}
 	<article
-		class="z-1 absolute right-4 bottom-17 md:bottom-4 transition-transform transition-250 bg-background-color m-0 py-1 pr-0 pl-4
+		class="z-1 absolute right-4 bottom-17 md:bottom-4 transition-transform transition-250 bg-background-color m-0 py-1 px-0
 			max-h-100 flex flex-col rounded-none border-solid border-1 border-table-border-color"
 		class:-translate-x-55={isSettingsSidebarShown && !isCollapsed}
 		class:translate-x-full={isCollapsed && !isSettingsSidebarShown}
 		class:translate-x-[calc(100%-13.75rem)]={isCollapsed && isSettingsSidebarShown}
 	>
 		{#if showRoutechoicesLabels}
-			<ul class="p-0 m-0 shrink-0 px-2">
+			<ul class="py-0 m-0 shrink-0 pr-2 pl-4">
 				{#each routechoices as routechoice (routechoice.id)}
 					<li style:color={routechoice.color} class="list-none text-5 m-0 text-right">
 						{routechoice.name}
@@ -53,7 +53,7 @@
 				{#each selectedRunnersWithCurrentLegOnly as runner (runner.id)}
 					<li
 						style:color={runner.track.color}
-						class="list-none text-5 m-0 px-2 text-right hover:bg-pico-dropdown-hover-background-color"
+						class="list-none text-5 m-0 pr-2 pl-4 text-right hover:bg-pico-dropdown-hover-background-color"
 						on:mouseenter={() => (hoveredRunnerId = runner.id)}
 						on:mouseleave={() => (hoveredRunnerId = null)}
 					>
