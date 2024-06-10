@@ -5,8 +5,6 @@
 
 	$: showSidebar = $page.url.searchParams.has('showSettings');
 
-	$: console.log($settingsStore.runnersTracksOpacity);
-
 	let routechoicesLabels = $settingsStore.routechoicesLabels;
 	let runnersLabels = $settingsStore.runnersLabels;
 	let runnersTracksColors = $settingsStore.runnersTracksColors;

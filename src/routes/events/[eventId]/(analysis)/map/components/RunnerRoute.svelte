@@ -31,7 +31,7 @@
 
 <LineString
 	{coords}
-	color={addAlpha(track.color, $settingsStore.runnersTracksOpacity)}
+	color={isEmphasized ? track.color : addAlpha(track.color, $settingsStore.runnersTracksOpacity)}
 	width={isEmphasized ? 6 : 5}
 	text={$settingsStore.runnersLabels === 'nextToTrack' ? name : undefined}
 	{zIndex}
