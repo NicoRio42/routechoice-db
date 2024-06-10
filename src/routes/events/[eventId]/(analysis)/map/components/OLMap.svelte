@@ -24,7 +24,7 @@
 				rotatedExtentForGeometry(fromExtent(fitBox), angle)
 			);
 
-			view.animate({ center, rotation: angle, resolution, duration: 750 });
+			view.animate({ center, rotation: angle, resolution, duration: 1000 });
 		}
 	}
 

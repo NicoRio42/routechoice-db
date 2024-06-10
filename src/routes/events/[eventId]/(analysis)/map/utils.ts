@@ -149,7 +149,7 @@ export function getSelectedRunnersWithCurrentLegOnlyAndTracks(
 			const fkRoutechoice =
 				runner.legs[0].fkManualRoutechoice ?? runner.legs[0].fkDetectedRoutechoice;
 			const routechoice = selectedLeg.routechoices.find((r) => r.id === fkRoutechoice);
-			const color = routechoice?.color ?? 'grey';
+			const color = routechoice?.color ?? '#808080';
 
 			return {
 				...runner,
