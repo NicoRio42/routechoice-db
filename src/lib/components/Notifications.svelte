@@ -34,7 +34,7 @@
 </script>
 
 {#if $notifications.length !== 0}
-	<ul class="fixed top-4 right-4 flex flex-col gap-4 z3 max-w-100">
+	<ul class="fixed top-4 right-4 flex flex-col gap-4 z4 max-w-100">
 		{#each $notifications as notification (notification.id)}
 			<li
 				transition:fade|global={{ duration: 125 }}

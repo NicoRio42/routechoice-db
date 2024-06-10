@@ -9,6 +9,7 @@
 
 	export let routechoices: Routechoice[] = [];
 	export let runner: Runner;
+	export let legNumber: number;
 
 	const user = getContext<Writable<User | null>>('user');
 
@@ -43,6 +44,7 @@
 			<form method="post" action="?/updateRoutechoice" class="contents" use:enhance>
 				<input type="hidden" name="runnerId" value={runner.id} />
 				<input type="hidden" name="runnerLegId" value={runner.legs[0].id} />
+				<input type="hidden" name="legNumber" value={legNumber} />
 
 				<select
 					class="routechoice-select"

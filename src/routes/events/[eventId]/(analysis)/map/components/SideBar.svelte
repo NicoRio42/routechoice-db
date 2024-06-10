@@ -58,6 +58,7 @@
 				<LegSplitTimesTable
 					{sortedRunnersWithOneLeg}
 					{legRoutechoices}
+					{legNumber}
 					isLastSplit={legNumber === legs.length}
 					bind:selectedRunnersIds
 					on:routechoiceChange

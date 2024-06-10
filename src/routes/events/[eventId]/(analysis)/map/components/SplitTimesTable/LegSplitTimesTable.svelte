@@ -14,6 +14,7 @@
 	export let sortedRunnersWithOneLeg: RunnerWithNullableLegsAndTrack[];
 	export let legRoutechoices: Routechoice[];
 	export let isLastSplit = false;
+	export let legNumber: number;
 
 	let iShowAllRunnersTracksChecked = false;
 
@@ -94,7 +95,7 @@
 				<LegCell {runnerLeg} {isLastSplit}></LegCell>
 
 				{#if legRoutechoices.length !== 0}
-					<RoutechoiceTableCell routechoices={legRoutechoices} {runner} />
+					<RoutechoiceTableCell routechoices={legRoutechoices} {runner} {legNumber} />
 				{/if}
 
 				<td class="text-center">

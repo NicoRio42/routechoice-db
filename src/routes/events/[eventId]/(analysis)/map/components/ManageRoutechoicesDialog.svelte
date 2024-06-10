@@ -1,18 +1,79 @@
 <script lang="ts">
-	import { enhance } from '$app/forms';
+	import { page } from '$app/stores';
 	import { confirmSubmit } from '$lib/actions/confirm-submit.js';
-	import type { Routechoice } from '$lib/server/db/models.js';
+	import { parseRoutechoicesTracksInASingleLeg } from '$lib/helpers';
+	import type { LegWithRoutechoices } from '$lib/models/leg.model';
+	import type { RunnerWithNullableLegsAndTrack } from '$lib/models/runner.model';
+	import { detectRunnersRoutechoicesForASingleLeg } from '$lib/routechoice-detector';
 	import { createEventDispatcher } from 'svelte';
 	import { fade } from 'svelte/transition';
+	import type { DeleteRoutechoice } from '../deleteRoutechoice/delete-routechoice-schema';
+	import { pushNotification } from '$lib/components/Notifications.svelte';
 
-	export let routechoices: Routechoice[];
+	export let leg: LegWithRoutechoices;
 	export let show: boolean;
+	export let runners: RunnerWithNullableLegsAndTrack[];
+	export let legIndex: number;
 
-	let loading = false;
-	const dispatch = createEventDispatcher<{ startDrawingNewRoutechoice: undefined }>();
+	type RunnerLegToUpdate = { id: string; fkRunner: string; fkDetectedRoutechoice: string | null };
+
+	const deleteRoutechoiceLoadingMap: Record<string, boolean> = {};
+	const deleteRoutechoiceToofastMap: Record<string, boolean> = {};
+
+	const dispatch = createEventDispatcher<{
+		startDrawingNewRoutechoice: undefined;
+		deleteRoutechoice: { deletedRoutechoiceId: string; runnerLegsToUpdate: RunnerLegToUpdate[] };
+	}>();
+
+	async function handleDeleteRoutechoice(routechoiceId: string) {
+		deleteRoutechoiceLoadingMap[routechoiceId] = true;
+		deleteRoutechoiceToofastMap[routechoiceId] = true;
+		setTimeout(() => (deleteRoutechoiceToofastMap[routechoiceId] = false), 250);
+
+		const legWithoutDeletedRoutechoice = {
+			...leg,
+			routechoices: leg.routechoices.filter((r) => r.id !== routechoiceId)
+		};
+
+		const runnersWithDetectedRoutechoices = detectRunnersRoutechoicesForASingleLeg(
+			parseRoutechoicesTracksInASingleLeg(legWithoutDeletedRoutechoice),
+			runners,
+			legIndex
+		);
+
+		const runnerLegsToUpdate: RunnerLegToUpdate[] = [];
+
+		for (const runner of runnersWithDetectedRoutechoices) {
+			const runnerLeg = runner.legs[legIndex];
+			if (runnerLeg === null) continue;
+
+			runnerLegsToUpdate.push({
+				id: runnerLeg.id,
+				fkRunner: runner.id,
+				fkDetectedRoutechoice: runnerLeg.fkDetectedRoutechoice
+			});
+		}
+
+		const response = await fetch($page.url.pathname + '/deleteRoutechoice', {
+			method: 'POST',
+			body: JSON.stringify({
+				routechoiceId,
+				runnerLegsToUpdate
+			} satisfies DeleteRoutechoice)
+		});
+
+		deleteRoutechoiceLoadingMap[routechoiceId] = false;
+
+		if (!response.ok) {
+			pushNotification('An error occured while deleting the routechoice', { type: 'error' });
+			return;
+		}
+
+		dispatch('deleteRoutechoice', { deletedRoutechoiceId: routechoiceId, runnerLegsToUpdate });
+		show = false;
+	}
 </script>
 
-<!-- Dialog showModal and close methods are not well supported on IOS -->
 {#if show}
 	<dialog open transition:fade={{ duration: 125 }}>
 		<article>
@@ -29,7 +90,7 @@
 				</thead>
 
 				<tbody>
-					{#each routechoices as routechoice (routechoice.id)}
+					{#each leg.routechoices as routechoice (routechoice.id)}
 						<tr>
 							<td>{routechoice.name}</td>
 							<td>{Math.round(routechoice.length)} m</td>
@@ -37,23 +98,16 @@
 
 							<td>
 								<form
-									action="?/deleteRoutechoice"
-									method="post"
 									use:confirmSubmit={'Are you sure to delete this routechoice?'}
-									use:enhance={() => {
-										loading = true;
-										return ({ update }) => {
-											loading = false;
-											show = false;
-											update();
-										};
-									}}
+									on:submit|preventDefault={() => handleDeleteRoutechoice(routechoice.id)}
 									class="m-0 p-0"
 								>
-									<input type="hidden" name="legId" value={routechoice.fkLeg} />
-									<input type="hidden" name="routechoiceId" value={routechoice.id} />
-
-									<button type="submit" class="btn-unset" aria-busy={loading}>
+									<button
+										type="submit"
+										class="btn-unset"
+										aria-busy={deleteRoutechoiceLoadingMap[routechoice.id] &&
+											!deleteRoutechoiceToofastMap[routechoice.id]}
+									>
 										<i class="i-carbon-trash-can w-5 h-5 block" />
 									</button>
 								</form>
@@ -63,15 +117,22 @@
 				</tbody>
 			</table>
 
-			<button
-				type="button"
-				on:click={() => {
-					dispatch('startDrawingNewRoutechoice');
-					show = false;
-				}}>Add routechoice</button
-			>
+			<div class="flex justify-end gap-2">
+				<button type="button" class="outline" on:click={() => (show = false)}>Cancel</button>
 
-			<button type="button" class="outline" on:click={() => (show = false)}>Cancel</button>
+				<button
+					type="button"
+					class="flex items-center gap-2"
+					on:click={() => {
+						dispatch('startDrawingNewRoutechoice');
+						show = false;
+					}}
+				>
+					<i class="i-carbon-add w-6 h-6 block"></i>
+
+					Add routechoice</button
+				>
+			</div>
 		</article>
 	</dialog>
 {/if}

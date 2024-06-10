@@ -1,7 +1,7 @@
 <script lang="ts">
 	import { page } from '$app/stores';
 	import { pushNotification } from '$lib/components/Notifications.svelte';
-	import { addSearchParamsToURL, getTracksFromLiveEvents } from '$lib/helpers';
+	import { getTracksFromLiveEvents } from '$lib/helpers';
 	import type { EventWithLiveEventsRunnersLegsAndControlPoints as Event } from '$lib/models/event.model.js';
 	import { mapIsLoading } from '$lib/stores/map-loading.store';
 	import type { User } from 'lucia';
@@ -13,11 +13,13 @@
 	import AddRoutechoiceDialog from './components/AddRoutechoiceDialog.svelte';
 	import Draw from './components/Draw.svelte';
 	import GeoreferencedImage from './components/GeoreferencedImage.svelte';
+	import ManageRoutechoicesButton from './components/ManageRoutechoicesButton.svelte';
 	import ManageRoutechoicesDialog from './components/ManageRoutechoicesDialog.svelte';
 	import OlMap from './components/OLMap.svelte';
 	import RoutechoiceTrack from './components/RoutechoiceTrack.svelte';
 	import RunnerRoute from './components/RunnerRoute.svelte';
 	import Settings from './components/Settings.svelte';
+	import SettingsButton from './components/SettingsButton.svelte';
 	import SideBar from './components/SideBar.svelte';
 	import TracksLabels from './components/TracksLabels.svelte';
 	import VectorLayer from './components/VectorLayer.svelte';
@@ -102,9 +104,56 @@
 
 {#if data.event.legs.length !== 0}
 	<ManageRoutechoicesDialog
-		routechoices={data.event.legs[legNumber - 1].routechoices}
+		leg={data.event.legs[legNumber - 1]}
+		runners={data.event.runners}
+		legIndex={legNumber - 1}
 		bind:show={showManageRoutechoicesDialog}
 		on:startDrawingNewRoutechoice={() => (isDrawingNewRoutechoice = true)}
+		on:deleteRoutechoice={({ detail: { deletedRoutechoiceId, runnerLegsToUpdate } }) => {
+			data.event.legs[legNumber - 1].routechoices = data.event.legs[
+				legNumber - 1
+			].routechoices.filter((rc) => rc.id !== deletedRoutechoiceId);
+
+			for (const runner of data.event.runners) {
+				const runnerLegToUpdate = runnerLegsToUpdate.find((rl) => rl.fkRunner === runner.id);
+				if (runnerLegToUpdate === undefined) continue;
+				const runnerLeg = runner.legs.find((rl) => rl?.id === runnerLegToUpdate.id);
+				if (runnerLeg === undefined) continue;
+				runnerLeg.fkDetectedRoutechoice = runnerLegToUpdate.fkDetectedRoutechoice;
+			}
+		}}
+	/>
+{/if}
+
+{#if showAddRoutechoiceDialog && currentDrawnRoutechoice !== null}
+	<AddRoutechoiceDialog
+		runners={data.event.runners}
+		leg={data.event.legs[legNumber - 1]}
+		legIndex={legNumber - 1}
+		{currentDrawnRoutechoice}
+		on:close={() => {
+			showAddRoutechoiceDialog = false;
+			currentDrawnRoutechoice = null;
+		}}
+		on:addRoutechoice={({ detail: { newRoutechoice, runnerLegsToUpdate } }) => {
+			data.event.legs[legNumber - 1].routechoices = [
+				...data.event.legs[legNumber - 1].routechoices,
+				{ ...newRoutechoice, elevation: null }
+			];
+
+			for (const runner of data.event.runners) {
+				const runnerLegToUpdate = runnerLegsToUpdate.find((rl) => rl.fkRunner === runner.id);
+				if (runnerLegToUpdate === undefined) continue;
+				const runnerLeg = runner.legs.find((rl) => rl?.id === runnerLegToUpdate.id);
+				if (runnerLeg === undefined) continue;
+				runnerLeg.fkDetectedRoutechoice = runnerLegToUpdate.fkDetectedRoutechoice;
+			}
+
+			data.event.runners = data.event.runners;
+			showAddRoutechoiceDialog = false;
+			currentDrawnRoutechoice = null;
+			isDrawingNewRoutechoice = false;
+		}}
 	/>
 {/if}
 
@@ -118,41 +167,16 @@
 		</article>
 	{/if}
 
-	<!-- I nead a div because pico overides the background-color css var for outline buttons -->
-	<div class="absolute top-2 right-2 z-1 bg-background-color rounded-md">
-		<a
-			role="button"
-			href={addSearchParamsToURL($page.url, 'showSettings', '')}
-			data-sveltekit-replacestate
-			class="outline !flex items-center justify-center p-2"
-		>
-			<i class="block i-carbon-settings"></i>
-		</a>
-	</div>
+	<SettingsButton />
 
 	{#if data.event.legs.length !== 0 && data.user?.role === 'admin'}
-		<!-- I nead a div because pico overides the background-color css var for outline buttons -->
-		<div class="absolute top-12 right-2 z-1 bg-background-color rounded-md">
-			<button
-				on:click={() => (showManageRoutechoicesDialog = !showManageRoutechoicesDialog)}
-				class="outline flex items-center justify-center p-2"
-			>
-				{#if showManageRoutechoicesDialog}
-					<i class="block i-carbon-edit-off"></i>
-				{:else}
-					<i class="block i-carbon-edit"></i>
-				{/if}
-			</button>
-		</div>
-	{/if}
-
-	{#if showAddRoutechoiceDialog && currentDrawnRoutechoice !== null}
-		<AddRoutechoiceDialog
-			leg={data.event.legs[legNumber - 1]}
-			{currentDrawnRoutechoice}
-			on:cancel={() => {
-				showAddRoutechoiceDialog = false;
-				currentDrawnRoutechoice = null;
+		<ManageRoutechoicesButton
+			{isDrawingNewRoutechoice}
+			on:click={() => {
+				if (isDrawingNewRoutechoice) {
+					isDrawingNewRoutechoice = false;
+					currentDrawnRoutechoice = null;
+				} else showManageRoutechoicesDialog = true;
 			}}
 		/>
 	{/if}
