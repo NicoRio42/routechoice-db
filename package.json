@@ -6,7 +6,7 @@
 	"scripts": {
 		"dev": "vite dev",
 		"dev:prod": "vite dev --mode production",
-		"dev-offline": "vite dev --mode dev-offline",
+		"dev:offline": "vite dev --mode dev-offline",
 		"build": "vite build",
 		"build:prod": "npm run migrate:prod && vite build",
 		"preview": "vite preview",

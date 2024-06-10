@@ -4,6 +4,7 @@
 	import { settingsStore } from '../settings-store';
 	import LineString from './LineString.svelte';
 	import { cropTrackFromLegNumber } from './utils.js';
+	import { addAlpha } from '$lib/helpers';
 
 	export let runnerLeg: RunnerLeg;
 	export let track: RunnerTrack;
@@ -30,7 +31,7 @@
 
 <LineString
 	{coords}
-	color={track.color}
+	color={addAlpha(track.color, $settingsStore.runnersTracksOpacity)}
 	width={isEmphasized ? 6 : 5}
 	text={$settingsStore.runnersLabels === 'nextToTrack' ? name : undefined}
 	{zIndex}

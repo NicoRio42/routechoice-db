@@ -2,7 +2,10 @@
 	import { page } from '$app/stores';
 	import { addAlpha } from '$lib/helpers.js';
 	import { RolesEnum } from '$lib/models/enums/roles.enum.js';
-	import type { RunnerWithNullableLegsAndTrack } from '$lib/models/runner.model.js';
+	import type {
+		RunnerWithLegsAndTracks,
+		RunnerWithNullableLegsAndTrack
+	} from '$lib/models/runner.model.js';
 	import type { Routechoice } from '$lib/server/db/models.js';
 	import { fullNameToShortName } from '$lib/utils/split-times';
 	import GreenJersey from '../../../components/GreenJersey.svelte';
@@ -15,6 +18,7 @@
 	export let legRoutechoices: Routechoice[];
 	export let isLastSplit = false;
 	export let legNumber: number;
+	export let selectedRunners: RunnerWithLegsAndTracks[];
 
 	let iShowAllRunnersTracksChecked = false;
 
@@ -72,6 +76,7 @@
 	<tbody>
 		{#each sortedRunnersWithOneLeg as runner (runner.id)}
 			{@const runnerLeg = runner.legs[0]}
+			{@const selectedRunner = selectedRunners.find((r) => r.id === runner.id)}
 
 			<tr>
 				<td class="!p-0">
@@ -100,14 +105,16 @@
 
 				<td class="text-center">
 					{#if runner.track !== null}
+						{@const trackColor = selectedRunner?.track?.color ?? runner.track.color}
+
 						<input
 							type="checkbox"
 							value={runner.id}
 							checked={selectedRunnersIds.includes(runner.id)}
 							on:change={(e) => handleShowTrackCheckboxChange(e, runner.id)}
-							style:--pico-border-color={runner.track.color}
-							style:--pico-primary-background={runner.track.color}
-							style:--pico-form-element-focus-color={addAlpha(runner.track.color, 0.13)}
+							style:--pico-border-color={trackColor}
+							style:--pico-primary-background={trackColor}
+							style:--pico-form-element-focus-color={addAlpha(trackColor, 0.13)}
 						/>
 					{/if}
 				</td>

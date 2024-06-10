@@ -56,7 +56,7 @@
 		</button>
 	</header>
 
-	<div class="mt-4 max-w-150 mx-auto">
+	<div class="mt-10 max-w-150 mx-auto">
 		{#each data.events as event (event.id)}
 			<a href="/events/{event.id}/map" class="contents" style:--pico-color="var(--pico-h1-color)">
 				<article class="shadow-xl hover:shadow-2xl py-6 md:px-6">

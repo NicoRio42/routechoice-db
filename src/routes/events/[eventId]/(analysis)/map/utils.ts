@@ -8,6 +8,7 @@ import { transform, transformExtent } from 'ol/proj.js';
 import type { CourseMap } from 'orienteering-js/models';
 import type { z } from 'zod';
 import type { runnersTracksColorsEnum } from './settings-store';
+import { hslToHex } from '$lib/helpers';
 
 export function computeFitBoxAndAngleFromLegNumber(
 	legNumber: number,
@@ -118,7 +119,7 @@ function getColorFromTime(time: number, fastestTime: number, slowestTime: number
 			? 120
 			: Math.round((1 - (time - fastestTime) / (slowestTime - fastestTime)) * 120);
 
-	return `hsl(${hue}deg 100% 50%)`;
+	return hslToHex(hue, 100, 50);
 }
 
 export function getSelectedRunnersWithCurrentLegOnlyAndTracks(

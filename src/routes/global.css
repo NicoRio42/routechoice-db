@@ -82,6 +82,7 @@ label {
 
 button.outline:not(.unpico),
 a[role='button'].outline:not(.unpico),
+label[role='button'].outline:not(.unpico),
 summary[role='button'].outline:not(.unpico) {
 	outline-style: none;
 }

@@ -1,13 +1,17 @@
 <script lang="ts">
 	import { page } from '$app/stores';
 	import type { LegWithRoutechoices } from '$lib/models/leg.model.js';
-	import type { RunnerWithNullableLegsAndTrack } from '$lib/models/runner.model.js';
+	import type {
+		RunnerWithLegsAndTracks,
+		RunnerWithNullableLegsAndTrack
+	} from '$lib/models/runner.model.js';
 	import type { Routechoice } from '$lib/server/db/models';
 	import LegStatistics from './LegStatistics/LegStatistics.svelte';
 	import LegSplitTimesTable from './SplitTimesTable/LegSplitTimesTable.svelte';
 	import Toggle from './Toggle.svelte';
 
 	export let selectedRunnersIds: string[];
+	export let selectedRunners: RunnerWithLegsAndTracks[];
 	export let runners: RunnerWithNullableLegsAndTrack[];
 	export let legs: LegWithRoutechoices[];
 	export let legNumber: number;
@@ -61,6 +65,7 @@
 					{legNumber}
 					isLastSplit={legNumber === legs.length}
 					bind:selectedRunnersIds
+					{selectedRunners}
 					on:routechoiceChange
 				/>
 			</section>

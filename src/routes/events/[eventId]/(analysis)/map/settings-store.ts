@@ -8,7 +8,8 @@ export const runnersTracksColorsEnum = z.enum(['time', 'routechoice', 'original'
 const settingsSchema = z.object({
 	routechoicesLabels: labelPositionEnum,
 	runnersLabels: labelPositionEnum,
-	runnersTracksColors: runnersTracksColorsEnum
+	runnersTracksColors: runnersTracksColorsEnum,
+	runnersTracksOpacity: z.number()
 });
 
 export const settingsStore = createPersistentStore(
@@ -17,6 +18,7 @@ export const settingsStore = createPersistentStore(
 	{
 		routechoicesLabels: 'nextToTrack',
 		runnersLabels: 'nextToTrack',
-		runnersTracksColors: 'original'
+		runnersTracksColors: 'original',
+		runnersTracksOpacity: 0.8
 	}
 );

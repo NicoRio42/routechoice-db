@@ -185,6 +185,7 @@
 
 	<SideBar
 		bind:selectedRunnersIds
+		selectedRunners={selectedRunnersWithCurrentLegOnly}
 		runners={data.event.runners}
 		legs={data.event.legs}
 		{legNumber}
