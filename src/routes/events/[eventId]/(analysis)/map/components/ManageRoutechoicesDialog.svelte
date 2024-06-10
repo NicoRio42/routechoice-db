@@ -74,65 +74,63 @@
 	}
 </script>
 
-{#if show}
-	<dialog open transition:fade={{ duration: 125 }}>
-		<article>
-			<h2>Routechoices</h2>
+<dialog open transition:fade={{ duration: 125 }}>
+	<article>
+		<h2>Routechoices</h2>
 
-			<table>
-				<thead>
+		<table>
+			<thead>
+				<tr>
+					<th>Name</th>
+					<th>Length</th>
+					<th>Color</th>
+					<th></th>
+				</tr>
+			</thead>
+
+			<tbody>
+				{#each leg.routechoices as routechoice (routechoice.id)}
 					<tr>
-						<th>Name</th>
-						<th>Length</th>
-						<th>Color</th>
-						<th></th>
-					</tr>
-				</thead>
+						<td>{routechoice.name}</td>
+						<td>{Math.round(routechoice.length)} m</td>
+						<td style:background-color={routechoice.color}></td>
 
-				<tbody>
-					{#each leg.routechoices as routechoice (routechoice.id)}
-						<tr>
-							<td>{routechoice.name}</td>
-							<td>{Math.round(routechoice.length)} m</td>
-							<td style:background-color={routechoice.color}></td>
-
-							<td>
-								<form
-									use:confirmSubmit={'Are you sure to delete this routechoice?'}
-									on:submit|preventDefault={() => handleDeleteRoutechoice(routechoice.id)}
-									class="m-0 p-0"
+						<td>
+							<form
+								use:confirmSubmit={'Are you sure to delete this routechoice?'}
+								on:submit|preventDefault={() => handleDeleteRoutechoice(routechoice.id)}
+								class="m-0 p-0"
+							>
+								<button
+									type="submit"
+									class="btn-unset"
+									aria-busy={deleteRoutechoiceLoadingMap[routechoice.id] &&
+										!deleteRoutechoiceToofastMap[routechoice.id]}
 								>
-									<button
-										type="submit"
-										class="btn-unset"
-										aria-busy={deleteRoutechoiceLoadingMap[routechoice.id] &&
-											!deleteRoutechoiceToofastMap[routechoice.id]}
-									>
-										<i class="i-carbon-trash-can w-5 h-5 block" />
-									</button>
-								</form>
-							</td>
-						</tr>
-					{/each}
-				</tbody>
-			</table>
+									<i class="i-carbon-trash-can w-5 h-5 block" />
+								</button>
+							</form>
+						</td>
+					</tr>
+				{/each}
+			</tbody>
+		</table>
 
-			<div class="flex justify-end gap-2">
-				<button type="button" class="outline" on:click={() => (show = false)}>Cancel</button>
+		<div class="flex justify-end gap-2">
+			<button type="button" class="outline" on:click={() => (show = false)}>Cancel</button>
 
-				<button
-					type="button"
-					class="flex items-center gap-2"
-					on:click={() => {
-						dispatch('startDrawingNewRoutechoice');
-						show = false;
-					}}
-				>
-					<i class="i-carbon-add w-6 h-6 block"></i>
+			<button
+				type="button"
+				class="flex items-center gap-2"
+				on:click={() => {
+					dispatch('startDrawingNewRoutechoice');
+					show = false;
+				}}
+			>
+				<i class="i-carbon-add w-6 h-6 block"></i>
 
-					Add routechoice</button
-				>
-			</div>
-		</article>
-	</dialog>
-{/if}
+				Add routechoice</button
+			>
+		</div>
+	</article>
+</dialog>

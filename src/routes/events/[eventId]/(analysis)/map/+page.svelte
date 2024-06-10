@@ -10,11 +10,9 @@
 	import { onMount, setContext } from 'svelte';
 	import { writable } from 'svelte/store';
 	import ActionButtons from './components/ActionButtons.svelte';
-	import AddRoutechoiceDialog from './components/AddRoutechoiceDialog.svelte';
 	import Draw from './components/Draw.svelte';
 	import GeoreferencedImage from './components/GeoreferencedImage.svelte';
 	import ManageRoutechoicesButton from './components/ManageRoutechoicesButton.svelte';
-	import ManageRoutechoicesDialog from './components/ManageRoutechoicesDialog.svelte';
 	import OlMap from './components/OLMap.svelte';
 	import RoutechoiceTrack from './components/RoutechoiceTrack.svelte';
 	import RunnerRoute from './components/RunnerRoute.svelte';
@@ -102,59 +100,63 @@
 	<meta name="twitter:card" content="summary_large_image" />
 </svelte:head>
 
-{#if data.event.legs.length !== 0}
-	<ManageRoutechoicesDialog
-		leg={data.event.legs[legNumber - 1]}
-		runners={data.event.runners}
-		legIndex={legNumber - 1}
-		bind:show={showManageRoutechoicesDialog}
-		on:startDrawingNewRoutechoice={() => (isDrawingNewRoutechoice = true)}
-		on:deleteRoutechoice={({ detail: { deletedRoutechoiceId, runnerLegsToUpdate } }) => {
-			data.event.legs[legNumber - 1].routechoices = data.event.legs[
-				legNumber - 1
-			].routechoices.filter((rc) => rc.id !== deletedRoutechoiceId);
+{#if showManageRoutechoicesDialog && data.event.legs.length !== 0}
+	{#await import('./components/ManageRoutechoicesDialog.svelte') then { default: ManageRoutechoicesDialog }}
+		<ManageRoutechoicesDialog
+			leg={data.event.legs[legNumber - 1]}
+			runners={data.event.runners}
+			legIndex={legNumber - 1}
+			bind:show={showManageRoutechoicesDialog}
+			on:startDrawingNewRoutechoice={() => (isDrawingNewRoutechoice = true)}
+			on:deleteRoutechoice={({ detail: { deletedRoutechoiceId, runnerLegsToUpdate } }) => {
+				data.event.legs[legNumber - 1].routechoices = data.event.legs[
+					legNumber - 1
+				].routechoices.filter((rc) => rc.id !== deletedRoutechoiceId);
 
-			for (const runner of data.event.runners) {
-				const runnerLegToUpdate = runnerLegsToUpdate.find((rl) => rl.fkRunner === runner.id);
-				if (runnerLegToUpdate === undefined) continue;
-				const runnerLeg = runner.legs.find((rl) => rl?.id === runnerLegToUpdate.id);
-				if (runnerLeg === undefined) continue;
-				runnerLeg.fkDetectedRoutechoice = runnerLegToUpdate.fkDetectedRoutechoice;
-			}
-		}}
-	/>
+				for (const runner of data.event.runners) {
+					const runnerLegToUpdate = runnerLegsToUpdate.find((rl) => rl.fkRunner === runner.id);
+					if (runnerLegToUpdate === undefined) continue;
+					const runnerLeg = runner.legs.find((rl) => rl?.id === runnerLegToUpdate.id);
+					if (runnerLeg === undefined) continue;
+					runnerLeg.fkDetectedRoutechoice = runnerLegToUpdate.fkDetectedRoutechoice;
+				}
+			}}
+		/>
+	{/await}
 {/if}
 
 {#if showAddRoutechoiceDialog && currentDrawnRoutechoice !== null}
-	<AddRoutechoiceDialog
-		runners={data.event.runners}
-		leg={data.event.legs[legNumber - 1]}
-		legIndex={legNumber - 1}
-		{currentDrawnRoutechoice}
-		on:close={() => {
-			showAddRoutechoiceDialog = false;
-			currentDrawnRoutechoice = null;
-		}}
-		on:addRoutechoice={({ detail: { newRoutechoice, runnerLegsToUpdate } }) => {
-			data.event.legs[legNumber - 1].routechoices = [
-				...data.event.legs[legNumber - 1].routechoices,
-				{ ...newRoutechoice, elevation: null }
-			];
+	{#await import('./components/AddRoutechoiceDialog.svelte') then { default: AddRoutechoiceDialog }}
+		<AddRoutechoiceDialog
+			runners={data.event.runners}
+			leg={data.event.legs[legNumber - 1]}
+			legIndex={legNumber - 1}
+			{currentDrawnRoutechoice}
+			on:close={() => {
+				showAddRoutechoiceDialog = false;
+				currentDrawnRoutechoice = null;
+			}}
+			on:addRoutechoice={({ detail: { newRoutechoice, runnerLegsToUpdate } }) => {
+				data.event.legs[legNumber - 1].routechoices = [
+					...data.event.legs[legNumber - 1].routechoices,
+					{ ...newRoutechoice, elevation: null }
+				];
 
-			for (const runner of data.event.runners) {
-				const runnerLegToUpdate = runnerLegsToUpdate.find((rl) => rl.fkRunner === runner.id);
-				if (runnerLegToUpdate === undefined) continue;
-				const runnerLeg = runner.legs.find((rl) => rl?.id === runnerLegToUpdate.id);
-				if (runnerLeg === undefined) continue;
-				runnerLeg.fkDetectedRoutechoice = runnerLegToUpdate.fkDetectedRoutechoice;
-			}
+				for (const runner of data.event.runners) {
+					const runnerLegToUpdate = runnerLegsToUpdate.find((rl) => rl.fkRunner === runner.id);
+					if (runnerLegToUpdate === undefined) continue;
+					const runnerLeg = runner.legs.find((rl) => rl?.id === runnerLegToUpdate.id);
+					if (runnerLeg === undefined) continue;
+					runnerLeg.fkDetectedRoutechoice = runnerLegToUpdate.fkDetectedRoutechoice;
+				}
 
-			data.event.runners = data.event.runners;
-			showAddRoutechoiceDialog = false;
-			currentDrawnRoutechoice = null;
-			isDrawingNewRoutechoice = false;
-		}}
-	/>
+				data.event.runners = data.event.runners;
+				showAddRoutechoiceDialog = false;
+				currentDrawnRoutechoice = null;
+				isDrawingNewRoutechoice = false;
+			}}
+		/>
+	{/await}
 {/if}
 
 <div class="wrapper overflow-hidden">
