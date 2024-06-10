@@ -56,80 +56,96 @@
 		</button>
 	</header>
 
-	<figure class="mt-4 overflow-auto">
-		<table>
-			<thead>
-				<tr>
-					<th>Name</th>
-					<th>Start time</th>
-					<th>Publish time</th>
-					<th>Tags</th>
+	<div class="mt-4 max-w-150 mx-auto">
+		{#each data.events as event (event.id)}
+			<a href="/events/{event.id}/map" class="contents" style:--pico-color="var(--pico-h1-color)">
+				<article class="shadow-xl hover:shadow-2xl py-6 md:px-6">
+					<div class="flex gap-4 justify-between">
+						<div>
+							<h2 class="text-5 font-500">{event.name}</h2>
 
-					{#if data.user?.role === 'admin'}
-						<th />
-						<th />
-					{/if}
-				</tr>
-			</thead>
+							{#if new Date(event.startTime).getTime() === new Date(event.publishTime).getTime()}
+								<p class="flex items-center gap-2">
+									<i class="i-carbon-calendar block w-6 h-6 text-gray"></i>
 
-			<tbody>
-				{#each data.events as event (event.id)}
-					<tr>
-						<td>
-							<a href="/events/{event.id}/map">{event.name}</a>
-						</td>
+									{new Date(event.startTime).toLocaleString()}
+								</p>
+							{:else if new Date(event.startTime).toLocaleDateString() === new Date(event.publishTime).toLocaleDateString()}
+								<p class="flex items-center gap-2">
+									<i class="i-carbon-calendar block w-6 h-6 text-gray"></i>
 
-						<td>{new Date(event.startTime).toLocaleString()}</td>
+									{new Date(event.startTime).toLocaleDateString()}
+								</p>
 
-						<td>{new Date(event.publishTime).toLocaleString()}</td>
+								<div class="flex gap-4">
+									<p>
+										<small class="text-gray">Start</small>
+										{new Date(event.startTime).toLocaleTimeString()}
+									</p>
 
-						<td>
-							{#each event.tagIds as tagId}
-								{@const tag = data.tags.find((t) => t.id === tagId)}
+									<p>
+										<small class="text-gray">Publish</small>
+										{new Date(event.publishTime).toLocaleTimeString()}
+									</p>
+								</div>
+							{:else}
+								<p>{new Date(event.startTime).toLocaleString()}</p>
 
-								{#if tag !== undefined}
-									<span
-										style:background-color={tag.color}
-										class="mr-1 px-1 rounded text-white nowrap"
-									>
-										{tag.name}
-									</span>
-								{/if}
-							{/each}
-						</td>
+								<p>{new Date(event.publishTime).toLocaleString()}</p>
+							{/if}
+
+							<p class="mb-0">
+								{#each event.tagIds as tagId}
+									{@const tag = data.tags.find((t) => t.id === tagId)}
+
+									{#if tag !== undefined}
+										<span
+											style:background-color={tag.color}
+											class="mr-1 px-1 rounded text-white nowrap"
+										>
+											{tag.name}
+										</span>
+									{/if}
+								{/each}
+							</p>
+						</div>
 
 						{#if data.user?.role === 'admin'}
-							<td class="text-right">
-								<a href="/events/{event.id}/manager">
-									<i class="i-carbon-settings-adjust w-5 h-5 block" />
-								</a>
-							</td>
+							<div class="flex flex-col justify-between">
+								<p class="m-0">
+									<a role="button" class="outline m-0 p-2" href="/events/{event.id}/manager">
+										<i class="i-carbon-settings w-5 h-5 block" />
+									</a>
+								</p>
 
-							<td class="text-right">
-								<form
-									action="?/deleteEvent"
-									method="post"
-									use:confirmSubmit={'Are you sure to delete this event?'}
-									use:enhance
-									class="m-0 p-0"
-								>
-									<input type="hidden" name="eventId" value={event.id} />
+								<!-- svelte-ignore a11y-no-static-element-interactions -->
+								<!-- svelte-ignore a11y-click-events-have-key-events -->
+								<div on:click={(e) => e.stopPropagation()}>
+									<form
+										action="?/deleteEvent"
+										method="post"
+										use:confirmSubmit={'Are you sure to delete this event?'}
+										use:enhance
+										class="m-0 p-0"
+									>
+										<input type="hidden" name="eventId" value={event.id} />
 
-									<button type="submit" class="btn-unset">
-										<i class="i-carbon-trash-can w-5 h-5 block" />
-									</button>
-								</form>
-							</td>
+										<button type="submit" class="btn-unset p-2">
+											<i class="i-carbon-trash-can w-5 h-5 block" />
+										</button>
+									</form>
+								</div>
+							</div>
 						{/if}
-					</tr>
-				{:else}
-					<tr>
-						<td colspan="7" class="text-center py-10"> No events for these filters. </td>
-					</tr>
-				{/each}
-			</tbody>
-		</table>
-	</figure>
+					</div>
+				</article>
+			</a>
+		{:else}
+			<tr>
+				<p class="text-center py-10">No events for these filters.</p>
+			</tr>
+		{/each}
+	</div>
 
 	<Paginator pageNumber={data.pageNumber} isLastPage={data.isLastPage}></Paginator>
 </main>
