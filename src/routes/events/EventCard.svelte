@@ -132,7 +132,7 @@
 				</details>
 			{/if}
 
-			<details class="dropdown m-0 pr-4 pb-4">
+			<details class="dropdown m-0 pr-4 pb-4 mt-auto">
 				<!-- svelte-ignore a11y-no-noninteractive-element-to-interactive-role -->
 				<summary role="button" class="outline m-0 p-2 h-fit !after:hidden">
 					<i class="i-carbon-document-pdf w-5 h-5 block" />
