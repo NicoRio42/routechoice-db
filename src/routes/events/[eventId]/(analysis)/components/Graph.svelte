@@ -8,6 +8,7 @@
 
 	export let runners: RunnerWithNullableLegsAndTrack[];
 	export let runnerLegKey: 'timeBehindSuperman' | 'timeBehindOverall';
+	export let eventId: string;
 
 	const supermanOrLeader = getSupermanOverallTimes(runners);
 
@@ -143,9 +144,14 @@
 		</svg>
 
 		{#each supermanOrLeader as leg, index (index)}
-			{#if index !== supermanOrLeader.length - 1}
-				<p class="x-label" style:left={(leg / maxX) * 100 + '%'}>{index + 1}</p>
-			{/if}
+			{@const previousLeg = index === 0 ? 0 : supermanOrLeader[index - 1]}
+			<a
+				href="/events/{eventId}/map?legNumber={index + 1}"
+				class="x-label"
+				style:left={((leg + previousLeg) / (maxX * 2)) * 100 + '%'}
+			>
+				{index === supermanOrLeader.length - 1 ? 'F' : index + 1}
+			</a>
 		{/each}
 	</div>
 </figure>

@@ -37,12 +37,16 @@
 		const event = loggatorEventSchema.parse(await response.json());
 
 		if ($formStore.name === '' || $formStore.name === undefined || $formStore.name === null) {
-			$formStore.name = event.event.name;
+			$formStore.name = cleanupLoggatorEventName(event.event.name);
 		}
 
 		$formStore.startTime = new Date(event.event.start_date);
 		$formStore.publishTime = new Date(event.event.publish_date);
 		$formStore.finishTime = new Date(event.event.end_date);
+	}
+
+	function cleanupLoggatorEventName(name: string): string {
+		return name.replace(/^\d+/, '').trim().replace(/^-/, '').trim();
 	}
 
 	onMount(async () => {

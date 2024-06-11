@@ -4,4 +4,4 @@
 	export let data;
 </script>
 
-<Graph runners={data.event.runners} runnerLegKey={'timeBehindOverall'} />
+<Graph runners={data.event.runners} runnerLegKey={'timeBehindOverall'} eventId={data.event.id} />
