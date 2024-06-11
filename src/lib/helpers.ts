@@ -142,7 +142,10 @@ export async function getTracksFromLiveEvents(
 	return tracks;
 }
 
-export async function getEventMap(liveEvent: LiveEvent, fetch: Fetch): Promise<CourseMap> {
+export async function getEventMapAndCalibration(
+	liveEvent: LiveEvent,
+	fetch: Fetch
+): Promise<CourseMap> {
 	const [_, eventId] = extractLiveProviderAndEventIdFromUrl(liveEvent.url);
 
 	if (liveEvent.liveProvider === 'loggator') {

@@ -1,4 +1,8 @@
-import { getEventMap, sortLegsAndRoutechoices, sortRunnersAndRunnersLegs } from '$lib/helpers.js';
+import {
+	getEventMapAndCalibration,
+	sortLegsAndRoutechoices,
+	sortRunnersAndRunnersLegs
+} from '$lib/helpers.js';
 import { db } from '$lib/server/db/db.js';
 import { event as eventTable } from '$lib/server/db/schema.js';
 import { error, redirect } from '@sveltejs/kit';
@@ -36,7 +40,7 @@ export async function load({ params: { eventId }, locals, fetch }) {
 			...eventWithSortedLegs,
 			runners
 		},
-		eventMap: await getEventMap(event.liveEvents[0], fetch),
+		eventMap: await getEventMapAndCalibration(event.liveEvents[0], fetch),
 		user: locals.user
 	};
 }
