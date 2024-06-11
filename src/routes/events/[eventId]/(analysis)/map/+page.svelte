@@ -194,7 +194,7 @@
 	<Settings />
 
 	<TracksLabels
-		routechoices={data.event.legs[legNumber - 1].routechoices}
+		routechoices={data.event.legs[legNumber - 1]?.routechoices ?? []}
 		{selectedRunnersWithCurrentLegOnly}
 		bind:hoveredRunnerId
 	/>
