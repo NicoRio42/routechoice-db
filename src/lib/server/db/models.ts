@@ -1,6 +1,7 @@
 import type {
 	controlPoint,
 	event,
+	file,
 	leg,
 	liveEvent,
 	routechoice,
@@ -23,3 +24,4 @@ export type RunnerInsert = typeof runner.$inferInsert;
 export type RunnerLeg = typeof runnerLeg.$inferSelect;
 export type RunnerLegInsert = typeof runnerLeg.$inferInsert;
 export type User = typeof user.$inferSelect;
+export type File = typeof file.$inferSelect;

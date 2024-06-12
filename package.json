@@ -21,6 +21,7 @@
 		"drizzle:up": "drizzle-kit up"
 	},
 	"devDependencies": {
+		"@cloudflare/workers-types": "^4.20240605.0",
 		"@iconify-json/carbon": "^1.1.33",
 		"@sveltejs/adapter-cloudflare": "^4.4.0",
 		"@sveltejs/enhanced-img": "^0.2.0",

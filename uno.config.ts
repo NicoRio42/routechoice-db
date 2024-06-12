@@ -11,7 +11,8 @@ export default defineConfig({
 			backgroundColor: 'var(--pico-background-color)',
 			h1Color: 'var(--pico-h1-color)',
 			'pico-dropdown-hover-background-color': 'var(--pico-dropdown-hover-background-color)',
-			'del-color': 'var(--pico-del-color)'
+			'del-color': 'var(--pico-del-color)',
+			'dropdown-color': 'var(--pico-dropdown-color)'
 		}
 	}
 });

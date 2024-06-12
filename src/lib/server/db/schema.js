@@ -42,6 +42,15 @@ export const liveEventsRelations = relations(liveEvent, ({ one }) => ({
 	})
 }));
 
+export const file = sqliteTable('file', {
+	id,
+	fkEvent: text('fk_event')
+		.references(() => event.id, { onDelete: 'cascade' })
+		.notNull(),
+	url: text('url').notNull(),
+	name: text('name').notNull()
+});
+
 export const tag = sqliteTable('tag', {
 	id: text('id').primaryKey(),
 	name: text('name').notNull().unique(),

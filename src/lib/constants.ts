@@ -1,3 +1,5 @@
+import { dev } from '$app/environment';
+
 export const NUMBERS = ['0', '1', '2', '3', '4', '5', '6', '7', '8', '9'];
 export const SPLITTIMES_BASE_URL = 'https://splittimes.pages.dev';
 export const SPLITTIMES_BASE_URL_DEV = 'http://localhost:5174';
@@ -5,6 +7,10 @@ export const ORIENTEERING_API_BASE_URL = 'https://orienteering-api.pages.dev';
 export const TWO_D_RERUN_URL = 'http://loggator2.worldofo.com/loadwinsplits.php';
 export const CLOUDINARY_CLOUD_NAME = 'dosqlwgkf';
 export const LOCAL_STORAGE_PREFIX = 'ROUTECHOICE_DB';
+export const MAX_R2_SIZE = 10485760;
+export const R2_PUBLIC_URL = dev
+	? '/r2-bucket'
+	: 'https://pub-9a88a99a2bfc484b98e1ff14f94954ea.r2.dev';
 
 type GpsProvider = {
 	urls: string[];

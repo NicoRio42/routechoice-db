@@ -4,7 +4,12 @@
 
 <script lang="ts" generics="T extends Record<string, unknown>">
 	import { createEventDispatcher, onDestroy } from 'svelte';
-	import { formFieldProxy, type SuperForm, type FormPathLeaves } from 'sveltekit-superforms';
+	import {
+		formFieldProxy,
+		type SuperForm,
+		type FormPathLeaves,
+		fileProxy
+	} from 'sveltekit-superforms';
 
 	export let form: SuperForm<T>;
 	export let field: FormPathLeaves<T>;
@@ -12,7 +17,8 @@
 
 	let errorsHaveBeenshownOnce = false;
 
-	const { value, errors } = formFieldProxy(form, field);
+	const { errors } = formFieldProxy(form, field);
+	const file = fileProxy(form, field);
 
 	const unsub = errors.subscribe((errs) => {
 		if (!errorsHaveBeenshownOnce) errorsHaveBeenshownOnce = errs !== undefined && errs.length !== 0;
@@ -31,7 +37,7 @@
 	<input
 		name={String(field)}
 		type="file"
-		bind:value={$value}
+		bind:files={$file}
 		data-invalid={$errors}
 		aria-invalid={errorsHaveBeenshownOnce ? $errors !== undefined && $errors.length !== 0 : null}
 		{...$$restProps}

@@ -18,14 +18,10 @@ export const actions = {
 		if (locals.user === null) throw error(401);
 		if (locals.user.role !== 'admin') throw error(403);
 
-		const formData = await request.formData();
-		const form = await superValidate(formData, zod(splitTimesFromLocalFile));
+		const form = await superValidate(request, zod(splitTimesFromLocalFile));
 		if (!form.valid) return fail(400, { form });
 
-		const splitTimesFile = formData.get('file');
-		if (!(splitTimesFile instanceof File)) return setError(form, 'file', 'Not a valid file');
-
-		const splitTimesRaw = await splitTimesFile.text();
+		const splitTimesRaw = await form.data.file.text();
 
 		const runnnersErrors = await parseAndInsertSplitTimesFromIofXml3File(
 			splitTimesRaw,

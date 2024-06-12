@@ -57,7 +57,7 @@
 
 	<div class="mt-10 max-w-150 mx-auto">
 		{#each data.events as event (event.id)}
-			<EventCard {event} tags={data.tags} user={data.user} />
+			<EventCard {event} tags={data.tags} user={data.user} filesPromise={data.filesPromise} />
 		{:else}
 			<tr>
 				<p class="text-center py-10">No events for these filters.</p>

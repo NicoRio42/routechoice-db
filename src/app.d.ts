@@ -1,7 +1,8 @@
 // See https://kit.svelte.dev/docs/types#app
 
 import type { LibSQLDatabase } from 'drizzle-orm/libsql';
-import { type Client } from '@libsql/client/web';
+import type { Client } from '@libsql/client/web';
+import type { R2Bucket } from '@cloudflare/workers-types';
 
 // for information about these interfaces
 declare global {
@@ -9,6 +10,12 @@ declare global {
 		interface Locals {
 			user: import('lucia').User | null;
 			session: import('lucia').Session | null;
+		}
+
+		interface Platform {
+			env?: {
+				R2_BUCKET: R2Bucket;
+			};
 		}
 	}
 }

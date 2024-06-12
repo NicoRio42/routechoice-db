@@ -2,12 +2,13 @@
 	import { enhance } from '$app/forms';
 	import { confirmSubmit } from '$lib/actions/confirm-submit';
 	import { pushNotification } from '$lib/components/Notifications.svelte';
-	import type { Event, Tag } from '$lib/server/db/models';
+	import type { Event, File, Tag } from '$lib/server/db/models';
 	import type { User } from 'lucia';
 
 	export let tags: Tag[];
 	export let event: Event & { tagIds: string[] };
 	export let user: User | null;
+	export let filesPromise: Promise<File[]>;
 
 	let loadingImage = false;
 	let tooFast = false;
@@ -139,9 +140,9 @@
 				</summary>
 
 				<ul dir="rtl">
-					<li>
+					<li class="hover:bg-pico-dropdown-hover-background-color">
 						<button
-							class="btn-unset"
+							class="btn-unset text-dropdown-color"
 							dir="ltr"
 							type="button"
 							aria-busy={loadingImage && !tooFast}
@@ -150,6 +151,20 @@
 							Raw image
 						</button>
 					</li>
+
+					{#await filesPromise}
+						<li aria-busy="true">Loading</li>
+					{:then files}
+						{@const eventFiles = files.filter((f) => f.fkEvent === event.id)}
+
+						{#each eventFiles as file (file.id)}
+							<li>
+								<a href={file.url} target="_blank" rel="noopener noreferrer">
+									{file.name}
+								</a>
+							</li>
+						{/each}
+					{/await}
 				</ul>
 			</details>
 		</div>

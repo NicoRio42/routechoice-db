@@ -5,6 +5,7 @@ import {
 	assoEventTag,
 	assoEventTag as assoEventTagTable,
 	event as eventTable,
+	file as fileTable,
 	tag as tagTable
 } from '$lib/server/db/schema.js';
 import { error, redirect } from '@sveltejs/kit';
@@ -89,7 +90,18 @@ export async function load({ url, locals }) {
 		events.pop();
 	}
 
-	return { events, user: locals.user, tags, form, pageNumber, isLastPage };
+	const filesPromise = db
+		.select()
+		.from(fileTable)
+		.where(
+			inArray(
+				fileTable.fkEvent,
+				events.map((e) => e.id)
+			)
+		)
+		.all();
+
+	return { events, user: locals.user, tags, form, pageNumber, isLastPage, filesPromise };
 }
 
 export const actions = {
