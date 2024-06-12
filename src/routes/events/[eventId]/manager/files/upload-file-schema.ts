@@ -11,4 +11,5 @@ export const uploadFileSchema = z.object({
 	file: z
 		.instanceof(File, { message: 'Please upload a file.' })
 		.refine((f) => f.size < MAX_R2_SIZE, 'Max 10 MB upload size.')
+		.refine((f) => !f.name.includes('/'), 'File name should not include slashes.')
 });
