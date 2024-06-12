@@ -105,7 +105,7 @@ export async function load({ url, locals }) {
 }
 
 export const actions = {
-	deleteEvent: async ({ locals, request }) => {
+	deleteEvent: async ({ locals, request, platform }) => {
 		if (locals.user === null) throw error(401);
 		if (locals.user.role !== 'admin') throw error(403);
 
@@ -113,7 +113,19 @@ export const actions = {
 		const eventId = formData.get('eventId');
 		if (typeof eventId !== 'string') throw error(400);
 
+		const filesToDelete = await db
+			.select()
+			.from(fileTable)
+			.where(eq(fileTable.fkEvent, eventId))
+			.all();
+
 		await db.delete(eventTable).where(eq(eventTable.id, eventId)).run();
+
+		if (filesToDelete.length !== 0) {
+			await platform?.env?.R2_BUCKET.delete(
+				filesToDelete.map((f) => f.url.split('/').at(-1) ?? '').filter((n) => n !== '')
+			);
+		}
 
 		throw redirect(302, '/events');
 	}
