@@ -62,16 +62,14 @@ export const actions = {
 		const fileId = formData.get('fileId');
 		if (typeof fileId !== 'string') throw error(400);
 
-		const file = await db
-			.select()
-			.from(fileTable)
+		const [file] = await db
+			.delete(fileTable)
 			.where(and(eq(fileTable.fkEvent, params.eventId), eq(fileTable.id, fileId)))
-			.get();
+			.returning();
 
 		if (file === undefined) throw error(404);
 
-		await platform?.env?.R2_BUCKET.delete(file.name);
-		await db.delete(fileTable).where(eq(fileTable.id, fileId)).run();
+		await platform?.env?.R2_BUCKET.delete(file.url.split('/').at(-1) ?? '');
 
 		throw redirect(302, request.url);
 	}
