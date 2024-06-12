@@ -25,9 +25,11 @@
 		</a>
 	</li>
 
-	<li>
-		<a href="/events/{data.event.id}/manager/course-and-routechoices/manage-course">
-			Manage course
-		</a>
-	</li>
+	{#if data.event.legs.length !== 0}
+		<li>
+			<a href="/events/{data.event.id}/manager/course-and-routechoices/manage-course">
+				Manage course
+			</a>
+		</li>
+	{/if}
 </ul>

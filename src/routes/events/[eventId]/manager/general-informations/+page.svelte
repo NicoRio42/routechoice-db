@@ -14,20 +14,22 @@
 	const { delayed, enhance, errors } = form;
 </script>
 
-<form method="POST" use:enhance novalidate class="mt-4">
-	<h1>General informations</h1>
+<main class="mx-auto max-w-150 px-4 pb-8 pt-4">
+	<form method="POST" use:enhance novalidate>
+		<h1>General informations</h1>
 
-	<TextField {form} field="name" label="Name" />
+		<TextField {form} field="name" label="Name" />
 
-	<TagsSelect allTags={data.tags} {form} field="tags" label="Tags" />
+		<TagsSelect allTags={data.tags} {form} field="tags" label="Tags" />
 
-	<div class="flex justify-end">
-		<button type="submit" aria-busy={$delayed} class="w-fit ml-auto">Submit</button>
-	</div>
+		<div class="flex justify-end">
+			<button type="submit" aria-busy={$delayed} class="sm:!w-fit ml-auto">Submit</button>
+		</div>
 
-	{#each $errors._errors ?? [] as globalError}
-		<p>
-			<small class="error">{globalError}</small>
-		</p>
-	{/each}
-</form>
+		{#each $errors._errors ?? [] as globalError}
+			<p>
+				<small class="error">{globalError}</small>
+			</p>
+		{/each}
+	</form>
+</main>

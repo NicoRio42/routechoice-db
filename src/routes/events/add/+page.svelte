@@ -54,34 +54,36 @@
 	});
 </script>
 
-<form method="POST" use:enhance novalidate class="pb-8 pt-4">
-	<h1>Create a new Event</h1>
+<main class="mx-auto max-w-150 px-4 pb-8 pt-4">
+	<form method="POST" use:enhance novalidate>
+		<h1>Create a new Event</h1>
 
-	<UrlField {form} field="liveProviderUrl" label="Live provider URL" list="recent-events" />
+		<UrlField {form} field="liveProviderUrl" label="Live provider URL" list="recent-events" />
 
-	<datalist id="recent-events">
-		{#each recentEvents as { url, name }}
-			<option value={url}>{name}</option>
+		<datalist id="recent-events">
+			{#each recentEvents as { url, name }}
+				<option value={url}>{name}</option>
+			{/each}
+		</datalist>
+
+		<TextField {form} field="name" label="Name" />
+
+		<TagsSelect allTags={data.tags} {form} field="tags" label="Tags" />
+
+		<DateTimeField {form} field="startTime" label="Start time" />
+
+		<DateTimeField {form} field="publishTime" label="Publish time" />
+
+		<DateTimeField {form} field="finishTime" label="Finish time" />
+
+		<div class="flex justify-end">
+			<button type="submit" class="sm:!w-fit ml-auto" aria-busy={$delayed}>Add new event</button>
+		</div>
+
+		{#each $errors._errors ?? [] as globalError}
+			<p>
+				<small class="error">{globalError}</small>
+			</p>
 		{/each}
-	</datalist>
-
-	<TextField {form} field="name" label="Name" />
-
-	<TagsSelect allTags={data.tags} {form} field="tags" label="Tags" />
-
-	<DateTimeField {form} field="startTime" label="Start time" />
-
-	<DateTimeField {form} field="publishTime" label="Publish time" />
-
-	<DateTimeField {form} field="finishTime" label="Finish time" />
-
-	<div class="flex justify-end">
-		<button type="submit" class="w-fit ml-auto" aria-busy={$delayed}>Add new event</button>
-	</div>
-
-	{#each $errors._errors ?? [] as globalError}
-		<p>
-			<small class="error">{globalError}</small>
-		</p>
-	{/each}
-</form>
+	</form>
+</main>

@@ -6,7 +6,12 @@ import { eq } from 'drizzle-orm';
 
 export async function load({ locals, params: { eventId } }) {
 	redirectIfNotAdmin(locals.user);
-	const event = await db.select().from(eventDb).where(eq(eventDb.id, eventId)).get();
+
+	const event = await db.query.event.findFirst({
+		where: eq(eventDb.id, eventId),
+		with: { legs: { columns: { id: true } } }
+	});
+
 	if (event === undefined) throw error(404);
 	return { event };
 }
