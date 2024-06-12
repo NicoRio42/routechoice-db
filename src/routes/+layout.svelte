@@ -73,7 +73,5 @@
 		<progress class="fixed h-1 border rounded-none" />
 	{/if}
 
-	<NavBar user={data.user} />
-
 	<slot />
 </div>

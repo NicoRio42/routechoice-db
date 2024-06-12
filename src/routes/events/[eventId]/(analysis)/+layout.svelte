@@ -2,15 +2,14 @@
 	import { afterNavigate } from '$app/navigation';
 	import { page } from '$app/stores';
 	import { clickOutside } from '$lib/actions/click-outside';
-	import { eventStore } from '$lib/stores/event-store';
-	import { onDestroy, onMount } from 'svelte';
+	import NavBar from '$lib/components/NavBar.svelte';
+	import { onMount } from 'svelte';
 	import { fade } from 'svelte/transition';
 	import { selectedRunnerIdStore } from './selected-runner-store.js';
 
 	export let data;
 
 	let showDropdown = false;
-	$eventStore = { name: data.event.name, id: data.event.id };
 
 	afterNavigate(() => (showDropdown = false));
 
@@ -18,9 +17,9 @@
 		const usersRunner = data.event.runners.find((r) => r.fkUser === data.user?.id);
 		$selectedRunnerIdStore = usersRunner?.id ?? null;
 	});
-
-	onDestroy(() => ($eventStore = null));
 </script>
+
+<NavBar user={data.user} eventName={data.event.name} />
 
 <div
 	class="absolute top-14 left-50% -translate-x-50% z-2"

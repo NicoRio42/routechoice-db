@@ -3,7 +3,7 @@ import { event as eventTable } from '$lib/server/db/schema.js';
 import { error } from '@sveltejs/kit';
 import { eq } from 'drizzle-orm';
 
-export async function load({ params: { eventId } }) {
+export async function load({ params: { eventId }, locals }) {
 	const eventInfo = await db
 		.select({ name: eventTable.name, publishTime: eventTable.publishTime })
 		.from(eventTable)
@@ -12,5 +12,5 @@ export async function load({ params: { eventId } }) {
 
 	if (eventInfo === undefined) throw error(404);
 
-	return { eventInfo };
+	return { eventInfo, user: locals.user };
 }

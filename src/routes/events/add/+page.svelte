@@ -1,5 +1,6 @@
 <script lang="ts">
 	import { browser } from '$app/environment';
+	import NavBar from '$lib/components/NavBar.svelte';
 	import DateTimeField from '$lib/components/form-fields/DateTimeField.svelte';
 	import TagsSelect from '$lib/components/form-fields/TagsSelect.svelte';
 	import TextField from '$lib/components/form-fields/TextField.svelte';
@@ -54,7 +55,9 @@
 	});
 </script>
 
-<main class="mx-auto max-w-150 px-4 pb-8 pt-4">
+<NavBar user={data.user} />
+
+<main class="mx-auto max-w-150 mt-4 px-4 pb-8 pt-4">
 	<form method="POST" use:enhance novalidate>
 		<h1>Create a new Event</h1>
 

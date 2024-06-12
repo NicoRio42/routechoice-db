@@ -13,5 +13,6 @@ export async function load({ locals, params: { eventId } }) {
 	});
 
 	if (event === undefined) throw error(404);
-	return { event };
+
+	return { event, user: locals.user };
 }

@@ -25,7 +25,7 @@ export async function load({ locals }) {
 		zod(partialAddEventObjectSchema.partial())
 	);
 
-	return { form, tags };
+	return { form, tags, user: locals.user };
 }
 
 export const actions = {

@@ -1,3 +1,11 @@
+<script>
+	import NavBar from '$lib/components/NavBar.svelte';
+
+	export let data;
+</script>
+
+<NavBar user={data.user} />
+
 <main class="max-w-100 mx-auto mt-10">
 	<h1>Bug report</h1>
 

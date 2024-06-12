@@ -2,15 +2,16 @@
 	import { enhance } from '$app/forms';
 	import { page } from '$app/stores';
 	import { RolesEnum } from '$lib/models/enums/roles.enum.js';
-	import { eventStore } from '$lib/stores/event-store.js';
 	import type { User } from 'lucia';
 	import { pushNotification } from './Notifications.svelte';
 	import ThemeSwitch from './ThemeSwitch.svelte';
 
 	export let user: User | null;
+	export let logoLinkHref = '/events';
+	export let eventName: string | undefined = undefined;
 
 	async function handleShare() {
-		if ($eventStore === null) return;
+		if (eventName === undefined) return;
 
 		const urlToShare = $page.url.href.split('?')[0];
 
@@ -30,7 +31,7 @@
 
 		await window.navigator.share({
 			title: 'Routechoice DB',
-			text: $eventStore.name,
+			text: eventName,
 			url: urlToShare
 		});
 	}
@@ -43,7 +44,7 @@
 		<li class="link-list-item">
 			<a
 				class="flex items-center gap-2 md:gap-4 p-0 text-5 text-primary whitespace-nowrap decoration-none"
-				href={$page.url.pathname === '/events' ? '/' : '/events'}
+				href={logoLinkHref}
 			>
 				<div class="bg-primary w-12 h-12 flex justify-center items-center">
 					<i class="i-carbon-3d-curve-auto-colon block w-8 h-8 text-white"></i>
@@ -51,7 +52,7 @@
 
 				<span class="hidden md:inline">Routechoice DB</span>
 
-				{#if $eventStore === null}
+				{#if eventName === undefined}
 					<div class="md:hidden flex flex-col items-center leading-none">
 						<span class="text-[0.625rem]">Routechoice</span>
 
@@ -61,11 +62,11 @@
 			</a>
 		</li>
 
-		{#if $eventStore !== null}
+		{#if eventName !== undefined}
 			<li
 				class="m-0 md:ml-4 md:pl-4 pl-2 py-1 md:border-l-1 md:border-l-solid md:border-l-table-border-color whitespace-nowrap text-ellipsis overflow-hidden min-w-0"
 			>
-				{$eventStore.name}
+				{eventName}
 			</li>
 
 			<li class="p-0 flex items-center gap2 md:mr2">

@@ -1,11 +1,12 @@
 <script lang="ts">
+	import NavBar from '$lib/components/NavBar.svelte';
 	import Paginator from '$lib/components/Paginator.svelte';
 	import SearchField from '$lib/components/form-fields/SearchField.svelte';
 	import TagsSelect from '$lib/components/form-fields/TagsSelect.svelte';
 	import { superForm } from 'sveltekit-superforms';
 	import { zodClient } from 'sveltekit-superforms/adapters';
-	import { filterEventFormSchema } from './schema';
 	import EventCard from './EventCard.svelte';
+	import { filterEventFormSchema } from './schema';
 
 	export let data;
 
@@ -18,7 +19,9 @@
 	<title>Routechoice DB</title>
 </svelte:head>
 
-<main class="container flex-shrink-0 flex-grow-1 px-4 pb4">
+<NavBar user={data.user} />
+
+<main class="container flex-shrink-0 flex-grow-1 mt-4 px-4 pb4">
 	<header class="max-w-150 mx-auto">
 		<div class="flex items-center justify-between">
 			<h1 class="mt-4 mb-6">Events</h1>

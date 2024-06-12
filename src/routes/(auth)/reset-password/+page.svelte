@@ -13,16 +13,18 @@
 	const { delayed, enhance, message } = form;
 </script>
 
-<form method="post" use:enhance>
-	<h1>Reset password</h1>
+<main class="max-w-150 m-x-auto my-4">
+	<form method="post" use:enhance>
+		<h1>Reset password</h1>
 
-	<EmailField {form} field="email" label="Email" />
+		<EmailField {form} field="email" label="Email" />
 
-	<div class="flex justify-end">
-		<button type="submit" aria-busy={$delayed}>Send email</button>
-	</div>
+		<div class="flex justify-end">
+			<button type="submit" aria-busy={$delayed}>Send email</button>
+		</div>
 
-	{#if $message}
-		<p>{$message}</p>
-	{/if}
-</form>
+		{#if $message}
+			<p>{$message}</p>
+		{/if}
+	</form>
+</main>
