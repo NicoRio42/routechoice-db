@@ -10,6 +10,7 @@ export default defineConfig({
 			tableBorderColor: 'var(--pico-table-border-color)',
 			backgroundColor: 'var(--pico-background-color)',
 			h1Color: 'var(--pico-h1-color)',
+			'text-color': 'var(--pico-text-color)',
 			'pico-dropdown-hover-background-color': 'var(--pico-dropdown-hover-background-color)',
 			'del-color': 'var(--pico-del-color)',
 			'dropdown-color': 'var(--pico-dropdown-color)'

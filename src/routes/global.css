@@ -39,16 +39,19 @@ label {
 [data-theme='light'],
 :root:not([data-theme='dark']) {
 	--pico-table-row-stripped-background-color: #f9fafa;
+	--pico-text-color: #373c44;
 }
 
 @media only screen and (prefers-color-scheme: dark) {
 	:root:not([data-theme]) {
 		--pico-table-row-stripped-background-color: #161b23;
+		--pico-text-color: #c2c7d0;
 	}
 }
 
 [data-theme='dark'] {
 	--pico-table-row-stripped-background-color: #161b23;
+	--pico-text-color: #c2c7d0;
 }
 
 .btn-unset {
@@ -57,7 +60,7 @@ label {
 	background-color: transparent;
 	border: none;
 	width: unset;
-	color: var(--pico-h1-color);
+	color: var(--pico-text-color);
 }
 
 .btn-unset:focus {

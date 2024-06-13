@@ -3,6 +3,7 @@
 	import { superForm } from 'sveltekit-superforms';
 	import { zodClient } from 'sveltekit-superforms/adapters';
 	import { resetPasswordEmailSchema } from './schema';
+	import SubmitButton from '$lib/components/form-fields/SubmitButton.svelte';
 
 	export let data;
 
@@ -19,9 +20,9 @@
 
 		<EmailField {form} field="email" label="Email" />
 
-		<div class="flex justify-end">
-			<button type="submit" aria-busy={$delayed}>Send email</button>
-		</div>
+		<SubmitButton aria-busy={$delayed}>
+			<i class="i-carbon-send block w-5 h-5"></i> Send email
+		</SubmitButton>
 
 		{#if $message}
 			<p>{$message}</p>

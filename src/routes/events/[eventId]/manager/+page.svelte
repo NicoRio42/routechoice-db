@@ -1,25 +1,25 @@
 <script>
-	import BackButton from '$lib/components/BackButton.svelte';
 	import ManagerListItem from './ManagerListItem.svelte';
+	import NavBar from '$lib/components/NavBar.svelte';
+	import { enhance } from '$app/forms';
+	import { confirmSubmit } from '$lib/actions/confirm-submit';
 
 	export let data;
 </script>
 
-<main class="container max-w-100 my-8">
-	<div class="flex items-center gap-4 mb-8">
-		<BackButton href="/events" />
+<NavBar user={data.user} eventName={data.event.name} backLinkHref="/events" />
 
-		<h1 class="m-0">Manage event</h1>
-	</div>
+<main class="container max-w-100 my-6">
+	<h1 class="mb-8">Manage event</h1>
 
 	<h2 class="text-5.5 font-500">Général</h2>
 
 	<ul>
-		<ManagerListItem href="/events/{data.event.id}/manager/general-informations">
+		<ManagerListItem href="/events/{data.event.id}/manager/general/event-informations">
 			Event informations
 		</ManagerListItem>
 
-		<ManagerListItem href="/events/{data.event.id}/manager/files">Files</ManagerListItem>
+		<ManagerListItem href="/events/{data.event.id}/manager/general/files">Files</ManagerListItem>
 	</ul>
 
 	<h2 class="text-5.5 font-500">Course and routechoices</h2>
@@ -56,6 +56,22 @@
 			Runner attribution
 		</ManagerListItem>
 	</ul>
+
+	<form
+		action="?/deleteEvent"
+		method="post"
+		use:confirmSubmit={'Are you sure to delete this event?'}
+		use:enhance
+		class="mx-0 mt-8 mb-12 p-0"
+	>
+		<input type="hidden" name="eventId" value={data.event.id} />
+
+		<button type="submit" class="btn-unset flex items-center gap-2 text-del-color">
+			<i class="i-carbon-trash-can w-5 h-5 block" />
+
+			Delete
+		</button>
+	</form>
 </main>
 
 <style>
@@ -66,9 +82,5 @@
 	ul {
 		padding-left: 0;
 		margin-bottom: 0;
-	}
-
-	ul:last-child {
-		margin-bottom: 3rem;
 	}
 </style>

@@ -7,6 +7,7 @@
 	import { enhance as sveltekitEnhance } from '$app/forms';
 	import { confirmSubmit } from '$lib/actions/confirm-submit.js';
 	import GlobalFormErrors from '$lib/components/form-fields/GlobalFormErrors.svelte';
+	import SubmitButton from '$lib/components/form-fields/SubmitButton.svelte';
 
 	export let data;
 
@@ -23,9 +24,9 @@
 
 		<FileField {form} field="file" label="File" />
 
-		<div class="flex justify-end">
-			<button class="sm:!w-fit" type="submit" aria-busy={$delayed}> Upload </button>
-		</div>
+		<SubmitButton aria-busy={$delayed}>
+			<i class="i-carbon-upload block w-5 h-5"></i> Upload
+		</SubmitButton>
 
 		<GlobalFormErrors {form} />
 	</form>

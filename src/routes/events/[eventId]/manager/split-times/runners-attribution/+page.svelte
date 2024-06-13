@@ -3,6 +3,7 @@
 	import { goto } from '$app/navigation';
 	import { page } from '$app/stores';
 	import { pushNotification } from '$lib/components/Notifications.svelte';
+	import SubmitButton from '$lib/components/form-fields/SubmitButton.svelte';
 	import { getRunnersWithTracksAndSortedLegs } from '$lib/helpers.js';
 	import { detectRunnersRoutechoices } from '$lib/routechoice-detector.js';
 	import type { RunnerLeg } from '$lib/server/db/models.js';
@@ -11,6 +12,13 @@
 
 	let duplicatedTrackingDeviceIdErrorRunnerId: string | null = null;
 	let duplicatedUserIdErrorRunnerId: string | null = null;
+	let loading = false;
+	let tooFast = false;
+
+	$: if (loading) {
+		tooFast = true;
+		setTimeout(() => (tooFast = false), 250);
+	}
 
 	$: if (browser && duplicatedTrackingDeviceIdErrorRunnerId !== null)
 		document.getElementById(duplicatedTrackingDeviceIdErrorRunnerId)?.scrollIntoView();
@@ -21,6 +29,7 @@
 	async function handleSubmit() {
 		duplicatedTrackingDeviceIdErrorRunnerId = null;
 		duplicatedUserIdErrorRunnerId = null;
+		loading = true;
 
 		for (const { id, trackingDeviceId, fkUser } of data.runners) {
 			if (
@@ -28,11 +37,13 @@
 				data.runners.some((r) => r.trackingDeviceId === trackingDeviceId && r.id !== id)
 			) {
 				duplicatedTrackingDeviceIdErrorRunnerId = id;
+				loading = false;
 				return;
 			}
 
 			if (fkUser !== null && data.runners.some((r) => r.fkUser === fkUser && r.id !== id)) {
 				duplicatedUserIdErrorRunnerId = id;
+				loading = false;
 				return;
 			}
 		}
@@ -73,80 +84,82 @@
 				{ type: 'error' }
 			);
 
+			loading = false;
 			return;
 		}
 
-		goto(`/events/${data.event.id}`);
+		loading = false;
+		goto(`/events/${data.event.id}/map`);
 	}
 </script>
 
-<h1 class="mt-8 mx-auto mb-4">Runners / GPS tracks / User correspondence</h1>
+<main class="mx-auto max-w-300 px-4 pb-8 pt-6">
+	<h1 class="mx-4">Runners / GPS tracks / User matching</h1>
 
-<p class="container">
-	&#62;
-	<a href={`/events/${data.event.id}/manager`}>{data.event.name}</a>
+	<form method="post" on:submit|preventDefault={handleSubmit}>
+		<figure class="overflow-auto">
+			<table>
+				<thead>
+					<tr>
+						<th>Split times</th>
+						<th>GPS track</th>
+						<th>User</th>
+					</tr>
+				</thead>
 
-	&#62;
-	<a href={`/events/${data.event.id}/manager/split-times`}>Split times</a>
-</p>
+				<tbody>
+					{#each data.runners as runner (runner.id)}
+						{@const isTrackingDeviceIdError = duplicatedTrackingDeviceIdErrorRunnerId === runner.id}
+						{@const isUserError = duplicatedUserIdErrorRunnerId === runner.id}
 
-<form method="post" on:submit|preventDefault={handleSubmit} class="container overflow-x-auto">
-	<table>
-		<thead>
-			<tr>
-				<th>Split times</th>
-				<th>GPS track</th>
-				<th>User</th>
-			</tr>
-		</thead>
+						<tr id={runner.id}>
+							<td>{`${runner.firstName} ${runner.lastName}`}</td>
 
-		<tbody>
-			{#each data.runners as runner (runner.id)}
-				{@const isTrackingDeviceIdError = duplicatedTrackingDeviceIdErrorRunnerId === runner.id}
-				{@const isUserError = duplicatedUserIdErrorRunnerId === runner.id}
+							<td>
+								<select
+									bind:value={runner.trackingDeviceId}
+									class="m-0"
+									aria-invalid={isTrackingDeviceIdError ? true : null}
+								>
+									<option />
 
-				<tr id={runner.id}>
-					<td>{`${runner.firstName} ${runner.lastName}`}</td>
+									{#each data.competitors as { deviceId, name } (deviceId)}
+										<option value={deviceId}>
+											{name}
+										</option>
+									{/each}
+								</select>
 
-					<td>
-						<select
-							bind:value={runner.trackingDeviceId}
-							class="m-0"
-							aria-invalid={isTrackingDeviceIdError ? true : null}
-						>
-							<option />
+								{#if isTrackingDeviceIdError}
+									<small class="error mt-0"> GPS track allready assigned. </small>
+								{/if}
+							</td>
 
-							{#each data.competitors as { deviceId, name } (deviceId)}
-								<option value={deviceId}>
-									{name}
-								</option>
-							{/each}
-						</select>
+							<td>
+								<select
+									bind:value={runner.fkUser}
+									class="m-0"
+									aria-invalid={isUserError ? true : null}
+								>
+									<option />
 
-						{#if isTrackingDeviceIdError}
-							<small class="error mt-0"> GPS track allready assigned. </small>
-						{/if}
-					</td>
+									{#each data.users as { id, name } (id)}
+										<option value={id}>{name}</option>
+									{/each}
+								</select>
 
-					<td>
-						<select bind:value={runner.fkUser} class="m-0" aria-invalid={isUserError ? true : null}>
-							<option />
+								{#if isUserError}
+									<small class="error mt-0"> User allready assigned. </small>
+								{/if}
+							</td>
+						</tr>
+					{/each}
+				</tbody>
+			</table>
+		</figure>
 
-							{#each data.users as { id, name } (id)}
-								<option value={id}>{name}</option>
-							{/each}
-						</select>
-
-						{#if isUserError}
-							<small class="error mt-0"> User allready assigned. </small>
-						{/if}
-					</td>
-				</tr>
-			{/each}
-		</tbody>
-	</table>
-
-	<div class="flex justify-end mb-8 px-8">
-		<button type="submit" class="submit">Save split times</button>
-	</div>
-</form>
+		<SubmitButton class="mx-4" aria-busy={loading && !tooFast}>
+			<i class="i-carbon-save block w-5 h-5"></i> Save matching
+		</SubmitButton>
+	</form>
+</main>

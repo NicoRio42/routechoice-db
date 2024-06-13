@@ -1,4 +1,6 @@
 <script lang="ts">
+	import SubmitButton from '$lib/components/form-fields/SubmitButton.svelte';
+
 	export let data;
 
 	let classNames: string[] = [];
@@ -42,69 +44,47 @@
 	}
 </script>
 
-<h1>Course and routechoices from OCAD</h1>
+<main class="mx-auto max-w-150 px-4 pb-8 pt-6">
+	<h1>Course and routechoices from OCAD</h1>
 
-<p>
-	&#62;
-	<a href={`/events/${data.event.id}/manager`}>Event manager: {data.event.name}</a>
+	<form method="post" enctype="multipart/form-data">
+		<label>
+			Course file (IOF XML 3.0)
 
-	&#62;
-	<a href={`/events/${data.event.id}/manager/course-and-routechoices`}>Course and routechoices</a>
+			<input
+				on:change={loadCourseFromOCAD}
+				name="courseFile"
+				type="file"
+				accept="application/xml"
+			/>
 
-	&#62;
-	<a href={`/events/${data.event.id}/manager/course-and-routechoices/ocad-export`}>
-		From OCAD exports
-	</a>
-</p>
+			{#if isCourseFileInvalid}
+				<p class="error-message">Invalid file extension</p>
+			{/if}
+		</label>
 
-<form method="post" enctype="multipart/form-data">
-	<label>
-		Course file (IOF XML 3.0)
+		<label>
+			Class
 
-		<input on:change={loadCourseFromOCAD} name="courseFile" type="file" accept="application/xml" />
+			<select bind:value={classIndex} name="classIndex" disabled={classNames.length === 0}>
+				{#each classNames as clsName, index}
+					<option value={index}>{clsName}</option>
+				{/each}
+			</select>
+		</label>
 
-		{#if isCourseFileInvalid}
-			<p class="error-message">Invalid file extension</p>
-		{/if}
-	</label>
+		<label>
+			Routechoices (GPX export)
 
-	<label>
-		Class
+			<input name="routechoicesFile" type="file" accept=".gpx" />
 
-		<select bind:value={classIndex} name="classIndex" disabled={classNames.length === 0}>
-			{#each classNames as clsName, index}
-				<option value={index}>{clsName}</option>
-			{/each}
-		</select>
-	</label>
+			{#if isRoutechoicesFileInvalid}
+				<p class="error">Invalid file extension</p>
+			{/if}
+		</label>
 
-	<label>
-		Routechoices (GPX export)
-
-		<input name="routechoicesFile" type="file" accept=".gpx" />
-
-		{#if isRoutechoicesFileInvalid}
-			<p class="error-message">Invalid file extension</p>
-		{/if}
-	</label>
-	
-	<div class="flex justify-end">
-		<button aria-busy={loading} disabled={loading} type="submit">Upload</button>
-	</div>
-</form>
-
-<style>
-	h1 {
-		margin: 2rem auto 1rem;
-	}
-
-	form {
-		max-width: 25rem;
-		margin: auto;
-	}
-	.error-message {
-		color: rgba(198, 40, 40, 0.999);
-		font-size: smaller;
-		margin-top: calc(var(--pico-spacing) * -1);
-	}
-</style>
+		<SubmitButton aria-busy={loading}>
+			<i class="i-carbon-upload block w-5 h-5"></i> Upload
+		</SubmitButton>
+	</form>
+</main>

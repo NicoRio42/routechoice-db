@@ -1,4 +1,6 @@
 <script lang="ts">
+	import GlobalFormErrors from '$lib/components/form-fields/GlobalFormErrors.svelte';
+	import SubmitButton from '$lib/components/form-fields/SubmitButton.svelte';
 	import TagsSelect from '$lib/components/form-fields/TagsSelect.svelte';
 	import TextField from '$lib/components/form-fields/TextField.svelte';
 	import { superForm } from 'sveltekit-superforms';
@@ -22,14 +24,8 @@
 
 		<TagsSelect allTags={data.tags} {form} field="tags" label="Tags" />
 
-		<div class="flex justify-end">
-			<button type="submit" aria-busy={$delayed} class="sm:!w-fit ml-auto">Submit</button>
-		</div>
+		<SubmitButton aria-busy={$delayed}>Submit</SubmitButton>
 
-		{#each $errors._errors ?? [] as globalError}
-			<p>
-				<small class="error">{globalError}</small>
-			</p>
-		{/each}
+		<GlobalFormErrors {form} />
 	</form>
 </main>

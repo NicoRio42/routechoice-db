@@ -22,7 +22,7 @@
 	onDestroy(unsub);
 </script>
 
-<label aria-busy={loading}>
+<label aria-busy={loading} class="!whitespace-normal">
 	{#if label !== undefined}
 		{label}
 	{/if}

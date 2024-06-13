@@ -31,7 +31,10 @@
 		{label}
 	{/if}
 
-	<div class="relative mt-0 mb-[--spacing]" data-invalid={shouldDisplayInvalidState()}>
+	<div
+		class="relative mt-0 mb-[calc(var(--pico-spacing)*2)]"
+		data-invalid={shouldDisplayInvalidState()}
+	>
 		{#if showPassword}
 			<input
 				name={String(field)}

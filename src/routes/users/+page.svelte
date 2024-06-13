@@ -2,16 +2,19 @@
 	import { enhance } from '$app/forms';
 	import { page } from '$app/stores';
 	import { confirmSubmit } from '$lib/actions/confirm-submit.js';
+	import NavBar from '$lib/components/NavBar.svelte';
 	import Paginator from '$lib/components/Paginator.svelte';
 
 	export let data;
 </script>
 
+<NavBar user={data.user} />
+
 <main class="container mt-6 px-4">
 	<header class="max-w-150 mx-auto">
 		<div class="flex items-center justify-between">
 			<h1 class="my-0">Users</h1>
-			
+
 			<a href="/users/add" role="button" class="!flex items-center gap-1 p2">
 				<i class="i-carbon-add inline-block w6 h6"></i>
 
@@ -26,17 +29,17 @@
 				placeholder="Search in first name, last name"
 				value={$page.url.searchParams.get('search')}
 				class="!mb0 !rounded-[var(--pico-border-radius)]"
-			>
+			/>
 
-			<button type="submit" class="outline w-fit flex items-center gap-1 p2 ml-auto my4">
+			<button type="submit" class="outline !w-fit flex items-center gap-1 p2 ml-auto my4">
 				<i class="i-carbon-filter inline-block w6 h6"></i>
-				
+
 				Filter
 			</button>
 		</form>
 	</header>
 
-	<figure class="mt-6 overflow-x-auto">
+	<figure class="my-6 overflow-x-auto">
 		<table>
 			<thead>
 				<tr>
@@ -90,6 +93,6 @@
 			</tbody>
 		</table>
 	</figure>
-	
+
 	<Paginator pageNumber={data.pageNumber} isLastPage={data.isLastPage}></Paginator>
 </main>

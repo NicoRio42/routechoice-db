@@ -31,7 +31,7 @@ export async function load({ locals, url }) {
 		search !== null && search !== ''
 			? selectClause.where(
 					or(like(userTable.firstName, `%${search}%`), like(userTable.lastName, `%${search}%`))
-			  )
+				)
 			: selectClause;
 
 	const users = await selectClauseWithWhere.all();
@@ -42,7 +42,7 @@ export async function load({ locals, url }) {
 		users.pop();
 	}
 
-	return { users, pageNumber, isLastPage };
+	return { users, pageNumber, isLastPage, user: locals.user };
 }
 
 function getPageNumberFromSearchParams(searchParams: URLSearchParams) {

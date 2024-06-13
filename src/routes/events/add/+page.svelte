@@ -11,6 +11,8 @@
 	import { zodClient } from 'sveltekit-superforms/adapters';
 	import { superForm } from 'sveltekit-superforms/client';
 	import { addEventSchema } from './schema.js';
+	import GlobalFormErrors from '$lib/components/form-fields/GlobalFormErrors.svelte';
+	import SubmitButton from '$lib/components/form-fields/SubmitButton.svelte';
 
 	export let data;
 
@@ -55,7 +57,7 @@
 	});
 </script>
 
-<NavBar user={data.user} />
+<NavBar user={data.user} backLinkHref="/events" />
 
 <main class="mx-auto max-w-150 mt-4 px-4 pb-8 pt-4">
 	<form method="POST" use:enhance novalidate>
@@ -79,14 +81,8 @@
 
 		<DateTimeField {form} field="finishTime" label="Finish time" />
 
-		<div class="flex justify-end">
-			<button type="submit" class="sm:!w-fit ml-auto" aria-busy={$delayed}>Add new event</button>
-		</div>
+		<SubmitButton aria-busy={$delayed}>Add new event</SubmitButton>
 
-		{#each $errors._errors ?? [] as globalError}
-			<p>
-				<small class="error">{globalError}</small>
-			</p>
-		{/each}
+		<GlobalFormErrors {form} />
 	</form>
 </main>

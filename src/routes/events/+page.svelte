@@ -19,7 +19,7 @@
 	<title>Routechoice DB</title>
 </svelte:head>
 
-<NavBar user={data.user} />
+<NavBar user={data.user} logoLinkHref="/" />
 
 <main class="container flex-shrink-0 flex-grow-1 mt-4 px-4 pb4">
 	<header class="max-w-150 mx-auto">

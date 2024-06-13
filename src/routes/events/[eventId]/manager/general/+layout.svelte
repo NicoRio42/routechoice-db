@@ -4,6 +4,10 @@
 	export let data;
 </script>
 
-<NavBar user={data.user} eventName={data.event.name} />
+<NavBar
+	user={data.user}
+	eventName={data.event.name}
+	backLinkHref="/events/{data.event.id}/manager"
+/>
 
 <slot></slot>

@@ -4,6 +4,8 @@
 	import { superForm } from 'sveltekit-superforms';
 	import { zodClient } from 'sveltekit-superforms/adapters';
 	import { loginFormSchema } from './schema';
+	import GlobalFormErrors from '$lib/components/form-fields/GlobalFormErrors.svelte';
+	import SubmitButton from '$lib/components/form-fields/SubmitButton.svelte';
 
 	export let data;
 	let showCloudflareWorkerCpuErrorMessage = false;
@@ -30,17 +32,13 @@
 
 		<PasswordField {form} field="password" label="Password" />
 
-		<div class="flex justify-end">
-			<button type="submit" aria-busy={$delayed}>Login</button>
-		</div>
+		<SubmitButton aria-busy={$delayed}>
+			<i class="i-carbon-login block w-5 h-5"></i> Login
+		</SubmitButton>
 
 		<p><a href="/reset-password">Reset password</a></p>
 
-		{#each $errors._errors ?? [] as globalError}
-			<p>
-				<small class="error">{globalError}</small>
-			</p>
-		{/each}
+		<GlobalFormErrors {form} />
 
 		{#if showCloudflareWorkerCpuErrorMessage}
 			<p>

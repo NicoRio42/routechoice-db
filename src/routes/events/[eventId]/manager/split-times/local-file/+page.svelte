@@ -1,6 +1,8 @@
 <script lang="ts">
 	import FileField from '$lib/components/form-fields/FileField.svelte';
+	import GlobalFormErrors from '$lib/components/form-fields/GlobalFormErrors.svelte';
 	import SelectField from '$lib/components/form-fields/SelectField.svelte';
+	import SubmitButton from '$lib/components/form-fields/SubmitButton.svelte';
 	import { timezones } from '$lib/components/form-fields/timezones.js';
 	import { superForm } from 'sveltekit-superforms';
 	import { zodClient } from 'sveltekit-superforms/adapters';
@@ -71,23 +73,12 @@
 	}
 </script>
 
-<main class="container max-w-2xl">
-	<h1 class="mt-4 md:mt-15 mb-2">Load split times from local IOF XML 3.0 file</h1>
+<main class="container max-w-100 mt-6">
+	<h1>Load split times from local IOF XML 3.0 file</h1>
 
-	<h3 class="font-normal">(IOF XML 2 support is experimental)</h3>
+	<p class="font-normal text-6 mb-0">(IOF XML 2 support is experimental)</p>
 
-	<p>
-		&#62;
-		<a href="/events/{data.event.id}/manager">Event manager: {data.event.name}</a>
-
-		&#62;
-		<a href="/events/{data.event.id}/manager/split-times">Split times</a>
-
-		&#62;
-		<a href="/events/{data.event.id}/manager/split-times/local-file">From local file</a>
-	</p>
-
-	<form class="mt-15" method="post" enctype="multipart/form-data" use:enhance>
+	<form class="mt-8" method="post" enctype="multipart/form-data" use:enhance>
 		<FileField
 			{form}
 			field="file"
@@ -107,16 +98,10 @@
 			{/each}
 		</SelectField>
 
-		<div class="flex justify-end">
-			<button type="submit" aria-busy={$delayed}> Load splits </button>
-		</div>
+		<SubmitButton aria-busy={$delayed}>
+			<i class="i-carbon-upload block w-5 h-5"></i> Load splits
+		</SubmitButton>
 
-		{#if $errors._errors !== undefined && $errors._errors.length !== 0}
-			<ul class="list-none">
-				{#each $errors._errors as error}
-					<li class="error">{error}</li>
-				{/each}
-			</ul>
-		{/if}
+		<GlobalFormErrors {form} />
 	</form>
 </main>

@@ -1,6 +1,4 @@
 <script lang="ts">
-	import { enhance } from '$app/forms';
-	import { confirmSubmit } from '$lib/actions/confirm-submit';
 	import { pushNotification } from '$lib/components/Notifications.svelte';
 	import type { Event, File, Tag } from '$lib/server/db/models';
 	import type { User } from 'lucia';
@@ -94,49 +92,24 @@
 		<!-- svelte-ignore a11y-no-static-element-interactions -->
 		<div class="flex flex-col justify-between" on:click={(e) => e.stopPropagation()}>
 			{#if user?.role === 'admin'}
-				<details class="dropdown m-0">
-					<!-- svelte-ignore a11y-no-noninteractive-element-to-interactive-role -->
-					<summary
+				<p class="p-2">
+					<a
 						role="button"
-						class="btn-unset m-0 flex items-end justify-end !after:hidden p-4 pr-3"
+						href="/events/{event.id}/manager"
+						class="outline !flex items-center justify-center p-1.5"
 					>
-						<i class="i-carbon-overflow-menu-vertical w-6 h-6 block" />
-					</summary>
-
-					<ul dir="rtl">
-						<li>
-							<a href="/events/{event.id}/manager" class="!flex items-center gap-2">
-								<i class="i-carbon-settings w-5 h-5 block" />
-
-								Manage
-							</a>
-						</li>
-
-						<li class="hover:bg-pico-dropdown-hover-background-color">
-							<form
-								action="?/deleteEvent"
-								method="post"
-								use:confirmSubmit={'Are you sure to delete this event?'}
-								use:enhance
-								class="m-0 p-0"
-							>
-								<input type="hidden" name="eventId" value={event.id} />
-
-								<button type="submit" class="btn-unset flex items-center gap-2 text-del-color">
-									<i class="i-carbon-trash-can w-5 h-5 block" />
-
-									Delete
-								</button>
-							</form>
-						</li>
-					</ul>
-				</details>
+						<i class="i-carbon-settings w-5 h-5 block" />
+					</a>
+				</p>
 			{/if}
 
-			<details class="dropdown m-0 pr-4 pb-4 mt-auto">
+			<details class="dropdown m-0 pr-1 pb-2 mt-auto">
 				<!-- svelte-ignore a11y-no-noninteractive-element-to-interactive-role -->
-				<summary role="button" class="outline m-0 p-2 h-fit !after:hidden">
-					<i class="i-carbon-document-pdf w-5 h-5 block" />
+				<summary
+					role="button"
+					class="outline m-0 p-2 h-fit flex items-center justify-center !after:hidden border-none focus:!shadow-none"
+				>
+					<i class="i-carbon-document-pdf w-6 h-6 block" />
 				</summary>
 
 				<ul dir="rtl">
