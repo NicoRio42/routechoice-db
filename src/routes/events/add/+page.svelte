@@ -20,7 +20,7 @@
 		validators: zodClient(addEventSchema)
 	});
 
-	const { delayed, enhance, form: formStore, errors } = form;
+	const { delayed, enhance, form: formStore } = form;
 
 	$: if (browser) fetchEvent($formStore.liveProviderUrl);
 
@@ -53,6 +53,8 @@
 	}
 
 	onMount(async () => {
+		$formStore.timeZoneOffset = new Date().getTimezoneOffset();
+		console.log(new Date().getTimezoneOffset());
 		recentEvents = await (await fetch('/api/live-events/loggator')).json();
 	});
 </script>
@@ -62,6 +64,8 @@
 <main class="sm:mx-auto px-4 sm:w-120 my-6 pb-12">
 	<form method="POST" use:enhance novalidate>
 		<h1>Create a new Event</h1>
+
+		<input type="hidden" name="timeZoneOffset" bind:value={$formStore.timeZoneOffset} />
 
 		<UrlField {form} field="liveProviderUrl" label="Live provider URL" list="recent-events" />
 

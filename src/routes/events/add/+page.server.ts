@@ -36,7 +36,9 @@ export const actions = {
 		const form = await superValidate(request, zod(addEventSchema));
 		if (!form.valid) return fail(400, { form });
 
-		console.log('[STARTTIME] ' + form.data.startTime.toISOString());
+		const startTime = new Date(form.data.startTime.getTime() + form.data.timeZoneOffset * 1000);
+		const publishTime = new Date(form.data.publishTime.getTime() + form.data.timeZoneOffset * 1000);
+		const finishTime = new Date(form.data.finishTime.getTime() + form.data.timeZoneOffset * 1000);
 
 		const filteredTags = form.data.tags.filter(
 			(tag) => tag.trim() !== '' && tag !== null && tag !== undefined
@@ -59,9 +61,9 @@ export const actions = {
 				.values({
 					id: eventId,
 					name: form.data.name,
-					startTime: form.data.startTime,
-					publishTime: form.data.publishTime,
-					finishTime: form.data.finishTime
+					startTime,
+					publishTime,
+					finishTime
 				})
 				.run();
 
