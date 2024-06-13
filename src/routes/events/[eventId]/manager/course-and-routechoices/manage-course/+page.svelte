@@ -12,7 +12,7 @@
 	];
 </script>
 
-<main class="mx-auto max-w-200 px-4 pb-8 pt-6">
+<main class="sm:mx-auto px-4 sm:w-120 my-6 pb-12">
 	<h1>Manage course</h1>
 
 	<figure class="overflow-auto">

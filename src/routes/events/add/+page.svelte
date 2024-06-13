@@ -59,7 +59,7 @@
 
 <NavBar user={data.user} backLinkHref="/events" />
 
-<main class="mx-auto max-w-150 mt-4 px-4 pb-8 pt-4">
+<main class="sm:mx-auto px-4 sm:w-120 my-6 pb-12">
 	<form method="POST" use:enhance novalidate>
 		<h1>Create a new Event</h1>
 

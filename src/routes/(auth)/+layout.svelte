@@ -4,6 +4,6 @@
 	export let data;
 </script>
 
-<NavBar user={data.user} />
+<NavBar user={data.user} logoLinkHref="/" />
 
 <slot></slot>

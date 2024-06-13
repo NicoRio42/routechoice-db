@@ -73,7 +73,7 @@
 	}
 </script>
 
-<main class="container max-w-100 mt-6">
+<main class="sm:mx-auto px-4 sm:w-120 my-6 pb-12">
 	<h1>Load split times from local IOF XML 3.0 file</h1>
 
 	<p class="font-normal text-6 mb-0">(IOF XML 2 support is experimental)</p>

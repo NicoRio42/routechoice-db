@@ -5,7 +5,7 @@
 	export let data;
 </script>
 
-<main class="mx-auto max-w-150 px-4 pb-8 pt-6">
+<main class="sm:mx-auto px-4 sm:w-150 my-6 pb-12">
 	<form method="post" enctype="multipart/form-data" use:enhance>
 		<h1>Load course and routechoices from 2D Rerun json export</h1>
 

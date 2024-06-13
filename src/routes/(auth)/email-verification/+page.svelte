@@ -5,7 +5,7 @@
 	export let form;
 </script>
 
-<article class="max-w-120 mx-auto mt-0 sm:mt-8">
+<main class="sm:mx-auto px-4 sm:w-150 mt-6 pb-12">
 	<h1>Confirmation de l'adresse email</h1>
 
 	<p>Un code de confirmation a été envoyé à l'adresse email : {data.email}</p>
@@ -42,4 +42,4 @@
 			</button>
 		</form>
 	{/if}
-</article>
+</main>

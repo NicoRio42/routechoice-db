@@ -22,7 +22,7 @@
 	const { delayed, enhance, errors } = form;
 </script>
 
-<main class="max-w-90 m-x-auto my-4">
+<main class="sm:mx-auto px-4 sm:w-100 mt-6 pb-12">
 	<form method="POST" use:enhance novalidate>
 		<h1 class="mb-4 mt0 sm:mt-4">Login</h1>
 

@@ -93,7 +93,7 @@
 	}
 </script>
 
-<main class="mx-auto max-w-300 px-4 pb-8 pt-6">
+<main class="md:mx-auto px-4 md:w-180 my-6 pb-12">
 	<h1 class="mx-4">Runners / GPS tracks / User matching</h1>
 
 	<form method="post" on:submit|preventDefault={handleSubmit}>

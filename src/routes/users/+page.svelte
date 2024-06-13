@@ -10,7 +10,7 @@
 
 <NavBar user={data.user} />
 
-<main class="container mt-6 px-4">
+<main class="xl:mx-auto px-4 xl:w-220 mt-6 pb-12">
 	<header class="max-w-150 mx-auto">
 		<div class="flex items-center justify-between">
 			<h1 class="my-0">Users</h1>

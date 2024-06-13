@@ -61,7 +61,7 @@
 	}
 </script>
 
-<main class="container max-w-100 mt-6">
+<main class="sm:mx-auto px-4 sm:w-120 my-6 pb-12">
 	<h1>Load split times from Winsplits</h1>
 
 	<form method="post" use:enhance>

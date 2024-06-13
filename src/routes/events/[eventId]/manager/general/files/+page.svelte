@@ -16,7 +16,7 @@
 	const { delayed, enhance } = form;
 </script>
 
-<main class="max-w-200 my-8 mx-auto px-4">
+<main class="sm:mx-auto px-4 sm:w-100 my-6 pb-12">
 	<h1>Upload files</h1>
 
 	<form use:enhance action="?/upload" method="post" enctype="multipart/form-data" class="p-0">

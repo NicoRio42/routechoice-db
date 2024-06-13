@@ -9,7 +9,7 @@
 
 <NavBar user={data.user} eventName={data.event.name} backLinkHref="/events" />
 
-<main class="container max-w-100 my-6">
+<main class="sm:mx-auto px-4 sm:w-120 my-6 pb-12">
 	<h1 class="mb-8">Manage event</h1>
 
 	<h2 class="text-5.5 font-500">Général</h2>

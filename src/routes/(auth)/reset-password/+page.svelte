@@ -14,7 +14,7 @@
 	const { delayed, enhance, message } = form;
 </script>
 
-<main class="max-w-150 m-x-auto my-4">
+<main class="max-w-150 m-x-auto my-4 pb-12">
 	<form method="post" use:enhance>
 		<h1>Reset password</h1>
 
