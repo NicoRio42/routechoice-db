@@ -25,17 +25,26 @@
 	<h2 class="text-5.5 font-500">Course and routechoices</h2>
 
 	<ul>
-		<ManagerListItem href="/events/{data.event.id}/manager/course-and-routechoices/2d-rerun-export">
+		<ManagerListItem
+			href="/events/{data.event.id}/manager/course-and-routechoices/2d-rerun-export"
+			disabled={data.event.legs.length !== 0}
+			disabledMessage="Already uploaded"
+		>
 			From 2dRerun export
 		</ManagerListItem>
 
-		<ManagerListItem href="/events/{data.event.id}/manager/course-and-routechoices/ocad-export">
+		<ManagerListItem
+			href="/events/{data.event.id}/manager/course-and-routechoices/ocad-export"
+			disabled={data.event.legs.length !== 0}
+			disabledMessage="Already uploaded"
+		>
 			From OCAD export
 		</ManagerListItem>
 
 		<ManagerListItem
 			href="/events/{data.event.id}/manager/course-and-routechoices/manage-course"
 			disabled={data.event.legs.length === 0}
+			disabledMessage="No course"
 		>
 			Manage course
 		</ManagerListItem>
