@@ -14,6 +14,7 @@
 	export let form: SuperForm<T>;
 	export let field: FormPathLeaves<T>;
 	export let label: string | undefined = undefined;
+	export let loading = false;
 
 	let errorsHaveBeenshownOnce = false;
 
@@ -27,7 +28,7 @@
 	onDestroy(unsub);
 </script>
 
-<label>
+<label aria-busy={loading} class="!whitespace-normal">
 	{#if label !== undefined}
 		{label}
 	{/if}

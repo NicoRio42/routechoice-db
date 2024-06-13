@@ -13,6 +13,7 @@
 	import { addEventSchema } from './schema.js';
 	import GlobalFormErrors from '$lib/components/form-fields/GlobalFormErrors.svelte';
 	import SubmitButton from '$lib/components/form-fields/SubmitButton.svelte';
+	import { pushNotification } from '$lib/components/Notifications.svelte';
 
 	export let data;
 
@@ -26,6 +27,13 @@
 
 	let previousEventUrl: string;
 	let recentEvents: { url: string; name: string }[] = [];
+	let loggatorLoading = false;
+	let loggatorLoadingTooFast = false;
+
+	$: if (loggatorLoading) {
+		loggatorLoadingTooFast = true;
+		setTimeout(() => (loggatorLoadingTooFast = false), 250);
+	}
 
 	async function fetchEvent(eventUrl: string | undefined) {
 		if (eventUrl === undefined || eventUrl === '' || eventUrl === previousEventUrl) return;
@@ -33,11 +41,25 @@
 		const [provider, eventId] = extractLiveProviderAndEventIdFromUrl(eventUrl);
 		if (provider !== 'loggator') return;
 		const url = `/api/live-events/${provider}/${eventId}`;
+
+		loggatorLoading = true;
 		const response = await fetch(url);
 
-		if (!response.ok) return;
+		if (!response.ok) {
+			pushNotification('Could not load event informations from Loggator.', { type: 'error' });
+			loggatorLoading = false;
+			return;
+		}
 
-		const event = loggatorEventSchema.parse(await response.json());
+		const rawEvent = loggatorEventSchema.safeParse(await response.json());
+
+		if (!rawEvent.success) {
+			pushNotification('Could not decode event informations from Loggator.', { type: 'error' });
+			loggatorLoading = false;
+			return;
+		}
+
+		const event = rawEvent.data;
 
 		if ($formStore.name === '' || $formStore.name === undefined || $formStore.name === null) {
 			$formStore.name = cleanupLoggatorEventName(event.event.name);
@@ -46,6 +68,7 @@
 		$formStore.startTime = new Date(event.event.start_date);
 		$formStore.publishTime = new Date(event.event.publish_date);
 		$formStore.finishTime = new Date(event.event.end_date);
+		loggatorLoading = false;
 	}
 
 	function cleanupLoggatorEventName(name: string): string {
@@ -54,7 +77,6 @@
 
 	onMount(async () => {
 		$formStore.timeZoneOffset = new Date().getTimezoneOffset();
-		console.log(new Date().getTimezoneOffset());
 		recentEvents = await (await fetch('/api/live-events/loggator')).json();
 	});
 </script>
@@ -75,15 +97,35 @@
 			{/each}
 		</datalist>
 
-		<TextField {form} field="name" label="Name" />
+		<TextField
+			{form}
+			loading={loggatorLoading && !loggatorLoadingTooFast}
+			field="name"
+			label="Name"
+		/>
 
 		<TagsSelect allTags={data.tags} {form} field="tags" label="Tags" />
 
-		<DateTimeField {form} field="startTime" label="Start time" />
+		<DateTimeField
+			{form}
+			loading={loggatorLoading && !loggatorLoadingTooFast}
+			field="startTime"
+			label="Start time"
+		/>
 
-		<DateTimeField {form} field="publishTime" label="Publish time" />
+		<DateTimeField
+			{form}
+			loading={loggatorLoading && !loggatorLoadingTooFast}
+			field="publishTime"
+			label="Publish time"
+		/>
 
-		<DateTimeField {form} field="finishTime" label="Finish time" />
+		<DateTimeField
+			{form}
+			loading={loggatorLoading && !loggatorLoadingTooFast}
+			field="finishTime"
+			label="Finish time"
+		/>
 
 		<SubmitButton aria-busy={$delayed}>Add new event</SubmitButton>
 
