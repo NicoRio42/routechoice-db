@@ -103,32 +103,34 @@
 				</p>
 			{/if}
 
-			<details class="dropdown m-0 pr-1 pb-2 mt-auto">
-				<!-- svelte-ignore a11y-no-noninteractive-element-to-interactive-role -->
-				<summary
-					role="button"
-					class="outline m-0 p-2 h-fit flex items-center justify-center !after:hidden border-none focus:!shadow-none"
-				>
-					<i class="i-carbon-document-pdf w-6 h-6 block" />
-				</summary>
+			{#await filesPromise then files}
+				{@const eventFiles = files.filter((f) => f.fkEvent === event.id)}
 
-				<ul dir="rtl">
-					<li class="hover:bg-pico-dropdown-hover-background-color">
-						<button
-							class="btn-unset text-dropdown-color"
-							dir="ltr"
-							type="button"
-							aria-busy={loadingImage && !tooFast}
-							on:click={(e) => (e.preventDefault(), downloadRawImage(event.id))}
-						>
-							Raw image
-						</button>
-					</li>
+				<details class="dropdown m-0 pr-1 pb-2 mt-auto">
+					<!-- svelte-ignore a11y-no-noninteractive-element-to-interactive-role -->
+					<summary
+						role="button"
+						class="outline m-0 p-2 h-fit flex items-center justify-center !after:hidden border-none focus:!shadow-none"
+					>
+						{#if eventFiles.length === 0}
+							<i class="i-carbon-download w-6 h-6 block" />
+						{:else}
+							<i class="i-carbon-document-pdf w-6 h-6 block" />
+						{/if}
+					</summary>
 
-					{#await filesPromise}
-						<li aria-busy="true">Loading</li>
-					{:then files}
-						{@const eventFiles = files.filter((f) => f.fkEvent === event.id)}
+					<ul dir="rtl">
+						<li class="hover:bg-pico-dropdown-hover-background-color">
+							<button
+								class="btn-unset text-dropdown-color"
+								dir="ltr"
+								type="button"
+								aria-busy={loadingImage && !tooFast}
+								on:click={(e) => (e.preventDefault(), downloadRawImage(event.id))}
+							>
+								Raw image
+							</button>
+						</li>
 
 						{#each eventFiles as file (file.id)}
 							<li>
@@ -137,9 +139,9 @@
 								</a>
 							</li>
 						{/each}
-					{/await}
-				</ul>
-			</details>
+					</ul>
+				</details>
+			{/await}
 		</div>
 	</article>
 </a>
