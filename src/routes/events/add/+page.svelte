@@ -1,19 +1,18 @@
 <script lang="ts">
 	import { browser } from '$app/environment';
 	import NavBar from '$lib/components/NavBar.svelte';
+	import { pushNotification } from '$lib/components/Notifications.svelte';
 	import DateTimeField from '$lib/components/form-fields/DateTimeField.svelte';
+	import GlobalFormErrors from '$lib/components/form-fields/GlobalFormErrors.svelte';
+	import SubmitButton from '$lib/components/form-fields/SubmitButton.svelte';
 	import TagsSelect from '$lib/components/form-fields/TagsSelect.svelte';
 	import TextField from '$lib/components/form-fields/TextField.svelte';
 	import UrlField from '$lib/components/form-fields/UrlField.svelte';
 	import { extractLiveProviderAndEventIdFromUrl } from '$lib/helpers.js';
-	import { loggatorEventSchema } from 'orienteering-js/models';
 	import { onMount } from 'svelte';
 	import { zodClient } from 'sveltekit-superforms/adapters';
 	import { superForm } from 'sveltekit-superforms/client';
 	import { addEventSchema } from './schema.js';
-	import GlobalFormErrors from '$lib/components/form-fields/GlobalFormErrors.svelte';
-	import SubmitButton from '$lib/components/form-fields/SubmitButton.svelte';
-	import { pushNotification } from '$lib/components/Notifications.svelte';
 
 	export let data;
 
@@ -51,24 +50,35 @@
 			return;
 		}
 
-		const rawEvent = loggatorEventSchema.safeParse(await response.json());
+		const rawEvent = await response.json();
+		const name = rawEvent?.event?.name;
+		const startDate = new Date(rawEvent?.event?.start_date);
+		const publishDate = new Date(rawEvent?.event?.publish_date);
+		const endDate = new Date(rawEvent?.event?.end_date);
 
-		if (!rawEvent.success) {
+		if (
+			name === undefined ||
+			!isValidDate(startDate) ||
+			!isValidDate(publishDate) ||
+			!isValidDate(endDate)
+		) {
 			pushNotification('Could not decode event informations from Loggator.', { type: 'error' });
 			loggatorLoading = false;
 			return;
 		}
 
-		const event = rawEvent.data;
-
 		if ($formStore.name === '' || $formStore.name === undefined || $formStore.name === null) {
-			$formStore.name = cleanupLoggatorEventName(event.event.name);
+			$formStore.name = cleanupLoggatorEventName(name);
 		}
 
-		$formStore.startTime = new Date(event.event.start_date);
-		$formStore.publishTime = new Date(event.event.publish_date);
-		$formStore.finishTime = new Date(event.event.end_date);
+		$formStore.startTime = startDate;
+		$formStore.publishTime = publishDate;
+		$formStore.finishTime = endDate;
 		loggatorLoading = false;
+	}
+
+	function isValidDate(date: Date): boolean {
+		return !isNaN(date.valueOf());
 	}
 
 	function cleanupLoggatorEventName(name: string): string {

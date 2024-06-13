@@ -47,7 +47,7 @@
 
 				<button
 					type="button"
-					class="btn-unset"
+					class="btn-unset text-white"
 					on:click={() => ($notifications = $notifications.filter((n) => n.id !== notification.id))}
 				>
 					<i class="i-carbon-close w-6 h-6 block"></i>
