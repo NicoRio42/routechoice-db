@@ -80,7 +80,7 @@ export const actions = {
 					.run();
 			}
 
-			throw redirect(302, `/events/${eventId}/manager/course-and-routechoices`);
+			throw redirect(302, `/events/${eventId}/manager`);
 		} catch (e) {
 			reThrowRedirectsAndErrors(e);
 

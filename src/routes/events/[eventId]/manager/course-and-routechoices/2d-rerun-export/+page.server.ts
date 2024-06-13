@@ -38,7 +38,7 @@ export const actions = {
 
 			await insertControlPointsLegsAndRoutechoices(controls, legs, db, eventId);
 
-			throw redirect(302, `/events/${eventId}/manager/split-times`);
+			throw redirect(302, `/events/${eventId}/manager`);
 		} catch (e) {
 			reThrowRedirectsAndErrors(e);
 
