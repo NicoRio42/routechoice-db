@@ -24,8 +24,8 @@
 
 {#if showRoutechoicesLabels || showRunnersTraksLabels}
 	<article
-		class="z-1 absolute right-4 bottom-17 md:bottom-4 transition-transform transition-250 bg-background-color m-0 py-1 px-0
-			max-h-100 flex flex-col rounded-none border-solid border-1 border-table-border-color"
+		class="z-1 absolute right-4 bottom-19 md:bottom-4 transition-transform transition-250 bg-background-color m-0 py-1 px-0
+			max-h-100 flex flex-col border-solid border-1 border-table-border-color"
 		class:-translate-x-55={isSettingsSidebarShown && !isCollapsed}
 		class:translate-x-full={isCollapsed && !isSettingsSidebarShown}
 		class:translate-x-[calc(100%-13.75rem)]={isCollapsed && isSettingsSidebarShown}
