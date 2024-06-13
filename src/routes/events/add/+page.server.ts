@@ -36,6 +36,8 @@ export const actions = {
 		const form = await superValidate(request, zod(addEventSchema));
 		if (!form.valid) return fail(400, { form });
 
+		console.log('[STARTTIME] ' + form.data.startTime.toISOString());
+
 		const filteredTags = form.data.tags.filter(
 			(tag) => tag.trim() !== '' && tag !== null && tag !== undefined
 		);
