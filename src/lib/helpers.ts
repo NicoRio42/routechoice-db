@@ -299,7 +299,9 @@ export function sortLegsAndRoutechoices(legs: LegWithRoutechoices[]): LegWithRou
 
 	while (sortedLegs.length !== legs.length) {
 		const nextLeg = legs.find(
-			(leg) => leg.fkStartControlPoint === sortedLegs[sortedLegs.length - 1].fkFinishControlPoint
+			(leg) =>
+				leg.fkStartControlPoint === sortedLegs[sortedLegs.length - 1].fkFinishControlPoint &&
+				sortedLegs.every((sortedLeg) => sortedLeg.id !== leg.id)
 		);
 
 		if (nextLeg === undefined) break;
@@ -331,7 +333,9 @@ export function sortLegs<T extends LegWithRoutechoices | Leg>(legs: T[]): T[] {
 
 	while (sortedLegs.length !== legs.length) {
 		const nextLeg = legs.find(
-			(leg) => leg.fkStartControlPoint === sortedLegs[sortedLegs.length - 1].fkFinishControlPoint
+			(leg) =>
+				leg.fkStartControlPoint === sortedLegs[sortedLegs.length - 1].fkFinishControlPoint &&
+				sortedLegs.every((sortedLeg) => sortedLeg.id !== leg.id)
 		);
 
 		if (nextLeg === undefined) break;
