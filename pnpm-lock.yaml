@@ -18,8 +18,8 @@ dependencies:
     specifier: npm:@jsr/orienteering-js__gps@^0.1.10
     version: /@jsr/orienteering-js__gps@0.1.10
   '@orienteering-js/split-times':
-    specifier: npm:@jsr/orienteering-js__split-times@^0.2.0
-    version: /@jsr/orienteering-js__split-times@0.2.0
+    specifier: npm:@jsr/orienteering-js__split-times@^0.2.1
+    version: /@jsr/orienteering-js__split-times@0.2.1
   '@picocss/pico':
     specifier: ^2.0.6
     version: 2.0.6
@@ -1930,8 +1930,8 @@ packages:
       mathjs: 13.0.0
     dev: false
 
-  /@jsr/orienteering-js__split-times@0.2.0:
-    resolution: {integrity: sha512-mFfV08s1nAr54PGjvedU070pY/BF/8Nq1xNCWi//tXTcBjfLuAzCh6ZH4wfJ/aI0t/fCMVmGCJQfvZlw8RB4Pw==, tarball: https://npm.jsr.io/~/11/@jsr/orienteering-js__split-times/0.2.0.tgz}
+  /@jsr/orienteering-js__split-times@0.2.1:
+    resolution: {integrity: sha512-PahMKEfPlItCAw1eD/R6XgXz+uN6Va1WQKGtAaU+M4pH/+wV8roYK1NW2XHOy/YttSv7vQTjvJO166NySCSXaA==, tarball: https://npm.jsr.io/~/11/@jsr/orienteering-js__split-times/0.2.1.tgz}
     dev: false
 
   /@libsql/client@0.6.0:
