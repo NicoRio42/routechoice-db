@@ -120,7 +120,12 @@
 				</li>
 
 				<li class="option-item">
-					<a href="/help">Help</a>
+					<a
+						href="https://docs.google.com/document/d/1bL9xlAb3Aw2Ga-Dk5r925952SeWGsHUR/edit#heading=h.8a2j0yz3hwd3"
+						target="_blank"
+					>
+						Help
+					</a>
 				</li>
 			{/if}
 
