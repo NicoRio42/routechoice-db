@@ -44,7 +44,7 @@
 		"@lucia-auth/adapter-drizzle": "^1.0.7",
 		"@orienteering-js/course": "npm:@jsr/orienteering-js__course@^0.3.1",
 		"@orienteering-js/gps": "npm:@jsr/orienteering-js__gps@^0.1.10",
-		"@orienteering-js/split-times": "npm:@jsr/orienteering-js__split-times@^0.2.1",
+		"@orienteering-js/split-times": "npm:@jsr/orienteering-js__split-times@^0.2.2",
 		"@picocss/pico": "^2.0.6",
 		"drizzle-orm": "^0.30.10",
 		"libsql-stateless-easy": "^1.6.8",
