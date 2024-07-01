@@ -7,7 +7,18 @@ export function detectRunnersRoutechoices(
 	legs: LegWithRoutechoiceWithParsedTrack[],
 	runners: RunnerWithNullableLegsAndTrack[]
 ): RunnerWithNullableLegsAndTrack[] {
-	return runners.map((runner) => detectSingleRunnerRoutechoices(legs, runner));
+	return runners.map((runner) => {
+		let runnerWithDetectedRoutechoices;
+
+		try {
+			runnerWithDetectedRoutechoices = detectSingleRunnerRoutechoices(legs, runner);
+		} catch (e) {
+			console.error(e);
+			runnerWithDetectedRoutechoices = runner;
+		}
+
+		return runnerWithDetectedRoutechoices;
+	});
 }
 
 export function detectRunnersRoutechoicesForASingleLeg(
@@ -114,6 +125,7 @@ function checkIfRunnerTrackConsistentWithSplitTimes(runner: RunnerWithNullableLe
 		.find((l) => l !== null);
 
 	if (lastCompleteLeg === undefined || lastCompleteLeg === null) {
+		console.log(runner);
 		throw new Error('Runner have no valid legs.');
 	}
 
