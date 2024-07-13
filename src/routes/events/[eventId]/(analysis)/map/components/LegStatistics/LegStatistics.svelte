@@ -21,7 +21,7 @@
 		return sortedRunnersWithOneLeg.filter((r) => {
 			const leg = r.legs[0];
 			if (leg === undefined || leg === null) return false;
-			if (leg?.fkManualRoutechoice === routechoiceId) return true;
+			if (leg.fkManualRoutechoice !== null) return leg.fkManualRoutechoice === routechoiceId;
 			return leg.fkDetectedRoutechoice === routechoiceId;
 		});
 	}
