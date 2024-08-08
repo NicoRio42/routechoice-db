@@ -1,6 +1,6 @@
 <script>
 	import YellowStar from './YellowStar.svelte';
-	import demoVideo from './demo.mp4';
+	import demoVideo from './demo-video.mp4';
 </script>
 
 <section class="grow flex justify-center items-center gap-4 py4 m0 w-full">
