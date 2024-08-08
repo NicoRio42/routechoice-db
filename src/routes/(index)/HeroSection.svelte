@@ -1,6 +1,6 @@
 <script>
 	import YellowStar from './YellowStar.svelte';
-	import demoVideo from './demo-video.mp4';
+	import demoVideo from './demo3.mp4';
 </script>
 
 <section class="grow flex justify-center items-center gap-4 py4 m0 w-full">
@@ -21,7 +21,7 @@
 			<div class="flex flex-col sm:flex-row justify-center gap-4 w-full sm:w-fit">
 				<a
 					role="button"
-					href="/events/z7ipovtsqlybull/map"
+					href="/events/11dcad47-62d4-4de5-afc7-34492f729eb9/map"
 					class="!flex outline w-full sm:w-fit items-center justify-center gap-2 text-nowrap"
 				>
 					<i class="i-carbon-demo block w-6 h-6"></i>
