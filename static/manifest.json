@@ -26,5 +26,42 @@
 		}
 	],
 	"start_url": "/events",
-	"display": "standalone"
+	"display": "standalone",
+	"screenshots": [
+		{
+			"src": "/screenshots/map.jpeg",
+			"sizes": "720x1600",
+			"type": "image/jpeg",
+			"form_factor": "narrow",
+			"label": "A leg with routechoices"
+		},
+		{
+			"src": "/screenshots/leg.jpeg",
+			"sizes": "720x1600",
+			"type": "image/jpeg",
+			"form_factor": "narrow",
+			"label": "Leg split times"
+		},
+		{
+			"src": "/screenshots/stats.jpeg",
+			"sizes": "720x1600",
+			"type": "image/jpeg",
+			"form_factor": "narrow",
+			"label": "Leg routechoices statistics"
+		},
+		{
+			"src": "/screenshots/splittimes.jpeg",
+			"sizes": "720x1600",
+			"type": "image/jpeg",
+			"form_factor": "narrow",
+			"label": "Split times table"
+		},
+		{
+			"src": "/screenshots/leader-graph.jpeg",
+			"sizes": "720x1600",
+			"type": "image/jpeg",
+			"form_factor": "narrow",
+			"label": "Leader graph"
+		}
+	]
 }

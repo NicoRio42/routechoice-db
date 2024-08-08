@@ -24,6 +24,8 @@
 					href="/events/11dcad47-62d4-4de5-afc7-34492f729eb9"
 					class="!flex outline w-full sm:w-fit items-center justify-center gap-2 text-nowrap"
 				>
+					<i class="i-carbon-demo block w-6 h-6"></i>
+
 					See the demo
 				</a>
 
