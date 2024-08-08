@@ -173,3 +173,29 @@ export function getSelectedRunnersWithCurrentLegOnlyAndTracks(
 		}
 	}));
 }
+
+type Point = readonly [number, number];
+
+export function getTransformCallbackToRemapAPairOfPoints(
+	initial: [Point, Point],
+	transformed: [Point, Point]
+): (point: Point) => Point {
+	const [[ax, ay], [bx, by]] = initial;
+	const [[cx, cy], [dx, dy]] = transformed;
+
+	const delta = Math.pow(bx - ax, 2) + Math.pow(by - ay, 2);
+	const bigC = (by - ay) * (dy - cy) + (bx - ax) * (dx - cx);
+	const bigS = (bx - ax) * (dy - cy) - (by - ay) * (dx - cx);
+
+	const c = bigC / delta;
+	const s = bigS / delta;
+
+	const tx = (cx + dx + s * (ay + by) - c * (ax + bx)) / 2;
+	const ty = (cy + dy - c * (ay + by) - s * (ax + bx)) / 2;
+
+	return ([xi, yi]) => {
+		const xt = xi * c - yi * s + tx;
+		const yt = xi * s + yi * c + ty;
+		return [xt, yt];
+	};
+}

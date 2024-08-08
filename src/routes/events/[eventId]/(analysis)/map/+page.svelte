@@ -43,13 +43,14 @@
 	let hoveredRunnerId: string | null = null;
 
 	$: legNumber = getLegNumberFromSearchParams($page.url.searchParams);
-	$: legRoutechoices = data.event.legs[legNumber - 1]?.routechoices ?? [];
+	$: selectedLeg = data.event.legs[legNumber - 1];
+	$: legRoutechoices = selectedLeg?.routechoices ?? [];
 	$: showRoutechoices = !$page.url.searchParams.has('hideRoutechoices');
 
 	// TODO Optimize this if it causes perf issues
 	$: selectedRunnersWithCurrentLegOnly = getSelectedRunnersWithCurrentLegOnlyAndTracks(
 		data.event.runners,
-		data.event.legs[legNumber - 1],
+		selectedLeg,
 		selectedRunnersIds,
 		$settingsStore.runnersTracksColors
 	);
@@ -103,7 +104,7 @@
 {#if showManageRoutechoicesDialog && data.event.legs.length !== 0}
 	{#await import('./components/ManageRoutechoicesDialog.svelte') then { default: ManageRoutechoicesDialog }}
 		<ManageRoutechoicesDialog
-			leg={data.event.legs[legNumber - 1]}
+			leg={selectedLeg}
 			runners={data.event.runners}
 			legIndex={legNumber - 1}
 			bind:show={showManageRoutechoicesDialog}
@@ -129,7 +130,7 @@
 	{#await import('./components/AddRoutechoiceDialog.svelte') then { default: AddRoutechoiceDialog }}
 		<AddRoutechoiceDialog
 			runners={data.event.runners}
-			leg={data.event.legs[legNumber - 1]}
+			leg={selectedLeg}
 			legIndex={legNumber - 1}
 			{currentDrawnRoutechoice}
 			on:close={() => {
@@ -194,7 +195,7 @@
 	<Settings />
 
 	<TracksLabels
-		routechoices={data.event.legs[legNumber - 1]?.routechoices ?? []}
+		routechoices={legRoutechoices}
 		{selectedRunnersWithCurrentLegOnly}
 		bind:hoveredRunnerId
 	/>
@@ -209,7 +210,13 @@
 		<VectorLayer>
 			{#if showRoutechoices}
 				{#each legRoutechoices as routechoice (routechoice.id)}
-					<RoutechoiceTrack {routechoice} opacity={0.8} width={6} />
+					<RoutechoiceTrack
+						{selectedLeg}
+						controlPoints={data.event.controlPoints}
+						{routechoice}
+						opacity={0.8}
+						width={6}
+					/>
 				{/each}
 			{/if}
 
