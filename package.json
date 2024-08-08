@@ -53,6 +53,7 @@
 		"ol": "^7.5.2",
 		"orienteering-js": "^0.0.29",
 		"oslo": "^1.2.0",
+		"svelte-meta-tags": "^3.1.2",
 		"zod": "^3.23.8"
 	}
 }
