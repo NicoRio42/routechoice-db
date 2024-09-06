@@ -59,8 +59,8 @@ export async function sendVerificationCodeEmail(
 		.values({ fkUser })
 		.returning();
 
-	const content = `Code: ${verificationCode.code}`;
-	await sendEmail('Code pour vérification adresse email', content, userEmail, userName);
+	const content = `Email adress verification code (valid 15 minutes): ${verificationCode.code}`;
+	await sendEmail('Email adress verification code', content, userEmail, userName);
 }
 
 export async function sendPasswordResetEmail(fkUser: string, userEmail: string, userName: string) {
@@ -72,6 +72,6 @@ export async function sendPasswordResetEmail(fkUser: string, userEmail: string, 
 		.returning();
 
 	const passwordResetLink = `${BASE_URL}/reset-password/${passwordResetToken.id}`;
-	const content = `Lien : ${passwordResetLink}`;
-	await sendEmail('Lien pour réinitialisation du mot de passe', content, userEmail, userName);
+	const content = `Password reset link (valid 15 minutes): ${passwordResetLink}`;
+	await sendEmail('Password reset link', content, userEmail, userName);
 }

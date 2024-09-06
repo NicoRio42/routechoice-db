@@ -13,6 +13,9 @@ import { db } from '$lib/server/db/db.js';
 import { auth } from '$lib/server/auth/auth.js';
 import { generateScryptHash } from '$lib/server/auth/crypto.js';
 
+const PASSWORD_RESET_LINK_NOT_VALID_ERROR =
+	'The password reset link in not valid anymore (valid for 15 minutes).';
+
 export async function load({ params }) {
 	const verificationToken = params.token;
 
@@ -23,7 +26,7 @@ export async function load({ params }) {
 		.get();
 
 	if (passwordResetToken === undefined) {
-		throw error(400);
+		throw error(400, PASSWORD_RESET_LINK_NOT_VALID_ERROR);
 	}
 
 	if (!isWithinExpirationDate(passwordResetToken.expiresAt)) {
@@ -32,7 +35,7 @@ export async function load({ params }) {
 			.where(eq(passwordResetTokenTable.id, verificationToken))
 			.run();
 
-		throw error(400);
+		throw error(400, PASSWORD_RESET_LINK_NOT_VALID_ERROR);
 	}
 
 	const form = await superValidate(zod(resetPasswordSchema));
@@ -56,7 +59,7 @@ export const actions = {
 			.get();
 
 		if (passwordResetToken === undefined) {
-			return fail(400);
+			throw error(400, PASSWORD_RESET_LINK_NOT_VALID_ERROR);
 		}
 
 		if (!isWithinExpirationDate(passwordResetToken.expiresAt)) {
@@ -65,7 +68,7 @@ export const actions = {
 				.where(eq(passwordResetTokenTable.id, verificationToken))
 				.run();
 
-			return fail(400);
+			throw error(400, PASSWORD_RESET_LINK_NOT_VALID_ERROR);
 		}
 
 		await auth.invalidateUserSessions(passwordResetToken.fkUser);

@@ -13,8 +13,6 @@
 	// Do not remove this comment, it is there to prevent the formatter to change the order of the style sheets
 	import 'uno.css';
 
-	export let data;
-
 	let tooFast = false;
 
 	$: {

@@ -13,18 +13,20 @@
 	const { errors, delayed, enhance } = form;
 </script>
 
-<form method="post" use:enhance class="mt-10">
-	<h1>Reset password</h1>
+<main class="max-w-180 m-x-auto my-4 pb-12">
+	<form method="post" use:enhance>
+		<h1>Reset password</h1>
 
-	<PasswordField {form} field="password" label="Password" />
+		<PasswordField {form} field="password" label="Password" />
 
-	<PasswordField {form} field="passwordConfirmation" label="Confirm password" />
+		<PasswordField {form} field="passwordConfirmation" label="Confirm password" />
 
-	<button type="submit" aria-busy={$delayed}>Change password</button>
+		<button type="submit" aria-busy={$delayed}>Change password</button>
 
-	{#each $errors._errors ?? [] as globalError}
-		<p>
-			<small class="error">{globalError}</small>
-		</p>
-	{/each}
-</form>
+		{#each $errors._errors ?? [] as globalError}
+			<p>
+				<small class="error">{globalError}</small>
+			</p>
+		{/each}
+	</form>
+</main>

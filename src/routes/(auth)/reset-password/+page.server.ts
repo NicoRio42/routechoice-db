@@ -36,7 +36,7 @@ export const actions = {
 
 		return message(
 			form,
-			'An email has been sent to the provided email adress if an account exists for it.'
+			'An email with a reset link has been sent to the provided email adress if an account exists for it. The link is valid for 15 minutes.'
 		);
 	}
 };
