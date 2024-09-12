@@ -89,15 +89,13 @@ export async function load({ url, locals }) {
 		events.pop();
 	}
 
+	const now = new Date().getTime();
+	const pastEventsIds = events.filter((e) => e.publishTime.getTime() <= now).map((e) => e.id);
+
 	const filesPromise = db
 		.select()
 		.from(fileTable)
-		.where(
-			inArray(
-				fileTable.fkEvent,
-				events.map((e) => e.id)
-			)
-		)
+		.where(inArray(fileTable.fkEvent, pastEventsIds))
 		.all();
 
 	return { events, user: locals.user, tags, form, pageNumber, isLastPage, filesPromise };
