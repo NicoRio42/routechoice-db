@@ -1,7 +1,6 @@
 <script lang="ts">
+	import { enhance } from '$app/forms';
 	import SubmitButton from '$lib/components/form-fields/SubmitButton.svelte';
-
-	export let data;
 
 	let classNames: string[] = [];
 	let classIndex: number | null = null;
@@ -47,7 +46,7 @@
 <main class="sm:mx-auto px-4 sm:w-120 my-6 pb-12">
 	<h1>Course and routechoices from OCAD</h1>
 
-	<form method="post" enctype="multipart/form-data">
+	<form method="post" enctype="multipart/form-data" use:enhance>
 		<label>
 			Course file (IOF XML 3.0)
 

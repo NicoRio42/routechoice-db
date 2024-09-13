@@ -6,7 +6,7 @@
 
 	export let data;
 
-	const legs = [
+	$: legs = [
 		{ ...data.legs[0], finishControlPoint: data.legs[0].startControlPoint, id: 'start' },
 		...data.legs
 	];
