@@ -69,6 +69,7 @@ export async function load({ params: { eventId }, locals, fetch }) {
 
 			if (attributedRunner === undefined) return;
 			if (attributedRunner.userId !== null) runner.fkUser = attributedRunner.userId;
+
 			if (attributedRunner.trackingDeviceId !== null) {
 				runner.trackingDeviceId = attributedRunner.trackingDeviceId;
 				runner.fkLiveEvent = liveEvent.id;

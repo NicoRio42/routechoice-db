@@ -59,11 +59,14 @@ export async function POST({ request, locals }) {
 		}
 	}
 
-	const firstInsert = statements.shift();
-	if (firstInsert === undefined) throw error(400, 'There should be at least one runner');
+	const firstStatement = statements.shift();
+
+	if (firstStatement === undefined) {
+		return new Response('There should be at least one runner', { status: 400 });
+	}
 
 	try {
-		await db.batch([firstInsert, ...statements]);
+		await db.batch([firstStatement, ...statements]);
 	} catch {
 		return new Response(null, { status: 500 });
 	}

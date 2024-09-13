@@ -62,7 +62,7 @@
 
 		const runnersForPost = runnersWithDetectedRoutechoices.map((runner) => ({
 			id: runner.id,
-			fkLiveEvent: runner.fkLiveEvent,
+			fkLiveEvent: data.liveEvent.id,
 			trackingDeviceId: runner.trackingDeviceId,
 			fkUser: runner.fkUser,
 			legs: runner.legs

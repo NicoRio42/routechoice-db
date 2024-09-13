@@ -25,7 +25,8 @@ export function matchRunnersByName(
 		...r,
 		name: replaceAll(r.name, /\s\s+/g, ' ')
 			.split(' ')
-			.flatMap((name) => name.split('-'))
+			.flatMap((nameFragment) => nameFragment.split('-'))
+			.filter((nameFragment) => !nameFragment.startsWith('#') && isNaN(parseInt(nameFragment)))
 			.map(trimToLowerCaseRemoveAccents)
 	}));
 
@@ -33,6 +34,7 @@ export function matchRunnersByName(
 		const standardizedRunnerName = [runner.firstName, runner.lastName]
 			.flatMap((name) => replaceAll(name, /\s\s+/g, ' ').split(' '))
 			.flatMap((name) => name.split('-'))
+			.filter((nameFragment) => !nameFragment.startsWith('#') && isNaN(parseInt(nameFragment)))
 			.map(trimToLowerCaseRemoveAccents);
 
 		for (const runnerForMatching of standardizedRunnersForMatching) {
