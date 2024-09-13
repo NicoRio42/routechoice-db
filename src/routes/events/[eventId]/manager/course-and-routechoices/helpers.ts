@@ -66,6 +66,11 @@ export async function insertControlPointsLegsAndRoutechoices(
 		});
 	}
 
-	await db.insert(legTable).values(legsToInsert).run();
-	await db.insert(routechoiceTable).values(routechoicesToInsert).run();
+	if (legsToInsert.length > 0) {
+		await db.insert(legTable).values(legsToInsert).run();
+	}
+
+	if (routechoicesToInsert.length > 0) {
+		await db.insert(routechoiceTable).values(routechoicesToInsert).run();
+	}
 }

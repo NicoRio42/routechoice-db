@@ -129,7 +129,7 @@
 						<p class="mt-8">No course yet.</p>
 
 						{#if $page.data.user?.role === RolesEnum.Enum.admin}
-							<a href="/events/{$page.data.event.id}/manager/course-and-routechoices" class="text-6"
+							<a href="/events/{$page.data.event.id}/manager" class="text-6"
 								>Add course and routechoices</a
 							>
 						{/if}
@@ -137,9 +137,7 @@
 						<p class="mt-8">No split times yet.</p>
 
 						{#if $page.data.user?.role === RolesEnum.Enum.admin}
-							<a href="/events/{$page.data.event.id}/manager/split-times" class="text-6"
-								>Add split times</a
-							>
+							<a href="/events/{$page.data.event.id}/manager" class="text-6">Add split times</a>
 						{/if}
 					{/if}
 				</td>
