@@ -1,0 +1,890 @@
+<?xml version="1.0" encoding="UTF-8" standalone="no" ?>
+<gpx xmlns="http://www.topografix.com/GPX/1/1"
+creator="OCAD 2020.7.8.4403" version="1.1"
+xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" 
+xsi:schemaLocation="http://www.topografix.com/GPX/1/1 
+http://www.topografix.com/GPX/1/1/gpx.xsd">
+
+  <metadata>
+    <name>C:\Users\simle\OneDrive - FFCO\General - Pôle France Jeune CO\entrainement\Séances\2024-2025\9_Septembre_2024\1209 Corrida La Sauvetat\RCDB\1209 Corrida La Sauvetat.A.gpx</name>
+    <author><name>FFCO</name></author>
+    <link href="http://www.ocad.com">
+      <text>OCAD AG</text>
+    </link>
+    <time>2024-09-12T22:10:18</time>
+    <bounds maxlat="45.63963331" maxlon="3.17135676" minlat="45.63530281" minlon="3.16673780"/>
+  </metadata>
+
+  <rte>
+    <name>rte1</name>
+    <cmt>Shortest Route</cmt>
+    <rtept lat="45.63961505" lon="3.16769764" >
+      <name>rte1_0</name>
+      <ele>0.00</ele>
+    </rtept>
+    <rtept lat="45.63940328" lon="3.16960714" >
+      <name>rte1_1</name>
+      <ele>0.00</ele>
+    </rtept>
+    <rtept lat="45.63905321" lon="3.17005793" >
+      <name>rte1_2</name>
+      <ele>0.00</ele>
+    </rtept>
+    <rtept lat="45.63897022" lon="3.17015523" >
+      <name>rte1_3</name>
+      <ele>0.00</ele>
+    </rtept>
+    <rtept lat="45.63874687" lon="3.17017509" >
+      <name>rte1_4</name>
+      <ele>0.00</ele>
+    </rtept>
+    <rtept lat="45.63854155" lon="3.17018472" >
+      <name>rte1_5</name>
+      <ele>0.00</ele>
+    </rtept>
+    <rtept lat="45.63760152" lon="3.17013562" >
+      <name>rte1_6</name>
+      <ele>0.00</ele>
+    </rtept>
+    <rtept lat="45.63706839" lon="3.17016479" >
+      <name>rte1_7</name>
+      <ele>0.00</ele>
+    </rtept>
+  </rte>
+  <rte>
+    <name>rte2</name>
+    <cmt>Shortest Route</cmt>
+    <rtept lat="45.63706839" lon="3.17016479" >
+      <name>rte2_0</name>
+      <ele>0.00</ele>
+    </rtept>
+    <rtept lat="45.63701075" lon="3.17016975" >
+      <name>rte2_1</name>
+      <ele>0.00</ele>
+    </rtept>
+    <rtept lat="45.63698777" lon="3.17106823" >
+      <name>rte2_2</name>
+      <ele>0.00</ele>
+    </rtept>
+    <rtept lat="45.63647627" lon="3.17108719" >
+      <name>rte2_3</name>
+      <ele>0.00</ele>
+    </rtept>
+    <rtept lat="45.63643697" lon="3.17087655" >
+      <name>rte2_4</name>
+      <ele>0.00</ele>
+    </rtept>
+    <rtept lat="45.63626059" lon="3.17079899" >
+      <name>rte2_5</name>
+      <ele>0.00</ele>
+    </rtept>
+    <rtept lat="45.63616377" lon="3.17051630" >
+      <name>rte2_6</name>
+      <ele>0.00</ele>
+    </rtept>
+    <rtept lat="45.63599488" lon="3.17025392" >
+      <name>rte2_7</name>
+      <ele>0.00</ele>
+    </rtept>
+    <rtept lat="45.63584390" lon="3.17005321" >
+      <name>rte2_8</name>
+      <ele>0.00</ele>
+    </rtept>
+    <rtept lat="45.63580071" lon="3.17002740" >
+      <name>rte2_9</name>
+      <ele>0.00</ele>
+    </rtept>
+    <rtept lat="45.63546587" lon="3.16993909" >
+      <name>rte2_10</name>
+      <ele>0.00</ele>
+    </rtept>
+    <rtept lat="45.63539767" lon="3.16977971" >
+      <name>rte2_11</name>
+      <ele>0.00</ele>
+    </rtept>
+    <rtept lat="45.63532243" lon="3.16951763" >
+      <name>rte2_12</name>
+      <ele>0.00</ele>
+    </rtept>
+  </rte>
+  <rte>
+    <name>rte3</name>
+    <cmt>Alternative Routes</cmt>
+    <rtept lat="45.63706839" lon="3.17016479" >
+      <name>rte3_0</name>
+      <ele>0.00</ele>
+    </rtept>
+    <rtept lat="45.63699642" lon="3.17011323" >
+      <name>rte3_1</name>
+      <ele>0.00</ele>
+    </rtept>
+    <rtept lat="45.63698204" lon="3.17009778" >
+      <name>rte3_2</name>
+      <ele>0.00</ele>
+    </rtept>
+    <rtept lat="45.63673182" lon="3.16882878" >
+      <name>rte3_3</name>
+      <ele>0.00</ele>
+    </rtept>
+    <rtept lat="45.63646877" lon="3.16889986" >
+      <name>rte3_4</name>
+      <ele>0.00</ele>
+    </rtept>
+    <rtept lat="45.63637153" lon="3.16888929" >
+      <name>rte3_5</name>
+      <ele>0.00</ele>
+    </rtept>
+    <rtept lat="45.63623188" lon="3.16833948" >
+      <name>rte3_6</name>
+      <ele>0.00</ele>
+    </rtept>
+    <rtept lat="45.63615987" lon="3.16832385" >
+      <name>rte3_7</name>
+      <ele>0.00</ele>
+    </rtept>
+    <rtept lat="45.63590682" lon="3.16893409" >
+      <name>rte3_8</name>
+      <ele>0.00</ele>
+    </rtept>
+    <rtept lat="45.63575159" lon="3.16915953" >
+      <name>rte3_9</name>
+      <ele>0.00</ele>
+    </rtept>
+    <rtept lat="45.63532243" lon="3.16951763" >
+      <name>rte3_10</name>
+      <ele>0.00</ele>
+    </rtept>
+  </rte>
+  <rte>
+    <name>rte4</name>
+    <cmt>Alternative Routes</cmt>
+    <rtept lat="45.63706839" lon="3.17016479" >
+      <name>rte4_0</name>
+      <ele>0.00</ele>
+    </rtept>
+    <rtept lat="45.63699642" lon="3.17011323" >
+      <name>rte4_1</name>
+      <ele>0.00</ele>
+    </rtept>
+    <rtept lat="45.63698204" lon="3.17009778" >
+      <name>rte4_2</name>
+      <ele>0.00</ele>
+    </rtept>
+    <rtept lat="45.63656768" lon="3.16779110" >
+      <name>rte4_3</name>
+      <ele>0.00</ele>
+    </rtept>
+    <rtept lat="45.63654611" lon="3.16776536" >
+      <name>rte4_4</name>
+      <ele>0.00</ele>
+    </rtept>
+    <rtept lat="45.63648848" lon="3.16776006" >
+      <name>rte4_5</name>
+      <ele>0.00</ele>
+    </rtept>
+    <rtept lat="45.63642002" lon="3.16778039" >
+      <name>rte4_6</name>
+      <ele>0.00</ele>
+    </rtept>
+    <rtept lat="45.63639478" lon="3.16779571" >
+      <name>rte4_7</name>
+      <ele>0.00</ele>
+    </rtept>
+    <rtept lat="45.63622854" lon="3.16816489" >
+      <name>rte4_8</name>
+      <ele>0.00</ele>
+    </rtept>
+    <rtept lat="45.63590682" lon="3.16893409" >
+      <name>rte4_9</name>
+      <ele>0.00</ele>
+    </rtept>
+    <rtept lat="45.63575159" lon="3.16915953" >
+      <name>rte4_10</name>
+      <ele>0.00</ele>
+    </rtept>
+    <rtept lat="45.63532243" lon="3.16951763" >
+      <name>rte4_11</name>
+      <ele>0.00</ele>
+    </rtept>
+  </rte>
+  <rte>
+    <name>rte5</name>
+    <cmt>Shortest Route</cmt>
+    <rtept lat="45.63532243" lon="3.16951763" >
+      <name>rte5_0</name>
+      <ele>0.00</ele>
+    </rtept>
+    <rtept lat="45.63539767" lon="3.16977971" >
+      <name>rte5_1</name>
+      <ele>0.00</ele>
+    </rtept>
+    <rtept lat="45.63546587" lon="3.16993909" >
+      <name>rte5_2</name>
+      <ele>0.00</ele>
+    </rtept>
+    <rtept lat="45.63563841" lon="3.17017067" >
+      <name>rte5_3</name>
+      <ele>0.00</ele>
+    </rtept>
+    <rtept lat="45.63577170" lon="3.17016081" >
+      <name>rte5_4</name>
+      <ele>0.00</ele>
+    </rtept>
+    <rtept lat="45.63582565" lon="3.17021232" >
+      <name>rte5_5</name>
+      <ele>0.00</ele>
+    </rtept>
+    <rtept lat="45.63594059" lon="3.17042319" >
+      <name>rte5_6</name>
+      <ele>0.00</ele>
+    </rtept>
+    <rtept lat="45.63585393" lon="3.17056669" >
+      <name>rte5_7</name>
+      <ele>0.00</ele>
+    </rtept>
+    <rtept lat="45.63583230" lon="3.17057689" >
+      <name>rte5_8</name>
+      <ele>0.00</ele>
+    </rtept>
+  </rte>
+  <rte>
+    <name>rte6</name>
+    <cmt>Alternative Routes</cmt>
+    <rtept lat="45.63532243" lon="3.16951763" >
+      <name>rte6_0</name>
+      <ele>0.00</ele>
+    </rtept>
+    <rtept lat="45.63539767" lon="3.16977971" >
+      <name>rte6_1</name>
+      <ele>0.00</ele>
+    </rtept>
+    <rtept lat="45.63546587" lon="3.16993909" >
+      <name>rte6_2</name>
+      <ele>0.00</ele>
+    </rtept>
+    <rtept lat="45.63554853" lon="3.17006257" >
+      <name>rte6_3</name>
+      <ele>0.00</ele>
+    </rtept>
+    <rtept lat="45.63562397" lon="3.17019116" >
+      <name>rte6_4</name>
+      <ele>0.00</ele>
+    </rtept>
+    <rtept lat="45.63558785" lon="3.17025780" >
+      <name>rte6_5</name>
+      <ele>0.00</ele>
+    </rtept>
+    <rtept lat="45.63554086" lon="3.17037061" >
+      <name>rte6_6</name>
+      <ele>0.00</ele>
+    </rtept>
+    <rtept lat="45.63557298" lon="3.17056582" >
+      <name>rte6_7</name>
+      <ele>0.00</ele>
+    </rtept>
+    <rtept lat="45.63560531" lon="3.17062240" >
+      <name>rte6_8</name>
+      <ele>0.00</ele>
+    </rtept>
+    <rtept lat="45.63570972" lon="3.17065353" >
+      <name>rte6_9</name>
+      <ele>0.00</ele>
+    </rtept>
+    <rtept lat="45.63576376" lon="3.17064343" >
+      <name>rte6_10</name>
+      <ele>0.00</ele>
+    </rtept>
+    <rtept lat="45.63582504" lon="3.17061281" >
+      <name>rte6_11</name>
+      <ele>0.00</ele>
+    </rtept>
+    <rtept lat="45.63583230" lon="3.17057689" >
+      <name>rte6_12</name>
+      <ele>0.00</ele>
+    </rtept>
+  </rte>
+  <rte>
+    <name>rte7</name>
+    <cmt>Shortest Route</cmt>
+    <rtept lat="45.63583230" lon="3.17057689" >
+      <name>rte7_0</name>
+      <ele>0.00</ele>
+    </rtept>
+    <rtept lat="45.63582504" lon="3.17061281" >
+      <name>rte7_1</name>
+      <ele>0.00</ele>
+    </rtept>
+    <rtept lat="45.63576376" lon="3.17064343" >
+      <name>rte7_2</name>
+      <ele>0.00</ele>
+    </rtept>
+    <rtept lat="45.63561244" lon="3.17066863" >
+      <name>rte7_3</name>
+      <ele>0.00</ele>
+    </rtept>
+    <rtept lat="45.63554393" lon="3.17071976" >
+      <name>rte7_4</name>
+      <ele>0.00</ele>
+    </rtept>
+    <rtept lat="45.63558687" lon="3.17090474" >
+      <name>rte7_5</name>
+      <ele>0.00</ele>
+    </rtept>
+    <rtept lat="45.63559399" lon="3.17096124" >
+      <name>rte7_6</name>
+      <ele>0.00</ele>
+    </rtept>
+    <rtept lat="45.63547859" lon="3.17105330" >
+      <name>rte7_7</name>
+      <ele>0.00</ele>
+    </rtept>
+    <rtept lat="45.63557185" lon="3.17131031" >
+      <name>rte7_8</name>
+      <ele>0.00</ele>
+    </rtept>
+    <rtept lat="45.63561148" lon="3.17130530" >
+      <name>rte7_9</name>
+      <ele>0.00</ele>
+    </rtept>
+    <rtept lat="45.63574847" lon="3.17122357" >
+      <name>rte7_10</name>
+      <ele>0.00</ele>
+    </rtept>
+  </rte>
+  <rte>
+    <name>rte8</name>
+    <cmt>Alternative Routes</cmt>
+    <rtept lat="45.63583230" lon="3.17057689" >
+      <name>rte8_0</name>
+      <ele>0.00</ele>
+    </rtept>
+    <rtept lat="45.63585393" lon="3.17056669" >
+      <name>rte8_1</name>
+      <ele>0.00</ele>
+    </rtept>
+    <rtept lat="45.63595862" lon="3.17041297" >
+      <name>rte8_2</name>
+      <ele>0.00</ele>
+    </rtept>
+    <rtept lat="45.63603439" lon="3.17032592" >
+      <name>rte8_3</name>
+      <ele>0.00</ele>
+    </rtept>
+    <rtept lat="45.63616379" lon="3.17050089" >
+      <name>rte8_4</name>
+      <ele>0.00</ele>
+    </rtept>
+    <rtept lat="45.63624958" lon="3.17093759" >
+      <name>rte8_5</name>
+      <ele>0.00</ele>
+    </rtept>
+    <rtept lat="45.63624233" lon="3.17096837" >
+      <name>rte8_6</name>
+      <ele>0.00</ele>
+    </rtept>
+    <rtept lat="45.63605127" lon="3.17107047" >
+      <name>rte8_7</name>
+      <ele>0.00</ele>
+    </rtept>
+    <rtept lat="45.63574847" lon="3.17122357" >
+      <name>rte8_8</name>
+      <ele>0.00</ele>
+    </rtept>
+  </rte>
+  <rte>
+    <name>rte9</name>
+    <cmt>Shortest Route</cmt>
+    <rtept lat="45.63574847" lon="3.17122357" >
+      <name>rte9_0</name>
+      <ele>0.00</ele>
+    </rtept>
+    <rtept lat="45.63561148" lon="3.17130530" >
+      <name>rte9_1</name>
+      <ele>0.00</ele>
+    </rtept>
+    <rtept lat="45.63557185" lon="3.17131031" >
+      <name>rte9_2</name>
+      <ele>0.00</ele>
+    </rtept>
+    <rtept lat="45.63547859" lon="3.17105330" >
+      <name>rte9_3</name>
+      <ele>0.00</ele>
+    </rtept>
+    <rtept lat="45.63560477" lon="3.17097667" >
+      <name>rte9_4</name>
+      <ele>0.00</ele>
+    </rtept>
+    <rtept lat="45.63565861" lon="3.17110007" >
+      <name>rte9_5</name>
+      <ele>0.00</ele>
+    </rtept>
+    <rtept lat="45.63571626" lon="3.17108998" >
+      <name>rte9_6</name>
+      <ele>0.00</ele>
+    </rtept>
+    <rtept lat="45.63612724" lon="3.17085506" >
+      <name>rte9_7</name>
+      <ele>0.00</ele>
+    </rtept>
+    <rtept lat="45.63612363" lon="3.17085505" >
+      <name>rte9_8</name>
+      <ele>0.00</ele>
+    </rtept>
+  </rte>
+  <rte>
+    <name>rte10</name>
+    <cmt>Shortest Route</cmt>
+    <rtept lat="45.63612363" lon="3.17085505" >
+      <name>rte10_0</name>
+      <ele>0.00</ele>
+    </rtept>
+    <rtept lat="45.63607005" lon="3.17056222" >
+      <name>rte10_1</name>
+      <ele>0.00</ele>
+    </rtept>
+    <rtept lat="45.63604485" lon="3.17055187" >
+      <name>rte10_2</name>
+      <ele>0.00</ele>
+    </rtept>
+    <rtept lat="45.63598734" lon="3.17047468" >
+      <name>rte10_3</name>
+      <ele>0.00</ele>
+    </rtept>
+    <rtept lat="45.63595862" lon="3.17041297" >
+      <name>rte10_4</name>
+      <ele>0.00</ele>
+    </rtept>
+    <rtept lat="45.63603439" lon="3.17032592" >
+      <name>rte10_5</name>
+      <ele>0.00</ele>
+    </rtept>
+    <rtept lat="45.63616379" lon="3.17050089" >
+      <name>rte10_6</name>
+      <ele>0.00</ele>
+    </rtept>
+    <rtept lat="45.63627137" lon="3.17081443" >
+      <name>rte10_7</name>
+      <ele>0.00</ele>
+    </rtept>
+    <rtept lat="45.63639745" lon="3.17080968" >
+      <name>rte10_8</name>
+      <ele>0.00</ele>
+    </rtept>
+    <rtept lat="45.63645513" lon="3.17077905" >
+      <name>rte10_9</name>
+      <ele>0.00</ele>
+    </rtept>
+    <rtept lat="45.63648042" lon="3.17072779" >
+      <name>rte10_10</name>
+      <ele>0.00</ele>
+    </rtept>
+  </rte>
+  <rte>
+    <name>rte11</name>
+    <cmt>Alternative Routes</cmt>
+    <rtept lat="45.63612363" lon="3.17085505" >
+      <name>rte11_0</name>
+      <ele>0.00</ele>
+    </rtept>
+    <rtept lat="45.63607005" lon="3.17056222" >
+      <name>rte11_1</name>
+      <ele>0.00</ele>
+    </rtept>
+    <rtept lat="45.63604485" lon="3.17055187" >
+      <name>rte11_2</name>
+      <ele>0.00</ele>
+    </rtept>
+    <rtept lat="45.63598734" lon="3.17047468" >
+      <name>rte11_3</name>
+      <ele>0.00</ele>
+    </rtept>
+    <rtept lat="45.63595862" lon="3.17041297" >
+      <name>rte11_4</name>
+      <ele>0.00</ele>
+    </rtept>
+    <rtept lat="45.63604520" lon="3.17032082" >
+      <name>rte11_5</name>
+      <ele>0.00</ele>
+    </rtept>
+    <rtept lat="45.63629383" lon="3.17025484" >
+      <name>rte11_6</name>
+      <ele>0.00</ele>
+    </rtept>
+    <rtept lat="45.63643070" lon="3.17026039" >
+      <name>rte11_7</name>
+      <ele>0.00</ele>
+    </rtept>
+    <rtept lat="45.63648042" lon="3.17072779" >
+      <name>rte11_8</name>
+      <ele>0.00</ele>
+    </rtept>
+  </rte>
+  <rte>
+    <name>rte12</name>
+    <cmt>Shortest Route</cmt>
+    <rtept lat="45.63648042" lon="3.17072779" >
+      <name>rte12_0</name>
+      <ele>0.00</ele>
+    </rtept>
+    <rtept lat="45.63646991" lon="3.17053264" >
+      <name>rte12_1</name>
+      <ele>0.00</ele>
+    </rtept>
+    <rtept lat="45.63646776" lon="3.16956734" >
+      <name>rte12_2</name>
+      <ele>0.00</ele>
+    </rtept>
+    <rtept lat="45.63640721" lon="3.16911532" >
+      <name>rte12_3</name>
+      <ele>0.00</ele>
+    </rtept>
+    <rtept lat="45.63650095" lon="3.16905399" >
+      <name>rte12_4</name>
+      <ele>0.00</ele>
+    </rtept>
+    <rtept lat="45.63659127" lon="3.16887456" >
+      <name>rte12_5</name>
+      <ele>0.00</ele>
+    </rtept>
+    <rtept lat="45.63673182" lon="3.16882878" >
+      <name>rte12_6</name>
+      <ele>0.00</ele>
+    </rtept>
+    <rtept lat="45.63676393" lon="3.16902912" >
+      <name>rte12_7</name>
+      <ele>0.00</ele>
+    </rtept>
+    <rtept lat="45.63679601" lon="3.16925514" >
+      <name>rte12_8</name>
+      <ele>0.00</ele>
+    </rtept>
+  </rte>
+  <rte>
+    <name>rte13</name>
+    <cmt>Alternative Routes</cmt>
+    <rtept lat="45.63648042" lon="3.17072779" >
+      <name>rte13_0</name>
+      <ele>0.00</ele>
+    </rtept>
+    <rtept lat="45.63646946" lon="3.17083044" >
+      <name>rte13_1</name>
+      <ele>0.00</ele>
+    </rtept>
+    <rtept lat="45.63646922" lon="3.17098961" >
+      <name>rte13_2</name>
+      <ele>0.00</ele>
+    </rtept>
+    <rtept lat="45.63647627" lon="3.17108719" >
+      <name>rte13_3</name>
+      <ele>0.00</ele>
+    </rtept>
+    <rtept lat="45.63698777" lon="3.17106823" >
+      <name>rte13_4</name>
+      <ele>0.00</ele>
+    </rtept>
+    <rtept lat="45.63697463" lon="3.17023126" >
+      <name>rte13_5</name>
+      <ele>0.00</ele>
+    </rtept>
+    <rtept lat="45.63691066" lon="3.16966112" >
+      <name>rte13_6</name>
+      <ele>0.00</ele>
+    </rtept>
+    <rtept lat="45.63679601" lon="3.16925514" >
+      <name>rte13_7</name>
+      <ele>0.00</ele>
+    </rtept>
+  </rte>
+  <rte>
+    <name>rte14</name>
+    <cmt>Shortest Route</cmt>
+    <rtept lat="45.63679601" lon="3.16925514" >
+      <name>rte14_0</name>
+      <ele>0.00</ele>
+    </rtept>
+    <rtept lat="45.63676393" lon="3.16902912" >
+      <name>rte14_1</name>
+      <ele>0.00</ele>
+    </rtept>
+    <rtept lat="45.63673182" lon="3.16882878" >
+      <name>rte14_2</name>
+      <ele>0.00</ele>
+    </rtept>
+    <rtept lat="45.63646877" lon="3.16889986" >
+      <name>rte14_3</name>
+      <ele>0.00</ele>
+    </rtept>
+    <rtept lat="45.63637153" lon="3.16888929" >
+      <name>rte14_4</name>
+      <ele>0.00</ele>
+    </rtept>
+    <rtept lat="45.63622827" lon="3.16834460" >
+      <name>rte14_5</name>
+      <ele>0.00</ele>
+    </rtept>
+    <rtept lat="45.63606294" lon="3.16810791" >
+      <name>rte14_6</name>
+      <ele>0.00</ele>
+    </rtept>
+    <rtept lat="45.63593003" lon="3.16786105" >
+      <name>rte14_7</name>
+      <ele>0.00</ele>
+    </rtept>
+    <rtept lat="45.63595892" lon="3.16780980" >
+      <name>rte14_8</name>
+      <ele>0.00</ele>
+    </rtept>
+    <rtept lat="45.63583340" lon="3.16744487" >
+      <name>rte14_9</name>
+      <ele>0.00</ele>
+    </rtept>
+    <rtept lat="45.63606801" lon="3.16712211" >
+      <name>rte14_10</name>
+      <ele>0.00</ele>
+    </rtept>
+  </rte>
+  <rte>
+    <name>rte15</name>
+    <cmt>Alternative Routes</cmt>
+    <rtept lat="45.63679601" lon="3.16925514" >
+      <name>rte15_0</name>
+      <ele>0.00</ele>
+    </rtept>
+    <rtept lat="45.63656450" lon="3.16750869" >
+      <name>rte15_1</name>
+      <ele>0.00</ele>
+    </rtept>
+    <rtept lat="45.63658269" lon="3.16738552" >
+      <name>rte15_2</name>
+      <ele>0.00</ele>
+    </rtept>
+    <rtept lat="45.63671320" lon="3.16682111" >
+      <name>rte15_3</name>
+      <ele>0.00</ele>
+    </rtept>
+    <rtept lat="45.63668805" lon="3.16677483" >
+      <name>rte15_4</name>
+      <ele>0.00</ele>
+    </rtept>
+    <rtept lat="45.63606801" lon="3.16712211" >
+      <name>rte15_5</name>
+      <ele>0.00</ele>
+    </rtept>
+  </rte>
+  <rte>
+    <name>rte16</name>
+    <cmt>Alternative Routes</cmt>
+    <rtept lat="45.63706839" lon="3.17016479" >
+      <name>rte16_0</name>
+      <ele>0.00</ele>
+    </rtept>
+    <rtept lat="45.63701075" lon="3.17016975" >
+      <name>rte16_1</name>
+      <ele>0.00</ele>
+    </rtept>
+    <rtept lat="45.63698777" lon="3.17106823" >
+      <name>rte16_2</name>
+      <ele>0.00</ele>
+    </rtept>
+    <rtept lat="45.63647627" lon="3.17108719" >
+      <name>rte16_3</name>
+      <ele>0.00</ele>
+    </rtept>
+    <rtept lat="45.63643697" lon="3.17087655" >
+      <name>rte16_4</name>
+      <ele>0.00</ele>
+    </rtept>
+    <rtept lat="45.63626059" lon="3.17079899" >
+      <name>rte16_5</name>
+      <ele>0.00</ele>
+    </rtept>
+    <rtept lat="45.63616377" lon="3.17051630" >
+      <name>rte16_6</name>
+      <ele>0.00</ele>
+    </rtept>
+    <rtept lat="45.63599488" lon="3.17025392" >
+      <name>rte16_7</name>
+      <ele>0.00</ele>
+    </rtept>
+    <rtept lat="45.63584390" lon="3.17005321" >
+      <name>rte16_8</name>
+      <ele>0.00</ele>
+    </rtept>
+    <rtept lat="45.63572166" lon="3.16990393" >
+      <name>rte16_9</name>
+      <ele>0.00</ele>
+    </rtept>
+    <rtept lat="45.63574033" lon="3.16946756" >
+      <name>rte16_10</name>
+      <ele>0.00</ele>
+    </rtept>
+    <rtept lat="45.63563971" lon="3.16930809" >
+      <name>rte16_11</name>
+      <ele>0.00</ele>
+    </rtept>
+    <rtept lat="45.63548108" lon="3.16940516" >
+      <name>rte16_12</name>
+      <ele>0.00</ele>
+    </rtept>
+    <rtept lat="45.63532243" lon="3.16951763" >
+      <name>rte16_13</name>
+      <ele>0.00</ele>
+    </rtept>
+  </rte>
+  <rte>
+    <name>rte17</name>
+    <cmt>Alternative Routes</cmt>
+    <rtept lat="45.63532243" lon="3.16951763" >
+      <name>rte17_0</name>
+      <ele>0.00</ele>
+    </rtept>
+    <rtept lat="45.63539767" lon="3.16977971" >
+      <name>rte17_1</name>
+      <ele>0.00</ele>
+    </rtept>
+    <rtept lat="45.63546587" lon="3.16993909" >
+      <name>rte17_2</name>
+      <ele>0.00</ele>
+    </rtept>
+    <rtept lat="45.63580071" lon="3.17002740" >
+      <name>rte17_3</name>
+      <ele>0.00</ele>
+    </rtept>
+    <rtept lat="45.63584390" lon="3.17005321" >
+      <name>rte17_4</name>
+      <ele>0.00</ele>
+    </rtept>
+    <rtept lat="45.63599848" lon="3.17025393" >
+      <name>rte17_5</name>
+      <ele>0.00</ele>
+    </rtept>
+    <rtept lat="45.63594059" lon="3.17042319" >
+      <name>rte17_6</name>
+      <ele>0.00</ele>
+    </rtept>
+    <rtept lat="45.63585393" lon="3.17056669" >
+      <name>rte17_7</name>
+      <ele>0.00</ele>
+    </rtept>
+    <rtept lat="45.63583230" lon="3.17057689" >
+      <name>rte17_8</name>
+      <ele>0.00</ele>
+    </rtept>
+  </rte>
+  <rte>
+    <name>rte18</name>
+    <cmt>Alternative Routes</cmt>
+    <rtept lat="45.63574847" lon="3.17122357" >
+      <name>rte18_0</name>
+      <ele>0.00</ele>
+    </rtept>
+    <rtept lat="45.63617743" lon="3.17100925" >
+      <name>rte18_1</name>
+      <ele>0.00</ele>
+    </rtept>
+    <rtept lat="45.63624233" lon="3.17096837" >
+      <name>rte18_2</name>
+      <ele>0.00</ele>
+    </rtept>
+    <rtept lat="45.63624958" lon="3.17093759" >
+      <name>rte18_3</name>
+      <ele>0.00</ele>
+    </rtept>
+    <rtept lat="45.63616379" lon="3.17050089" >
+      <name>rte18_4</name>
+      <ele>0.00</ele>
+    </rtept>
+    <rtept lat="45.63603439" lon="3.17032592" >
+      <name>rte18_5</name>
+      <ele>0.00</ele>
+    </rtept>
+    <rtept lat="45.63595862" lon="3.17041297" >
+      <name>rte18_6</name>
+      <ele>0.00</ele>
+    </rtept>
+    <rtept lat="45.63598734" lon="3.17047468" >
+      <name>rte18_7</name>
+      <ele>0.00</ele>
+    </rtept>
+    <rtept lat="45.63604485" lon="3.17055187" >
+      <name>rte18_8</name>
+      <ele>0.00</ele>
+    </rtept>
+    <rtept lat="45.63607005" lon="3.17056222" >
+      <name>rte18_9</name>
+      <ele>0.00</ele>
+    </rtept>
+    <rtept lat="45.63612363" lon="3.17085505" >
+      <name>rte18_10</name>
+      <ele>0.00</ele>
+    </rtept>
+  </rte>
+  <rte>
+    <name>rte19</name>
+    <cmt>Alternative Routes</cmt>
+    <rtept lat="45.63679601" lon="3.16925514" >
+      <name>rte19_0</name>
+      <ele>0.00</ele>
+    </rtept>
+    <rtept lat="45.63676393" lon="3.16902912" >
+      <name>rte19_1</name>
+      <ele>0.00</ele>
+    </rtept>
+    <rtept lat="45.63656768" lon="3.16779110" >
+      <name>rte19_2</name>
+      <ele>0.00</ele>
+    </rtept>
+    <rtept lat="45.63654611" lon="3.16776536" >
+      <name>rte19_3</name>
+      <ele>0.00</ele>
+    </rtept>
+    <rtept lat="45.63648848" lon="3.16776006" >
+      <name>rte19_4</name>
+      <ele>0.00</ele>
+    </rtept>
+    <rtept lat="45.63640199" lon="3.16779060" >
+      <name>rte19_5</name>
+      <ele>0.00</ele>
+    </rtept>
+    <rtept lat="45.63618909" lon="3.16804668" >
+      <name>rte19_6</name>
+      <ele>0.00</ele>
+    </rtept>
+    <rtept lat="45.63607014" lon="3.16810793" >
+      <name>rte19_7</name>
+      <ele>0.00</ele>
+    </rtept>
+    <rtept lat="45.63600903" lon="3.16802560" >
+      <name>rte19_8</name>
+      <ele>0.00</ele>
+    </rtept>
+    <rtept lat="45.63593003" lon="3.16786105" >
+      <name>rte19_9</name>
+      <ele>0.00</ele>
+    </rtept>
+    <rtept lat="45.63595892" lon="3.16780980" >
+      <name>rte19_10</name>
+      <ele>0.00</ele>
+    </rtept>
+    <rtept lat="45.63583340" lon="3.16744487" >
+      <name>rte19_11</name>
+      <ele>0.00</ele>
+    </rtept>
+    <rtept lat="45.63606801" lon="3.16712211" >
+      <name>rte19_12</name>
+      <ele>0.00</ele>
+    </rtept>
+  </rte>
+  <rte>
+    <name>rte20</name>
+    <cmt>Shortest Route</cmt>
+    <rtept lat="45.63606801" lon="3.16712211" >
+      <name>rte20_0</name>
+      <ele>0.00</ele>
+    </rtept>
+    <rtept lat="45.63636723" lon="3.16694330" >
+      <name>rte20_1</name>
+      <ele>0.00</ele>
+    </rtept>
+  </rte>
+</gpx>
