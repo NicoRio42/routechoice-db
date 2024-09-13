@@ -31,7 +31,9 @@
 				{#each legs as leg, legIndex (leg.id)}
 					<tr animate:flip>
 						<td>
-							<a href="/events/{$page.params.eventId}?legNumber={legIndex === 0 ? 1 : legIndex}">
+							<a
+								href="/events/{$page.params.eventId}/map?legNumber={legIndex === 0 ? 1 : legIndex}"
+							>
 								{#if legIndex === 0}
 									Start
 								{:else if legIndex === legs.length - 1}
@@ -45,14 +47,15 @@
 						<td>{leg.finishControlPoint.code}</td>
 
 						<td>
-							<!-- Warning: submit event handler should be before enhance action -->
 							<form
-								action="?/deleteControlPoint&controlPointId={leg.finishControlPoint.id}"
+								action="?/deleteControlPoint"
 								method="post"
 								class="m-0 p-0"
 								use:confirmSubmit={'Are you sure to delete this control point?'}
 								use:enhance
 							>
+								<input type="hidden" name="controlPointId" value={leg.finishControlPoint.id} />
+
 								<button type="submit" class="btn-unset">
 									<i class="i-carbon-trash-can block" />
 								</button>

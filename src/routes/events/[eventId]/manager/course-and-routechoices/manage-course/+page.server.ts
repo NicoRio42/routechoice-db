@@ -19,14 +19,15 @@ export async function load({ params: { eventId }, locals }) {
 }
 
 export const actions = {
-	deleteControlPoint: async ({ url: { searchParams }, locals, params: { eventId } }) => {
+	deleteControlPoint: async ({ request, locals, params: { eventId } }) => {
 		if (locals.user === null) throw error(401);
 		if (locals.user.role !== 'admin') throw error(403);
 
-		const controlPointId = searchParams.get('controlPointId');
+		const formData = await request.formData();
+		const controlPointId = formData.get('controlPointId');
 
-		if (controlPointId === null) {
-			return;
+		if (typeof controlPointId !== 'string') {
+			throw error(400);
 		}
 
 		const previousLeg = await db
@@ -41,18 +42,16 @@ export const actions = {
 			.where(eq(legTable.fkStartControlPoint, controlPointId))
 			.get();
 
-		if (previousLeg === undefined || nextLeg === undefined) {
-			return;
-		}
-
 		// Will delete cascade previousLeg and nextLeg
 		await db.delete(controlPointTable).where(eq(controlPointTable.id, controlPointId)).run();
 
-		// Creating leg from previous control point to next control point
-		await db
-			.insert(legTable)
-			.values({ ...previousLeg, fkFinishControlPoint: nextLeg.fkFinishControlPoint })
-			.run();
+		// Creating leg from previous control point to next control point if not start or finish
+		if (previousLeg !== undefined && nextLeg !== undefined) {
+			await db
+				.insert(legTable)
+				.values({ ...previousLeg, fkFinishControlPoint: nextLeg.fkFinishControlPoint })
+				.run();
+		}
 
 		throw redirect(302, `/events/${eventId}/manager/course-and-routechoices/manage-course`);
 	}

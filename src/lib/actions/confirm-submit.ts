@@ -7,7 +7,7 @@ export function confirmSubmit(form: HTMLFormElement, message: string) {
 		}
 	}
 
-	form.addEventListener('submit', confirmEventListener, false);
+	form.addEventListener('submit', confirmEventListener, { capture: true });
 
 	return { destroy: () => form.removeEventListener('submit', confirmEventListener) };
 }
